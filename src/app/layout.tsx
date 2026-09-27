@@ -1,11 +1,12 @@
 import type { Metadata, Viewport } from 'next';
-import { Lora, Poppins } from 'next/font/google';
+import { Fraunces, Jost, Lora, Poppins } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { Preloader } from '@/components/layout/Preloader';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { ScrollProgress } from '@/components/layout/ScrollProgress';
+import { TypeSwitcher } from '@/components/layout/TypeSwitcher';
 import { MotionProvider } from '@/components/motion/MotionProvider';
 import { jsonLd } from '@/lib/seo';
 import { site } from '@/lib/site';
@@ -28,18 +29,42 @@ const poppins = Poppins({
   display: 'swap',
 });
 
+/* Typography preview (client review). Two candidate pairings, both with Jost
+   as the UI face; the display face is Fraunces (option 1) or GT Super Display
+   (option 2, self-hosted from /public/fonts/gt-super — see the README there).
+   Fraunces is loaded as a variable font with its optical-size axis so the
+   browser picks the text or display cut per heading size. */
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  weight: 'variable',
+  style: ['normal', 'italic'],
+  axes: ['opsz'],
+  variable: '--font-fraunces',
+  display: 'swap',
+});
+
+const jost = Jost({
+  subsets: ['latin'],
+  weight: ['300', '400', '500'],
+  variable: '--font-jost',
+  display: 'swap',
+});
+
 /**
  * Runs before first paint, ahead of the bundle.
  *
  * - `data-js` tells the stylesheet that JavaScript is present, so effects that
  *   would leave a page unreadable without it (the reveal states, the
  *   dark-ground fade) only exist when they can complete.
+ * - `data-type` selects the typography pairing under review (see
+ *   TypeSwitcher), read from `?type=` or the last choice, so the page never
+ *   paints in one pairing and re-flows into another.
  * - `data-preload` holds the page's entrance animations under an ivory cover
  *   for the one visit per session that gets the preloader, so the sequence
  *   plays as the loader lifts rather than underneath it. The Preloader clears
  *   it; the timer here clears it anyway if the bundle never arrives.
  */
-const boot = `(function(){var d=document.documentElement;d.setAttribute('data-js','');var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}if(reduce)return;var seen=false;try{seen=sessionStorage.getItem('p2s:seen-preloader')==='1'}catch(e){}if(seen)return;d.setAttribute('data-preload','');setTimeout(function(){d.removeAttribute('data-preload')},3200)})();`;
+const boot = `(function(){var d=document.documentElement;d.setAttribute('data-js','');var t='a';try{var q=new URLSearchParams(location.search).get('type');if(q==='a'||q==='b'){t=q;localStorage.setItem('p2s:type',t)}else{var s=localStorage.getItem('p2s:type');if(s==='a'||s==='b')t=s}}catch(e){}d.setAttribute('data-type',t);var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}if(reduce)return;var seen=false;try{seen=sessionStorage.getItem('p2s:seen-preloader')==='1'}catch(e){}if(seen)return;d.setAttribute('data-preload','');setTimeout(function(){d.removeAttribute('data-preload')},3200)})();`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -100,7 +125,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     // The boot script writes attributes onto <html> before hydration; React
     // must not treat them as a mismatch.
-    <html lang="en" className={`${lora.variable} ${poppins.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${lora.variable} ${poppins.variable} ${fraunces.variable} ${jost.variable}`}
+      data-type="a"
+      suppressHydrationWarning
+    >
       <body>
         <script dangerouslySetInnerHTML={{ __html: boot }} />
         <script
@@ -122,6 +152,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <PageTransition>{children}</PageTransition>
           </main>
           <Footer />
+          <TypeSwitcher />
         </MotionProvider>
       </body>
     </html>

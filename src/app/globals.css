@@ -50,6 +50,47 @@
 }
 
 /* --------------------------------------------------------------------------
+   Typography preview (client review)
+   Two candidate pairings, selected by `data-type` on <html> — set before first
+   paint by the boot script in layout.tsx, toggled by <TypeSwitcher>. Each
+   pairing rewrites the two font tokens above, so every heading, label and
+   paragraph follows. Remove this block, the switcher and the extra fonts in
+   layout.tsx once a pairing is chosen.
+   -------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: 'GT Super Display';
+  src:
+    url('/fonts/gt-super/GT-Super-Display-Regular.woff2') format('woff2'),
+    url('/fonts/gt-super/GT-Super-Display-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'GT Super Display';
+  src:
+    url('/fonts/gt-super/GT-Super-Display-Regular-Italic.woff2') format('woff2'),
+    url('/fonts/gt-super/GT-Super-Display-Regular-Italic.woff') format('woff');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Option 1 — Fraunces + Jost */
+:root[data-type='a'] {
+  --font-display: var(--font-fraunces), Georgia, 'Times New Roman', serif;
+  --font-ui: var(--font-jost), system-ui, -apple-system, sans-serif;
+}
+
+/* Option 2 — GT Super Display + Jost */
+:root[data-type='b'] {
+  --font-display: 'GT Super Display', Georgia, 'Times New Roman', serif;
+  --font-ui: var(--font-jost), system-ui, -apple-system, sans-serif;
+}
+
+/* --------------------------------------------------------------------------
    Base
    -------------------------------------------------------------------------- */
 
