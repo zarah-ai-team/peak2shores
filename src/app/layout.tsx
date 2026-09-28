@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Fraunces, Jost, Lora, Poppins } from 'next/font/google';
+import { Cormorant_Garamond, Fraunces, Instrument_Serif, Jost, Lora, Poppins } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -29,9 +29,12 @@ const poppins = Poppins({
   display: 'swap',
 });
 
-/* Typography preview (client review). Two candidate pairings, both with Jost
-   as the UI face; the display face is Fraunces (option 1) or GT Super Display
-   (option 2, self-hosted from /public/fonts/gt-super — see the README there).
+/* Typography preview (client review). Six candidate pairings: Fraunces +
+   Jost (option 1), GT Super Display + Jost (option 2), GT Super Display +
+   Poppins (option 3), Instrument Serif + Jost (option 4), Georgia + Poppins
+   (option 5, a system font, so nothing is loaded for it) and Cormorant
+   Garamond + Jost (option 6). GT Super is self-hosted from
+   /public/fonts/gt-super — see the README there.
    Fraunces is loaded as a variable font with its optical-size axis so the
    browser picks the text or display cut per heading size. */
 const fraunces = Fraunces({
@@ -40,6 +43,22 @@ const fraunces = Fraunces({
   style: ['normal', 'italic'],
   axes: ['opsz'],
   variable: '--font-fraunces',
+  display: 'swap',
+});
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: ['400'],
+  style: ['normal', 'italic'],
+  variable: '--font-instrument-serif',
+  display: 'swap',
+});
+
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['400'],
+  style: ['normal', 'italic'],
+  variable: '--font-cormorant',
   display: 'swap',
 });
 
@@ -64,7 +83,7 @@ const jost = Jost({
  *   plays as the loader lifts rather than underneath it. The Preloader clears
  *   it; the timer here clears it anyway if the bundle never arrives.
  */
-const boot = `(function(){var d=document.documentElement;d.setAttribute('data-js','');var t='a';try{var q=new URLSearchParams(location.search).get('type');if(q==='a'||q==='b'){t=q;localStorage.setItem('p2s:type',t)}else{var s=localStorage.getItem('p2s:type');if(s==='a'||s==='b')t=s}}catch(e){}d.setAttribute('data-type',t);var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}if(reduce)return;var seen=false;try{seen=sessionStorage.getItem('p2s:seen-preloader')==='1'}catch(e){}if(seen)return;d.setAttribute('data-preload','');setTimeout(function(){d.removeAttribute('data-preload')},3200)})();`;
+const boot = `(function(){var d=document.documentElement;d.setAttribute('data-js','');var t='a';try{var q=new URLSearchParams(location.search).get('type');if(/^[a-f]$/.test(q||'')){t=q;localStorage.setItem('p2s:type',t)}else{var s=localStorage.getItem('p2s:type');if(/^[a-f]$/.test(s||''))t=s}}catch(e){}d.setAttribute('data-type',t);var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}if(reduce)return;var seen=false;try{seen=sessionStorage.getItem('p2s:seen-preloader')==='1'}catch(e){}if(seen)return;d.setAttribute('data-preload','');setTimeout(function(){d.removeAttribute('data-preload')},3200)})();`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -127,7 +146,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     // must not treat them as a mismatch.
     <html
       lang="en"
-      className={`${lora.variable} ${poppins.variable} ${fraunces.variable} ${jost.variable}`}
+      className={`${lora.variable} ${poppins.variable} ${fraunces.variable} ${instrumentSerif.variable} ${cormorant.variable} ${jost.variable}`}
       data-type="a"
       suppressHydrationWarning
     >

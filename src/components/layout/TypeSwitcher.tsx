@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 /**
  * Client-review typography switcher.
  *
- * Two candidate pairings are wired through `data-type` on <html>; the
+ * Six candidate pairings are wired through `data-type` on <html>; the
  * stylesheet swaps `--font-display` and `--font-ui` per value, so every
  * heading, label and paragraph on the site changes at once. The boot script
  * in layout.tsx applies the stored (or `?type=`) choice before first paint;
@@ -19,7 +19,7 @@ import { useEffect, useRef, useState } from 'react';
  * Temporary: remove along with the `data-type` rules once a pairing is chosen.
  */
 
-type TypeOption = 'a' | 'b';
+type TypeOption = 'a' | 'b' | 'c' | 'd' | 'e' | 'f';
 type Point = { x: number; y: number };
 
 const STORAGE_KEY = 'p2s:type';
@@ -49,10 +49,39 @@ const OPTIONS: ReadonlyArray<{
     ui: 'Jost',
     sample: "'GT Super Display', Georgia, serif",
   },
+  {
+    id: 'c',
+    number: '3',
+    display: 'GT Super Display',
+    ui: 'Poppins',
+    sample: "'GT Super Display', Georgia, serif",
+  },
+  {
+    id: 'd',
+    number: '4',
+    display: 'Instrument Serif',
+    ui: 'Jost',
+    sample: 'var(--font-instrument-serif), Georgia, serif',
+  },
+  {
+    id: 'e',
+    number: '5',
+    display: 'Georgia',
+    ui: 'Poppins',
+    sample: "Georgia, 'Times New Roman', serif",
+  },
+  {
+    id: 'f',
+    number: '6',
+    display: 'Cormorant Garamond',
+    ui: 'Jost',
+    sample: 'var(--font-cormorant), Georgia, serif',
+  },
 ];
 
 function current(): TypeOption {
-  return document.documentElement.getAttribute('data-type') === 'b' ? 'b' : 'a';
+  const t = document.documentElement.getAttribute('data-type');
+  return OPTIONS.some((o) => o.id === t) ? (t as TypeOption) : 'a';
 }
 
 function clamp(p: Point, el: HTMLElement | null): Point {
@@ -247,11 +276,11 @@ export function TypeSwitcher() {
         <div
           role="radiogroup"
           aria-label="Typography option"
-          className="flex flex-col gap-2 px-4 pb-4 pt-1"
+          className="flex max-h-[calc(100vh-120px)] flex-col gap-2 overflow-y-auto px-4 pb-4 pt-1"
         >
           {OPTIONS.map((o) => {
             const checked = type === o.id;
-            const pending = o.id === 'b' && gtSuperLoaded === false;
+            const pending = o.display === 'GT Super Display' && gtSuperLoaded === false;
             return (
               <button
                 key={o.id}

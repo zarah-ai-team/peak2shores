@@ -51,7 +51,7 @@
 
 /* --------------------------------------------------------------------------
    Typography preview (client review)
-   Two candidate pairings, selected by `data-type` on <html> — set before first
+   Six candidate pairings, selected by `data-type` on <html> — set before first
    paint by the boot script in layout.tsx, toggled by <TypeSwitcher>. Each
    pairing rewrites the two font tokens above, so every heading, label and
    paragraph follows. Remove this block, the switcher and the extra fonts in
@@ -87,6 +87,30 @@
 /* Option 2 — GT Super Display + Jost */
 :root[data-type='b'] {
   --font-display: 'GT Super Display', Georgia, 'Times New Roman', serif;
+  --font-ui: var(--font-jost), system-ui, -apple-system, sans-serif;
+}
+
+/* Option 3 — GT Super Display + Poppins */
+:root[data-type='c'] {
+  --font-display: 'GT Super Display', Georgia, 'Times New Roman', serif;
+  --font-ui: var(--font-poppins), system-ui, -apple-system, sans-serif;
+}
+
+/* Option 4 — Instrument Serif + Jost */
+:root[data-type='d'] {
+  --font-display: var(--font-instrument-serif), Georgia, 'Times New Roman', serif;
+  --font-ui: var(--font-jost), system-ui, -apple-system, sans-serif;
+}
+
+/* Option 5 — Georgia + Poppins (system serif, nothing to download) */
+:root[data-type='e'] {
+  --font-display: Georgia, 'Times New Roman', serif;
+  --font-ui: var(--font-poppins), system-ui, -apple-system, sans-serif;
+}
+
+/* Option 6 — Cormorant Garamond + Jost */
+:root[data-type='f'] {
+  --font-display: var(--font-cormorant), Georgia, 'Times New Roman', serif;
   --font-ui: var(--font-jost), system-ui, -apple-system, sans-serif;
 }
 
