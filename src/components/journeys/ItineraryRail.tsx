@@ -39,14 +39,22 @@ export function ItineraryRail({ days }: { days: RailDay[] }) {
 
   // Measure the active link and place the marker beside it. Layout effect, so
   // the marker never paints a frame in the wrong place.
+  // Measured again whenever the nav changes size — it is hidden below the
+  // desktop breakpoint, and a late web font changes every link's height.
   useLayoutEffect(() => {
     const nav = navRef.current;
     if (!nav) return;
-    const link = nav.querySelector<HTMLElement>(`[data-day="${activeDay}"]`);
-    if (!link) return;
-    // The nav is positioned, so it is the link's offsetParent: offsetTop is
-    // already relative to it.
-    setMarker({ y: link.offsetTop, h: link.offsetHeight });
+    const place = () => {
+      const link = nav.querySelector<HTMLElement>(`[data-day="${activeDay}"]`);
+      if (!link) return;
+      // The nav is positioned, so it is the link's offsetParent: offsetTop is
+      // already relative to it.
+      setMarker({ y: link.offsetTop, h: link.offsetHeight });
+    };
+    place();
+    const observer = new ResizeObserver(place);
+    observer.observe(nav);
+    return () => observer.disconnect();
   }, [activeDay]);
 
   return (

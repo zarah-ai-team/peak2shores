@@ -86,7 +86,15 @@ export function useHeroCarousel() {
  * Each slide pushes in a few percent while it is up, and the whole stack takes
  * the page's scroll at a fraction of its speed.
  */
-export function HeroSlides({ index, y }: { index: number; y?: MotionValue<number> }) {
+export function HeroSlides({
+  index,
+  running,
+  y,
+}: {
+  index: number;
+  running: boolean;
+  y?: MotionValue<number>;
+}) {
   return (
     <m.div
       className="absolute inset-0 -z-10"
@@ -127,8 +135,9 @@ export function HeroSlides({ index, y }: { index: number; y?: MotionValue<number
       })}
 
       {/* Announced politely, so a screen reader hears the change without being
-          interrupted mid-sentence. */}
-      <p aria-live="polite" className="sr-only">
+          interrupted mid-sentence — and only once autoplay has stopped, so the
+          reader is not talked over every few seconds. */}
+      <p aria-live={running ? 'off' : 'polite'} className="sr-only">
         {`Slide ${index + 1} of ${heroSlides.length}: ${heroSlides[index].label}`}
       </p>
     </m.div>

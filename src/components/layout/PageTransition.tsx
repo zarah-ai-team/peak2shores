@@ -1,8 +1,7 @@
 'use client';
 
-import * as m from 'motion/react-m';
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useLayoutEffect, useRef, type ReactNode } from 'react';
 import { ease } from '@/lib/motion';
 
 /**
@@ -19,39 +18,45 @@ import { ease } from '@/lib/motion';
  *   should paint at full opacity — it keeps the largest contentful paint
  *   honest, and a page whose only route to being visible is a JavaScript
  *   animation is a page that disappears when the bundle fails.
- * - Once the animation finishes the wrapper drops back to a plain element. A
- *   lingering transform or clip-path creates a containing block and quietly
- *   breaks `position: fixed` and the sticky itinerary rail inside a page.
+ * - Nothing is left behind once it finishes. A lingering transform or
+ *   clip-path creates a containing block and quietly breaks `position: fixed`
+ *   and the sticky itinerary rail inside a page — so this is a Web Animation
+ *   on a plain wrapper, which removes its effect when it ends.
  *
- * Reduced motion is honoured by `MotionConfig reducedMotion="user"`: the
- * transform is skipped and only the fade remains.
+ * The wrapper is the same element on every render. Swapping it for an
+ * animated one (and back) would make React discard and rebuild the whole page
+ * twice per navigation: every reveal would replay, and the header would lose
+ * track of the hero it measures.
+ *
+ * Under reduced motion the transform is skipped and only the fade remains.
  */
 export function PageTransition({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const ref = useRef<HTMLDivElement>(null);
   const firstRender = useRef(true);
-  const [animatingFrom, setAnimatingFrom] = useState<string | null>(null);
 
-  useEffect(() => {
+  // Layout effect, so the new page never paints once at full opacity first.
+  useLayoutEffect(() => {
     if (firstRender.current) {
       firstRender.current = false;
       return;
     }
-    setAnimatingFrom(pathname);
+    const el = ref.current;
+    if (!el || typeof el.animate !== 'function') return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const animation = el.animate(
+      reduced
+        ? { opacity: [0, 1] }
+        : {
+            opacity: [0, 1],
+            transform: ['translateY(16px)', 'none'],
+            clipPath: ['inset(2% 0% 0% 0%)', 'inset(0% 0% 0% 0%)'],
+          },
+      { duration: 720, easing: `cubic-bezier(${ease.editorial.join(',')})` },
+    );
+    return () => animation.cancel();
   }, [pathname]);
 
-  if (animatingFrom !== pathname) {
-    return <>{children}</>;
-  }
-
-  return (
-    <m.div
-      key={pathname}
-      initial={{ opacity: 0, y: 16, clipPath: 'inset(2% 0% 0% 0%)' }}
-      animate={{ opacity: 1, y: 0, clipPath: 'inset(0% 0% 0% 0%)' }}
-      transition={{ duration: 0.72, ease: ease.editorial }}
-      onAnimationComplete={() => setAnimatingFrom(null)}
-    >
-      {children}
-    </m.div>
-  );
+  return <div ref={ref}>{children}</div>;
 }

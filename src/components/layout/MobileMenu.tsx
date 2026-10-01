@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import * as m from 'motion/react-m';
 import { AnimatePresence } from 'motion/react';
 import { useEffect, useRef, type RefObject } from 'react';
@@ -31,12 +32,16 @@ type MobileMenuProps = {
 export function MobileMenu({ open, onClose, returnFocusTo }: MobileMenuProps) {
   const scrollY = useRef(0);
   const panelRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  const pathnameRef = useRef(pathname);
+  pathnameRef.current = pathname;
 
   // Lock the page behind the overlay and restore the exact scroll position.
   useEffect(() => {
     if (!open) return;
 
     scrollY.current = window.scrollY;
+    const openedOn = pathnameRef.current;
     const body = document.body;
     const previous = {
       position: body.style.position,
@@ -55,7 +60,12 @@ export function MobileMenu({ open, onClose, returnFocusTo }: MobileMenuProps) {
       body.style.top = previous.top;
       body.style.width = previous.width;
       body.style.overflow = previous.overflow;
-      window.scrollTo(0, scrollY.current);
+      // Back to where the reader was — unless a menu link took them to a new
+      // page, which starts at the top. Instant: the stylesheet's smooth
+      // scrolling would otherwise show the page gliding down from the top.
+      if (pathnameRef.current === openedOn) {
+        window.scrollTo({ top: scrollY.current, behavior: 'instant' });
+      }
     };
   }, [open]);
 

@@ -54,7 +54,7 @@ export function Hero() {
       className="relative isolate flex h-svh min-h-[600px] flex-col justify-end overflow-hidden md:min-h-[760px]"
       {...containerProps}
     >
-      <HeroSlides index={index} y={pictureY} />
+      <HeroSlides index={index} running={running} y={pictureY} />
 
       <m.div
         data-parallax

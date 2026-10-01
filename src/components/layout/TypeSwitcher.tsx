@@ -113,7 +113,10 @@ export function TypeSwitcher() {
         const p = JSON.parse(saved) as Point;
         if (Number.isFinite(p.x) && Number.isFinite(p.y)) setPos(clamp(p, panel.current));
       }
-      setMinimised(localStorage.getItem(MINIMISED_KEY) === '1');
+      // No choice made yet: start out of the way on a phone, where the open
+      // panel would cover most of the page.
+      const minimised = localStorage.getItem(MINIMISED_KEY);
+      setMinimised(minimised === null ? window.innerWidth < 768 : minimised === '1');
     } catch {
       /* ignore */
     }

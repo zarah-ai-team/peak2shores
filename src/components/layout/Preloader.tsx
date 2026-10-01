@@ -5,7 +5,10 @@ import { AnimatePresence, useReducedMotion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { ease } from '@/lib/motion';
 
-const SESSION_KEY = 'p2s:seen-preloader';
+/** When the loader last played. Read by the boot script in the layout too. */
+const SEEN_KEY = 'p2s:preloader-at';
+/** How long before a returning visitor sees it again. */
+const SEEN_FOR_MS = 24 * 60 * 60 * 1000;
 /** The shortest the sequence can read as intentional rather than a flash. */
 const MIN_MS = 900;
 /** The longest anyone waits, however slow the network. */
@@ -21,7 +24,12 @@ function releasePage() {
  *
  * The loader resolves on the window's own load event, floored at 900ms and
  * capped at 1800ms — it never invents a delay to look impressive. It runs once
- * per session; a returning visitor goes straight to the page.
+ * a day across every tab; a returning visitor goes straight to the page.
+ *
+ * The boot script decides whether this visit gets it, by setting
+ * `data-preload` before first paint. If that attribute is already gone when
+ * the bundle arrives — the boot timer gave up on a slow load and the page is
+ * showing — the loader does not appear a second time over it.
  *
  * While it is up, the hero's entrance waits (see `data-preload` in
  * globals.css). The two hand over at the same instant: the cover lifts, the
@@ -35,17 +43,14 @@ export function Preloader() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (reduced) {
-      releasePage();
-      return;
-    }
+    const pending = document.documentElement.hasAttribute('data-preload');
     let seen = false;
     try {
-      seen = sessionStorage.getItem(SESSION_KEY) === '1';
+      seen = Date.now() - Number(localStorage.getItem(SEEN_KEY)) < SEEN_FOR_MS;
     } catch {
       // Private browsing. Show it — a single 900ms screen is not a problem.
     }
-    if (seen) {
+    if (reduced || seen || !pending) {
       releasePage();
       return;
     }
@@ -61,7 +66,7 @@ export function Preloader() {
         setVisible(false);
         releasePage();
         try {
-          sessionStorage.setItem(SESSION_KEY, '1');
+          localStorage.setItem(SEEN_KEY, String(Date.now()));
         } catch {
           /* ignore */
         }

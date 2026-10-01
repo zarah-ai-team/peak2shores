@@ -18,7 +18,7 @@ export default function PlanPage() {
   return (
     <>
       <PageTitle kicker="Plan your journey" title="Start with a conversation.">
-        Join one of this year’s departures, or design a private journey on your own dates. Either
+        Join one of our upcoming departures, or design a private journey on your own dates. Either
         way it begins the same way — you tell us a little, and Marc calls you.
       </PageTitle>
 

@@ -108,7 +108,11 @@ export function JourneyExplorer({ journeys }: { journeys: JourneySummary[] }) {
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.5, ease: ease.editorial }}
             >
-              <JourneyRow journey={journey} flip={i % 2 === 1} />
+              <JourneyRow
+                journey={journey}
+                flip={i % 2 === 1}
+                first={journey.slug === journeys[0]?.slug}
+              />
             </m.article>
           ))}
         </AnimatePresence>
@@ -133,7 +137,16 @@ export function JourneyExplorer({ journeys }: { journeys: JourneySummary[] }) {
   );
 }
 
-function JourneyRow({ journey, flip }: { journey: JourneySummary; flip: boolean }) {
+function JourneyRow({
+  journey,
+  flip,
+  first,
+}: {
+  journey: JourneySummary;
+  flip: boolean;
+  /** The top row of the full list is the page's largest paint, so it loads eagerly. */
+  first: boolean;
+}) {
   const titleId = `journey-${journey.slug}-title`;
 
   return (
@@ -150,6 +163,7 @@ function JourneyRow({ journey, flip }: { journey: JourneySummary; flip: boolean 
         media={journey.listMedia}
         hover
         decorative
+        priority={first}
         sizes="(min-width: 1024px) 55vw, 100vw"
         className={`h-[300px] sm:h-[420px] lg:h-auto lg:min-h-[520px] ${
           flip ? 'lg:order-2' : 'lg:order-1'

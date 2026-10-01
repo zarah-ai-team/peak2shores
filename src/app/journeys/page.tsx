@@ -15,8 +15,8 @@ export default function JourneysPage() {
   return (
     <>
       <PageTitle kicker="Journeys" title="A short list, on purpose.">
-        {journeys.length} journeys this year. Each limited to 18 guests, each one somewhere Marc
-        knows well. If nothing here fits, we also design private journeys.
+        {journeys.length} journeys on the calendar. Each limited to 18 guests, each one somewhere
+        Marc knows well. If nothing here fits, we also design private journeys.
       </PageTitle>
 
       {/* Summaries only: the itineraries never need to cross to the browser. */}

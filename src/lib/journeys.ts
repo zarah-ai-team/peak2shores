@@ -106,7 +106,7 @@ const amalfiDetail: JourneyDetail = {
   heroMedia: 'am-hero',
   overviewHeadline: 'One coast. Two hotels. Nine days that never feel scheduled.',
   overview: [
-    'The Amalfi coast is famous for the wrong reasons — the traffic, the queues, the day-trippers. We go in September, when the light softens and the sea is still warm, and we stay put: three nights above Positano, four in a quieter village on the other side of the cape.',
+    'The Amalfi coast is famous for the wrong reasons — the traffic, the queues, the day-trippers. We go in September, when the light softens and the sea is still warm, and we stay put: three nights above Positano, five in a quieter village on the other side of the cape.',
     'Most days have one thing in them. A boat. A lunch. A walk. The rest is yours — a terrace, a swim, a book you have been meaning to finish.',
   ],
   why: {
@@ -317,7 +317,7 @@ export const journeys: Journey[] = [
     title: 'Amalfi, Slowly',
     lead: 'One coast, two hotels, no rush.',
     blurb:
-      'Lemon groves and a private boat day. Dinners that start when the light goes soft. Three nights in each hotel so you can actually live there.',
+      'Lemon groves and a private boat day. Dinners that start when the light goes soft. Long enough in each hotel to actually live there.',
     country: 'Italy',
     region: 'Amalfi Coast',
     days: 9,

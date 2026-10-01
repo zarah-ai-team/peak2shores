@@ -1,5 +1,12 @@
 import type { Metadata, Viewport } from 'next';
-import { Cormorant_Garamond, Fraunces, Instrument_Serif, Jost, Lora, Poppins } from 'next/font/google';
+import {
+  Cormorant_Garamond,
+  Fraunces,
+  Instrument_Serif,
+  Jost,
+  Lora,
+  Poppins,
+} from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -79,11 +86,12 @@ const jost = Jost({
  *   TypeSwitcher), read from `?type=` or the last choice, so the page never
  *   paints in one pairing and re-flows into another.
  * - `data-preload` holds the page's entrance animations under an ivory cover
- *   for the one visit per session that gets the preloader, so the sequence
- *   plays as the loader lifts rather than underneath it. The Preloader clears
- *   it; the timer here clears it anyway if the bundle never arrives.
+ *   for the one visit a day that gets the preloader, so the sequence plays as
+ *   the loader lifts rather than underneath it. The Preloader clears it; the
+ *   timer here clears it anyway if the bundle is slow, and the Preloader then
+ *   stands down rather than covering a page that is already showing.
  */
-const boot = `(function(){var d=document.documentElement;d.setAttribute('data-js','');var t='a';try{var q=new URLSearchParams(location.search).get('type');if(/^[a-f]$/.test(q||'')){t=q;localStorage.setItem('p2s:type',t)}else{var s=localStorage.getItem('p2s:type');if(/^[a-f]$/.test(s||''))t=s}}catch(e){}d.setAttribute('data-type',t);var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}if(reduce)return;var seen=false;try{seen=sessionStorage.getItem('p2s:seen-preloader')==='1'}catch(e){}if(seen)return;d.setAttribute('data-preload','');setTimeout(function(){d.removeAttribute('data-preload')},3200)})();`;
+const boot = `(function(){var d=document.documentElement;d.setAttribute('data-js','');var t='a';try{var q=new URLSearchParams(location.search).get('type');if(/^[a-f]$/.test(q||'')){t=q;localStorage.setItem('p2s:type',t)}else{var s=localStorage.getItem('p2s:type');if(/^[a-f]$/.test(s||''))t=s}}catch(e){}d.setAttribute('data-type',t);var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}if(reduce)return;var seen=false;try{seen=Date.now()-Number(localStorage.getItem('p2s:preloader-at'))<864e5}catch(e){}if(seen)return;d.setAttribute('data-preload','');setTimeout(function(){if(!d.hasAttribute('data-preload'))return;d.removeAttribute('data-preload');try{localStorage.setItem('p2s:preloader-at',String(Date.now()))}catch(e){}},3200)})();`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),

@@ -32,17 +32,17 @@ export function Header() {
   useEffect(() => {
     let lastY = window.scrollY;
     let frame = 0;
-    // The page's hero, if it has one. Measured directly: a fraction of the
-    // viewport height is wrong on every route whose hero has a floor or a
-    // ceiling, and changes with a phone's browser bar on every scroll.
-    const hero = overHero ? document.querySelector<HTMLElement>('[data-hero]') : null;
-
     const measure = () => {
       frame = 0;
       // A zero-height viewport means the layout has not settled yet; measuring
       // against it would solidify the header over the hero. Wait for the resize.
       if (!window.innerHeight) return;
       const y = window.scrollY;
+      // The page's hero, if it has one. Measured directly: a fraction of the
+      // viewport height is wrong on every route whose hero has a floor or a
+      // ceiling, and changes with a phone's browser bar on every scroll. Looked
+      // up each time, so a re-rendered page never leaves a detached node here.
+      const hero = overHero ? document.querySelector<HTMLElement>('[data-hero]') : null;
 
       // The header solidifies once the hero's bottom edge has passed behind it.
       if (hero) {

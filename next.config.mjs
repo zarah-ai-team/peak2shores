@@ -25,10 +25,18 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   images: {
-    formats: ['image/avif', 'image/webp'],
-    // Real destination photography will be served from these sizes; the
-    // editorial grid tops out at a 1440-wide canvas with full-bleed heroes.
-    deviceSizes: [420, 640, 828, 1080, 1280, 1600, 1920, 2560],
+    // WebP only. AVIF is smaller but several times slower to encode, and on a
+    // small instance with a cold cache that encode is what keeps a page of
+    // photographs blank.
+    formats: ['image/webp'],
+    // The editorial grid tops out at a 1440-wide canvas with full-bleed
+    // heroes. Sources are 2400px wide, so a 2560 variant would only re-encode
+    // the original at full size.
+    deviceSizes: [420, 640, 828, 1080, 1280, 1600, 1920],
+    // Next's default is 60 seconds, so browsers and the CDN come back for every
+    // photograph almost immediately. Files in public/images are replaced by
+    // name rarely enough that a month is safe.
+    minimumCacheTTL: 60 * 60 * 24 * 31,
   },
   async headers() {
     return [{ source: '/(.*)', headers: securityHeaders }];

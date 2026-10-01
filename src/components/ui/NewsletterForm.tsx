@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { site } from '@/lib/site';
+import { failureMessage } from '@/lib/forms';
 
 type Status = 'idle' | 'sending' | 'done' | 'error';
 
@@ -17,6 +18,7 @@ type Status = 'idle' | 'sending' | 'done' | 'error';
 export function NewsletterForm({ compact = false }: { compact?: boolean }) {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<Status>('idle');
+  const [errorText, setErrorText] = useState('');
   const doneRef = useRef<HTMLParagraphElement>(null);
   const id = compact ? 'email-footer' : 'email-circle';
 
@@ -34,8 +36,14 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
-      setStatus(res.ok ? 'done' : 'error');
+      if (res.ok) {
+        setStatus('done');
+      } else {
+        setErrorText(await failureMessage(res));
+        setStatus('error');
+      }
     } catch {
+      setErrorText('');
       setStatus('error');
     }
   }
@@ -67,6 +75,9 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
           id={id}
           type="email"
           required
+          maxLength={254}
+          pattern="[^\s@]+@[^\s@]+\.[^\s@]{2,}"
+          title="An address like name@example.com"
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -90,7 +101,9 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
         aria-live="assertive"
         className="prose-body-sm mt-3 text-acqua-text"
       >
-        {status === 'error' ? `That didn’t send. Please try again, or email ${site.email}.` : ''}
+        {status === 'error'
+          ? errorText || `That didn’t send. Please try again, or email ${site.email}.`
+          : ''}
       </p>
     </div>
   );

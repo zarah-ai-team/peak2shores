@@ -6,6 +6,7 @@ import { Reveal } from '@/components/motion/Reveal';
 import { Button } from '@/components/ui/Button';
 import { SectionLabel, Tick } from '@/components/ui/Editorial';
 import { site } from '@/lib/site';
+import { failureMessage } from '@/lib/forms';
 
 const PARTY_OPTIONS = ['Couple', 'Friends', 'Family', 'Solo'] as const;
 
@@ -42,6 +43,7 @@ export function EnquiryForm({
 }: EnquiryFormProps) {
   const [party, setParty] = useState<string>('Couple');
   const [status, setStatus] = useState<Status>('idle');
+  const [errorText, setErrorText] = useState('');
   const sentRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
@@ -77,8 +79,14 @@ export function EnquiryForm({
           website: data.get('website'),
         }),
       });
-      setStatus(res.ok ? 'sent' : 'error');
+      if (res.ok) {
+        setStatus('sent');
+      } else {
+        setErrorText(await failureMessage(res));
+        setStatus('error');
+      }
     } catch {
+      setErrorText('');
       setStatus('error');
     }
   }
@@ -143,6 +151,8 @@ export function EnquiryForm({
                   type="email"
                   required
                   maxLength={254}
+                  pattern="[^\s@]+@[^\s@]+\.[^\s@]{2,}"
+                  title="An address like name@example.com"
                   autoComplete="email"
                   placeholder="you@example.com"
                   className="w-full border-0 bg-transparent p-0 font-ui text-[16px] font-light leading-[1.3] text-on-dark outline-none placeholder:text-on-dark-muted"
@@ -215,7 +225,7 @@ export function EnquiryForm({
 
             <p role="alert" aria-live="assertive" className="prose-body-sm mt-5 text-acqua">
               {status === 'error'
-                ? `That didn’t send. Please try again, or email ${site.email}.`
+                ? errorText || `That didn’t send. Please try again, or email ${site.email}.`
                 : ''}
             </p>
           </form>
