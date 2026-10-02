@@ -37,7 +37,7 @@
   --color-tone-slate: #8c8f86;
 
   /* Type */
-  --font-display: var(--font-lora), Georgia, 'Times New Roman', serif;
+  --font-display: Georgia, 'Times New Roman', serif;
   --font-ui: var(--font-poppins), system-ui, -apple-system, sans-serif;
 
   /* Rhythm */
@@ -47,71 +47,6 @@
   --ease-editorial: cubic-bezier(0.2, 0.6, 0.2, 1);
   --ease-exit: cubic-bezier(0.4, 0, 0.6, 1);
   --ease-reveal: cubic-bezier(0.16, 0.84, 0.24, 1);
-}
-
-/* --------------------------------------------------------------------------
-   Typography preview (client review)
-   Six candidate pairings, selected by `data-type` on <html> — set before first
-   paint by the boot script in layout.tsx, toggled by <TypeSwitcher>. Each
-   pairing rewrites the two font tokens above, so every heading, label and
-   paragraph follows. Remove this block, the switcher and the extra fonts in
-   layout.tsx once a pairing is chosen.
-   -------------------------------------------------------------------------- */
-
-@font-face {
-  font-family: 'GT Super Display';
-  src:
-    url('/fonts/gt-super/GT-Super-Display-Regular.woff2') format('woff2'),
-    url('/fonts/gt-super/GT-Super-Display-Regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'GT Super Display';
-  src:
-    url('/fonts/gt-super/GT-Super-Display-Regular-Italic.woff2') format('woff2'),
-    url('/fonts/gt-super/GT-Super-Display-Regular-Italic.woff') format('woff');
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-
-/* Option 1 — Fraunces + Jost */
-:root[data-type='a'] {
-  --font-display: var(--font-fraunces), Georgia, 'Times New Roman', serif;
-  --font-ui: var(--font-jost), system-ui, -apple-system, sans-serif;
-}
-
-/* Option 2 — GT Super Display + Jost */
-:root[data-type='b'] {
-  --font-display: 'GT Super Display', Georgia, 'Times New Roman', serif;
-  --font-ui: var(--font-jost), system-ui, -apple-system, sans-serif;
-}
-
-/* Option 3 — GT Super Display + Poppins */
-:root[data-type='c'] {
-  --font-display: 'GT Super Display', Georgia, 'Times New Roman', serif;
-  --font-ui: var(--font-poppins), system-ui, -apple-system, sans-serif;
-}
-
-/* Option 4 — Instrument Serif + Jost */
-:root[data-type='d'] {
-  --font-display: var(--font-instrument-serif), Georgia, 'Times New Roman', serif;
-  --font-ui: var(--font-jost), system-ui, -apple-system, sans-serif;
-}
-
-/* Option 5 — Georgia + Poppins (system serif, nothing to download) */
-:root[data-type='e'] {
-  --font-display: Georgia, 'Times New Roman', serif;
-  --font-ui: var(--font-poppins), system-ui, -apple-system, sans-serif;
-}
-
-/* Option 6 — Cormorant Garamond + Jost */
-:root[data-type='f'] {
-  --font-display: var(--font-cormorant), Georgia, 'Times New Roman', serif;
-  --font-ui: var(--font-jost), system-ui, -apple-system, sans-serif;
 }
 
 /* --------------------------------------------------------------------------
@@ -295,7 +230,7 @@
     text-transform: uppercase;
   }
 
-  /* Lora carries the emotion. */
+  /* Georgia carries the emotion. */
   .display {
     font-family: var(--font-display);
     font-weight: 400;
@@ -356,7 +291,7 @@
     font-size: clamp(21px, 1.8vw, 30px);
   }
 
-  /* The italic Lora lead — used once per block, never twice. */
+  /* The italic Georgia lead — used once per block, never twice. */
   .lead {
     font-family: var(--font-display);
     font-style: italic;

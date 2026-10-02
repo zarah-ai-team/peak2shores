@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 import * as m from 'motion/react-m';
 import { AnimatePresence } from 'motion/react';
 import { Frame } from '@/components/ui/Frame';
+import { JourneyGlobe } from './JourneyGlobe';
 import { Reveal } from '@/components/motion/Reveal';
 import { MetaItem } from '@/components/ui/Editorial';
 import { ButtonLink } from '@/components/ui/Button';
@@ -51,6 +52,12 @@ export function JourneyExplorer({ journeys }: { journeys: JourneySummary[] }) {
 
   return (
     <>
+      <JourneyGlobe
+        journeys={journeys}
+        selected={selection.country}
+        onSelect={(country) => toggle('country', country)}
+      />
+
       <section
         aria-label="Filter journeys"
         className="gutter grid border-y border-line sm:grid-cols-2 lg:grid-cols-4"

@@ -75,6 +75,8 @@ export type Journey = {
   blurb: string;
   country: string;
   region: string;
+  /** Where the journey sits on the globe: [longitude, latitude]. */
+  coords: [number, number];
   days: number;
   /** Short form used in list metadata. */
   departure: string;
@@ -320,6 +322,7 @@ export const journeys: Journey[] = [
       'Lemon groves and a private boat day. Dinners that start when the light goes soft. Long enough in each hotel to actually live there.',
     country: 'Italy',
     region: 'Amalfi Coast',
+    coords: [14.48, 40.63],
     days: 9,
     departure: '12 Sept 2027',
     departureWindow: '12 – 20 September 2027',
@@ -346,6 +349,7 @@ export const journeys: Journey[] = [
       'By train and boat from Lucerne to the Engadin. A grand hotel where the steamers still stop, a cold swim before breakfast, and a village Marc has known since he was a boy.',
     country: 'Switzerland',
     region: 'Lucerne to the Engadin',
+    coords: [8.31, 47.05],
     days: 8,
     departure: '19 June 2027',
     departureWindow: '19 – 26 June 2027',
@@ -446,6 +450,7 @@ export const journeys: Journey[] = [
       'Tramuntana villages, a finca lunch cooked by the owner, and a sea you will have to yourself in October.',
     country: 'Spain',
     region: 'Mallorca',
+    coords: [2.95, 39.62],
     days: 7,
     departure: '3 Oct 2027',
     departureWindow: '3 – 9 October 2027',
@@ -537,6 +542,7 @@ export const journeys: Journey[] = [
       'Four nights in the winelands and four on the Atlantic. Winemakers we have known for years, a private table at a chef’s home, and mornings with nothing planned.',
     country: 'South Africa',
     region: 'Cape & Winelands',
+    coords: [18.9, -33.9],
     days: 11,
     departure: '14 Feb 2028',
     departureWindow: '14 – 24 February 2028',
@@ -664,6 +670,7 @@ export const journeys: Journey[] = [
       'The journey that gave the company its name in one week: a villa on Como, the Bernina line over the pass, and the high valley in larch-gold light.',
     country: 'Italy & Switzerland',
     region: 'Como to the Engadin',
+    coords: [9.26, 45.99],
     days: 10,
     departure: '26 Sept 2027',
     departureWindow: '26 September – 5 October 2027',
@@ -792,6 +799,7 @@ export type JourneySummary = Pick<
   | 'blurb'
   | 'country'
   | 'region'
+  | 'coords'
   | 'days'
   | 'departure'
   | 'departureWindow'
@@ -815,6 +823,7 @@ export function toSummary(journey: Journey): JourneySummary {
     blurb,
     country,
     region,
+    coords,
     days,
     departure,
     departureWindow,
@@ -836,6 +845,7 @@ export function toSummary(journey: Journey): JourneySummary {
     blurb,
     country,
     region,
+    coords,
     days,
     departure,
     departureWindow,

@@ -37,13 +37,13 @@ in `@theme` and every colour, font and rule reads from them.
 | `--color-line`       | 18% ink   | Every rule in the layout                             |
 | `--nav-h`            | 68/88px   | The fixed header. Every offset that clears it reads this. |
 
-Lora carries the emotion (`--font-display`, one weight plus italic); Poppins is
+Georgia carries the emotion (`--font-display`, a system serif with its italic); Poppins is
 demoted to metadata and interface (`--font-ui`). Zero corner radius anywhere,
 1px rules, flush-left type, editorial numbering — as the canvas' own
 exploration sheet specified.
 
 Type classes: `.display` (journey heroes) · `.page-title` (index pages) · `.h1`–`.h5`
-· `.lead` (italic Lora) · `.prose-body` · `.kicker` / `.kicker-sm`.
+· `.lead` (italic Georgia) · `.prose-body` · `.kicker` / `.kicker-sm`.
 Layout classes: `.gutter` (the 56px page inset, tightened on small screens),
 `.editorial-grid` (the 140px numbered rail + two columns), `.editorial-grid--wide`.
 Shared blocks: `<PageTitle>`, `<FactList>`, `<DarkCta>`, `<SectionLabel>`, `<MetaItem>`.
