@@ -9,7 +9,7 @@ import { ButtonLink } from '@/components/ui/Button';
 import { FactList, MetaItem, SectionLabel } from '@/components/ui/Editorial';
 import { Itinerary } from '@/components/journeys/Itinerary';
 import { EnquiryForm } from '@/components/journeys/EnquiryForm';
-import { getJourney, journeys, type Journey } from '@/lib/journeys';
+import { getJourney, journeyLabel, liveJourneys, type Journey } from '@/lib/journeys';
 import { getMedia } from '@/lib/media';
 import { enterAt } from '@/lib/motion';
 import { jsonLd, pageMetadata } from '@/lib/seo';
@@ -17,8 +17,10 @@ import { site } from '@/lib/site';
 
 type Params = { params: Promise<{ slug: string }> };
 
+export const revalidate = 3600;
+
 export function generateStaticParams() {
-  return journeys.map((journey) => ({ slug: journey.slug }));
+  return liveJourneys().map((journey) => ({ slug: journey.slug }));
 }
 
 function describe(journey: Journey) {
@@ -30,11 +32,20 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const journey = getJourney(slug);
   if (!journey) return {};
 
-  return pageMetadata({
+  const base = pageMetadata({
     title: journey.title,
     description: describe(journey),
     path: `/journeys/${journey.slug}`,
   });
+  // Shared in a message or on social, the journey shows its own photograph.
+  const hero = getMedia(journey.detail?.heroMedia ?? journey.listMedia);
+  if (!hero.src) return base;
+  const images = [{ url: hero.src, alt: hero.alt ?? journey.title }];
+  return {
+    ...base,
+    openGraph: { ...base.openGraph, images },
+    twitter: { ...base.twitter, images },
+  };
 }
 
 export default async function JourneyPage({ params }: Params) {
@@ -85,7 +96,10 @@ export default async function JourneyPage({ params }: Params) {
         priceCurrency: 'USD',
         unitText: 'per person',
       },
-      availability: 'https://schema.org/LimitedAvailability',
+      availability:
+        journey.status && journey.status !== 'open'
+          ? 'https://schema.org/SoldOut'
+          : 'https://schema.org/LimitedAvailability',
       validThrough: journey.departureISO,
     },
   };
@@ -160,6 +174,9 @@ function JourneyHero({ journey }: { journey: Journey }) {
               /
             </li>
             <li aria-current="page">
+              {journeyLabel(journey) && (
+                <span className="text-acqua">{journeyLabel(journey)} · </span>
+              )}
               {journey.country} · {journey.region}
             </li>
           </ol>

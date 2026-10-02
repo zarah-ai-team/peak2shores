@@ -21,6 +21,27 @@ const securityHeaders = [
   },
 ];
 
+/*
+ * Every address on the old Squarespace site (from its sitemap, October 2026)
+ * that has no page of the same name here. Permanent, so search rankings and
+ * existing links carry over. /destinations and /experiences keep their names.
+ * Point the three destinations at their own pages once those exist.
+ */
+const legacyRedirects = [
+  { source: '/home', destination: '/' },
+  { source: '/why-us', destination: '/our-story' },
+  { source: '/start-exploring', destination: '/plan' },
+  { source: '/switzerland', destination: '/destinations' },
+  { source: '/mexico', destination: '/destinations' },
+  { source: '/miami', destination: '/destinations' },
+];
+
+/* Preview and staging copies (Vercel previews, Netlify deploy previews) —
+   never indexed. Mirrors src/lib/env.ts. */
+const isProduction = process.env.VERCEL_ENV
+  ? process.env.VERCEL_ENV === 'production'
+  : !process.env.CONTEXT || process.env.CONTEXT === 'production';
+
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
@@ -39,7 +60,13 @@ const nextConfig = {
     minimumCacheTTL: 60 * 60 * 24 * 31,
   },
   async headers() {
-    return [{ source: '/(.*)', headers: securityHeaders }];
+    const headers = isProduction
+      ? securityHeaders
+      : [...securityHeaders, { key: 'X-Robots-Tag', value: 'noindex, nofollow' }];
+    return [{ source: '/(.*)', headers }];
+  },
+  async redirects() {
+    return legacyRedirects.map((r) => ({ ...r, statusCode: 301 }));
   },
 };
 

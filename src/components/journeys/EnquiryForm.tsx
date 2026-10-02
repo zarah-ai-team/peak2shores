@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/Button';
 import { SectionLabel, Tick } from '@/components/ui/Editorial';
 import { site } from '@/lib/site';
 import { failureMessage } from '@/lib/forms';
+import { track } from '@/lib/analytics';
+import { readFirstTouch } from '@/lib/attribution';
 
 const PARTY_OPTIONS = ['Couple', 'Friends', 'Family', 'Solo'] as const;
 
@@ -21,6 +23,11 @@ export type EnquiryFormProps = {
   groupMax?: number;
   headline?: string;
   intro?: string;
+  /**
+   * For the general form (no journeyTitle): the journeys a visitor can pick
+   * from. A private journey is always offered as well.
+   */
+  journeyOptions?: string[];
 };
 
 /**
@@ -40,6 +47,7 @@ export function EnquiryForm({
   groupMax = site.maxGuests,
   headline = 'Tell us a little. We’ll call you, not the other way round.',
   intro,
+  journeyOptions,
 }: EnquiryFormProps) {
   const [party, setParty] = useState<string>('Couple');
   const [status, setStatus] = useState<Status>('idle');
@@ -70,10 +78,15 @@ export function EnquiryForm({
         body: JSON.stringify({
           name: data.get('name'),
           email: data.get('email'),
+          phone: data.get('phone'),
           guests: data.get('guests'),
+          travelWindow: data.get('travelWindow'),
+          heardFrom: data.get('heardFrom'),
           notes: data.get('notes'),
           party,
-          journey: journeyTitle,
+          journey: journeyTitle ?? (data.get('journey') || undefined),
+          // Where this visitor first came from — stored with the enquiry.
+          source: readFirstTouch(),
           // Honeypot: a field no person sees or fills. The server drops
           // submissions where it has a value.
           website: data.get('website'),
@@ -81,6 +94,7 @@ export function EnquiryForm({
       });
       if (res.ok) {
         setStatus('sent');
+        track('enquiry_sent', { journey: journeyTitle ?? (data.get('journey') || 'private') });
       } else {
         setErrorText(await failureMessage(res));
         setStatus('error');
@@ -159,6 +173,17 @@ export function EnquiryForm({
                 />
               </Field>
 
+              <Field label="Phone (optional)">
+                <input
+                  name="phone"
+                  type="tel"
+                  maxLength={40}
+                  autoComplete="tel"
+                  placeholder="+1 305 000 0000"
+                  className="w-full border-0 bg-transparent p-0 font-ui text-[16px] font-light leading-[1.3] text-on-dark outline-none placeholder:text-on-dark-muted"
+                />
+              </Field>
+
               <fieldset className="m-0 flex flex-col gap-2.5 border-0 border-t border-line-dark p-0 py-[22px]">
                 <legend className="kicker-sm p-0 text-on-dark-muted">Travelling as</legend>
                 <div className="flex flex-wrap gap-[18px]">
@@ -190,6 +215,43 @@ export function EnquiryForm({
                   min={1}
                   max={groupMax}
                   placeholder="2"
+                  className="w-full border-0 bg-transparent p-0 font-ui text-[16px] font-light leading-[1.3] text-on-dark outline-none placeholder:text-on-dark-muted"
+                />
+              </Field>
+
+              {!journeyTitle && journeyOptions && (
+                <Field label="Journey of interest" className="sm:col-span-2">
+                  <select
+                    name="journey"
+                    defaultValue=""
+                    className="w-full border-0 bg-transparent p-0 font-ui text-[16px] font-light leading-[1.3] text-on-dark outline-none"
+                  >
+                    <option value="" className="text-ink">
+                      A private journey, or not sure yet
+                    </option>
+                    {journeyOptions.map((title) => (
+                      <option key={title} value={title} className="text-ink">
+                        {title}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+              )}
+
+              <Field label="When would you like to travel">
+                <input
+                  name="travelWindow"
+                  maxLength={120}
+                  placeholder="September 2027, or flexible"
+                  className="w-full border-0 bg-transparent p-0 font-ui text-[16px] font-light leading-[1.3] text-on-dark outline-none placeholder:text-on-dark-muted"
+                />
+              </Field>
+
+              <Field label="How did you hear about us">
+                <input
+                  name="heardFrom"
+                  maxLength={120}
+                  placeholder="Instagram, a friend, Google…"
                   className="w-full border-0 bg-transparent p-0 font-ui text-[16px] font-light leading-[1.3] text-on-dark outline-none placeholder:text-on-dark-muted"
                 />
               </Field>

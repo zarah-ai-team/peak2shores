@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { site } from '@/lib/site';
 import { failureMessage } from '@/lib/forms';
+import { track } from '@/lib/analytics';
+import { readFirstTouch } from '@/lib/attribution';
 
 type Status = 'idle' | 'sending' | 'done' | 'error';
 
@@ -34,10 +36,11 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
       const res = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, source: readFirstTouch() }),
       });
       if (res.ok) {
         setStatus('done');
+        track('newsletter_signup');
       } else {
         setErrorText(await failureMessage(res));
         setStatus('error');

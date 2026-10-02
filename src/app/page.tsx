@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   title: { absolute: `${site.name} — ${site.tagline}` },
 };
 
+/* Rebuilt hourly, so a newly released journey reaches the featured list. */
+export const revalidate = 3600;
+
 export default function HomePage() {
   return (
     <>

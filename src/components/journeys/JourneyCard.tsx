@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Frame } from '@/components/ui/Frame';
 import { RevealItem } from '@/components/motion/Reveal';
-import type { JourneySummary } from '@/lib/journeys';
+import { journeyLabel, type JourneySummary } from '@/lib/journeys';
 
 /**
  * The editorial journey card: a tall photograph, a metadata rule above the
@@ -30,7 +30,12 @@ export function JourneyCard({ journey }: { journey: JourneySummary }) {
         />
         <div className="pb-10 pr-6 pt-7">
           <div className="kicker-sm mb-4 flex justify-between gap-4">
-            <span>{journey.country}</span>
+            <span>
+              {journeyLabel(journey) && (
+                <span className="text-acqua-text">{journeyLabel(journey)} · </span>
+              )}
+              {journey.country}
+            </span>
             <span className="text-right">
               {journey.days} days · max. {journey.groupMax}
             </span>

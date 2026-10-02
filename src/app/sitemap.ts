@@ -1,6 +1,8 @@
 import type { MetadataRoute } from 'next';
-import { journeys } from '@/lib/journeys';
+import { liveJourneys } from '@/lib/journeys';
 import { site } from '@/lib/site';
+
+export const revalidate = 3600;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
@@ -13,6 +15,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/our-story', priority: 0.7 },
     { path: '/journal', priority: 0.6 },
     { path: '/plan', priority: 0.9 },
+    // Listed once Marc's final wording replaces the draft structure.
+    ...(site.legalDraft
+      ? []
+      : ['/privacy', '/cookies', '/terms', '/booking-terms'].map((path) => ({
+          path,
+          priority: 0.3,
+        }))),
   ];
 
   return [
@@ -22,7 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly' as const,
       priority: route.priority,
     })),
-    ...journeys.map((journey) => ({
+    ...liveJourneys().map((journey) => ({
       url: `${site.url}/journeys/${journey.slug}`,
       lastModified: now,
       changeFrequency: 'monthly' as const,

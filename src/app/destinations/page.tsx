@@ -5,7 +5,7 @@ import { TextReveal } from '@/components/motion/TextReveal';
 import { SectionLabel, Tick } from '@/components/ui/Editorial';
 import { ButtonLink } from '@/components/ui/Button';
 import { PeaksToShores } from '@/components/home/PeaksToShores';
-import { journeys } from '@/lib/journeys';
+import { liveJourneys, type Journey } from '@/lib/journeys';
 import { enterAt } from '@/lib/motion';
 import { pageMetadata } from '@/lib/seo';
 
@@ -22,9 +22,9 @@ export const metadata = pageMetadata({
  * catalogue.
  */
 function destinations() {
-  const byCountry = new Map<string, typeof journeys>();
+  const byCountry = new Map<string, Journey[]>();
 
-  journeys.forEach((journey) => {
+  liveJourneys().forEach((journey) => {
     journey.country.split(' & ').forEach((country) => {
       const list = byCountry.get(country) ?? [];
       list.push(journey);
@@ -39,6 +39,8 @@ function destinations() {
     media: list[0].listMedia,
   }));
 }
+
+export const revalidate = 3600;
 
 export default function DestinationsPage() {
   const places = destinations();

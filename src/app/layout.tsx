@@ -7,6 +7,8 @@ import { Preloader } from '@/components/layout/Preloader';
 import { PageTransition } from '@/components/layout/PageTransition';
 import { ScrollProgress } from '@/components/layout/ScrollProgress';
 import { MotionProvider } from '@/components/motion/MotionProvider';
+import { Analytics } from '@/components/layout/Analytics';
+import { consentDefaults } from '@/lib/analytics';
 import { jsonLd } from '@/lib/seo';
 import { site } from '@/lib/site';
 
@@ -77,6 +79,7 @@ const organization = {
       logo: `${site.url}/brand/logo-dark.png`,
       founder: { '@type': 'Person', name: site.founder.name },
       foundingDate: String(site.founded),
+      ...(site.instagram ? { sameAs: [site.instagram] } : {}),
     },
     {
       '@type': 'WebSite',
@@ -96,6 +99,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={poppins.variable} suppressHydrationWarning>
       <body>
         <script dangerouslySetInnerHTML={{ __html: boot }} />
+        {/* Consent Mode defaults must exist before Tag Manager loads. */}
+        {process.env.NEXT_PUBLIC_GTM_ID && (
+          <script dangerouslySetInnerHTML={{ __html: consentDefaults }} />
+        )}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: jsonLd(organization) }}
@@ -115,6 +122,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <PageTransition>{children}</PageTransition>
           </main>
           <Footer />
+          <Analytics />
         </MotionProvider>
       </body>
     </html>

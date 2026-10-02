@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { journeys } from '@/lib/journeys';
+import { liveJourneys } from '@/lib/journeys';
 import { site } from '@/lib/site';
-import { readJsonBody, sameOrigin, tooManyRequests } from '@/lib/api';
+import { readJsonBody, readSource, sameOrigin, text, tooManyRequests } from '@/lib/api';
 
 /**
  * Journey enquiries.
@@ -13,7 +13,6 @@ import { readJsonBody, sameOrigin, tooManyRequests } from '@/lib/api';
  */
 
 const PARTY = new Set(['Couple', 'Friends', 'Family', 'Solo']);
-const JOURNEY_TITLES = new Set(journeys.map((j) => j.title));
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 export async function POST(request: Request) {
@@ -37,8 +36,15 @@ export async function POST(request: Request) {
   const email = typeof data.email === 'string' ? data.email.trim().slice(0, 254) : '';
   const party = typeof data.party === 'string' && PARTY.has(data.party) ? data.party : undefined;
   const journey =
-    typeof data.journey === 'string' && JOURNEY_TITLES.has(data.journey) ? data.journey : undefined;
+    typeof data.journey === 'string' && liveJourneys().some((j) => j.title === data.journey)
+      ? data.journey
+      : undefined;
   const notes = typeof data.notes === 'string' ? data.notes.trim().slice(0, 2000) : '';
+  const phoneRaw = text(data.phone, 40);
+  const phone = phoneRaw && /^[+()\d\s.-]{6,40}$/.test(phoneRaw) ? phoneRaw : undefined;
+  const travelWindow = text(data.travelWindow, 120);
+  const heardFrom = text(data.heardFrom, 120);
+  const source = readSource(data.source);
   const guestsRaw = typeof data.guests === 'string' ? Number(data.guests) : data.guests;
   const guests =
     typeof guestsRaw === 'number' &&
@@ -55,13 +61,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'A valid email address is required.' }, { status: 422 });
   }
 
-  // TODO(launch): deliver { name, email, party, guests, journey, notes }.
-  // Logs carry no personal data — only that an enquiry arrived and for what.
+  // TODO(launch): deliver { name, email, phone, party, guests, journey,
+  // travelWindow, heardFrom, notes, source } to the shared inbox / CRM.
+  // Logs carry no personal data — only that an enquiry arrived, for what, and
+  // which channel brought the traveller in.
   console.info('[peaks2shores] enquiry received', {
     journey: journey ?? 'private',
     party,
     guests,
     hasNotes: notes.length > 0,
+    hasPhone: Boolean(phone),
+    travelWindow,
+    heardFrom,
+    utm: [source.source, source.medium, source.campaign].filter(Boolean).join(' / ') || undefined,
+    referrer: source.referrer,
     at: new Date().toISOString(),
   });
 

@@ -205,19 +205,23 @@ export function Globe({ destinations, counts, pins, selected, onSelect }: GlobeP
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, size, size);
 
-      // Atmosphere.
-      let g = ctx.createRadialGradient(c, c, r * 0.94, c, c, r * 1.13);
-      g.addColorStop(0, hexAlpha(palette.acqua, 0.2));
-      g.addColorStop(1, hexAlpha(palette.acqua, 0));
+      // A soft shadow on the page below, so the globe sits rather than floats.
+      ctx.save();
+      ctx.translate(c, c + r * 1.04);
+      ctx.scale(1, 0.12);
+      let g = ctx.createRadialGradient(0, 0, 0, 0, 0, r * 0.8);
+      g.addColorStop(0, hexAlpha(palette.ink, 0.16));
+      g.addColorStop(1, hexAlpha(palette.ink, 0));
       ctx.fillStyle = g;
       ctx.beginPath();
-      ctx.arc(c, c, r * 1.13, 0, Math.PI * 2);
+      ctx.arc(0, 0, r * 0.8, 0, Math.PI * 2);
       ctx.fill();
+      ctx.restore();
 
-      // Ocean: a soft charcoal, lit from the upper left.
-      g = ctx.createRadialGradient(c - r * 0.35, c - r * 0.4, r * 0.05, c, c, r);
-      g.addColorStop(0, '#6b6d66');
-      g.addColorStop(1, '#45473f');
+      // Ocean: a printed atlas's pale sea, a shade deeper toward the edge.
+      g = ctx.createRadialGradient(c - r * 0.25, c - r * 0.3, r * 0.1, c, c, r);
+      g.addColorStop(0, '#e2e9e7');
+      g.addColorStop(1, '#c4d2d1');
       ctx.beginPath();
       path(sphere);
       ctx.fillStyle = g;
@@ -225,17 +229,19 @@ export function Globe({ destinations, counts, pins, selected, onSelect }: GlobeP
 
       ctx.beginPath();
       path(graticule);
-      ctx.strokeStyle = hexAlpha(palette.ivory, 0.07);
-      ctx.lineWidth = 0.6;
+      ctx.strokeStyle = hexAlpha(palette.ink, 0.06);
+      ctx.lineWidth = 0.5;
       ctx.stroke();
 
-      // Everywhere without a journey is only a faint outline, for bearings.
+      // Everywhere without a journey: quiet sand, for bearings only.
       const destinationSet = new Set(L.destinations);
       ctx.beginPath();
       for (const country of L.countries) {
         if (!destinationSet.has(country.properties.name)) path(country);
       }
-      ctx.strokeStyle = hexAlpha(palette.ivory, 0.16);
+      ctx.fillStyle = '#efeadf';
+      ctx.fill();
+      ctx.strokeStyle = hexAlpha(palette.ink, 0.12);
       ctx.lineWidth = 0.5;
       ctx.stroke();
 
@@ -246,32 +252,28 @@ export function Globe({ destinations, counts, pins, selected, onSelect }: GlobeP
         ctx.beginPath();
         path(country);
         ctx.fillStyle =
-          name === L.selected || name === L.hovered
-            ? palette.acqua
-            : hexAlpha(palette.acquaDeep, 0.85);
+          name === L.selected
+            ? palette.acquaText
+            : name === L.hovered
+              ? palette.acquaDeep
+              : hexAlpha(palette.acquaDeep, 0.7);
         ctx.fill();
-        ctx.strokeStyle = hexAlpha(palette.ivory, name === L.selected ? 0.9 : 0.4);
-        ctx.lineWidth = 0.8;
+        ctx.strokeStyle = hexAlpha(palette.ink, 0.25);
+        ctx.lineWidth = 0.6;
         ctx.stroke();
       }
 
-      // Limb darkening, then the highlight — the two together make the sphere.
-      g = ctx.createRadialGradient(c, c, r * 0.5, c, c, r);
-      g.addColorStop(0, 'rgba(0,0,0,0)');
-      g.addColorStop(1, 'rgba(0,0,0,0.22)');
+      // A gentle fall-off toward the edge — enough to read as round.
+      g = ctx.createRadialGradient(c, c, r * 0.6, c, c, r);
+      g.addColorStop(0, hexAlpha(palette.ink, 0));
+      g.addColorStop(1, hexAlpha(palette.ink, 0.1));
       ctx.beginPath();
       path(sphere);
       ctx.fillStyle = g;
       ctx.fill();
 
-      g = ctx.createRadialGradient(c - r * 0.42, c - r * 0.48, 0, c - r * 0.42, c - r * 0.48, r);
-      g.addColorStop(0, 'rgba(255,255,255,0.16)');
-      g.addColorStop(1, 'rgba(255,255,255,0)');
-      ctx.fillStyle = g;
-      ctx.fill();
-
-      ctx.strokeStyle = hexAlpha(palette.acqua, 0.25);
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = hexAlpha(palette.ink, 0.22);
+      ctx.lineWidth = 0.8;
       ctx.stroke();
 
       // Pins, on the near side only.
@@ -288,7 +290,7 @@ export function Globe({ destinations, counts, pins, selected, onSelect }: GlobeP
           const t = (now % 1800) / 1800;
           ctx.beginPath();
           ctx.arc(x, y, dot + 3 + t * 14, 0, Math.PI * 2);
-          ctx.strokeStyle = hexAlpha(palette.acqua, (1 - t) * 0.7);
+          ctx.strokeStyle = hexAlpha(palette.acquaText, (1 - t) * 0.6);
           ctx.lineWidth = 1.5;
           ctx.stroke();
         }
@@ -298,7 +300,7 @@ export function Globe({ destinations, counts, pins, selected, onSelect }: GlobeP
         ctx.fill();
         ctx.beginPath();
         ctx.arc(x, y, dot, 0, Math.PI * 2);
-        ctx.fillStyle = active ? palette.acqua : palette.ink;
+        ctx.fillStyle = active ? palette.acquaText : palette.ink;
         ctx.fill();
       }
     }

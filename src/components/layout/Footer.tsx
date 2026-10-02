@@ -4,6 +4,14 @@ import { footerNav, site } from '@/lib/site';
 import { NewsletterForm } from '@/components/ui/NewsletterForm';
 import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal';
 
+const legalLinks = [
+  { label: 'Privacy', href: '/privacy' },
+  { label: 'Cookies', href: '/cookies' },
+  { label: 'Terms', href: '/terms' },
+  { label: 'Booking terms', href: '/booking-terms' },
+  { label: 'Photography credits', href: '/credits' },
+];
+
 export function Footer() {
   return (
     <footer className="gutter pb-10 pt-20">
@@ -60,6 +68,19 @@ export function Footer() {
                 </a>
               </>
             )}
+            {site.whatsapp && (
+              <>
+                <br />
+                <a
+                  href={`https://wa.me/${site.whatsapp}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-acqua-text"
+                >
+                  WhatsApp
+                </a>
+              </>
+            )}
           </p>
           <div className="mt-8">
             <div className="kicker-sm mb-3">The travel journal</div>
@@ -74,13 +95,22 @@ export function Footer() {
         amount={0.5}
         className="mt-12 flex flex-col gap-3 border-t border-line pt-5 font-ui text-[10px] uppercase leading-none tracking-[0.14em] text-muted sm:flex-row sm:justify-between"
       >
-        <span>
-          © {new Date().getFullYear()} {site.legalName}
+        <span className="flex flex-wrap gap-x-6 gap-y-2">
+          <span>
+            © {new Date().getFullYear()} {site.legalName}
+          </span>
+          {site.sellerOfTravel && <span>Seller of Travel Reg. No. {site.sellerOfTravel}</span>}
         </span>
-        <span className="flex gap-6">
-          <Link href="/credits" className="py-1 transition-colors duration-300 hover:text-ink">
-            Photography credits
-          </Link>
+        <span className="flex flex-wrap gap-x-6 gap-y-2">
+          {legalLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="py-1 transition-colors duration-300 hover:text-ink"
+            >
+              {link.label}
+            </Link>
+          ))}
           <span>Fewer, better journeys.</span>
         </span>
       </Reveal>

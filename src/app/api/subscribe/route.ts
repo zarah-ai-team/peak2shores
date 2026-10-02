@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { readJsonBody, sameOrigin, tooManyRequests } from '@/lib/api';
+import { readJsonBody, readSource, sameOrigin, tooManyRequests } from '@/lib/api';
 
 /**
  * "Join the circle" sign-ups.
@@ -27,8 +27,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'A valid email address is required.' }, { status: 422 });
   }
 
-  // TODO(launch): subscribe `email`. The log records the event, not the address.
-  console.info('[peaks2shores] circle sign-up received', { at: new Date().toISOString() });
+  const source = readSource(body.value.source);
+
+  // TODO(launch): subscribe `email` (with `source`), using double opt-in.
+  // The log records the event and channel, not the address.
+  console.info('[peaks2shores] circle sign-up received', {
+    utm: [source.source, source.medium, source.campaign].filter(Boolean).join(' / ') || undefined,
+    at: new Date().toISOString(),
+  });
 
   return NextResponse.json({ ok: true });
 }

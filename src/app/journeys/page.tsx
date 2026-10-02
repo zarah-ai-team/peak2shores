@@ -1,8 +1,11 @@
 import { JourneyExplorer } from '@/components/journeys/JourneyExplorer';
 import { DarkCta } from '@/components/ui/DarkCta';
 import { PageTitle } from '@/components/ui/Editorial';
-import { journeys, toSummary } from '@/lib/journeys';
+import { liveJourneys, toSummary } from '@/lib/journeys';
 import { pageMetadata } from '@/lib/seo';
+
+/* Rebuilt hourly, so a journey scheduled with `publishAt` appears on time. */
+export const revalidate = 3600;
 
 export const metadata = pageMetadata({
   title: 'Journeys',
@@ -12,6 +15,7 @@ export const metadata = pageMetadata({
 });
 
 export default function JourneysPage() {
+  const journeys = liveJourneys();
   return (
     <>
       <PageTitle kicker="Journeys" title="A short list, on purpose.">

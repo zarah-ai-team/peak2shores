@@ -9,7 +9,7 @@ import { JourneyGlobe } from './JourneyGlobe';
 import { Reveal } from '@/components/motion/Reveal';
 import { MetaItem } from '@/components/ui/Editorial';
 import { ButtonLink } from '@/components/ui/Button';
-import { filterGroups, type FilterKey, type JourneySummary } from '@/lib/journeys';
+import { filterGroups, journeyLabel, type FilterKey, type JourneySummary } from '@/lib/journeys';
 import { ease } from '@/lib/motion';
 
 type Selection = Partial<Record<FilterKey, string>>;
@@ -184,6 +184,9 @@ function JourneyRow({
       >
         <div className="kicker-sm flex justify-between gap-4">
           <span>
+            {journeyLabel(journey) && (
+              <span className="text-acqua-text">{journeyLabel(journey)} · </span>
+            )}
             {journey.country} · {journey.region}
           </span>
           <span>{journey.n}</span>

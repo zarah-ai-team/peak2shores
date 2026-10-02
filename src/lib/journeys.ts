@@ -67,8 +67,25 @@ export type JourneyDetail = {
   spotsLeft: number;
 };
 
+/**
+ * Where a journey stands for booking. A journey is never deleted: once it is
+ * full or has departed it keeps its page, marked, so links and search rankings
+ * survive.
+ */
+export type JourneyStatus = 'open' | 'waitlist' | 'sold-out' | 'past';
+
 export type Journey = {
   slug: string;
+  /**
+   * When the journey is released (ISO 8601 with offset, e.g.
+   * '2026-11-01T09:00:00-05:00'). Until then it exists nowhere on the site —
+   * not in lists, navigation, the sitemap or llms.txt, and its address is a
+   * 404. Pages rebuild hourly, so it appears within the hour of this time.
+   * Omit for a journey that is already live.
+   */
+  publishAt?: string;
+  /** Booking state. Defaults to open. */
+  status?: JourneyStatus;
   n: string;
   title: string;
   lead: string;
@@ -312,7 +329,7 @@ const amalfiDetail: JourneyDetail = {
   spotsLeft: 6,
 };
 
-export const journeys: Journey[] = [
+const allJourneys: Journey[] = [
   {
     slug: 'amalfi-slowly',
     n: 'No. 01',
@@ -782,7 +799,46 @@ export const journeys: Journey[] = [
   },
 ];
 
-export const featuredJourneys = journeys.filter((j) => j.featured);
+/** How long a newly released journey carries its "New" label. */
+const NEW_FOR_DAYS = 30;
+
+/** Released, or never scheduled. */
+export function isLive(journey: Journey, now = new Date()) {
+  return !journey.publishAt || new Date(journey.publishAt) <= now;
+}
+
+/**
+ * Every journey visitors may see, as of now. A function rather than a list so
+ * a page rebuilt after a journey's release time picks it up.
+ */
+export function liveJourneys(now = new Date()): Journey[] {
+  return allJourneys.filter((journey) => isLive(journey, now));
+}
+
+export function featuredJourneys(now = new Date()): Journey[] {
+  return liveJourneys(now).filter((journey) => journey.featured);
+}
+
+/** Released within the last NEW_FOR_DAYS days. */
+export function isNew(journey: Journey, now = new Date()) {
+  if (!journey.publishAt) return false;
+  const age = now.getTime() - new Date(journey.publishAt).getTime();
+  return age >= 0 && age < NEW_FOR_DAYS * 24 * 60 * 60 * 1000;
+}
+
+/** The short label shown before a journey's place name, if it needs one. */
+export function journeyLabel(journey: Pick<Journey, 'status'> & { isNew?: boolean }) {
+  switch (journey.status) {
+    case 'sold-out':
+      return 'Sold out';
+    case 'waitlist':
+      return 'Waitlist';
+    case 'past':
+      return 'Departed';
+    default:
+      return journey.isNew ? 'New' : null;
+  }
+}
 
 /**
  * What an index card or row needs — and nothing a detail page needs. The
@@ -812,7 +868,8 @@ export type JourneySummary = Pick<
   | 'tags'
   | 'listMedia'
   | 'cardMedia'
->;
+  | 'status'
+> & { isNew: boolean };
 
 export function toSummary(journey: Journey): JourneySummary {
   const {
@@ -836,6 +893,7 @@ export function toSummary(journey: Journey): JourneySummary {
     tags,
     listMedia,
     cardMedia,
+    status,
   } = journey;
   return {
     slug,
@@ -858,11 +916,15 @@ export function toSummary(journey: Journey): JourneySummary {
     tags,
     listMedia,
     cardMedia,
+    status,
+    isNew: isNew(journey),
   };
 }
 
+/** A live journey by its address; unreleased ones do not exist yet. */
 export function getJourney(slug: string): Journey | undefined {
-  return journeys.find((j) => j.slug === slug);
+  const journey = allJourneys.find((j) => j.slug === slug);
+  return journey && isLive(journey) ? journey : undefined;
 }
 
 /* -- Filters ------------------------------------------------------------- */

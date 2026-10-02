@@ -8,13 +8,38 @@ export const site = {
   maxGuests: 18,
   email: 'hello@peaks2shores.com',
   /**
-   * No real number has been supplied. The canvas carried "+1 (305) 000 0000"
-   * as a placeholder; a placeholder must not ship — in the footer it is a
-   * dead line, in structured data it is a policy risk. Set both fields when
-   * the number exists and every phone link on the site appears.
+   * Confirmed by Marc, October 2026. (The old site's "Call" button dialled
+   * 250-5050 by mistake.) Shown as a one-tap link in the footer and in the
+   * Organization structured data.
    */
-  phone: null as string | null,
-  phoneHref: null as string | null,
+  phone: '+1 786 253 5050' as string | null,
+  phoneHref: '+17862535050' as string | null,
+  /**
+   * WhatsApp, as the international number with digits only (e.g.
+   * '17862535050'). Unset until Marc confirms which number takes WhatsApp;
+   * when set, a one-tap WhatsApp link appears beside the phone number.
+   */
+  whatsapp: null as string | null,
+  /**
+   * Seller of Travel registration (California, Florida and others require it
+   * to be displayed). Marc is confirming the number; when set, it appears in
+   * the footer on every page.
+   */
+  sellerOfTravel: null as string | null,
+  /** The Instagram profile, for structured data and the /links page. */
+  instagram: null as string | null,
+  /**
+   * Whether AI companies may use the site to train their models (GPTBot,
+   * ClaudeBot, Google-Extended, Applebot-Extended, CCBot). Marc's decision.
+   * AI *search* tools that quote and link to the site are always allowed; this
+   * switch only governs training. Currently allowed, as before.
+   */
+  allowAiTraining: true,
+  /**
+   * The legal pages exist with their full structure but await Marc's final
+   * wording. While true they carry a draft notice and are kept out of search.
+   */
+  legalDraft: true,
   locations: 'Miami · Switzerland',
   legalName: 'Peaks2Shores LLC',
   founder: {

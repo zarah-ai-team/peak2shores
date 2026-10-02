@@ -27,7 +27,7 @@ export function FeaturedJourneys() {
         className="grid list-none gap-x-0.5 gap-y-14 border-t border-line p-0 sm:grid-cols-2 lg:grid-cols-3 lg:gap-y-0"
         stagger={0.1}
       >
-        {featuredJourneys.map((journey) => (
+        {featuredJourneys().map((journey) => (
           <JourneyCard key={journey.slug} journey={toSummary(journey)} />
         ))}
       </RevealGroup>

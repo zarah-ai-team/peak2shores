@@ -10,11 +10,25 @@ import { filterGroups, type JourneySummary } from '@/lib/journeys';
 import { ease } from '@/lib/motion';
 import type { GlobePin } from './Globe';
 
-/** The globe and its outlines load after the page, as their own chunk. */
-const Globe = dynamic(() => import('./Globe').then((mod) => mod.Globe), {
-  ssr: false,
-  loading: () => <GlobeGround />,
-});
+/**
+ * The globe and its outlines load after the page, as their own chunk.
+ *
+ * That download can fail — a dropped connection, or a tab opened before the
+ * latest deploy asking for a chunk that no longer exists. It is tried twice,
+ * and if it still fails the plain sphere stays in its place: the destination
+ * buttons beside it keep working, and the rest of the page is untouched rather
+ * than replaced by the error screen.
+ */
+const Globe = dynamic(
+  () =>
+    import('./Globe')
+      .catch(() =>
+        new Promise((resolve) => setTimeout(resolve, 1500)).then(() => import('./Globe')),
+      )
+      .then((mod) => mod.Globe)
+      .catch(() => GlobeGround),
+  { ssr: false, loading: () => <GlobeGround /> },
+);
 
 const destinations =
   filterGroups.find((group) => group.key === 'country')?.options ?? ([] as string[]);
@@ -151,8 +165,8 @@ function GlobeGround() {
       <div
         className="absolute inset-[7%] rounded-full"
         style={{
-          background: 'radial-gradient(circle at 32% 28%, #6b6d66 0%, #45473f 70%, #3a3c35 100%)',
-          boxShadow: '0 0 60px rgb(12 192 223 / 0.18)',
+          background: 'radial-gradient(circle at 40% 36%, #e2e9e7 0%, #c4d2d1 100%)',
+          boxShadow: 'inset 0 0 0 1px rgb(30 31 29 / 0.2)',
         }}
       />
     </div>

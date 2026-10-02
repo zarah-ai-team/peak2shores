@@ -3,9 +3,12 @@ import { Frame } from '@/components/ui/Frame';
 import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal';
 import { FactList, PageTitle, SectionLabel, Tick } from '@/components/ui/Editorial';
 import { EnquiryForm } from '@/components/journeys/EnquiryForm';
-import { journeys } from '@/lib/journeys';
+import { liveJourneys } from '@/lib/journeys';
 import { pageMetadata } from '@/lib/seo';
 import { site } from '@/lib/site';
+
+/* Rebuilt hourly, so a journey scheduled with `publishAt` appears on time. */
+export const revalidate = 3600;
 
 export const metadata = pageMetadata({
   title: 'Plan your journey',
@@ -64,7 +67,7 @@ export default function PlanPage() {
 
       <section className="gutter border-b border-line pb-20 pt-20 md:pb-24 md:pt-24">
         <div className="editorial-grid--wide mb-10 lg:mb-14">
-          <SectionLabel className="lg:pt-3">This year’s departures</SectionLabel>
+          <SectionLabel className="lg:pt-3">Upcoming departures</SectionLabel>
           <Reveal variant="mask">
             <h2 className="h4 max-w-[720px]">
               Or take a place on a journey that is already going.
@@ -76,7 +79,7 @@ export default function PlanPage() {
           className="m-0 flex list-none flex-col border-t border-line p-0"
           stagger={0.06}
         >
-          {journeys.map((journey) => (
+          {liveJourneys().map((journey) => (
             <RevealItem as="li" key={journey.slug} distance={12} className="border-b border-line">
               <Link
                 href={`/journeys/${journey.slug}`}
@@ -99,6 +102,7 @@ export default function PlanPage() {
       </section>
 
       <EnquiryForm
+        journeyOptions={liveJourneys().map((journey) => journey.title)}
         headline="Tell us a little. We’ll call you, not the other way round."
         intro="Whether it’s a departure on the list or something we have not planned yet, this is where it starts. Enquiring holds nothing and commits you to nothing."
       />

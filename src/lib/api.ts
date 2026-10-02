@@ -115,3 +115,38 @@ export async function readJsonBody(request: Request): Promise<Body> {
     };
   }
 }
+
+/** A bounded, trimmed string field, or undefined. */
+export function text(value: unknown, max: number): string | undefined {
+  if (typeof value !== 'string') return undefined;
+  const trimmed = value.trim().slice(0, max);
+  return trimmed || undefined;
+}
+
+const SOURCE_KEYS = [
+  'source',
+  'medium',
+  'campaign',
+  'term',
+  'content',
+  'gclid',
+  'fbclid',
+  'referrer',
+  'landing',
+  'at',
+] as const;
+
+/**
+ * The first-touch record a form sends (see lib/attribution). Only known keys,
+ * only short strings — it arrives from the browser, so it is treated as input.
+ */
+export function readSource(value: unknown): Partial<Record<(typeof SOURCE_KEYS)[number], string>> {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+  const record = value as Record<string, unknown>;
+  const out: Partial<Record<(typeof SOURCE_KEYS)[number], string>> = {};
+  for (const key of SOURCE_KEYS) {
+    const v = text(record[key], 300);
+    if (v) out[key] = v;
+  }
+  return out;
+}

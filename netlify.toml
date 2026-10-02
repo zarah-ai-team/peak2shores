@@ -8,3 +8,11 @@
 
 [build.environment]
   NODE_VERSION = "20"
+
+# Practice copies (checklist item 30):
+# - Every pull request gets its own preview URL (deploy previews).
+# - A `staging` branch can be served at its own URL: Netlify → Site
+#   configuration → Build & deploy → Branches and deploy contexts → add
+#   `staging` to branch deploys.
+# Neither is ever indexed: the build reads CONTEXT and sends noindex headers and
+# a closed robots.txt anywhere but production (see next.config.mjs, robots.ts).
