@@ -27,12 +27,21 @@ export const ease = {
 } as const;
 
 export const duration = {
-  ui: 0.3,
-  uiSlow: 0.45,
-  reveal: 1.1,
-  page: 0.7,
-  signature: 1.4,
+  ui: 0.25,
+  uiSlow: 0.4,
+  reveal: 0.9,
+  page: 0.6,
+  signature: 1.2,
 } as const;
+
+/** How far a block travels as it reveals, in px. A settle, not a slide. */
+export const DEFAULT_DISTANCE = 16;
+
+/** Gap between list items in a RevealGroup, and between hero headline lines. */
+export const stagger = { list: 0.06, lines: 0.09 } as const;
+
+/** The hero sequence (§3): kicker, then lines, then standfirst and buttons. */
+export const heroTiming = { kicker: 0.05, firstLine: 0.12, lead: 0.45, actions: 0.55 } as const;
 
 const transitions = {
   ui: { duration: duration.ui, ease: ease.editorial },
@@ -74,7 +83,7 @@ function offsetFor(direction: RevealDirection, distance: number) {
 export function makeReveal(
   direction: RevealDirection = 'up',
   variant: Exclude<RevealVariant, 'mask'> = 'fade',
-  distance = 18,
+  distance = DEFAULT_DISTANCE,
 ): Variants {
   const offset = offsetFor(direction, distance);
   if (variant === 'scale') {
@@ -95,15 +104,25 @@ export const maskInnerVariants: Variants = {
   visible: {
     y: '0%',
     opacity: 1,
-    transition: { duration: 1.15, ease: ease.reveal },
+    transition: { duration: 1.0, ease: ease.reveal },
   },
 };
+
+/** Items past this index arrive with the last staggered one (spec: cap at 6). */
+export const STAGGER_CAP = 6;
 
 export function staggerParent(stagger = 0.08, delayChildren = 0): Variants {
   return {
     hidden: {},
     visible: {
-      transition: { staggerChildren: stagger, delayChildren },
+      transition: {
+        // A long list must not trickle in for seconds: the seventh item onward
+        // shares the sixth's delay.
+        delayChildren:
+          stagger > 0
+            ? (i: number) => delayChildren + Math.min(i, STAGGER_CAP - 1) * stagger
+            : delayChildren,
+      },
     },
   };
 }

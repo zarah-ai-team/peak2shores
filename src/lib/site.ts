@@ -21,6 +21,12 @@ export const site = {
    */
   whatsapp: null as string | null,
   /**
+   * A scheduling link for "Book a call" (Calendly, Cal.com, Google
+   * appointment page…). Unset until Marc chooses one; until then the button
+   * falls back to the enquiry form on /plan.
+   */
+  bookingUrl: null as string | null,
+  /**
    * Seller of Travel registration (California, Florida and others require it
    * to be displayed). Marc is confirming the number; when set, it appears in
    * the footer on every page.
@@ -57,12 +63,7 @@ export type NavItem = { label: string; href: string };
  * `data-hero` — sit in one place.
  */
 export function isHeroRoute(pathname: string) {
-  return (
-    pathname === '/' ||
-    pathname === '/our-story' ||
-    pathname === '/destinations' ||
-    /^\/journeys\/[^/]+$/.test(pathname)
-  );
+  return pathname === '/' || pathname === '/destinations' || /^\/journeys\/[^/]+$/.test(pathname);
 }
 
 export const primaryNav: NavItem[] = [

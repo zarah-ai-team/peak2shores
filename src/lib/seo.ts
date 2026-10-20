@@ -14,16 +14,21 @@ export function pageMetadata({
   description,
   path,
   type = 'website',
+  noindex = false,
 }: {
   title: string;
   description: string;
+  /** From the site root, with a leading slash; resolved against metadataBase. */
   path: string;
   type?: 'website' | 'article';
+  /** Keep the page out of search while still letting crawlers follow its links. */
+  noindex?: boolean;
 }): Metadata {
   const fullTitle = `${title} — ${site.name}`;
   return {
     title,
     description,
+    ...(noindex ? { robots: { index: false, follow: true } } : {}),
     alternates: { canonical: path },
     openGraph: {
       type,

@@ -1,119 +1,132 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { footerNav, site } from '@/lib/site';
-import { NewsletterForm } from '@/components/ui/NewsletterForm';
+import { site } from '@/lib/site';
+import type { Navigation } from '@/lib/content';
+import { FooterSignup } from '@/components/layout/FooterSignup';
 import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal';
+import { Ground } from '@/components/motion/Ground';
 
-const legalLinks = [
-  { label: 'Privacy', href: '/privacy' },
-  { label: 'Cookies', href: '/cookies' },
-  { label: 'Terms', href: '/terms' },
-  { label: 'Booking terms', href: '/booking-terms' },
-  { label: 'Photography credits', href: '/credits' },
-];
+const link = 'transition-colors duration-300 hover:text-acqua';
 
-export function Footer() {
+/**
+ * The page ends dark: forest-deep, with the closing line and the journal
+ * sign-up, then the brand, the two footer groups and the contact column, then
+ * the legal row. Phone, WhatsApp and the Seller of Travel number appear only
+ * when they are set in `site.ts` — nothing is shown that hasn't been confirmed.
+ */
+export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
   return (
-    <footer className="gutter pb-10 pt-20">
-      <RevealGroup
-        className="grid gap-12 md:grid-cols-2 lg:grid-cols-4 lg:gap-14"
-        stagger={0.1}
-        amount={0.1}
-      >
-        <RevealItem distance={14}>
-          <Link href="/" aria-label={`${site.name} — home`}>
-            <Image
-              src="/brand/logo-dark.png"
-              alt={site.name}
-              width={900}
-              height={485}
-              sizes="200px"
-              className="mb-5 h-12 w-auto"
-            />
-          </Link>
-          <p className="prose-body-sm max-w-[260px]">
-            Curated travel experiences. Small-group journeys of no more than {site.maxGuests}{' '}
-            guests, personally curated by {site.founder.name}.
-          </p>
-        </RevealItem>
+    <Ground as="footer" data-tone="dark" className="bg-forest-deep pb-10 text-on-dark">
+      <div className="container-site">
+        {/* Forest sections often end the page; forest against forest-deep
+            barely differs, so the footer opens on its own rule. */}
+        <div aria-hidden className="border-t border-line-dark" />
+        <div className="grid-site gap-y-12 pb-block pt-section">
+          <Reveal variant="mask" className="col-span-full lg:col-span-7">
+            <p className="h2 m-0">Fewer, better journeys.</p>
+          </Reveal>
+          <Reveal
+            delay={0.1}
+            className="col-span-full md:col-span-6 lg:col-span-5 lg:col-start-8 lg:self-end"
+          >
+            <FooterSignup />
+          </Reveal>
+        </div>
 
-        {footerNav.map((group) => (
-          <RevealItem key={group.label} distance={14}>
-            <nav aria-label={group.label} className="flex flex-col gap-1.5">
-              <div className="kicker-sm mb-3">{group.label}</div>
-              {group.items.map((item) => (
-                <Link
-                  key={item.href + item.label}
-                  href={item.href}
-                  className="prose-body-sm py-0.5 transition-colors duration-300 hover:text-acqua-text"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
+        <RevealGroup
+          className="grid-site gap-y-12 border-t border-line-dark pt-12"
+          stagger={0.08}
+          amount={0.1}
+        >
+          <RevealItem className="col-span-full md:col-span-4 lg:col-span-4">
+            <Link
+              href="/"
+              aria-label={`${site.name} — home`}
+              className="mb-6 inline-flex min-h-11 items-center"
+            >
+              <Image
+                src="/brand/logo-light.png"
+                alt=""
+                width={900}
+                height={485}
+                sizes="100px"
+                className="h-11 w-auto"
+              />
+            </Link>
+            <p className="prose-body-sm max-w-[300px]">
+              Curated travel experiences. Small-group journeys of no more than {site.maxGuests}{' '}
+              guests, personally curated by {site.founder.name}.
+            </p>
           </RevealItem>
-        ))}
 
-        <RevealItem distance={14}>
-          <div className="kicker-sm mb-3">{site.locations}</div>
-          <p className="prose-body-sm">
-            <a href={`mailto:${site.email}`} className="hover:text-acqua-text">
-              {site.email}
-            </a>
-            {site.phone && (
-              <>
-                <br />
-                <a href={`tel:${site.phoneHref}`} className="hover:text-acqua-text">
+          {nav.footer.map((group) => (
+            <RevealItem key={group.label} className="col-span-2 lg:col-span-2">
+              <nav aria-label={group.label} className="flex flex-col">
+                <p className="kicker-sm m-0 mb-4">{group.label}</p>
+                {group.items.map((item) => (
+                  <Link
+                    key={item.href + item.label}
+                    href={item.href}
+                    className={`prose-body-sm py-1.5 ${link}`}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </nav>
+            </RevealItem>
+          ))}
+
+          <RevealItem className="col-span-full md:col-span-8 lg:col-span-3 lg:col-start-10">
+            <p className="kicker-sm m-0 mb-4">{site.locations}</p>
+            <p className="prose-body-sm m-0 flex flex-col items-start">
+              <a href={`mailto:${site.email}`} className={`py-1.5 ${link}`}>
+                {site.email}
+              </a>
+              {site.phone && site.phoneHref && (
+                <a href={`tel:${site.phoneHref}`} className={`py-1.5 ${link}`}>
                   {site.phone}
                 </a>
-              </>
-            )}
-            {site.whatsapp && (
-              <>
-                <br />
+              )}
+              {site.whatsapp && (
                 <a
                   href={`https://wa.me/${site.whatsapp}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-acqua-text"
+                  className={`py-1.5 ${link}`}
                 >
                   WhatsApp
                 </a>
-              </>
-            )}
-          </p>
-          <div className="mt-8">
-            <div className="kicker-sm mb-3">The travel journal</div>
-            <NewsletterForm compact />
-          </div>
-        </RevealItem>
-      </RevealGroup>
+              )}
+              {site.instagram && (
+                <a
+                  href={site.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`py-1.5 ${link}`}
+                >
+                  Instagram
+                </a>
+              )}
+            </p>
+          </RevealItem>
+        </RevealGroup>
 
-      <Reveal
-        direction="none"
-        delay={0.2}
-        amount={0.5}
-        className="mt-12 flex flex-col gap-3 border-t border-line pt-5 font-ui text-[10px] uppercase leading-none tracking-[0.14em] text-muted sm:flex-row sm:justify-between"
-      >
-        <span className="flex flex-wrap gap-x-6 gap-y-2">
-          <span>
-            © {new Date().getFullYear()} {site.legalName}
+        <div className="kicker-sm mt-14 flex flex-col gap-4 border-t border-line-dark pt-6 text-on-dark-muted lg:flex-row lg:justify-between">
+          <span className="flex flex-wrap gap-x-6 gap-y-2">
+            <span>
+              © {new Date().getFullYear()} {site.legalName}
+            </span>
+            {site.sellerOfTravel && <span>Seller of Travel Reg. No. {site.sellerOfTravel}</span>}
           </span>
-          {site.sellerOfTravel && <span>Seller of Travel Reg. No. {site.sellerOfTravel}</span>}
-        </span>
-        <span className="flex flex-wrap gap-x-6 gap-y-2">
-          {legalLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="py-1 transition-colors duration-300 hover:text-ink"
-            >
-              {link.label}
-            </Link>
-          ))}
-          <span>Fewer, better journeys.</span>
-        </span>
-      </Reveal>
-    </footer>
+          <nav aria-label="Legal" className="flex flex-wrap gap-x-6 gap-y-1">
+            {nav.legal.map((item) => (
+              <Link key={item.href} href={item.href} className={`py-1.5 ${link}`}>
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </div>
+    </Ground>
   );
 }

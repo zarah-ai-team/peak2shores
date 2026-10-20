@@ -1,39 +1,59 @@
 import { Frame } from '@/components/ui/Frame';
 import { Reveal } from '@/components/motion/Reveal';
 import { ButtonLink } from '@/components/ui/Button';
-import { SectionLabel } from '@/components/ui/Editorial';
-import { founder } from '@/lib/content';
+import { Quote, SectionLabel } from '@/components/ui/Editorial';
+import { Section } from '@/components/ui/Section';
+import type { HomeContent } from '@/lib/content';
 
-export function FounderStrip() {
+/**
+ * 4.6 — 06 The founder (stone).
+ *
+ * Marc's own cut-out portrait (public/brand/marc.webp, through the
+ * `marc-portrait` slot) stands on the left half with its feet on the floor of
+ * the section — contained, never cropped, no parallax. The text takes the
+ * right half: headline, his two paragraphs, and the promise as a pull quote
+ * under a short brass rule. It ends on Marc, who chooses the hotels next.
+ */
+export function FounderStrip({ founder }: { founder: HomeContent['founder'] }) {
   return (
-    <section id="story" className="grid border-b border-line lg:grid-cols-2">
-      {/* The cut-out portrait keeps its feet on the frame's floor — no parallax. */}
-      <Frame
-        media="marc-portrait"
-        fit="contain"
-        sizes="(min-width: 1024px) 50vw, 100vw"
-        className="min-h-[420px] sm:min-h-[560px] lg:min-h-[720px]"
-      />
+    <Section ground="stone" pad="none" id="story" aria-labelledby="founder-title">
+      <div className="grid-site">
+        {/* Stretched to the text column, which is kept tight (section-sm), so a
+            width-bound portrait stands on the floor without a field of stone above. */}
+        <div className="col-span-4 pt-section-sm md:col-span-6 md:col-start-2 lg:col-span-6 lg:col-start-1 lg:pt-12">
+          <Frame
+            media="marc-portrait"
+            fit="contain"
+            ground="transparent"
+            sizes="(min-width: 1024px) 46vw, (min-width: 768px) 70vw, 100vw"
+            className="h-full min-h-[480px] md:min-h-[600px] lg:min-h-[640px]"
+          />
+        </div>
 
-      <Reveal
-        direction="left"
-        distance={24}
-        className="gutter flex flex-col justify-center gap-7 py-16 lg:py-[96px] lg:pr-24"
-      >
-        <SectionLabel>05 — The founder</SectionLabel>
-        <h2 className="h2">{founder.headline}</h2>
-        {founder.body.map((paragraph) => (
-          <p key={paragraph} className="prose-body max-w-[480px]">
-            {paragraph}
-          </p>
-        ))}
-        <blockquote className="lead max-w-[480px] border-l border-gorse pl-6">
-          “{founder.quote}”
-        </blockquote>
-        <ButtonLink href="/our-story" variant="rule" className="self-start">
-          Meet Marc
-        </ButtonLink>
-      </Reveal>
-    </section>
+        <Reveal
+          direction="left"
+          distance={16}
+          className="col-span-4 py-section-sm md:col-span-8 lg:col-span-6 lg:col-start-7 lg:self-center"
+        >
+          <div className="max-w-[520px]">
+            <SectionLabel tone="stone" className="mb-8 lg:mb-10">
+              06 — The founder
+            </SectionLabel>
+            <h2 id="founder-title" className="h2 mb-block">
+              {founder.headline}
+            </h2>
+            {founder.body.map((paragraph) => (
+              <p key={paragraph} className="prose-body mb-stack">
+                {paragraph}
+              </p>
+            ))}
+            <Quote className="mb-10 mt-12">“{founder.quote}”</Quote>
+            <ButtonLink href="/our-story" variant="rule">
+              Meet Marc
+            </ButtonLink>
+          </div>
+        </Reveal>
+      </div>
+    </Section>
   );
 }

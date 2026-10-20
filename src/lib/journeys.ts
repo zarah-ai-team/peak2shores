@@ -63,7 +63,12 @@ export type JourneyDetail = {
   notIncluded: string;
   marc: { quote: string; note: string; role: string };
   gallery: { media: MediaKey; span: 'wide' | 'single'; height: 'tall' | 'short' }[];
-  quotes: { text: string; who: string }[];
+  /**
+   * Guest words. Shown only when `verified: true` — a real guest, quoted with
+   * permission. None is verified yet, so the provider returns none and the
+   * Guests section does not render. Default (absent) is unverified.
+   */
+  quotes: { text: string; who: string; verified?: boolean }[];
   spotsLeft: number;
 };
 
@@ -859,6 +864,7 @@ export type JourneySummary = Pick<
   | 'days'
   | 'departure'
   | 'departureWindow'
+  | 'departureISO'
   | 'group'
   | 'groupMax'
   | 'priceFrom'
@@ -884,6 +890,7 @@ export function toSummary(journey: Journey): JourneySummary {
     days,
     departure,
     departureWindow,
+    departureISO,
     group,
     groupMax,
     priceFrom,
@@ -907,6 +914,7 @@ export function toSummary(journey: Journey): JourneySummary {
     days,
     departure,
     departureWindow,
+    departureISO,
     group,
     groupMax,
     priceFrom,
@@ -970,3 +978,46 @@ export const filterGroups: {
     match: (j, v) => j.inspire.some((i) => i === v),
   },
 ];
+
+/* -- Content source ------------------------------------------------------ */
+
+/**
+ * The whole catalogue, unfiltered — scheduled journeys included.
+ *
+ * Read only by the local content source (`src/lib/content/sources/local.ts`),
+ * which hands it to the provider, where the publishing rules are applied in
+ * one place. Pages never import this: they call `getJourneys()` and friends
+ * from `@/lib/content`.
+ */
+export const journeyCatalogue: readonly Journey[] = allJourneys;
+
+/* -- Related journeys ---------------------------------------------------- */
+
+/**
+ * Up to `limit` journeys from `all` most like the one at `slug`: a shared
+ * country counts most, then shared inspirations, then the same season. Ties
+ * keep catalogue order. Departed journeys are left out. Pure — the caller
+ * decides which journeys are visible.
+ */
+export function rankRelated<T extends Journey>(all: readonly T[], slug: string, limit = 3): T[] {
+  const self = all.find((j) => j.slug === slug);
+  if (!self) return [];
+  const countries = new Set(self.country.split(' & '));
+  return all
+    .filter((j) => j.slug !== slug && j.status !== 'past')
+    .map((j, index) => {
+      let score = 0;
+      if (j.country.split(' & ').some((c) => countries.has(c))) score += 3;
+      score += j.inspire.filter((i) => self.inspire.includes(i)).length;
+      if (j.season === self.season) score += 1;
+      return { j, score, index };
+    })
+    .sort((a, b) => b.score - a.score || a.index - b.index)
+    .slice(0, Math.max(0, limit))
+    .map(({ j }) => j);
+}
+
+/** Synchronous form for legacy callers. Prefer `getRelatedJourneys` from `@/lib/content`. */
+export function relatedJourneys(slug: string, limit = 3, now = new Date()): JourneySummary[] {
+  return rankRelated(liveJourneys(now), slug, limit).map(toSummary);
+}

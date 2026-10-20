@@ -2,12 +2,8 @@
 
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import { useMemo } from 'react';
-import * as m from 'motion/react-m';
-import { AnimatePresence } from 'motion/react';
-import { Frame } from '@/components/ui/Frame';
+import { useMemo, useState } from 'react';
 import { filterGroups, type JourneySummary } from '@/lib/journeys';
-import { ease } from '@/lib/motion';
 import type { GlobePin } from './Globe';
 
 /**
@@ -15,9 +11,9 @@ import type { GlobePin } from './Globe';
  *
  * That download can fail — a dropped connection, or a tab opened before the
  * latest deploy asking for a chunk that no longer exists. It is tried twice,
- * and if it still fails the plain sphere stays in its place: the destination
- * buttons beside it keep working, and the rest of the page is untouched rather
- * than replaced by the error screen.
+ * and if it still fails the plain sphere stays in its place: the list and the
+ * filters keep working, and the rest of the page is untouched rather than
+ * replaced by the error screen.
  */
 const Globe = dynamic(
   () =>
@@ -34,12 +30,14 @@ const destinations =
   filterGroups.find((group) => group.key === 'country')?.options ?? ([] as string[]);
 
 /**
- * "Explore by destination": the globe, and beside it the journeys in whichever
- * country is chosen.
+ * "Where we go" — the journeys index's signature band.
  *
- * The choice is the same one the Destination filter makes — the explorer owns
- * it — so turning the globe to Italy and clicking "Italy" in the filters are
- * the same act, and the list below follows either way.
+ * Night ground, the globe weighted right, and down the left every live
+ * journey by name. Hovering or focusing a name lights its pin in brass;
+ * pointing at a pin lights the name. Choosing a country on the globe is the
+ * same act as the Destination filter — the explorer owns that choice — so the
+ * rows below follow either way. The canvas is hidden from assistive
+ * technology; the list and the filters are the accessible route.
  */
 export function JourneyGlobe({
   journeys,
@@ -50,6 +48,9 @@ export function JourneyGlobe({
   selected?: string;
   onSelect: (country: string) => void;
 }) {
+  const [listHover, setListHover] = useState<string | null>(null);
+  const [pinHover, setPinHover] = useState<string | null>(null);
+
   const { counts, pins } = useMemo(() => {
     const counts: Record<string, number> = {};
     for (const name of destinations) {
@@ -64,95 +65,88 @@ export function JourneyGlobe({
     return { counts, pins };
   }, [journeys]);
 
-  const inCountry = selected ? journeys.filter((j) => j.country.includes(selected)) : [];
+  const lit = listHover ?? pinHover;
 
   return (
     <section
       aria-labelledby="globe-title"
-      className="gutter grid grid-cols-1 items-center gap-10 border-t border-line py-14 md:py-20 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-16"
+      data-tone="dark"
+      className="overflow-hidden bg-forest-deep text-on-dark"
     >
-      <div className="mx-auto w-full min-w-0 max-w-[560px]">
-        <Globe
-          destinations={destinations}
-          counts={counts}
-          pins={pins}
-          selected={selected}
-          onSelect={onSelect}
-        />
-      </div>
-
-      <div className="min-w-0">
-        <p className="kicker-sm mb-5">Explore by destination</p>
-        <h2 id="globe-title" className="h3 mb-5">
-          {selected ?? 'Turn the globe.'}
-        </h2>
-        <p className="prose-body-sm mb-7 max-w-[440px]">
-          {selected
-            ? `${inCountry.length} ${inCountry.length === 1 ? 'journey' : 'journeys'} in ${selected}. Choose again to see every destination.`
-            : 'Drag to turn it, then choose a country. Every marked place is somewhere Marc knows well.'}
-        </p>
-
-        <div
-          role="group"
-          aria-label="Destinations"
-          className="mb-8 flex flex-wrap gap-x-[18px] gap-y-1"
-        >
-          {destinations.map((name) => {
-            const on = selected === name;
-            return (
-              <button
-                key={name}
-                type="button"
-                aria-pressed={on}
-                onClick={() => onSelect(name)}
-                className="toggle-link min-h-6 border-0 bg-transparent py-1.5 font-ui text-[14px] font-light leading-[1.3] hover:text-acqua-text"
-                style={{ color: on ? 'var(--color-ink)' : 'var(--color-muted)' }}
-              >
-                {name}
-              </button>
-            );
-          })}
-        </div>
-
-        <AnimatePresence mode="wait" initial={false}>
-          {selected && (
-            <m.ul
-              key={selected}
-              className="m-0 list-none border-t border-line p-0"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.4, ease: ease.editorial }}
-            >
-              {inCountry.map((journey) => (
-                <li key={journey.slug} className="border-b border-line">
+      <div className="container-site grid-site items-center gap-y-10 py-section-sm lg:min-h-[clamp(420px,56vw,720px)] lg:py-12">
+        <div className="order-2 col-span-4 md:col-span-8 lg:order-1 lg:col-span-4">
+          <h2 id="globe-title" className="kicker mb-stack">
+            Where we go
+          </h2>
+          <ul className="m-0 list-none border-t border-line-dark p-0">
+            {journeys.map((journey) => {
+              const on = lit === journey.slug;
+              const dim = selected && !journey.country.includes(selected);
+              return (
+                <li key={journey.slug} className="border-b border-line-dark">
                   <Link
                     href={`/journeys/${journey.slug}`}
-                    className="group grid grid-cols-[88px_minmax(0,1fr)] items-center gap-5 py-4 transition-colors duration-300 hover:bg-panel sm:grid-cols-[112px_minmax(0,1fr)]"
+                    onPointerEnter={() => setListHover(journey.slug)}
+                    onPointerLeave={() => setListHover(null)}
+                    onFocus={() => setListHover(journey.slug)}
+                    onBlur={() => setListHover(null)}
+                    className={`group flex min-h-11 items-baseline justify-between gap-4 py-4 transition-opacity duration-300 ${
+                      dim ? 'opacity-45' : ''
+                    }`}
                   >
-                    <Frame
-                      media={journey.cardMedia}
-                      reveal={false}
-                      hover
-                      decorative
-                      sizes="112px"
-                      className="aspect-[4/3] w-full"
-                    />
                     <span className="min-w-0">
-                      <span className="kicker-sm mb-2 block">
+                      <span
+                        className={`h5 block transition-colors duration-300 ${
+                          on ? 'text-acqua' : 'text-on-dark'
+                        }`}
+                      >
+                        {journey.title}
+                      </span>
+                      <span className="kicker-sm mt-1.5 block">
                         {journey.region} · {journey.days} days
                       </span>
-                      <span className="h4 mb-1 block">{journey.title}</span>
-                      <span className="block font-ui text-[12px] text-muted">
-                        {journey.departure} · from {journey.priceFrom} pp
-                      </span>
                     </span>
+                    <span
+                      aria-hidden
+                      className={`status-mark transition-colors duration-300 ${
+                        on ? 'bg-gorse' : 'bg-acqua/60'
+                      }`}
+                    />
                   </Link>
                 </li>
-              ))}
-            </m.ul>
-          )}
-        </AnimatePresence>
+              );
+            })}
+          </ul>
+          <p className="prose-body-sm mt-stack max-w-[36ch]">
+            {selected
+              ? `${counts[selected] ?? 0} ${counts[selected] === 1 ? 'journey' : 'journeys'} in ${selected}. `
+              : 'Drag to turn the globe, then choose a country. Every marked place is somewhere Marc knows well.'}
+            {selected && (
+              <button
+                type="button"
+                onClick={() => onSelect(selected)}
+                className="link-rule min-h-0 py-0 align-baseline"
+              >
+                Show every destination
+              </button>
+            )}
+          </p>
+        </div>
+
+        <div className="order-1 col-span-4 md:col-span-6 md:col-start-2 lg:order-2 lg:col-span-7 lg:col-start-6">
+          <div className="mx-auto w-full max-w-[min(100%,680px)] lg:mr-0">
+            <Globe
+              tone="dark"
+              destinations={destinations}
+              counts={counts}
+              pins={pins}
+              selected={selected}
+              onSelect={onSelect}
+              highlight={listHover}
+              onHoverPin={setPinHover}
+            />
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -165,8 +159,9 @@ function GlobeGround() {
       <div
         className="absolute inset-[7%] rounded-full"
         style={{
-          background: 'radial-gradient(circle at 40% 36%, #e2e9e7 0%, #c4d2d1 100%)',
-          boxShadow: 'inset 0 0 0 1px rgb(30 31 29 / 0.2)',
+          background:
+            'radial-gradient(circle at 40% 36%, var(--color-forest) 0%, var(--color-forest-deep) 100%)',
+          boxShadow: 'inset 0 0 0 1px rgb(244 241 234 / 0.18)',
         }}
       />
     </div>

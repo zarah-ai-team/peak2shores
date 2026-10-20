@@ -24,6 +24,15 @@ type GlobeProps = {
   pins: GlobePin[];
   selected?: string;
   onSelect: (country: string) => void;
+  /** A journey whose pin is lit (brass), e.g. while its name in a list is hovered. */
+  highlight?: string | null;
+  /** Reports the pin under the pointer, so a list beside the globe can answer it. */
+  onHoverPin?: (slug: string | null) => void;
+  /**
+   * `light` is the printed atlas on paper; `dark` is the night band the
+   * journeys index sets it in (forest-deep ground, sea-glass land, brass pin).
+   */
+  tone?: 'light' | 'dark';
 };
 
 type Country = Feature<Geometry, { name: string }>;
@@ -60,15 +69,53 @@ function viewBounds(pins: GlobePin[]): { lon: Point; lat: Point } {
 }
 
 /** Brand tokens, read once from the stylesheet so the globe follows them. */
-function readPalette() {
+function readPalette(tone: 'light' | 'dark') {
   const css = getComputedStyle(document.documentElement);
   const token = (name: string, fallback: string) => css.getPropertyValue(name).trim() || fallback;
+  const ink = token('--color-ink', '#1e1f1d');
+  const ivory = token('--color-ivory', '#f4f1ea');
+  const acqua = token('--color-acqua', '#8cc2b8');
+  const acquaDeep = token('--color-acqua-deep', '#5f948c');
+  const acquaText = token('--color-acqua-text', '#2f6b64');
+  const gorse = token('--color-gorse', '#b39e64');
+  if (tone === 'dark') {
+    const onDark = token('--color-on-dark', '#f4f1ea');
+    const forest = token('--color-forest', '#1d2a25');
+    const deep = token('--color-forest-deep', '#151e1a');
+    return {
+      shadow: null as string | null,
+      oceanIn: forest,
+      oceanOut: deep,
+      graticule: hexAlpha(onDark, 0.05),
+      land: hexAlpha(onDark, 0.12),
+      landStroke: hexAlpha(onDark, 0.1),
+      dest: hexAlpha(acqua, 0.38),
+      destHover: hexAlpha(acqua, 0.6),
+      destSelected: hexAlpha(acqua, 0.8),
+      destStroke: hexAlpha(onDark, 0.22),
+      limb: 'rgba(0, 0, 0, 0.25)',
+      edge: hexAlpha(onDark, 0.18),
+      pinHalo: deep,
+      pin: acqua,
+      pinActive: gorse,
+    };
+  }
   return {
-    ink: token('--color-ink', '#1e1f1d'),
-    ivory: token('--color-ivory', '#f4f1ea'),
-    acqua: token('--color-acqua', '#0cc0df'),
-    acquaDeep: token('--color-acqua-deep', '#0b9fb8'),
-    acquaText: token('--color-acqua-text', '#06758a'),
+    shadow: ink as string | null,
+    oceanIn: '#e2e9e7',
+    oceanOut: '#c4d2d1',
+    graticule: hexAlpha(ink, 0.06),
+    land: '#efeadf',
+    landStroke: hexAlpha(ink, 0.12),
+    dest: hexAlpha(acquaDeep, 0.7),
+    destHover: acquaDeep,
+    destSelected: acquaText,
+    destStroke: hexAlpha(ink, 0.25),
+    limb: hexAlpha(ink, 0.1),
+    edge: hexAlpha(ink, 0.22),
+    pinHalo: ivory,
+    pin: ink,
+    pinActive: acquaText,
   };
 }
 
@@ -88,7 +135,16 @@ function readPalette() {
  * The canvas is hidden from assistive technology: the destination buttons
  * beside it do the same job and are the accessible route.
  */
-export function Globe({ destinations, counts, pins, selected, onSelect }: GlobeProps) {
+export function Globe({
+  destinations,
+  counts,
+  pins,
+  selected,
+  onSelect,
+  highlight = null,
+  onHoverPin,
+  tone = 'light',
+}: GlobeProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const labelRef = useRef<HTMLDivElement>(null);
@@ -113,13 +169,18 @@ export function Globe({ destinations, counts, pins, selected, onSelect }: GlobeP
     pins,
     selected,
     hovered: null as string | null,
+    hoveredPin: null as string | null,
+    highlight,
     onSelect,
+    onHoverPin,
   });
   live.current.destinations = destinations;
   live.current.pins = pins;
   live.current.selected = selected;
   live.current.hovered = hovered;
   live.current.onSelect = onSelect;
+  live.current.highlight = highlight;
+  live.current.onHoverPin = onHoverPin;
 
   const projection = useRef(geoOrthographic().clipAngle(90).precision(0.6)).current;
 
@@ -166,7 +227,7 @@ export function Globe({ destinations, counts, pins, selected, onSelect }: GlobeP
     if (!wrap || !canvas || !ctx) return;
 
     const L = live.current;
-    const palette = readPalette();
+    const palette = readPalette(tone);
     L.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let cancelled = false;
 
@@ -206,22 +267,26 @@ export function Globe({ destinations, counts, pins, selected, onSelect }: GlobeP
       ctx.clearRect(0, 0, size, size);
 
       // A soft shadow on the page below, so the globe sits rather than floats.
-      ctx.save();
-      ctx.translate(c, c + r * 1.04);
-      ctx.scale(1, 0.12);
-      let g = ctx.createRadialGradient(0, 0, 0, 0, 0, r * 0.8);
-      g.addColorStop(0, hexAlpha(palette.ink, 0.16));
-      g.addColorStop(1, hexAlpha(palette.ink, 0));
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.arc(0, 0, r * 0.8, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
+      // Paper only: on the night band there is nothing for it to fall on.
+      let g: CanvasGradient;
+      if (palette.shadow) {
+        ctx.save();
+        ctx.translate(c, c + r * 1.04);
+        ctx.scale(1, 0.12);
+        g = ctx.createRadialGradient(0, 0, 0, 0, 0, r * 0.8);
+        g.addColorStop(0, hexAlpha(palette.shadow, 0.16));
+        g.addColorStop(1, hexAlpha(palette.shadow, 0));
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(0, 0, r * 0.8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
 
       // Ocean: a printed atlas's pale sea, a shade deeper toward the edge.
       g = ctx.createRadialGradient(c - r * 0.25, c - r * 0.3, r * 0.1, c, c, r);
-      g.addColorStop(0, '#e2e9e7');
-      g.addColorStop(1, '#c4d2d1');
+      g.addColorStop(0, palette.oceanIn);
+      g.addColorStop(1, palette.oceanOut);
       ctx.beginPath();
       path(sphere);
       ctx.fillStyle = g;
@@ -229,7 +294,7 @@ export function Globe({ destinations, counts, pins, selected, onSelect }: GlobeP
 
       ctx.beginPath();
       path(graticule);
-      ctx.strokeStyle = hexAlpha(palette.ink, 0.06);
+      ctx.strokeStyle = palette.graticule;
       ctx.lineWidth = 0.5;
       ctx.stroke();
 
@@ -239,9 +304,9 @@ export function Globe({ destinations, counts, pins, selected, onSelect }: GlobeP
       for (const country of L.countries) {
         if (!destinationSet.has(country.properties.name)) path(country);
       }
-      ctx.fillStyle = '#efeadf';
+      ctx.fillStyle = palette.land;
       ctx.fill();
-      ctx.strokeStyle = hexAlpha(palette.ink, 0.12);
+      ctx.strokeStyle = palette.landStroke;
       ctx.lineWidth = 0.5;
       ctx.stroke();
 
@@ -253,26 +318,26 @@ export function Globe({ destinations, counts, pins, selected, onSelect }: GlobeP
         path(country);
         ctx.fillStyle =
           name === L.selected
-            ? palette.acquaText
+            ? palette.destSelected
             : name === L.hovered
-              ? palette.acquaDeep
-              : hexAlpha(palette.acquaDeep, 0.7);
+              ? palette.destHover
+              : palette.dest;
         ctx.fill();
-        ctx.strokeStyle = hexAlpha(palette.ink, 0.25);
+        ctx.strokeStyle = palette.destStroke;
         ctx.lineWidth = 0.6;
         ctx.stroke();
       }
 
       // A gentle fall-off toward the edge — enough to read as round.
       g = ctx.createRadialGradient(c, c, r * 0.6, c, c, r);
-      g.addColorStop(0, hexAlpha(palette.ink, 0));
-      g.addColorStop(1, hexAlpha(palette.ink, 0.1));
+      g.addColorStop(0, 'rgba(0, 0, 0, 0)');
+      g.addColorStop(1, palette.limb);
       ctx.beginPath();
       path(sphere);
       ctx.fillStyle = g;
       ctx.fill();
 
-      ctx.strokeStyle = hexAlpha(palette.ink, 0.22);
+      ctx.strokeStyle = palette.edge;
       ctx.lineWidth = 0.8;
       ctx.stroke();
 
@@ -283,24 +348,25 @@ export function Globe({ destinations, counts, pins, selected, onSelect }: GlobeP
         const at = projection(pin.coords);
         if (!at) continue;
         const [x, y] = at;
-        const active = pin.country === L.selected;
+        const lit = pin.slug === L.highlight || pin.slug === L.hoveredPin;
+        const active = lit || pin.country === L.selected;
         const dot = active ? 5.5 : 4;
 
         if (active && !L.reduced) {
           const t = (now % 1800) / 1800;
           ctx.beginPath();
           ctx.arc(x, y, dot + 3 + t * 14, 0, Math.PI * 2);
-          ctx.strokeStyle = hexAlpha(palette.acquaText, (1 - t) * 0.6);
+          ctx.strokeStyle = hexAlpha(palette.pinActive, (1 - t) * 0.6);
           ctx.lineWidth = 1.5;
           ctx.stroke();
         }
         ctx.beginPath();
         ctx.arc(x, y, dot + 2.5, 0, Math.PI * 2);
-        ctx.fillStyle = palette.ivory;
+        ctx.fillStyle = palette.pinHalo;
         ctx.fill();
         ctx.beginPath();
         ctx.arc(x, y, dot, 0, Math.PI * 2);
-        ctx.fillStyle = active ? palette.acquaText : palette.ink;
+        ctx.fillStyle = active ? palette.pinActive : palette.pin;
         ctx.fill();
       }
     }
@@ -319,7 +385,7 @@ export function Globe({ destinations, counts, pins, selected, onSelect }: GlobeP
         L.rotation[0] += L.velocity * (dt / 16);
         L.velocity *= 0.94;
         keepInView();
-      } else if (!L.selected && !L.hovered && !L.reduced) {
+      } else if (!L.selected && !L.hovered && !L.highlight && !L.reduced) {
         // Sway between the outermost journeys, turning back at each edge.
         L.rotation[0] += (L.swayDir * SWAY_DEG_PER_SEC * dt) / 1000;
         const edge = keepInView();
@@ -339,6 +405,17 @@ export function Globe({ destinations, counts, pins, selected, onSelect }: GlobeP
       if (held === lon) return 0;
       L.velocity = 0;
       return held === bounds.lon[1] ? 1 : -1;
+    }
+
+    /** The journey pin under a point on the canvas, if any. */
+    function pinAt(x: number, y: number): string | null {
+      const centre: Point = [-L.rotation[0], -L.rotation[1]];
+      for (const pin of L.pins) {
+        if (geoDistance(pin.coords, centre) > Math.PI / 2 - 0.06) continue;
+        const at = projection(pin.coords);
+        if (at && Math.hypot(at[0] - x, at[1] - y) < 14) return pin.slug;
+      }
+      return null;
     }
 
     /** The destination under a point on the canvas, pins first. */
@@ -367,6 +444,11 @@ export function Globe({ destinations, counts, pins, selected, onSelect }: GlobeP
 
     const showLabel = (name: string | null, at?: Point) => {
       if (name !== L.hovered) setHovered(name);
+      const slug = name && at ? pinAt(...at) : null;
+      if (slug !== L.hoveredPin) {
+        L.hoveredPin = slug;
+        L.onHoverPin?.(slug);
+      }
       canvas.style.cursor = L.dragging ? 'grabbing' : name ? 'pointer' : 'grab';
       const label = labelRef.current;
       if (label && at) label.style.transform = `translate(${at[0] + 14}px, ${at[1] - 10}px)`;
@@ -496,7 +578,9 @@ export function Globe({ destinations, counts, pins, selected, onSelect }: GlobeP
       />
       <div
         ref={labelRef}
-        className="pointer-events-none absolute left-0 top-0 whitespace-nowrap bg-ink px-2.5 py-1.5 font-ui text-[10px] uppercase leading-none tracking-[0.16em] text-ivory transition-opacity duration-200"
+        className={`kicker-sm pointer-events-none absolute left-0 top-0 whitespace-nowrap px-2.5 py-1.5 transition-opacity duration-200 ${
+          tone === 'dark' ? 'bg-ivory !text-ink' : 'bg-ink !text-ivory'
+        }`}
         style={{ opacity: hovered ? 1 : 0 }}
       >
         {hovered ? `${hovered} · ${count} ${count === 1 ? 'journey' : 'journeys'}` : ''}

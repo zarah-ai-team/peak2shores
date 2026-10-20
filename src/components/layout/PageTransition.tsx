@@ -2,15 +2,15 @@
 
 import { usePathname } from 'next/navigation';
 import { useLayoutEffect, useRef, type ReactNode } from 'react';
-import { ease } from '@/lib/motion';
+import { duration, ease } from '@/lib/motion';
 
 /**
  * The transition between pages.
  *
  * App Router swaps the tree as soon as the new route is ready, so an exit
  * animation on the outgoing page would either be skipped or would hold the
- * navigation back. Instead the incoming page arrives on its own: a soft rise
- * under a bottom mask, at magazine pace.
+ * navigation back. Instead the incoming page arrives on its own: a 12px rise
+ * and fade over 600ms. Transform and opacity only — no layout shift.
  *
  * Two deliberate constraints:
  *
@@ -50,10 +50,9 @@ export function PageTransition({ children }: { children: ReactNode }) {
         ? { opacity: [0, 1] }
         : {
             opacity: [0, 1],
-            transform: ['translateY(16px)', 'none'],
-            clipPath: ['inset(2% 0% 0% 0%)', 'inset(0% 0% 0% 0%)'],
+            transform: ['translateY(12px)', 'none'],
           },
-      { duration: 720, easing: `cubic-bezier(${ease.editorial.join(',')})` },
+      { duration: duration.page * 1000, easing: `cubic-bezier(${ease.editorial.join(',')})` },
     );
     return () => animation.cancel();
   }, [pathname]);

@@ -1,31 +1,53 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { site } from '@/lib/site';
 import { failureMessage } from '@/lib/forms';
 import { track } from '@/lib/analytics';
 import { readFirstTouch } from '@/lib/attribution';
 
-type Status = 'idle' | 'sending' | 'done' | 'error';
+type Status = 'idle' | 'sending' | 'done' | 'undelivered' | 'error';
+
+export type NewsletterVariant = 'compact' | 'large' | 'dark';
 
 /**
  * "Join the circle" — a rule, a field and a flush-left label.
  *
- * Posts to /api/subscribe, which records the address server-side. That route
- * is the single place to wire the mailing provider before launch.
+ * - `compact`: the small inline form (sans field).
+ * - `large`: the homepage / journal form — the field is set in the serif at
+ *   `.h5` size, with an ink submit.
+ * - `dark`: for forest / forest-deep grounds (the footer) — on-dark rule,
+ *   text and placeholder.
  *
- * The status line is a persistent live region so the outcome is announced;
- * on success focus moves to it, since the button that had focus is gone.
+ * Posts to /api/subscribe, which answers `{ ok, delivered }`. `delivered:
+ * false` means no mailing provider is wired yet and nothing was stored, so the
+ * form says so honestly and offers the email address instead of claiming a
+ * sign-up. A hidden `website` field is the honeypot the route checks.
+ *
+ * The status line is a persistent live region; on a result, focus moves to it,
+ * since the button that had focus is gone.
  */
-export function NewsletterForm({ compact = false }: { compact?: boolean }) {
+export function NewsletterForm({
+  variant: variantProp,
+  compact = false,
+  className = '',
+}: {
+  variant?: NewsletterVariant;
+  /** Legacy alias for `variant="compact"`. */
+  compact?: boolean;
+  className?: string;
+}) {
+  const variant: NewsletterVariant = variantProp ?? (compact ? 'compact' : 'large');
+  const dark = variant === 'dark';
   const [email, setEmail] = useState('');
+  const [website, setWebsite] = useState('');
   const [status, setStatus] = useState<Status>('idle');
   const [errorText, setErrorText] = useState('');
-  const doneRef = useRef<HTMLParagraphElement>(null);
-  const id = compact ? 'email-footer' : 'email-circle';
+  const resultRef = useRef<HTMLParagraphElement>(null);
+  const id = `email-${useId().replace(/:/g, '')}`;
 
   useEffect(() => {
-    if (status === 'done') doneRef.current?.focus();
+    if (status === 'done' || status === 'undelivered') resultRef.current?.focus();
   }, [status]);
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -36,11 +58,16 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
       const res = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: readFirstTouch() }),
+        body: JSON.stringify({ email, website, source: readFirstTouch() }),
       });
       if (res.ok) {
-        setStatus('done');
-        track('newsletter_signup');
+        const data = (await res.json().catch(() => ({}))) as { delivered?: boolean };
+        if (data.delivered === false) {
+          setStatus('undelivered');
+        } else {
+          setStatus('done');
+          track('newsletter_signup');
+        }
       } else {
         setErrorText(await failureMessage(res));
         setStatus('error');
@@ -51,25 +78,60 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
     }
   }
 
+  const resultClass = `outline-none ${
+    variant === 'compact' ? 'prose-body-sm' : variant === 'dark' ? 'h5 text-on-dark' : 'h5'
+  }`;
+
   if (status === 'done') {
     return (
-      <p
-        ref={doneRef}
-        tabIndex={-1}
-        role="status"
-        className={`outline-none ${compact ? 'prose-body-sm' : 'font-display text-[24px] leading-[1.3]'}`}
-      >
+      <p ref={resultRef} tabIndex={-1} role="status" className={`${resultClass} ${className}`}>
         You’re on the list. Marc’s next letter will find you.
       </p>
     );
   }
 
+  if (status === 'undelivered') {
+    return (
+      <p
+        ref={resultRef}
+        tabIndex={-1}
+        role="status"
+        className={`outline-none ${variant === 'compact' ? 'prose-body-sm' : 'prose-body'} ${
+          dark ? 'text-on-dark-body' : ''
+        } ${className}`}
+      >
+        We couldn’t add you automatically just now. To join the circle, email{' '}
+        <a href={`mailto:${site.email}`} className="prose-link">
+          {site.email}
+        </a>{' '}
+        and we’ll add you by hand.
+      </p>
+    );
+  }
+
+  const fieldText =
+    variant === 'large'
+      ? 'font-display text-[clamp(22px,1.8vw,28px)] font-normal leading-[1.2] py-3 placeholder:text-muted'
+      : variant === 'dark'
+        ? 'prose-body py-3 text-on-dark placeholder:text-on-dark-muted'
+        : 'prose-body-sm py-3 text-ink placeholder:text-muted';
+
+  const submit =
+    variant === 'large'
+      ? 'btn ml-5 shrink-0 bg-ink px-6 py-[15px] text-ivory hover:bg-forest'
+      : `shrink-0 py-3 pl-5 transition-colors duration-300 ${
+          dark ? 'text-on-dark hover:text-acqua' : 'hover:text-acqua-text'
+        }`;
+
   return (
-    <div className={compact ? '' : 'w-full max-w-[480px]'}>
-      {/* `.field-rule` re-rules the line in acqua while the field has focus. */}
+    <div className={`w-full ${variant === 'compact' ? '' : 'max-w-[520px]'} ${className}`}>
+      {/* `.field-rule` re-rules the line in sea-glass while the field has focus. */}
       <form
         onSubmit={onSubmit}
-        className="field-rule flex max-w-[480px] items-center border-b border-ink"
+
+        className={`field-rule relative flex items-center border-b ${
+          dark ? 'border-on-dark/40' : 'border-ink'
+        } ${variant === 'large' ? 'pb-2' : ''}`}
       >
         <label htmlFor={id} className="sr-only">
           Your email address
@@ -86,14 +148,26 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Your email"
           aria-describedby={status === 'error' ? `${id}-error` : undefined}
-          className={`min-w-0 flex-1 border-0 bg-transparent font-ui font-light text-ink outline-none placeholder:text-muted ${
-            compact ? 'py-3 text-[14px]' : 'py-4 text-[15px]'
-          }`}
+          aria-invalid={status === 'error' ? true : undefined}
+          className={`min-w-0 flex-1 border-0 bg-transparent outline-none ${fieldText}`}
         />
+        {/* Honeypot: invisible to people, irresistible to bots. */}
+        <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+          <label htmlFor={`${id}-website`}>Website</label>
+          <input
+            id={`${id}-website`}
+            type="text"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
+          />
+        </div>
         <button
           type="submit"
           aria-disabled={status === 'sending'}
-          className="shrink-0 py-3 pl-5 font-ui text-[11px] font-medium uppercase leading-none tracking-[0.16em] transition-colors duration-300 hover:text-acqua-text aria-disabled:opacity-45"
+          className={`min-h-11 font-ui text-[11.5px] font-medium uppercase leading-none tracking-[0.16em] aria-disabled:opacity-40 ${submit}`}
         >
           {status === 'sending' ? 'Sending' : 'Join the circle'}
         </button>
@@ -102,7 +176,7 @@ export function NewsletterForm({ compact = false }: { compact?: boolean }) {
         id={`${id}-error`}
         role="alert"
         aria-live="assertive"
-        className="prose-body-sm mt-3 text-acqua-text"
+        className={`prose-body-sm mt-3 ${dark ? 'text-error-dark' : 'text-error'}`}
       >
         {status === 'error'
           ? errorText || `That didn’t send. Please try again, or email ${site.email}.`

@@ -18,47 +18,67 @@ type Credit = {
 };
 
 /**
- * Attribution for the placeholder photography.
+ * Attribution for the stock photography.
  *
- * Most of the comps are Creative Commons BY or BY-SA, which require visible
- * credit. This page is generated from the same manifest the fetch script
- * writes, so it can never drift from what is actually on the site. It goes
- * away with the comps: once commissioned photography replaces them, delete the
- * manifest, this route and the footer link together.
+ * Most frames are Unsplash (no attribution required, credited as a courtesy);
+ * the few Wikimedia Commons frames are CC BY-SA and do require visible credit.
+ * Generated from the same manifest the sourcing scripts write, so it can never
+ * drift from what is on the site. Remove it only once every credited frame has
+ * been replaced with commissioned photography.
  */
 export default function CreditsPage() {
   const rows = (Object.values(credits) as Credit[]).sort((a, b) => a.slot.localeCompare(b.slot));
 
   return (
     <>
-      <PageTitle kicker="Credits" title="Photography.">
+      <PageTitle kicker="Credits" title="Photography." variant="stacked">
         The photographs on this site are used under the licences listed below. Each links to its
-        source on Wikimedia Commons, where the licence text and the author’s full attribution can be
-        found.
+        source on Unsplash or Wikimedia Commons, where the licence text and the author’s full
+        attribution can be found.
       </PageTitle>
 
-      <Reveal as="section" className="gutter pb-24 md:pb-[104px]">
-        <ul className="m-0 list-none border-t border-line p-0">
-          {rows.map((row) => (
-            <li
-              key={row.slot}
-              className="grid gap-2 border-b border-line py-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_140px] sm:gap-6"
-            >
-              <a
-                href={row.pageUrl}
-                rel="noopener noreferrer license"
-                className="prose-body-sm underline decoration-line underline-offset-4 transition-colors duration-300 hover:text-acqua-text"
+      {/* The table is several screens tall, so the default 15% threshold is
+          never reached on a short viewport: start as soon as any of it shows. */}
+      <Reveal as="section" amount={0} className="container-site pb-section-sm">
+        <table className="block w-full border-collapse text-left sm:table">
+          <caption className="sr-only">Photograph, author and licence</caption>
+          <thead className="hidden sm:table-header-group">
+            <tr className="border-b border-line">
+              <th scope="col" className="kicker-sm py-4 pr-6 font-medium">
+                Photograph
+              </th>
+              <th scope="col" className="kicker-sm py-4 pr-6 font-medium">
+                Author
+              </th>
+              <th scope="col" className="kicker-sm py-4 font-medium sm:text-right">
+                Licence
+              </th>
+            </tr>
+          </thead>
+          <tbody className="block sm:table-row-group">
+            {rows.map((row) => (
+              <tr
+                key={row.slot}
+                className="grid gap-1 border-b border-line py-4 sm:table-row sm:py-0"
               >
-                {row.title
-                  .replace(/^File:/, '')
-                  .replace(/\.[a-z]+$/i, '')
-                  .replace(/_/g, ' ')}
-              </a>
-              <span className="prose-body-sm">{row.author}</span>
-              <span className="kicker-sm sm:text-right">{row.licence}</span>
-            </li>
-          ))}
-        </ul>
+                <td className="prose-body-sm min-w-0 [overflow-wrap:anywhere] sm:py-4 sm:pr-6 sm:align-top">
+                  <a href={row.pageUrl} rel="noopener noreferrer license" className="prose-link">
+                    {row.title
+                      .replace(/^File:/, '')
+                      .replace(/\.[a-z]+$/i, '')
+                      .replace(/_/g, ' ')}
+                  </a>
+                </td>
+                <td className="prose-body-sm min-w-0 [overflow-wrap:anywhere] sm:py-4 sm:pr-6 sm:align-top">
+                  {row.author}
+                </td>
+                <td className="kicker-sm sm:whitespace-nowrap sm:py-4 sm:text-right sm:align-top">
+                  {row.licence}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </Reveal>
     </>
   );

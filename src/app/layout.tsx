@@ -11,13 +11,14 @@ import { Analytics } from '@/components/layout/Analytics';
 import { consentDefaults } from '@/lib/analytics';
 import { jsonLd } from '@/lib/seo';
 import { site } from '@/lib/site';
+import { getNavigation } from '@/lib/content';
 
 /* Display type is Georgia, a system serif, so nothing is downloaded for it.
-   Poppins needs all three of its weights (body 300, labels 400, buttons 500).
-   Anything loaded beyond this is a preload competing with the hero. */
+   Poppins is the interface and body voice; 400–600 cover body, labels and
+   buttons. Self-hosted by next/font — no request leaves the site. */
 const poppins = Poppins({
   subsets: ['latin'],
-  weight: ['300', '400', '500'],
+  weight: ['400', '500', '600'],
   variable: '--font-poppins',
   display: 'swap',
 });
@@ -34,7 +35,7 @@ const poppins = Poppins({
  *   timer here clears it anyway if the bundle is slow, and the Preloader then
  *   stands down rather than covering a page that is already showing.
  */
-const boot = `(function(){var d=document.documentElement;d.setAttribute('data-js','');var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}if(reduce)return;var seen=false;try{seen=Date.now()-Number(localStorage.getItem('p2s:preloader-at'))<864e5}catch(e){}if(seen)return;d.setAttribute('data-preload','');setTimeout(function(){if(!d.hasAttribute('data-preload'))return;d.removeAttribute('data-preload');try{localStorage.setItem('p2s:preloader-at',String(Date.now()))}catch(e){}},3200)})();`;
+const boot = `(function(){var d=document.documentElement;d.setAttribute('data-js','');var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}if(reduce)return;var seen=false;try{seen=Date.now()-Number(localStorage.getItem('p2s:preloader-at'))<864e5}catch(e){}if(seen)return;d.setAttribute('data-preload','');setTimeout(function(){if(!d.hasAttribute('data-preload'))return;d.removeAttribute('data-preload');try{localStorage.setItem('p2s:preloader-at',String(Date.now()))}catch(e){}},2400)})();`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -92,11 +93,16 @@ const organization = {
   ],
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const nav = await getNavigation();
   return (
     // The boot script writes attributes onto <html> before hydration; React
     // must not treat them as a mismatch.
-    <html lang="en" className={poppins.variable} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={poppins.variable}
+      suppressHydrationWarning
+    >
       <body>
         <script dangerouslySetInnerHTML={{ __html: boot }} />
         {/* Consent Mode defaults must exist before Tag Manager loads. */}
@@ -109,19 +115,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-6 focus:top-6 focus:z-[120] focus:bg-ink focus:px-5 focus:py-3 focus:font-ui focus:text-[11px] focus:uppercase focus:tracking-[0.16em] focus:text-ivory"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-6 focus:top-6 focus:z-[120] focus:bg-forest-deep focus:px-5 focus:py-3 focus:font-ui focus:text-[11.5px] focus:font-medium focus:uppercase focus:tracking-[0.16em] focus:text-on-dark"
         >
           Skip to content
         </a>
         <MotionProvider>
           <Preloader />
+          <Header primary={nav.primary} cta={nav.cta} />
+          {/* After the header: its colour follows the header's state through a
+              sibling selector (.scroll-progress in globals.css). */}
           <ScrollProgress />
-          <Header />
           {/* Focusable so the skip link lands reliably in every browser. */}
           <main id="main" tabIndex={-1} className="outline-none">
             <PageTransition>{children}</PageTransition>
           </main>
-          <Footer />
+          <Footer nav={nav} />
           <Analytics />
         </MotionProvider>
       </body>

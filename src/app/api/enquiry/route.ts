@@ -1,15 +1,23 @@
 import { NextResponse } from 'next/server';
-import { liveJourneys } from '@/lib/journeys';
-import { site } from '@/lib/site';
+import { getEnquirableJourneyTitles, getSiteSettings } from '@/lib/content';
 import { readJsonBody, readSource, sameOrigin, text, tooManyRequests } from '@/lib/api';
+import { deliver, isDeliveryConfigured } from '@/lib/delivery';
 
 /**
  * Journey enquiries.
  *
- * INTEGRATION POINT — before launch, forward this to Marc's inbox and the CRM.
- * The endpoint validates, bounds and rate-limits; wiring the delivery is a
- * one-file change. Until then a submission is acknowledged and logged as an
- * opaque event — never with the person's details.
+ * Validated, bounded and rate-limited here, then handed to `deliver()` in
+ * src/lib/delivery.ts, which forwards to ENQUIRY_WEBHOOK_URL when it is set.
+ *
+ * The response is truthful about delivery:
+ *   200 { ok: true, delivered: true }   — accepted and forwarded
+ *   200 { ok: true, delivered: false }  — accepted, but NO delivery is
+ *                                         configured: the enquiry exists only
+ *                                         as an anonymous log line. Launch
+ *                                         blocker until the env var is set.
+ *   502 { error }                        — a configured provider failed; the
+ *                                         form shows its "email us" fallback.
+ * Logs never carry the person's details.
  */
 
 const PARTY = new Set(['Couple', 'Friends', 'Family', 'Solo']);
@@ -27,16 +35,22 @@ export async function POST(request: Request) {
   if (!body.ok) return body.response;
   const data = body.value;
 
-  // Honeypot: a real browser never fills it. Say "ok" so the bot learns nothing.
+  // Honeypot: a real browser never fills it. Answer exactly as a success
+  // would, so the bot learns nothing.
   if (typeof data.website === 'string' && data.website.trim() !== '') {
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, delivered: isDeliveryConfigured('enquiry') });
   }
+
+  const [site, journeyTitles] = await Promise.all([
+    getSiteSettings(),
+    getEnquirableJourneyTitles(),
+  ]);
 
   const name = typeof data.name === 'string' ? data.name.trim().slice(0, 200) : '';
   const email = typeof data.email === 'string' ? data.email.trim().slice(0, 254) : '';
   const party = typeof data.party === 'string' && PARTY.has(data.party) ? data.party : undefined;
   const journey =
-    typeof data.journey === 'string' && liveJourneys().some((j) => j.title === data.journey)
+    typeof data.journey === 'string' && journeyTitles.includes(data.journey)
       ? data.journey
       : undefined;
   const notes = typeof data.notes === 'string' ? data.notes.trim().slice(0, 2000) : '';
@@ -61,10 +75,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'A valid email address is required.' }, { status: 422 });
   }
 
-  // TODO(launch): deliver { name, email, phone, party, guests, journey,
-  // travelWindow, heardFrom, notes, source } to the shared inbox / CRM.
-  // Logs carry no personal data — only that an enquiry arrived, for what, and
-  // which channel brought the traveller in.
+  const result = await deliver('enquiry', {
+    name,
+    email,
+    phone,
+    party,
+    guests,
+    journey,
+    travelWindow,
+    heardFrom,
+    notes,
+    source,
+  });
+
+  // Logs carry no personal data — only that an enquiry arrived, for what,
+  // which channel brought the traveller in, and whether it went anywhere.
   console.info('[peaks2shores] enquiry received', {
     journey: journey ?? 'private',
     party,
@@ -75,8 +100,15 @@ export async function POST(request: Request) {
     heardFrom,
     utm: [source.source, source.medium, source.campaign].filter(Boolean).join(' / ') || undefined,
     referrer: source.referrer,
+    delivered: result.delivered,
     at: new Date().toISOString(),
   });
 
-  return NextResponse.json({ ok: true });
+  if (!result.delivered && result.reason === 'failed') {
+    return NextResponse.json(
+      { error: `That didn’t send. Please email ${site.email}.` },
+      { status: 502 },
+    );
+  }
+  return NextResponse.json({ ok: true, delivered: result.delivered });
 }

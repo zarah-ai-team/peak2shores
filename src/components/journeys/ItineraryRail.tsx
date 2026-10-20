@@ -78,12 +78,10 @@ export function ItineraryRail({ days }: { days: RailDay[] }) {
             href={`#day-${day.n}`}
             data-day={day.n}
             aria-current={active ? 'location' : undefined}
-            className="grid min-h-6 grid-cols-[36px_minmax(0,1fr)] gap-3 border-b border-line py-2.5 pl-3 font-ui text-[13px] font-light leading-[1.4] transition-colors duration-300 hover:text-acqua-text"
+            className="meta grid min-h-11 grid-cols-[36px_minmax(0,1fr)] items-baseline gap-3 border-b border-line py-2.5 pl-3 transition-colors duration-300 hover:text-acqua-text"
             style={{ color: active ? 'var(--color-ink)' : 'var(--color-muted)' }}
           >
-            <span className="font-ui text-[10px] leading-[1.8] tracking-[0.16em]">
-              {String(day.n).padStart(2, '0')}
-            </span>
+            <span className="kicker-sm !text-current">{String(day.n).padStart(2, '0')}</span>
             <span>{day.title}</span>
           </a>
         );

@@ -10,9 +10,9 @@ const SEEN_KEY = 'p2s:preloader-at';
 /** How long before a returning visitor sees it again. */
 const SEEN_FOR_MS = 24 * 60 * 60 * 1000;
 /** The shortest the sequence can read as intentional rather than a flash. */
-const MIN_MS = 900;
+const MIN_MS = 600;
 /** The longest anyone waits, however slow the network. */
-const MAX_MS = 1800;
+const MAX_MS = 1400;
 
 /** Let the page's own entrance play. Set by the boot script in the layout. */
 function releasePage() {
@@ -22,8 +22,8 @@ function releasePage() {
 /**
  * PEAKS → 2 → SHORES.
  *
- * The loader resolves on the window's own load event, floored at 900ms and
- * capped at 1800ms — it never invents a delay to look impressive. It runs once
+ * The loader resolves on the window's own load event, floored at 600ms and
+ * capped at 1400ms — it never invents a delay to look impressive. It runs once
  * a day across every tab; a returning visitor goes straight to the page.
  *
  * The boot script decides whether this visit gets it, by setting
@@ -48,7 +48,7 @@ export function Preloader() {
     try {
       seen = Date.now() - Number(localStorage.getItem(SEEN_KEY)) < SEEN_FOR_MS;
     } catch {
-      // Private browsing. Show it — a single 900ms screen is not a problem.
+      // Private browsing. Show it — a single 600ms screen is not a problem.
     }
     if (reduced || seen || !pending) {
       releasePage();
@@ -107,29 +107,33 @@ export function Preloader() {
     <AnimatePresence>
       {visible && (
         <m.div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-ivory"
+          className="fixed inset-0 z-[100] flex origin-top items-center justify-center bg-ivory"
           aria-hidden
-          initial={{ opacity: 1 }}
+          initial={{ scaleY: 1 }}
+          // The cover lifts: its bottom edge rises to the top of the screen.
           exit={{
-            opacity: 0,
-            transition: { duration: 0.6, ease: ease.exit },
+            scaleY: 0,
+            transition: { duration: 0.7, ease: ease.reveal },
           }}
         >
-          <div className="gutter w-full">
-            <div className="flex flex-col items-start font-display leading-[0.92] tracking-[-0.02em] text-ink">
+          <m.div
+            className="container-site"
+            exit={{ opacity: 0, transition: { duration: 0.25, ease: ease.exit } }}
+          >
+            <div className="flex flex-col items-start font-display font-medium leading-[0.92] tracking-[-0.02em] text-ink">
               {[
-                { label: 'Peaks', delay: 0.05 },
-                { label: '2', delay: 0.17 },
-                { label: 'Shores', delay: 0.29 },
+                { label: 'Peaks', delay: 0.04 },
+                { label: '2', delay: 0.12 },
+                { label: 'Shores', delay: 0.2 },
               ].map((line) => (
                 <span key={line.label} className="block overflow-hidden pb-[0.04em]">
                   <m.span
-                    className="block text-[clamp(40px,9vw,120px)]"
+                    className="block text-[clamp(44px,9vw,128px)]"
                     variants={word}
                     initial="hidden"
                     animate="visible"
-                    style={{ color: line.label === '2' ? 'var(--color-acqua)' : undefined }}
-                    transition={{ duration: 1, ease: ease.reveal, delay: line.delay }}
+                    style={{ color: line.label === '2' ? 'var(--color-acqua-deep)' : undefined }}
+                    transition={{ duration: 0.8, ease: ease.reveal, delay: line.delay }}
                   >
                     {line.label}
                   </m.span>
@@ -141,9 +145,9 @@ export function Preloader() {
               className="mt-8 h-px w-full max-w-[420px] origin-left bg-gorse"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
-              transition={{ duration: 1.2, ease: ease.editorial, delay: 0.2 }}
+              transition={{ duration: 0.8, ease: ease.editorial, delay: 0.15 }}
             />
-          </div>
+          </m.div>
         </m.div>
       )}
     </AnimatePresence>

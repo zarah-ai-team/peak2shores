@@ -8,6 +8,8 @@ import {
   maskInnerVariants,
   staggerParent,
   viewportOnce,
+  DEFAULT_DISTANCE,
+  stagger as staggerDefaults,
   type RevealDirection,
   type RevealVariant,
 } from '@/lib/motion';
@@ -69,7 +71,7 @@ export function Reveal({
   as = 'div',
   direction = 'up',
   variant = 'fade',
-  distance = 18,
+  distance = DEFAULT_DISTANCE,
   amount,
 }: RevealProps) {
   const Component = m[as];
@@ -111,7 +113,7 @@ export function RevealGroup({
   children,
   className,
   id,
-  stagger = 0.08,
+  stagger = staggerDefaults.list,
   delay = 0,
   as = 'div',
   amount,
@@ -143,7 +145,7 @@ export function RevealItem({
   as = 'div',
   direction = 'up',
   variant = 'fade',
-  distance = 18,
+  distance = DEFAULT_DISTANCE,
 }: Omit<RevealProps, 'delay' | 'amount'>) {
   const Component = m[as];
 

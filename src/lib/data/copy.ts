@@ -1,4 +1,4 @@
-import type { MediaKey } from './media';
+import type { MediaKey } from '../media';
 
 /**
  * Editorial copy, lifted verbatim from the approved design canvas.
@@ -10,9 +10,9 @@ import type { MediaKey } from './media';
 
 export const philosophy = {
   headline: 'Great travel isn’t about seeing everything. It’s about experiencing the right things.',
+  // Trimmed to one line in the October 2026 review: the headline carries it.
   body: [
-    'Luxury rarely means doing more. More often it means doing less — and doing it exceptionally well. A remarkable hotel should be enjoyed, not slept in before an early departure. A free afternoon isn’t a gap in the plan; it is the plan.',
-    'Peaks2Shores journeys are built around quality, time, space and access — with a small group of good company and people on the ground we’ve known for years.',
+    'A remarkable hotel should be enjoyed, not slept in before an early departure. A free afternoon isn’t a gap in the plan; it is the plan.',
   ],
 };
 
@@ -69,7 +69,7 @@ export const reasons = [
   {
     n: '01',
     title: 'Small by design',
-    body: 'Never more than approximately 18 guests. Small enough for one table at dinner.',
+    body: 'Never more than 18 guests. Small enough for one table at dinner.',
   },
   {
     n: '02',
@@ -98,10 +98,56 @@ export const reasons = [
   },
 ];
 
+/* -- Home: also designed for you ---------------------------------------- */
+
+/** The secondary offers — smaller than the journeys, but present. */
+export const services = [
+  {
+    n: '01',
+    title: 'Private Travel',
+    line: 'Designed around you alone — your dates, your pace, your people.',
+    href: '/plan#private',
+    media: 'svc-private' as MediaKey,
+  },
+  {
+    n: '02',
+    title: 'Cruises & Yachts',
+    line: 'Small ships and private yachts, chosen the way we choose hotels.',
+    href: '/plan#private',
+    media: 'svc-cruises' as MediaKey,
+  },
+  {
+    n: '03',
+    title: 'Sports & Special Events',
+    line: 'The event, and everything around it, arranged with the same care.',
+    href: '/plan#private',
+    media: 'svc-events' as MediaKey,
+  },
+  {
+    n: '04',
+    title: 'Villas',
+    line: 'Houses with a strong sense of place, for families and friends.',
+    href: '/plan#private',
+    media: 'svc-villas' as MediaKey,
+  },
+];
+
+/* -- Home: speak to a travel designer ----------------------------------- */
+
+export const speak = {
+  label: 'Speak to a travel designer',
+  headline: 'Every journey begins with a conversation.',
+  body: 'Call, message us on WhatsApp, or book a time that suits you. Most of our guests talk to us before they book — we would rather you did.',
+};
+
 /* -- The Peaks → Shores transition --------------------------------------- */
 
 export const peaksToShores = {
   headlineParts: ['Peaks.', '2.', 'Shores.'],
+  /** The two halves of the body, for the homepage drag-compare. */
+  peaks: 'Peaks is where the journey began — the Alps, childhood, the outdoors.',
+  shores: 'Shores is where it lives now — Miami, the ocean, a different light.',
+  between: 'Between them sit the places we love most: where mountains meet water.',
   body: 'Peaks is where the journey began — the Alps, childhood, the outdoors. Shores is where it lives now — Miami, the ocean, a different light. Between them sit the places we love most: where mountains meet water. Alpine lakes. The Amalfi coast. Mallorca. The Mediterranean.',
   frames: [
     { n: 'Peaks', label: 'The Alps', media: 'tr-1' as MediaKey },
