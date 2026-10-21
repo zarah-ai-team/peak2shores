@@ -27,7 +27,8 @@ const signature = [
  *
  * `variant="signature"` is the homepage composition: the name, then one
  * full-bleed Peaks/Shores picture the reader drags across (PeaksShoresSlider)
- * — it replaced the four-frame strip in the October 2026 review. `variant="compact"` (the default, used by
+ * — it replaced the four-frame strip in the October 2026 review. On a desktop
+ * the name and the picture share one screen, the picture taking what is left. `variant="compact"` (the default, used by
  * /destinations) keeps the headline and lays the four frames in an even
  * strip. Both are server-rendered; each frame drifts a few pixels on scroll
  * through Frame's own parallax, pinned under reduced motion.
@@ -49,13 +50,14 @@ export function PeaksToShores({
       <Section
         contained={false}
         ground="forest"
-        pad="none"
+        screen
         id="destinations"
         aria-labelledby="p2s-title"
+        className="lg:pb-0"
       >
-        <div className="container-site grid-site gap-y-8 py-section-sm lg:items-end">
+        <div className="container-site grid-site gap-y-8 max-lg:pb-section-sm lg:items-end lg:pb-[4svh]">
           <div className="col-span-4 md:col-span-8 lg:col-span-7">
-            <SectionLabel tone="dark" className="mb-8 lg:mb-10">
+            <SectionLabel tone="dark" className="mb-8 lg:mb-[2.5svh]">
               {label}
             </SectionLabel>
             <Reveal variant="mask">
@@ -69,7 +71,9 @@ export function PeaksToShores({
             className="col-span-4 md:col-span-6 lg:col-span-5 lg:col-start-8 lg:pb-3"
           >
             <p className="prose-body measure text-on-dark-body">{content.between}</p>
-            <p className="kicker-sm mt-6 text-on-dark-muted">Drag to travel from one to the other</p>
+            <p className="kicker-sm mt-6 text-on-dark-muted">
+              Drag to travel from one to the other
+            </p>
           </Reveal>
         </div>
         <PeaksShoresSlider content={content} />

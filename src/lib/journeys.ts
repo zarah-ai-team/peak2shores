@@ -115,6 +115,12 @@ export type Journey = {
   tags: string[];
   listMedia: MediaKey;
   cardMedia: MediaKey;
+  /**
+   * The detail page's opening photograph, when the journey has no full
+   * write-up. Kept apart from `listMedia` so the page does not open on the
+   * photograph the reader just clicked. Falls back to `listMedia`.
+   */
+  heroMedia?: MediaKey;
   featured: boolean;
   detail?: JourneyDetail;
   /**
@@ -386,6 +392,7 @@ const allJourneys: Journey[] = [
     tags: ['Mountains & Lakes', 'Nature', 'Hosted by Marc'],
     listMedia: 'jl-2',
     cardMedia: 'feat-2',
+    heroMedia: 'sl-hero',
     featured: true,
     itineraryHeadline: 'Eight days, by train and boat.',
     itinerary: [
@@ -579,6 +586,7 @@ const allJourneys: Journey[] = [
     tags: ['Food & Wine', 'Nature', 'Hosted by Marc'],
     listMedia: 'jl-4',
     cardMedia: 'jl-4',
+    heroMedia: 'cp-hero',
     featured: false,
     itineraryHeadline: 'Eleven days. Two nights in town, four in the vines, four on the water.',
     itinerary: [

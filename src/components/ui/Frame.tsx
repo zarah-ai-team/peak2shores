@@ -147,6 +147,7 @@ export function Frame({
       alt={decorative ? '' : (slot.alt ?? slot.label)}
       fill
       sizes={sizes}
+      quality={85}
       priority={priority}
       loading={warm ? 'eager' : undefined}
       fetchPriority={warm ? 'low' : undefined}

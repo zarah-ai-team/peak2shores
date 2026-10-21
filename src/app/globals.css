@@ -60,9 +60,9 @@
 
   /* Rhythm — usable as py-section, pt-section-sm, mb-block, gap-stack, px-gutter */
   --spacing-gutter: var(--site-gutter);
-  --spacing-section: clamp(96px, 12vw, 192px);
-  --spacing-section-sm: clamp(64px, 8vw, 128px);
-  --spacing-block: clamp(40px, 5vw, 80px);
+  --spacing-section: clamp(72px, 8vw, 136px);
+  --spacing-section-sm: clamp(56px, 6vw, 96px);
+  --spacing-block: clamp(32px, 3.5vw, 56px);
   --spacing-stack: 24px;
   --spacing-grid-gap: var(--grid-gap);
 
@@ -81,15 +81,18 @@
     /* The house grade: pulls the stock comps toward one palette so pages read
        as shot rather than assembled. Applied by Frame to every photograph
        except the cut-out portrait. Remove once commissioned work lands. */
-    --photo-grade: saturate(0.86) contrast(0.97) brightness(1.01);
+    --photo-grade: saturate(1.02) contrast(1.03);
     /* The fixed header's height. Every offset that has to clear it — the
        spacer on solid-header routes, anchor scroll padding, the sticky
        itinerary rail, the mobile menu's top inset — reads this one value. */
     --nav-h: 68px;
+    /* Its height once the page moves (`data-compact`). A bar pinned beneath
+       the header sits at this offset, so no gap opens between the two. */
+    --nav-h-compact: 60px;
     /* Outer margin and column gap of the site grid (§2.4). */
     --site-gutter: 20px;
     --grid-gap: 16px;
-    --site-max: 1680px;
+    --site-max: 1480px;
   }
   @media (min-width: 768px) {
     :root {
@@ -100,6 +103,7 @@
   @media (min-width: 1024px) {
     :root {
       --nav-h: 84px;
+      --nav-h-compact: 68px;
     }
   }
   @media (min-width: 1120px) {
@@ -230,6 +234,24 @@
     padding-inline: var(--site-gutter);
   }
 
+  /* One idea per screen. From 1024px a `.screen` section is exactly one
+     viewport tall (capped on very tall displays) and stacks its content as a
+     column, so a section that has to fill the screen gives a child `flex-1`.
+     The padding is inside the height, sized in svh so a short laptop screen
+     loses margin before it loses content. Utilities still win (e.g. lg:py-0
+     for a full-bleed picture). Phones stack and scroll as normal. */
+  @media (min-width: 1024px) {
+    .screen {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: min(100svh, 1120px);
+      min-height: 560px;
+      padding-block: clamp(56px, 10svh, 112px) clamp(32px, 6svh, 72px);
+      overflow: hidden;
+    }
+  }
+
   /* The text container. Full-bleed photographs sit outside it; text never does. */
   .container-site {
     width: 100%;
@@ -340,7 +362,7 @@
   .h5,
   .numeral {
     font-family: var(--font-display);
-    font-weight: 500;
+    font-weight: 400;
     font-feature-settings:
       'lnum' 1,
       'kern' 1;
@@ -348,50 +370,50 @@
   }
 
   .display {
-    font-size: clamp(54px, 9.2vw, 156px);
+    font-size: clamp(40px, 5.6vw, 92px);
     line-height: 0.94;
     letter-spacing: -0.025em;
   }
 
   .h1 {
-    font-size: clamp(48px, 8vw, 132px);
+    font-size: clamp(36px, 4.8vw, 80px);
     line-height: 0.96;
     letter-spacing: -0.022em;
   }
 
   .page-title {
-    font-size: clamp(46px, 6.4vw, 104px);
+    font-size: clamp(34px, 4.2vw, 68px);
     line-height: 0.98;
     letter-spacing: -0.02em;
   }
 
   .h2 {
-    font-size: clamp(38px, 5vw, 76px);
+    font-size: clamp(28px, 3.2vw, 50px);
     line-height: 1.02;
     letter-spacing: -0.018em;
   }
 
   .h3 {
-    font-size: clamp(32px, 3.8vw, 58px);
+    font-size: clamp(24px, 2.5vw, 38px);
     line-height: 1.05;
     letter-spacing: -0.015em;
   }
 
   .h4 {
-    font-size: clamp(26px, 2.6vw, 40px);
+    font-size: clamp(21px, 1.8vw, 28px);
     line-height: 1.1;
     letter-spacing: -0.01em;
   }
 
   .h5 {
-    font-weight: 600;
-    font-size: clamp(22px, 1.8vw, 28px);
+    font-weight: 400;
+    font-size: clamp(18px, 1.3vw, 21px);
     line-height: 1.18;
     letter-spacing: -0.005em;
   }
 
   .numeral {
-    font-size: clamp(56px, 7vw, 112px);
+    font-size: clamp(40px, 4.4vw, 68px);
     line-height: 0.9;
     letter-spacing: -0.03em;
     font-variant-numeric: lining-nums;
@@ -403,7 +425,7 @@
     font-style: italic;
     font-weight: 400;
     line-height: 1.36;
-    font-size: clamp(21px, 1.9vw, 28px);
+    font-size: clamp(18px, 1.35vw, 21px);
     font-feature-settings: 'onum' 1;
     text-wrap: pretty;
   }
@@ -414,14 +436,14 @@
     font-weight: 400;
     line-height: 1.18;
     letter-spacing: -0.01em;
-    font-size: clamp(28px, 3.2vw, 48px);
+    font-size: clamp(22px, 2.2vw, 34px);
     text-wrap: balance;
   }
 
   .prose-body {
     font-family: var(--font-ui);
     font-weight: 400;
-    font-size: clamp(16px, 0.35vw + 14.8px, 17px);
+    font-size: clamp(15px, 0.2vw + 14.2px, 16px);
     line-height: 1.7;
     color: var(--color-body);
   }
@@ -429,7 +451,7 @@
   .prose-body-sm {
     font-family: var(--font-ui);
     font-weight: 400;
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1.65;
     color: var(--color-body);
   }
@@ -804,12 +826,7 @@
     border-color 0.45s var(--ease-editorial);
 }
 .site-header[data-compact] {
-  height: 60px;
-}
-@media (min-width: 1024px) {
-  .site-header[data-compact] {
-    height: 68px;
-  }
+  height: var(--nav-h-compact);
 }
 .site-header[data-solid] {
   color: var(--color-ink);

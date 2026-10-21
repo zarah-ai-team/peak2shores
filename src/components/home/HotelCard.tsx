@@ -20,7 +20,7 @@ export function HotelCard({ hotel, index }: { hotel: Hotel; index: number }) {
 
   return (
     <article
-      className="group relative isolate aspect-[4/5] overflow-hidden bg-forest-deep text-on-dark lg:aspect-[3/4]"
+      className="group relative isolate aspect-[4/5] overflow-hidden bg-forest-deep text-on-dark lg:aspect-auto lg:h-full"
       aria-labelledby={`hotel-${index + 1}-name`}
     >
       <div className="absolute inset-0 -z-10">

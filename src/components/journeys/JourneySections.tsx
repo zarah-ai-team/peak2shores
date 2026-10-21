@@ -30,7 +30,7 @@ export function JourneyHero({ journey }: { journey: Journey }) {
     >
       <div className="absolute inset-0 -z-10">
         <Frame
-          media={journey.detail?.heroMedia ?? journey.listMedia}
+          media={journey.detail?.heroMedia ?? journey.heroMedia ?? journey.listMedia}
           priority
           reveal={false}
           drift

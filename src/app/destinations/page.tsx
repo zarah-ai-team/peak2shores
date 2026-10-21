@@ -36,7 +36,7 @@ export default async function DestinationsPage() {
   return (
     <>
       <PhotoHero
-        media="tr-3"
+        media="destinations-hero"
         drift
         kicker={
           <span className="flex items-center gap-3.5">

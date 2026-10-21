@@ -40,7 +40,7 @@ export default function NotFound() {
           </div>
         </div>
         <Frame
-          media="g5"
+          media="not-found"
           ratio="3/4"
           decorative
           sizes="(min-width: 1024px) 22vw, 0px"

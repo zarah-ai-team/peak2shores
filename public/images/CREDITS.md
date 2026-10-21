@@ -9,7 +9,7 @@ calm light, no crowds, the right destination) and its provenance read from the
 source page itself. None of it was shot for Peaks2Shores; see
 `PHOTOGRAPHY-BRIEF.md` for what a commissioned shoot should replace first.
 
-- **84** frames from Unsplash under the
+- **83** frames from Unsplash under the
   [Unsplash License](https://unsplash.com/license): free for commercial use, no
   attribution required (credited here and on `/credits` anyway). The licence
   does not allow selling the photos unaltered or compiling them into a
@@ -88,7 +88,6 @@ source page itself. None of it was shot for Peaks2Shores; see
 | `hotel-2` | hotel-2.jpg | [Unsplash](https://unsplash.com/photos/brown-and-white-concrete-building-beside-body-of-water-during-daytime-CNVYC8IR4tY) | Simon Schwyter | Unsplash License |
 | `hotel-3` | hotel-3.jpg | [Unsplash](https://unsplash.com/photos/a-courtyard-with-a-tree-in-the-middle-of-it-sjB6J6113l0) | Max Harlynking | Unsplash License |
 | `jl-1` | jl-1.jpg | [Unsplash](https://unsplash.com/photos/coastal-town-nestled-into-steep-mountains-with-ocean-in-foreground-dis_sHK2oQM) | Ahmet Yüksek ✪ | Unsplash License |
-| `jl-2` | jl-2.jpg | [Unsplash](https://unsplash.com/photos/island-with-trees-on-a-lake-with-mountains-tFW7Nf-JUKU) | Andreas Slotosch | Unsplash License |
 | `jl-3` | jl-3.jpg | [Unsplash](https://unsplash.com/photos/a-village-nestled-between-lush-mountains-c5daUuAQOPY) | Nick Andreas | Unsplash License |
 | `jl-4` | jl-4.jpg | [Unsplash](https://unsplash.com/photos/green-forest-AJjaMQeLUak) | Matthijs van Schuppen | Unsplash License |
 | `jl-5` | jl-5.jpg | [Unsplash](https://unsplash.com/photos/a-body-of-water-with-a-mountain-in-the-background-5KOpO1StLaw) | Yianni Mathioudakis | Unsplash License |

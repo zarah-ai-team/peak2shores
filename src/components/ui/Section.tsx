@@ -57,6 +57,8 @@ export function Container({
  *   two consecutive light sections; never between light and dark.
  * - `contained` (default true): wraps children in `.container-site`. Pass
  *   false for full-bleed content and place a `<Container>` yourself.
+ * - `screen`: from 1024px the section is exactly one viewport tall, its
+ *   content a centred column (`.screen` in globals.css). Replaces `pad`.
  */
 export function Section({
   children,
@@ -64,6 +66,7 @@ export function Section({
   pad = 'section',
   rule = false,
   contained = true,
+  screen = false,
   as = 'section',
   id,
   className = '',
@@ -77,6 +80,7 @@ export function Section({
   pad?: keyof typeof padClass;
   rule?: boolean;
   contained?: boolean;
+  screen?: boolean;
   as?: Tag;
   id?: string;
   className?: string;
@@ -86,7 +90,7 @@ export function Section({
   'aria-label'?: string;
   'aria-labelledby'?: string;
 }) {
-  const cls = `relative ${groundClass[ground]} ${padClass[pad]} ${className}`;
+  const cls = `relative ${groundClass[ground]} ${screen ? 'screen max-lg:py-section-sm' : padClass[pad]} ${className}`;
   const content = (
     <>
       {rule && (

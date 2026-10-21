@@ -32,7 +32,7 @@ export function ExperiencesStrip({ experiences }: { experiences: Experience[] })
       id="experiences"
       aria-labelledby="experiences-title"
       data-tone="dark"
-      className="relative isolate flex min-h-[min(100svh,960px)] items-end overflow-hidden bg-forest-deep text-on-dark"
+      className="relative isolate flex min-h-[min(100svh,860px)] items-end overflow-hidden bg-forest-deep text-on-dark"
     >
       <div className="absolute inset-0 -z-10">
         {items.map((experience, i) => (

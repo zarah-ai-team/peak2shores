@@ -43,7 +43,7 @@ export default async function PlanPage() {
       <Section ground="stone" pad="section-sm" id="private" aria-labelledby="private-title">
         <div className="grid-site items-center gap-y-block">
           <Frame
-            media="ce-4"
+            media="plan-private"
             ratio="4/5"
             decorative
             sizes="(min-width: 1024px) 45vw, 100vw"

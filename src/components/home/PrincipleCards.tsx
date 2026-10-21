@@ -8,7 +8,8 @@ import type { Pillar } from '@/lib/content';
 /**
  * The four principles as cards that open on hover, focus or tap.
  *
- * On a desktop they stand side by side at most of a screen's height; the open
+ * On a desktop they stand side by side and fill the height the section leaves
+ * them; the open
  * one takes most of the row and shows its line and paragraph, the others
  * narrow to a photograph, a number and a name. On a phone they stack, and
  * the open one grows tall enough for its text. One card is always open, so
@@ -22,7 +23,7 @@ export function PrincipleCards({ pillars }: { pillars: Pillar[] }) {
   const [open, setOpen] = useState(0);
 
   return (
-    <ol className="m-0 flex list-none flex-col gap-3 p-0 lg:h-[min(78svh,760px)] lg:flex-row">
+    <ol className="m-0 flex list-none flex-col gap-3 p-0 lg:h-full lg:flex-row">
       {pillars.map((pillar, i) => {
         const active = i === open;
         const panelId = `principle-${pillar.n}`;
@@ -32,7 +33,7 @@ export function PrincipleCards({ pillars }: { pillars: Pillar[] }) {
             onMouseEnter={() => setOpen(i)}
             onFocusCapture={() => setOpen(i)}
             className={`group relative isolate overflow-hidden bg-forest-deep text-on-dark motion-safe:transition-[flex-grow,height] motion-safe:duration-700 motion-safe:ease-[var(--ease-editorial)] ${
-              active ? 'h-[480px] lg:h-auto lg:grow-[3.2]' : 'h-28 lg:h-auto lg:grow'
+              active ? 'h-[420px] lg:h-auto lg:grow-[3.2]' : 'h-28 lg:h-auto lg:grow'
             } lg:basis-0`}
           >
             <div className="absolute inset-0 -z-10">
@@ -50,6 +51,11 @@ export function PrincipleCards({ pillars }: { pillars: Pillar[] }) {
                   active ? 'opacity-20' : 'opacity-50'
                 }`}
               />
+              {/* Keeps the line and paragraph legible over a busy photograph. */}
+              <div
+                aria-hidden
+                className="absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t from-forest-deep/90 via-forest-deep/45 to-transparent"
+              />
             </div>
 
             <div className="flex h-full flex-col justify-end p-6 lg:p-8">
@@ -62,7 +68,10 @@ export function PrincipleCards({ pillars }: { pillars: Pillar[] }) {
                   className="flex w-full items-baseline gap-4 text-left after:absolute after:inset-0 after:content-['']"
                 >
                   <span className="kicker text-on-dark">{pillar.n}</span>
-                  <span className="h4 text-on-dark">{pillar.title}</span>
+                  {/* A narrowed card has room for a smaller name only. */}
+                  <span className={`${active ? 'h4' : 'h5 lg:hyphens-auto'} text-on-dark`}>
+                    {pillar.title}
+                  </span>
                 </button>
               </h3>
               <div
@@ -73,9 +82,7 @@ export function PrincipleCards({ pillars }: { pillars: Pillar[] }) {
               >
                 <div className="overflow-hidden">
                   <p className="lead mt-5 max-w-[30ch] text-on-dark">{pillar.lead}</p>
-                  <p className="prose-body-sm mt-3 max-w-[44ch] text-on-dark-body">
-                    {pillar.body}
-                  </p>
+                  <p className="prose-body-sm mt-3 max-w-[44ch] text-on-dark-body">{pillar.body}</p>
                 </div>
               </div>
             </div>

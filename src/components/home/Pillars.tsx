@@ -13,27 +13,32 @@ import { PrincipleCards } from './PrincipleCards';
  * as photographs, and the one reason the principles do not already cover set
  * as a single closing line. Four of the six reasons repeated the pillars and
  * a fifth the hotels section (client review, October 2026).
+ *
+ * On a desktop it is one screen: the headline, then the cards taking whatever
+ * height is left, then the closing line.
  */
 export function Pillars({ pillars }: { pillars: Pillar[] }) {
   return (
-    <Section contained={false} ground="panel" id="pillars" aria-labelledby="pillars-title">
-      <div className="container-site">
-        <div className="grid-site mb-block gap-y-8 lg:items-end">
+    <Section contained={false} screen ground="panel" id="pillars" aria-labelledby="pillars-title">
+      <div className="container-site lg:flex lg:min-h-0 lg:flex-1 lg:flex-col">
+        <div className="grid-site mb-block gap-y-8 lg:mb-[4svh] lg:items-end">
           <div className="col-span-4 md:col-span-8 lg:col-span-8">
-            <SectionLabel className="mb-8 lg:mb-10">02 — What every journey is held to</SectionLabel>
+            <SectionLabel className="mb-8 lg:mb-[2.5svh]">
+              02 — What every journey is held to
+            </SectionLabel>
             <Reveal variant="mask">
-              <h2 id="pillars-title" className="h2 max-w-[22ch]">
+              <h2 id="pillars-title" className="h2 max-w-[34ch]">
                 Someone who really knows travel has already done the filtering for you.
               </h2>
             </Reveal>
           </div>
         </div>
 
-        <Reveal distance={16}>
+        <Reveal distance={16} className="lg:min-h-0 lg:flex-1">
           <PrincipleCards pillars={pillars} />
         </Reveal>
 
-        <Reveal delay={0.1} className="mt-10 flex items-start gap-4 lg:mt-14">
+        <Reveal delay={0.1} className="mt-10 flex items-start gap-4 lg:mt-[3.5svh]">
           <Tick className="mt-[0.7em] w-[22px] shrink-0" />
           <p className="h5 m-0">
             Seamless by nature.{' '}

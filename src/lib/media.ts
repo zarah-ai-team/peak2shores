@@ -195,15 +195,15 @@ export const media = {
     label: 'Shores',
     brief: 'Open water and a coastline in warm light. Wide, room for type on the right.',
     tone: '#6c7f86',
-    src: '/images/drive/croatia-hvar-sailing.jpg',
-    alt: 'A yacht at anchor over turquoise water off Hvar',
+    src: '/images/drive/zimbabwe-zambezi-sunset-cruise.jpg',
+    alt: 'Boats on the Zambezi as the sun sets',
   },
   'principle-1': {
     label: 'Personal',
     brief: 'Marc with guests or a local host — real people, natural light.',
     tone: '#c9bea9',
-    src: '/images/drive/marc-matterhorn-trail.jpg',
-    alt: 'Marc on an alpine trail with the Matterhorn behind',
+    src: '/images/drive/switzerland-guests-lucerne-chapel-bridge.jpg',
+    alt: 'Marc’s small group by the Chapel Bridge, Lucerne',
   },
   'principle-2': {
     label: 'Curated',
@@ -230,8 +230,8 @@ export const media = {
     label: 'Taste',
     brief: 'Food, wine, a table worth booking. Wide.',
     tone: '#9a9587',
-    src: '/images/drive/south-africa-guests-african-feast.jpg',
-    alt: 'Guests sharing a long dinner table at an African feast',
+    src: '/images/drive/switzerland-guests-lavaux-vineyards.jpg',
+    alt: 'Two guests among the Lavaux vineyards above Lake Geneva',
   },
   'exp-meet': {
     label: 'Meet',
@@ -286,15 +286,15 @@ export const media = {
     label: 'Cruises & Yachts',
     brief: 'A small ship or private yacht on clear water.',
     tone: '#7f9aa3',
-    src: '/images/drive/zimbabwe-zambezi-sunset-cruise.jpg',
-    alt: 'Boats on the Zambezi as the sun sets',
+    src: '/images/drive/marc-river-cruise-deck.jpg',
+    alt: 'Marc on the deck of a river cruise ship',
   },
   'svc-events': {
     label: 'Sports & Special Events',
     brief: 'The atmosphere of a great event — no logos, no identifiable venue.',
     tone: '#8c8f86',
-    src: '/images/g3.jpg',
-    alt: 'A white tablecloth laid with crystal glasses, plates and lemons in dappled light',
+    src: '/images/drive/south-africa-guests-african-feast.jpg',
+    alt: 'Guests sharing a long dinner table at an African feast',
   },
   'svc-villas': {
     label: 'Villas',
@@ -311,6 +311,73 @@ export const media = {
     alt: '',
   },
 
+  /* ---- One photograph, one place --------------------------------------- */
+  // Each of these gives a page its own frame where it used to borrow one that
+  // already appears elsewhere on the site.
+  'destinations-hero': {
+    label: 'Destinations · where mountains meet water',
+    brief: 'A lake below the Alps, wide — mountains and water in one frame.',
+    tone: '#4d5c5e',
+    src: '/images/drive/switzerland-rigi-lake-view.jpg',
+    alt: 'Lake Lucerne and the Alps seen from a meadow on the Rigi',
+  },
+  'dest-italy': {
+    label: 'Destination · Italy',
+    brief: 'The Italian coast from the water. Wide.',
+    tone: '#8c8f86',
+    src: '/images/home-hero.jpg',
+    alt: 'A sailing boat at anchor off the Amalfi Coast, a cliffside town and the coast fading into haze behind',
+  },
+  'dest-switzerland': {
+    label: 'Destination · Switzerland',
+    brief: 'A Swiss lake beneath cliffs. Upright.',
+    tone: '#4d5c5e',
+    src: '/images/drive/switzerland-lake-lucerne-cliffs.jpg',
+    alt: 'Still lake water beneath green cliffs on Lake Lucerne',
+  },
+  'dest-spain': {
+    label: 'Destination · Spain',
+    brief: 'The Mallorcan coast at the end of the day. Wide.',
+    tone: '#9a9587',
+    src: '/images/pillar-4.jpg',
+    alt: 'A single chair on a Mallorcan headland, facing the sea in the last light',
+  },
+  'dest-south-africa': {
+    label: 'Destination · South Africa',
+    brief: 'The Cape from Table Mountain. Upright.',
+    tone: '#6c7f86',
+    src: '/images/drive/south-africa-lions-head-table-mountain.jpg',
+    alt: 'Lion’s Head and the Atlantic seaboard from Table Mountain',
+  },
+  'sl-hero': {
+    label: 'Hero · The Swiss Lakes',
+    brief: 'Lucerne’s old town on the water. Wide.',
+    tone: '#5f7580',
+    src: '/images/drive/switzerland-lucerne-old-town-river.jpg',
+    alt: 'Lucerne old town facades across the turquoise Reuss',
+  },
+  'cp-hero': {
+    label: 'Hero · The Cape',
+    brief: 'The Cape coast from above. Wide.',
+    tone: '#6c7f86',
+    src: '/images/drive/south-africa-hout-bay-aerial.jpg',
+    alt: 'Hout Bay and the Twelve Apostles from the air',
+  },
+  'plan-private': {
+    label: 'Private & custom travel',
+    brief: 'Guests on their own journey, somewhere memorable. Upright.',
+    tone: '#a09a8c',
+    src: '/images/drive/switzerland-guests-jungfraujoch.jpg',
+    alt: 'Guests with the Swiss flag on the Jungfraujoch snowfield',
+  },
+  'not-found': {
+    label: 'Not found',
+    brief: 'A quiet path through open country. Upright.',
+    tone: '#7a8a7a',
+    src: '/images/drive/switzerland-gstaad-meadow.jpg',
+    alt: 'Alpine meadow and footpath above Gstaad',
+  },
+
   /* ---- Journeys index -------------------------------------------------- */
   'jl-1': {
     label: 'Amalfi, Slowly',
@@ -322,7 +389,7 @@ export const media = {
     label: 'The Swiss Lakes',
     brief: 'Swiss lake — still water, larches, first snow on the peaks.',
     tone: '#4d5c5e',
-    alt: 'A larch-covered islet on Lake Sils in the Engadin, mountains behind',
+    alt: 'A belle-époque grand hotel on the green water of Lake Lucerne, wooded slopes behind',
   },
   'jl-3': {
     label: 'Mallorca',

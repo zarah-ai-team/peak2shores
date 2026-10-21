@@ -11,17 +11,18 @@ import { HotelCard } from './HotelCard';
  * ledger's thumbnails were not (client review, October 2026). Each card turns
  * over on hover, focus or tap to the case for the hotel, its signature detail
  * and what is nearby. The hotels are described, not named or claimed as
- * partners — exactly as the copy has it.
+ * partners — exactly as the copy has it. One screen on a desktop: the three
+ * cards share the height under the headline.
  */
 export function HotelsStrip({ hotels }: { hotels: HomeContent['signatureHotels'] }) {
   return (
-    <Section contained={false} id="hotels" aria-labelledby="hotels-title">
-      <div className="container-site">
-        <div className="grid-site mb-block gap-y-8 lg:items-end">
+    <Section contained={false} screen id="hotels" aria-labelledby="hotels-title">
+      <div className="container-site lg:flex lg:min-h-0 lg:flex-1 lg:flex-col">
+        <div className="grid-site mb-block gap-y-8 lg:mb-[4svh] lg:items-end">
           <div className="col-span-4 md:col-span-8 lg:col-span-8">
-            <SectionLabel className="mb-8 lg:mb-10">08 — Where you stay</SectionLabel>
+            <SectionLabel className="mb-8 lg:mb-[2.5svh]">08 — Where you stay</SectionLabel>
             <Reveal variant="mask">
-              <h2 id="hotels-title" className="h2 max-w-[20ch]">
+              <h2 id="hotels-title" className="h2 max-w-[30ch]">
                 We don’t simply book hotels. We choose where you spend your time.
               </h2>
             </Reveal>
@@ -40,14 +41,14 @@ export function HotelsStrip({ hotels }: { hotels: HomeContent['signatureHotels']
         <RevealGroup
           as="ul"
           stagger={0.08}
-          className="m-0 grid list-none gap-[var(--grid-gap)] p-0 md:grid-cols-2 lg:grid-cols-3"
+          className="m-0 grid list-none gap-[var(--grid-gap)] p-0 md:grid-cols-2 lg:min-h-0 lg:flex-1 lg:grid-cols-3 lg:grid-rows-[minmax(0,1fr)]"
         >
           {hotels.map((hotel, i) => (
             <RevealItem
               as="li"
               key={hotel.name}
               distance={16}
-              className={i === 0 ? 'md:col-span-2 lg:col-span-1' : ''}
+              className={`lg:min-h-0 ${i === 0 ? 'md:col-span-2 lg:col-span-1' : ''}`}
             >
               <HotelCard hotel={hotel} index={i} />
             </RevealItem>

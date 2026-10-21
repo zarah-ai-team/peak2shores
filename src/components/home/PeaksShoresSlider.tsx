@@ -53,7 +53,7 @@ export function PeaksShoresSlider({ content }: { content: Content }) {
   return (
     <div
       ref={box}
-      className="relative h-[min(92svh,900px)] min-h-[560px] touch-pan-y select-none overflow-hidden bg-forest-deep text-on-dark"
+      className="relative h-[70svh] min-h-[420px] touch-pan-y lg:h-auto lg:min-h-0 lg:flex-1 select-none overflow-hidden bg-forest-deep text-on-dark"
       onPointerDown={(e) => {
         dragging.current = true;
         e.currentTarget.setPointerCapture(e.pointerId);

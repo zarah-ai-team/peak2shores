@@ -5,12 +5,16 @@ import * as m from 'motion/react-m';
 import { useReducedMotion, type MotionValue } from 'motion/react';
 import { Frame } from '@/components/ui/Frame';
 
-/* The reel is cut from Marc's own footage and photographs (public/video/).
-   Phones get the 720p cut; everyone else the full one, WebM where the browser
-   takes it. */
+/* The reel is rendered at 4K from Marc's own photographs (public/video/).
+   Phones get the 720p cut; retina laptops and large screens the 4K master;
+   everyone else 1080p. The first matching source wins. */
 const sources = [
   { src: '/video/hero-reel-720.mp4', type: 'video/mp4', media: '(max-width: 767px)' },
-  { src: '/video/hero-reel.webm', type: 'video/webm' },
+  {
+    src: '/video/hero-reel-4k.mp4',
+    type: 'video/mp4',
+    media: '(min-width: 1280px) and (min-resolution: 1.5dppx), (min-width: 2200px)',
+  },
   { src: '/video/hero-reel.mp4', type: 'video/mp4' },
 ];
 
@@ -122,7 +126,9 @@ export function HeroReel({
 export function HeroReelControls({ paused, onToggle }: { paused: boolean; onToggle: () => void }) {
   return (
     <div className="flex items-center gap-4 pt-4">
-      <span className="kicker-sm text-on-dark/80">Filmed by Marc · Switzerland &amp; beyond</span>
+      <span className="kicker-sm text-on-dark/80">
+        Photographed by Marc · Switzerland &amp; Africa
+      </span>
       <button
         type="button"
         onClick={onToggle}

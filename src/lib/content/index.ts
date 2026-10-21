@@ -25,7 +25,7 @@
  * `import { pillars } from '@/lib/content'` lines keep compiling. New code
  * should use the async getters instead.
  */
-import { getMedia } from '../media';
+import { getMedia, media, type MediaKey } from '../media';
 import { isLive, isNew, journeyLabel, rankRelated, toSummary } from '../journeys';
 import { pageMetadata, jsonLd } from '../seo';
 import { source } from './source';
@@ -156,13 +156,19 @@ export async function getDestinations(opts?: ContentQueryOptions): Promise<Desti
       byCountry.set(country, list);
     }
   }
-  return [...byCountry.entries()].map(([country, list]) => ({
-    slug: slugify(country),
-    country,
-    regions: [...new Set(list.map((j) => j.region))],
-    journeys: list.map(toSummary),
-    media: list[0].listMedia,
-  }));
+  return [...byCountry.entries()].map(([country, list]) => {
+    const slug = slugify(country);
+    // A country's own photograph (`dest-<slug>` in the registry) when there is
+    // one, so the chapter does not repeat a journey's list photograph.
+    const own = `dest-${slug}`;
+    return {
+      slug,
+      country,
+      regions: [...new Set(list.map((j) => j.region))],
+      journeys: list.map(toSummary),
+      media: own in media ? (own as MediaKey) : list[0].listMedia,
+    };
+  });
 }
 
 export async function getDestinationBySlug(

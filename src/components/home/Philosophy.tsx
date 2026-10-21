@@ -13,7 +13,7 @@ import { Section } from '@/components/ui/Section';
  */
 export function Philosophy({ philosophy }: { philosophy: HomeContent['philosophy'] }) {
   return (
-    <Section contained={false} id="philosophy" aria-labelledby="philosophy-title">
+    <Section contained={false} screen id="philosophy" aria-labelledby="philosophy-title">
       <div className="container-site flex flex-col items-center text-center">
         <SectionLabel className="mb-8 lg:mb-10">01 — Philosophy</SectionLabel>
         <Reveal variant="mask">

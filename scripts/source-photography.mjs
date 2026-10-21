@@ -13,8 +13,8 @@
  * Unsplash License or is not free to use (Unsplash+). Nothing about a photo is
  * typed in by hand, so the credits can only say what the source page says.
  *
- * Files are written to `public/images/<slot>.jpg` (long edge ≤ 2400px, JPEG
- * q82, uncropped — every frame is laid out with object-fit: cover), and
+ * Files are written to `public/images/<slot>.jpg` (long edge ≤ 3840px, so
+ * full-bleed frames stay sharp on 4K screens; JPEG q84, uncropped — every frame is laid out with object-fit: cover), and
  * `public/images/credits.json` is updated in place: replaced slots get the new
  * provenance, slots not in the manifest keep their existing entry.
  * `public/images/CREDITS.md` is regenerated from the result.
@@ -31,8 +31,8 @@ const manifestPath = join(root, 'scripts', 'photography-manifest.json');
 const creditsJsonPath = join(imagesDir, 'credits.json');
 const creditsMdPath = join(imagesDir, 'CREDITS.md');
 
-const MAX_EDGE = 2400;
-const JPEG_QUALITY = 82;
+const MAX_EDGE = 3840;
+const JPEG_QUALITY = 84;
 const UNSPLASH_LICENSE = 'https://unsplash.com/license';
 
 const args = process.argv.slice(2);

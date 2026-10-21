@@ -24,7 +24,7 @@ export function SpeakToUs({ speak }: { speak: HomeContent['speak'] }) {
       id="speak"
       aria-labelledby="speak-title"
       data-tone="dark"
-      className="relative isolate flex min-h-[min(100svh,920px)] items-end overflow-hidden bg-forest-deep text-on-dark"
+      className="relative isolate flex min-h-[min(100svh,820px)] items-end overflow-hidden bg-forest-deep text-on-dark"
     >
       <div className="absolute inset-0 -z-10">
         <Frame

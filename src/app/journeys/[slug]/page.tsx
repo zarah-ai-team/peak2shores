@@ -55,7 +55,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     path: `/journeys/${journey.slug}`,
   });
   // Shared in a message or on social, the journey shows its own photograph.
-  const hero = getMedia(journey.detail?.heroMedia ?? journey.listMedia);
+  const hero = getMedia(journey.detail?.heroMedia ?? journey.heroMedia ?? journey.listMedia);
   if (!hero.src) return base;
   const images = [{ url: hero.src, alt: hero.alt ?? journey.title }];
   return {
@@ -99,7 +99,7 @@ export default async function JourneyPage({ params }: Params) {
 
   const url = `${site.url}/journeys/${journey.slug}`;
   const days = journey.detail?.days ?? journey.itinerary ?? [];
-  const heroMedia = getMedia(journey.detail?.heroMedia ?? journey.listMedia);
+  const heroMedia = getMedia(journey.detail?.heroMedia ?? journey.heroMedia ?? journey.listMedia);
   const price = journey.priceFrom.replace(/[$,]/g, '');
 
   const trip = {

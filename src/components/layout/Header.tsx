@@ -16,7 +16,8 @@ const HIDE_AFTER = 480;
  *
  * - transparent over a hero, frosted paper once the page is read (`data-solid`)
  * - a little shorter as soon as the page moves (`data-compact`)
- * - out of the way on a long scroll down, back on any scroll up (`data-hidden`)
+ * - out of the way on a long scroll down, back on any scroll up (`data-hidden`),
+ *   unless the page pins a bar beneath it (`[data-pin-header]`)
  * - on-dark over the open forest mobile menu (`data-menu`)
  *
  * Both logo files are in the tree; CSS cross-fades between them, so the swap
@@ -55,8 +56,12 @@ export function Header({ primary, cta }: { primary: NavItem[]; cta: NavItem }) {
 
       setCompact(y > 40);
 
+      // A page that pins a bar beneath the header (the journeys filters) keeps
+      // the header in place; hiding it would leave that bar floating.
+      const pinned = document.querySelector('[data-pin-header]') !== null;
+
       const delta = y - lastY;
-      if (y < HIDE_AFTER || delta < -4) setHidden(false);
+      if (pinned || y < HIDE_AFTER || delta < -4) setHidden(false);
       else if (delta > 8) setHidden(true);
       lastY = y;
     };

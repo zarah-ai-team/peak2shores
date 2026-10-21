@@ -19,8 +19,9 @@ type Selection = Partial<Record<FilterKey, string>>;
 /**
  * The journeys index, below the page title.
  *
- * 1. The globe band (night ground) — choosing a country there is the same
- *    choice as the Destination filter.
+ * 1. The globe band — choosing a country there is the same choice as the
+ *    Destination filter, and hovering a journey anywhere on the page (the
+ *    band's list or a row below) flies the globe to it.
  * 2. A sticky filter bar: four word lists in one row on a desktop; behind a
  *    "Refine" disclosure on a phone. One option per group, tapped again to
  *    clear — the same semantics the page has always had.
@@ -34,6 +35,7 @@ export function JourneyExplorer({ journeys }: { journeys: JourneySummary[] }) {
   const [selection, setSelection] = useState<Selection>({});
   const [touched, setTouched] = useState(false);
   const [open, setOpen] = useState(false);
+  const [hover, setHover] = useState<string | null>(null);
   const panelId = useId();
   const listRef = useRef<HTMLElement>(null);
 
@@ -79,11 +81,16 @@ export function JourneyExplorer({ journeys }: { journeys: JourneySummary[] }) {
         journeys={journeys}
         selected={selection.country}
         onSelect={(country) => toggle('country', country)}
+        hover={hover}
+        onHover={setHover}
       />
 
+      {/* `data-pin-header` keeps the header in place above this bar, so the
+          two stay stacked at the top of the page however far it scrolls. */}
       <section
         aria-label="Filter journeys"
-        className="sticky top-[var(--nav-h)] z-20 border-b border-line bg-panel/95 backdrop-blur-[14px]"
+        data-pin-header
+        className="sticky top-[var(--nav-h-compact)] z-20 border-b border-line bg-panel/95 backdrop-blur-[14px]"
       >
         <div className="container-site">
           {/* Phone: one line — Refine, the count, Clear. */}
@@ -179,6 +186,7 @@ export function JourneyExplorer({ journeys }: { journeys: JourneySummary[] }) {
                     journey={journey}
                     flip={i % 2 === 1}
                     first={journey.slug === journeys[0]?.slug}
+                    onHover={setHover}
                   />
                 </li>
               ))}
@@ -217,11 +225,14 @@ function JourneyRow({
   journey,
   flip,
   first,
+  onHover,
 }: {
   journey: JourneySummary;
   flip: boolean;
   /** The top row of the full list is the page's largest paint, so it loads eagerly. */
   first: boolean;
+  /** Tells the globe which journey the reader is looking at. */
+  onHover: (slug: string | null) => void;
 }) {
   const titleId = `journey-${journey.slug}-title`;
   const tag = journeyTagStatus(journey);
@@ -231,22 +242,43 @@ function JourneyRow({
     <Link
       href={`/journeys/${journey.slug}`}
       aria-labelledby={titleId}
+      onPointerEnter={() => onHover(journey.slug)}
+      onPointerLeave={() => onHover(null)}
+      onFocus={() => onHover(journey.slug)}
+      onBlur={() => onHover(null)}
       className="group grid-site items-center gap-y-8 py-block"
     >
-      <Frame
-        ratio="4/5"
-        media={journey.listMedia}
-        hover
-        decorative
-        priority={first}
-        sizes="(min-width: 1024px) 50vw, 100vw"
-        className={`col-span-4  md:col-span-6 lg:col-span-6 ${
+      {/* The photograph eases in closer on hover or focus; a caption rises over it. */}
+      <div
+        className={`relative isolate col-span-4 overflow-hidden md:col-span-6 lg:col-span-6 ${
           flip ? 'md:col-start-3 lg:order-2 lg:col-start-7' : ''
         }`}
-      />
+      >
+        <Frame
+          ratio="4/5"
+          media={journey.listMedia}
+          hover
+          decorative
+          priority={first}
+          sizes="(min-width: 1024px) 50vw, 100vw"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-gradient-to-t from-forest-deep/70 via-forest-deep/25 to-transparent px-6 pb-6 pt-24 text-on-dark opacity-0 transition-[opacity,transform] duration-700 ease-[var(--ease-editorial)] motion-safe:translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
+        >
+          <span className="kicker-sm !text-on-dark">
+            {journey.region} · {journey.departure}
+          </span>
+          <span className="kicker-sm inline-flex items-center gap-2 !text-on-dark">
+            View the journey
+            <Arrow />
+          </span>
+        </div>
+      </div>
 
       <Reveal
         distance={16}
+        delay={0.08}
         className={`col-span-4 flex flex-col md:col-span-8 lg:col-span-5 ${
           flip ? 'lg:order-1 lg:col-start-1' : 'lg:col-start-8'
         }`}
