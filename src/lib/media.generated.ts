@@ -25,6 +25,8 @@ export const discovered: Record<string, { src: string }> = {
   'hotel-1': { src: '/images/hotel-1.jpg' },
   'hotel-2': { src: '/images/hotel-2.jpg' },
   'hotel-3': { src: '/images/hotel-3.jpg' },
+  'ma-list': { src: '/images/ma-list.jpg' },
+  'ce-list': { src: '/images/ce-list.jpg' },
   'jl-1': { src: '/images/jl-1.jpg' },
   'jl-2': { src: '/images/jl-2.jpg' },
   'jl-3': { src: '/images/jl-3.jpg' },

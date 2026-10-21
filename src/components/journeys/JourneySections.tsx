@@ -550,15 +550,9 @@ export function RelatedJourneys({ journeys }: { journeys: JourneySummary[] }) {
                   href={`/journeys/${journey.slug}`}
                   className="group grid-site items-center gap-y-5 py-7"
                 >
-                  <Frame
-                    ratio="3/2"
-                    media={journey.listMedia}
-                    hover
-                    decorative
-                    sizes="(min-width: 1024px) 30vw, 100vw"
-                    className="col-span-4  md:col-span-3 lg:col-span-4"
-                  />
-                  <span className="col-span-4 flex flex-col gap-3 md:col-span-5 lg:col-span-5 lg:col-start-6">
+                  {/* Text only: the journey's photograph belongs to the Journeys
+                      index, and repeating it here would show it twice. */}
+                  <span className="col-span-4 flex flex-col gap-3 md:col-span-6 lg:col-span-8">
                     <span className="kicker-sm flex flex-wrap items-center gap-x-4 gap-y-2">
                       {tag !== 'open' && <StatusTag status={tag} />}
                       <span>

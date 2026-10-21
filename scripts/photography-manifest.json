@@ -413,5 +413,15 @@
     "slot": "jn-4",
     "source": "unsplash",
     "photo": "wooden-chairs-on-seaside-terrace-V-znk3SS474"
+  },
+  {
+    "slot": "ma-list",
+    "source": "unsplash",
+    "photo": "a-view-of-the-ocean-from-the-top-of-a-mountain--ng6LPq1Dg8"
+  },
+  {
+    "slot": "ce-list",
+    "source": "unsplash",
+    "photo": "gI67EMO0i5w"
   }
 ]
