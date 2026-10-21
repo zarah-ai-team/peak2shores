@@ -1,0 +1,417 @@
+[
+  {
+    "slot": "home-hero",
+    "source": "unsplash",
+    "photo": "sailing-boat-Fzp8kL9jAiM"
+  },
+  {
+    "slot": "home-hero-2",
+    "source": "unsplash",
+    "photo": "green-trees-near-lake-and-mountain-during-daytime-kokjC1WcD4M"
+  },
+  {
+    "slot": "home-hero-3",
+    "source": "unsplash",
+    "photo": "mountains-in-body-of-water-F8ru8OvpRzA"
+  },
+  {
+    "slot": "pillar-1",
+    "source": "unsplash",
+    "photo": "people-walking-down-a-narrow-street-towards-a-castle-m8uV_9gO9M0"
+  },
+  {
+    "slot": "pillar-2",
+    "source": "unsplash",
+    "photo": "terraced-buildings-overlook-a-calm-blue-ocean-under-clear-skies-pDZpDy_KCeg"
+  },
+  {
+    "slot": "pillar-3",
+    "source": "unsplash",
+    "photo": "orange-fruits-on-brown-wooden-crate-tDyPWf0PUwc"
+  },
+  {
+    "slot": "pillar-4",
+    "source": "unsplash",
+    "photo": "a-lone-chair-overlooks-the-sea-at-sunset-iDG5heMyY_o"
+  },
+  {
+    "slot": "feat-1",
+    "source": "unsplash",
+    "photo": "houses-near-mountains-and-sea-jvaahYi7_Po"
+  },
+  {
+    "slot": "feat-2",
+    "source": "unsplash",
+    "photo": "closeup-photo-of-brown-wooden-dock-facing-mountain-and-calm-body-of-water-Q-AQrJr4LSI"
+  },
+  {
+    "slot": "feat-3",
+    "source": "unsplash",
+    "photo": "a-house-in-a-field-with-mountains-in-the-background-oP0_l1xHUOo"
+  },
+  {
+    "slot": "tr-1",
+    "source": "unsplash",
+    "photo": "snow-covered-mountain-during-daytime-ct4MF6XoLzY"
+  },
+  {
+    "slot": "tr-2",
+    "source": "unsplash",
+    "photo": "snow-capped-mountains-reflected-in-lake-o75824r-9HE"
+  },
+  {
+    "slot": "tr-3",
+    "source": "unsplash",
+    "photo": "green-trees-on-brown-mountain-near-body-of-water-during-daytime-kJ2_a03Bp-M"
+  },
+  {
+    "slot": "tr-4",
+    "source": "unsplash",
+    "photo": "silhouette-of-palm-trees-near-body-of-water-during-sunset-FQjUaIMQF3Q"
+  },
+  {
+    "slot": "ex-1",
+    "source": "unsplash",
+    "photo": "a-table-set-up-for-a-meal-under-a-pergolated-roof-z9MAxYlXv3s"
+  },
+  {
+    "slot": "ex-2",
+    "source": "unsplash",
+    "photo": "a-person-making-a-bowl-on-a-pottery-wheel-EETgT0lmAiQ"
+  },
+  {
+    "slot": "ex-3",
+    "source": "unsplash",
+    "photo": "a-narrow-plant-lined-alleyway-in-an-old-european-town-1mgFxLxwQOc"
+  },
+  {
+    "slot": "ex-4",
+    "source": "unsplash",
+    "photo": "white-sailboat-on-body-of-water-during-daytime-oLh30da4k3w"
+  },
+  {
+    "slot": "ex-5",
+    "source": "unsplash",
+    "photo": "an-open-window-with-a-view-of-a-body-of-water-uH8GHfmgS3Y"
+  },
+  {
+    "slot": "hotel-1",
+    "source": "unsplash",
+    "photo": "coastal-town-buildings-overlooking-a-vibrant-blue-sea-with-boats-GasM0nsuews"
+  },
+  {
+    "slot": "hotel-2",
+    "source": "unsplash",
+    "photo": "brown-and-white-concrete-building-beside-body-of-water-during-daytime-CNVYC8IR4tY"
+  },
+  {
+    "slot": "hotel-3",
+    "source": "unsplash",
+    "photo": "a-courtyard-with-a-tree-in-the-middle-of-it-sjB6J6113l0"
+  },
+  {
+    "slot": "jl-1",
+    "source": "unsplash",
+    "photo": "coastal-town-nestled-into-steep-mountains-with-ocean-in-foreground-dis_sHK2oQM"
+  },
+  {
+    "slot": "jl-3",
+    "source": "unsplash",
+    "photo": "a-village-nestled-between-lush-mountains-c5daUuAQOPY"
+  },
+  {
+    "slot": "jl-4",
+    "source": "unsplash",
+    "photo": "green-forest-AJjaMQeLUak"
+  },
+  {
+    "slot": "jl-5",
+    "source": "unsplash",
+    "photo": "a-body-of-water-with-a-mountain-in-the-background-5KOpO1StLaw"
+  },
+  {
+    "slot": "am-hero",
+    "source": "unsplash",
+    "photo": "a-small-village-on-a-cliff-overlooking-the-ocean-jnwHRs7eVtw"
+  },
+  {
+    "slot": "am-why",
+    "source": "unsplash",
+    "photo": "green-mountains-EzpgUGeatTM"
+  },
+  {
+    "slot": "am-map",
+    "source": "unsplash",
+    "photo": "an-aerial-view-of-a-city-and-a-harbor-7GeNoS4QspM"
+  },
+  {
+    "slot": "am-h1",
+    "source": "unsplash",
+    "photo": "a-balcony-with-a-table-and-chairs-and-a-view-of-the-ocean-wf5JpohfnX4"
+  },
+  {
+    "slot": "am-h2",
+    "source": "unsplash",
+    "photo": "arches-of-a-cloister-overlooking-a-courtyard-garden-iuXDLwK3jo0"
+  },
+  {
+    "slot": "d1",
+    "source": "unsplash",
+    "photo": "champagne-flute-on-table-Rlq8BdhBYp4"
+  },
+  {
+    "slot": "d2",
+    "source": "unsplash",
+    "photo": "a-narrow-street-with-a-stone-wall-next-to-it-SaFbIgSclrw"
+  },
+  {
+    "slot": "d3",
+    "source": "unsplash",
+    "photo": "two-boats-near-stone-island-during-day-QVU_5fjXWe0"
+  },
+  {
+    "slot": "d4",
+    "source": "unsplash",
+    "photo": "a-historic-building-with-a-lush-green-garden-and-trees-kwSLAeUrZcA"
+  },
+  {
+    "slot": "d5",
+    "source": "unsplash",
+    "photo": "beach-chairs-and-umbrellas-by-the-ocean-waves-sqrnQMEy7VQ"
+  },
+  {
+    "slot": "d6",
+    "source": "unsplash",
+    "photo": "boat-near-island-swJhB7hq2XA"
+  },
+  {
+    "slot": "d7",
+    "source": "unsplash",
+    "photo": "a-person-is-mixing-a-mixture-in-a-bowl-O-hPtwG--ik"
+  },
+  {
+    "slot": "d9",
+    "source": "unsplash",
+    "photo": "a-pastry-and-a-cup-of-coffee-on-a-table-Xt8ARul4H8o"
+  },
+  {
+    "slot": "g1",
+    "source": "unsplash",
+    "photo": "coastal-town-nestled-on-a-cliffside-by-the-sea-h39poUqMMw0"
+  },
+  {
+    "slot": "g2",
+    "source": "unsplash",
+    "photo": "fresh-yellow-lemons-some-sliced-displayed-in-wooden-crates-WFJ19r9TbZE"
+  },
+  {
+    "slot": "g3",
+    "source": "unsplash",
+    "photo": "table-set-with-lemons-and-crystal-f6QoaTtdyGw"
+  },
+  {
+    "slot": "g4",
+    "source": "unsplash",
+    "photo": "stone-arches-and-columns-in-a-cloister-with-greenery-DnwNr7GBeEA"
+  },
+  {
+    "slot": "g5",
+    "source": "unsplash",
+    "photo": "a-white-wall-with-a-chair-and-a-city-in-the-background-G56s81sNzIQ"
+  },
+  {
+    "slot": "sl-1",
+    "source": "unsplash",
+    "photo": "body-of-water-near-concrete-buildings-under-white-and-gray-sky-at-daytime-xpw5IOgLjuw"
+  },
+  {
+    "slot": "sl-2",
+    "source": "unsplash",
+    "photo": "a-large-white-boat-floating-on-top-of-a-body-of-water-FVMlr4uL3Bc"
+  },
+  {
+    "slot": "sl-3",
+    "source": "unsplash",
+    "photo": "green-and-black-mountains-under-blue-sky-during-daytime-7qYuJHmzOpk"
+  },
+  {
+    "slot": "sl-4",
+    "source": "unsplash",
+    "photo": "photography-of-red-traveling-train-during-daytime-KbosFAsVh1k"
+  },
+  {
+    "slot": "sl-5",
+    "source": "unsplash",
+    "photo": "calm-lake-during-daytime-iulCMZeUUzg"
+  },
+  {
+    "slot": "sl-6",
+    "source": "unsplash",
+    "photo": "a-group-of-windows-with-flowers-in-them-IcmoAlwTVkE"
+  },
+  {
+    "slot": "sl-7",
+    "source": "unsplash",
+    "photo": "brown-wooden-dock-on-lake-near-green-trees-under-white-clouds-and-blue-sky-during-daytime-G3gmQEMd2qM"
+  },
+  {
+    "slot": "sl-8",
+    "source": "unsplash",
+    "photo": "a-group-of-boats-floating-on-top-of-a-lake-I9ytvxlvv-c"
+  },
+  {
+    "slot": "ma-1",
+    "source": "unsplash",
+    "photo": "a-view-of-the-mountains-from-a-high-point-of-view-hiabrcnKUJ0"
+  },
+  {
+    "slot": "ma-2",
+    "source": "unsplash",
+    "photo": "a-picturesque-village-nestled-amidst-majestic-mountains-F6JYz0q_hKE"
+  },
+  {
+    "slot": "ma-3",
+    "source": "unsplash",
+    "photo": "green-trees-near-blue-sea-under-blue-sky-and-white-clouds-during-daytime-ncca-EipewU"
+  },
+  {
+    "slot": "ma-4",
+    "source": "unsplash",
+    "photo": "green-trees-on-field-during-day-hLP3LHQVTfc"
+  },
+  {
+    "slot": "ma-5",
+    "source": "unsplash",
+    "photo": "boats-in-a-harbor-with-a-town-on-the-hill-jQdyA49RId0"
+  },
+  {
+    "slot": "ma-6",
+    "source": "unsplash",
+    "photo": "a-house-with-a-pool-in-the-middle-of-it-Irn0tSJPPWY"
+  },
+  {
+    "slot": "ma-7",
+    "source": "unsplash",
+    "photo": "palma-cathedral-reflected-in-calm-water-under-a-clear-sky-w1tXiQDe-Gg"
+  },
+  {
+    "slot": "cp-1",
+    "source": "unsplash",
+    "photo": "sandy-beach-at-sunset-L6EP96_w1Fc"
+  },
+  {
+    "slot": "cp-2",
+    "source": "unsplash",
+    "photo": "aerial-view-of-green-and-brown-mountains-under-blue-sky-during-daytime-7NH0ASF_dYU"
+  },
+  {
+    "slot": "cp-3",
+    "source": "unsplash",
+    "photo": "a-white-house-with-a-brick-path-YoQ1_FDzGKM"
+  },
+  {
+    "slot": "cp-4",
+    "source": "unsplash",
+    "photo": "green-plants-on-field-under-cloudy-sky-during-daytime-9HoZc6RtPb0"
+  },
+  {
+    "slot": "cp-5",
+    "source": "unsplash",
+    "photo": "a-row-of-benches-sitting-on-top-of-a-lush-green-field-nYfBQMMEaIw"
+  },
+  {
+    "slot": "cp-6",
+    "source": "unsplash",
+    "photo": "a-large-field-with-a-mountain-in-the-background-2GZvGZh4dJc"
+  },
+  {
+    "slot": "cp-7",
+    "source": "unsplash",
+    "photo": "a-road-going-down-the-side-of-a-mountain-next-to-the-ocean-iftNmWjH5_Q"
+  },
+  {
+    "slot": "cp-8",
+    "source": "unsplash",
+    "photo": "a-lighthouse-on-top-of-a-rocky-outcropping-next-to-the-ocean-ixu0ZmjW03Y"
+  },
+  {
+    "slot": "cp-9",
+    "source": "unsplash",
+    "photo": "white-and-brown-houses-near-sea-under-blue-sky-during-daytime-p7w95B7b2PM"
+  },
+  {
+    "slot": "cp-10",
+    "source": "unsplash",
+    "photo": "green-grass-during-sunrise-IpE-bIbCfBo"
+  },
+  {
+    "slot": "cp-11",
+    "source": "unsplash",
+    "photo": "city-buildings-near-body-of-water-during-daytime-v59Et7cDz7A"
+  },
+  {
+    "slot": "ce-1",
+    "source": "unsplash",
+    "photo": "potted-cacti-on-lake-como-balcony-gzKf0_sVTxc"
+  },
+  {
+    "slot": "ce-2",
+    "source": "unsplash",
+    "photo": "a-view-of-a-town-from-a-boat-8ceIDcsWkUE"
+  },
+  {
+    "slot": "ce-3",
+    "source": "unsplash",
+    "photo": "a-small-island-in-the-middle-of-a-body-of-water-DTTQ1OwFyIM"
+  },
+  {
+    "slot": "ce-4",
+    "source": "unsplash",
+    "photo": "a-boat-is-docked-at-a-pier-on-a-lake-SYOHJT5rG2g"
+  },
+  {
+    "slot": "ce-5",
+    "source": "unsplash",
+    "photo": "red-train-crosses-a-stone-viaduct-in-the-mountains-Q_gcvVqfYzA"
+  },
+  {
+    "slot": "ce-6",
+    "source": "unsplash",
+    "photo": "a-body-of-water-surrounded-by-snow-covered-mountains-l_460POgGoU"
+  },
+  {
+    "slot": "ce-7",
+    "source": "unsplash",
+    "photo": "a-close-up-of-a-pine-tree-with-yellow-leaves-ZgWALE6YGxY"
+  },
+  {
+    "slot": "ce-8",
+    "source": "unsplash",
+    "photo": "a-lake-with-trees-and-mountains-in-the-background-UjNmwXiOvpY"
+  },
+  {
+    "slot": "ce-10",
+    "source": "unsplash",
+    "photo": "red-train-on-rail-Y_wE4T13uYg"
+  },
+  {
+    "slot": "jn-1",
+    "source": "unsplash",
+    "photo": "brown-trees-near-lake-under-blue-sky-during-daytime-q2W49_5uBjM"
+  },
+  {
+    "slot": "jn-2",
+    "source": "unsplash",
+    "photo": "landscape-photo-of-village-houses-near-ocean-kAE6Kd7W2UA"
+  },
+  {
+    "slot": "jn-3",
+    "source": "unsplash",
+    "photo": "a-table-set-up-for-a-formal-dinner-under-a-tree-vOx6oJFCb9w"
+  },
+  {
+    "slot": "jn-4",
+    "source": "unsplash",
+    "photo": "wooden-chairs-on-seaside-terrace-V-znk3SS474"
+  }
+]

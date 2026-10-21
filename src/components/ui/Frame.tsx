@@ -8,8 +8,25 @@ import { getMedia, type MediaKey } from '@/lib/media';
 import { ease, duration } from '@/lib/motion';
 import { useMotionScale } from '@/components/motion/useMotionScale';
 
+export type FrameRatio = '21/9' | '16/9' | '16/10' | '3/2' | '4/3' | '1/1' | '4/5' | '3/4' | '2/3';
+
 type FrameProps = {
   media: MediaKey;
+  /**
+   * Sets the frame's aspect-ratio. Prefer this to fixed heights; a className
+   * height still works (and wins over the ratio's derived height).
+   */
+  ratio?: FrameRatio;
+  /**
+   * Renders the frame as a <figure> with this <figcaption> below it, in
+   * `kicker-sm`. With a caption, `className` goes on the figure (place it in
+   * the grid with that) and `frameClassName` on the picture box.
+   */
+  caption?: ReactNode;
+  /** Caption colour: `dark` for forest / charcoal grounds. */
+  tone?: 'light' | 'dark';
+  /** Classes for the picture box when a caption wraps it in a figure. */
+  frameClassName?: string;
   /** Above-the-fold frames load eagerly and skip the reveal. */
   priority?: boolean;
   /**
@@ -37,7 +54,22 @@ type FrameProps = {
    * inside a link whose name should be the title — so it gets an empty alt.
    */
   decorative?: boolean;
+  /**
+   * The ground the frame sits on before (and around) the photograph.
+   * `tone` (default) is the slot's photographic tone; `transparent` lets the
+   * section's own ground show through — for the cut-out portrait on stone.
+   * A transparent frame has no curtain colour to lift, so it fades instead.
+   */
+  ground?: 'tone' | 'transparent';
+  /**
+   * The house colour grade (`--photo-grade`). On by default for every
+   * photograph; off for the cut-out portrait and brand artwork.
+   */
+  grade?: boolean;
 };
+
+/** Slots that are artwork or a cut-out, not photography — never graded. */
+const UNGRADED = new Set<string>(['marc-portrait']);
 
 /**
  * The frame's observer lives on an ordinary, unclipped layer. Chrome measures
@@ -60,7 +92,13 @@ const curtainVariants: Variants = {
 /** The picture settles from 1.04 → 1 behind the curtain. */
 const settleVariants: Variants = {
   hidden: { scale: 1.04 },
-  visible: { scale: 1, transition: { duration: 1.8, ease: ease.reveal } },
+  visible: { scale: 1, transition: { duration: 1.6, ease: ease.reveal } },
+};
+
+/** A transparent frame has no cover to lift; the picture fades up instead. */
+const fadeVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: duration.signature, ease: ease.reveal } },
 };
 
 /**
@@ -90,8 +128,16 @@ export function Frame({
   parallax = 0,
   drift = false,
   decorative = false,
+  ratio,
+  caption,
+  tone = 'light',
+  frameClassName = '',
+  ground = 'tone',
+  grade,
 }: FrameProps) {
   const slot = getMedia(media);
+  const graded = grade ?? (!UNGRADED.has(media) && fit !== 'contain');
+  const groundColour = ground === 'transparent' ? 'transparent' : slot.tone;
   const ref = useRef<HTMLDivElement>(null);
   const animate = reveal && !priority && !warm;
 
@@ -101,10 +147,11 @@ export function Frame({
       alt={decorative ? '' : (slot.alt ?? slot.label)}
       fill
       sizes={sizes}
+      quality={85}
       priority={priority}
       loading={warm ? 'eager' : undefined}
       fetchPriority={warm ? 'low' : undefined}
-      className={fit === 'contain' ? 'object-contain object-bottom' : 'object-cover'}
+      className={`${fit === 'contain' ? 'object-contain object-bottom' : 'object-cover'}${graded ? ' photo-grade' : ''}`}
     />
   ) : (
     <Placeholder label={slot.label} brief={slot.brief} overlay={overlay} />
@@ -125,11 +172,11 @@ export function Frame({
       layer
     );
 
-  return (
+  const box = (
     <div
       ref={ref}
-      className={`relative isolate overflow-hidden ${className}`}
-      style={{ backgroundColor: slot.tone }}
+      className={`relative isolate overflow-hidden ${caption ? frameClassName : className}`}
+      style={{ backgroundColor: groundColour, aspectRatio: ratio?.replace('/', ' / ') }}
     >
       {animate ? (
         <m.div
@@ -139,16 +186,22 @@ export function Frame({
           viewport={{ once: true, amount: 0.2 }}
           variants={triggerVariants}
         >
-          <m.div data-reveal className="absolute inset-0" variants={settleVariants}>
+          <m.div
+            data-reveal
+            className="absolute inset-0"
+            variants={ground === 'transparent' ? fadeVariants : settleVariants}
+          >
             {body}
           </m.div>
-          <m.div
-            aria-hidden
-            data-curtain
-            className="pointer-events-none absolute inset-0 origin-bottom"
-            style={{ backgroundColor: slot.tone }}
-            variants={curtainVariants}
-          />
+          {ground === 'transparent' ? null : (
+            <m.div
+              aria-hidden
+              data-curtain
+              className="pointer-events-none absolute inset-0 origin-bottom"
+              style={{ backgroundColor: slot.tone }}
+              variants={curtainVariants}
+            />
+          )}
         </m.div>
       ) : (
         <div className="absolute inset-0">{body}</div>
@@ -158,17 +211,14 @@ export function Frame({
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
-          // Deeper than the canvas' scrim on purpose. The canvas assumed a dark,
-          // low-contrast hero; real photography is often bright, and the header
-          // and headline have to stay legible over whatever is dropped in.
+          // Forest-tinted (spec §2.1, raised in the design review): the bottom
+          // protects the headline block, the left the lead and breadcrumb on
+          // bright midday photographs, the top the transparent header.
           style={{
             background: [
-              // Vertical: protects the header at the top and the headline block
-              // at the bottom.
-              'linear-gradient(180deg, rgba(0,0,0,.46) 0%, rgba(0,0,0,.10) 30%, rgba(0,0,0,.12) 48%, rgba(0,0,0,.72) 100%)',
-              // Horizontal: hero copy is flush left, so the left third carries a
-              // little more weight. Falls off before the middle of the frame.
-              'linear-gradient(90deg, rgba(0,0,0,.42) 0%, rgba(0,0,0,.14) 34%, rgba(0,0,0,0) 62%)',
+              'linear-gradient(to top, rgb(21 30 26 / 0.78), rgb(21 30 26 / 0) 62%)',
+              'linear-gradient(to right, rgb(21 30 26 / 0.45), rgb(21 30 26 / 0) 55%)',
+              'linear-gradient(to bottom, rgb(21 30 26 / 0.28), rgb(21 30 26 / 0) 22%)',
             ].join(', '),
           }}
         />
@@ -178,11 +228,25 @@ export function Frame({
           aria-hidden
           className="pointer-events-none absolute inset-0"
           style={{
-            background: 'linear-gradient(180deg, rgba(0,0,0,0) 45%, rgba(0,0,0,.42) 100%)',
+            background: 'linear-gradient(to top, rgb(21 30 26 / 0.55), rgb(21 30 26 / 0) 40%)',
           }}
         />
       )}
     </div>
+  );
+
+  if (!caption) return box;
+
+  return (
+    <figure className={`m-0 ${className}`}>
+      {box}
+      <figcaption
+        className={`kicker-sm mt-4 ${tone === 'dark' ? 'text-on-dark-muted' : 'text-muted'}`}
+      >
+        {hover && <span aria-hidden className="frame-caption-rule mb-3" />}
+        {caption}
+      </figcaption>
+    </figure>
   );
 }
 

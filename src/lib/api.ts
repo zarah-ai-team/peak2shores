@@ -11,6 +11,13 @@ import { NextResponse } from 'next/server';
  * which is what `next start` is. On a multi-instance or serverless host the
  * counters are per instance and the limit is correspondingly looser; put a
  * platform limiter (or a shared store) in front of it there.
+ *
+ * NETLIFY: each route handler runs as a serverless function. Every warm
+ * instance keeps its own Map, a cold start begins empty, and concurrent
+ * instances do not share counts — so "5 per minute" is per instance: a
+ * best-effort brake on one bursty client, not a guarantee. For a hard limit
+ * add a Netlify rate-limit rule on /api/* (Site configuration → Security), or
+ * back `tooManyRequests` with a shared store. Behaviour here is unchanged.
  */
 
 /** Largest body either form can legitimately produce, with room to spare. */
@@ -23,8 +30,12 @@ type Bucket = { count: number; resetAt: number };
 const buckets = new Map<string, Bucket>();
 
 function clientKey(request: Request) {
-  // Behind a proxy the first forwarded address is the client's; without one,
-  // fall back to a single shared bucket so the limit still applies.
+  // Netlify's edge sets x-nf-client-connection-ip itself, so a client cannot
+  // forge it; prefer it. Otherwise, behind a proxy the first forwarded address
+  // is the client's; without one, fall back to a single shared bucket so the
+  // limit still applies.
+  const netlify = request.headers.get('x-nf-client-connection-ip')?.trim();
+  if (netlify) return netlify;
   const forwarded = request.headers.get('x-forwarded-for');
   const ip = forwarded?.split(',')[0]?.trim() || request.headers.get('x-real-ip') || 'anonymous';
   return ip;
@@ -97,7 +108,8 @@ export async function readJsonBody(request: Request): Promise<Body> {
       response: NextResponse.json({ error: 'Malformed request.' }, { status: 400 }),
     };
   }
-  if (text.length > MAX_BODY_BYTES) {
+  // Bytes, not UTF-16 units: accented text is longer on the wire than .length.
+  if (new TextEncoder().encode(text).byteLength > MAX_BODY_BYTES) {
     return {
       ok: false,
       response: NextResponse.json({ error: 'Request too large.' }, { status: 413 }),

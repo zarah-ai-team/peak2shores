@@ -3,7 +3,8 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * A 2px acqua rule across the very top that fills as the page is read.
+ * A 1px rule across the very top that fills as the page is read — sea-glass
+ * over a photograph, the hairline step on paper (`.scroll-progress` in CSS).
  *
  * It sits above the header, so it reads as a property of the page rather than
  * of the navigation, and it is `aria-hidden` — scroll position is already
@@ -48,7 +49,7 @@ export function ScrollProgress() {
     <div
       ref={ref}
       aria-hidden
-      className="pointer-events-none fixed inset-x-0 top-0 z-[60] h-[2px] origin-left bg-acqua"
+      className="scroll-progress pointer-events-none fixed inset-x-0 top-0 z-[60] h-px origin-left"
       style={{ transform: 'scaleX(0)', transition: 'transform 120ms linear' }}
     />
   );

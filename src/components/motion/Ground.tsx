@@ -1,21 +1,25 @@
 'use client';
 
 import { useInView } from 'motion/react';
-import { createElement, useRef, type ReactNode } from 'react';
+import { createElement, useRef, type CSSProperties, type ReactNode } from 'react';
 
 type GroundProps = {
   children: ReactNode;
-  as?: 'section' | 'div';
+  as?: 'section' | 'div' | 'aside' | 'footer' | 'article';
   className?: string;
+  style?: CSSProperties;
   id?: string;
   'aria-label'?: string;
+  'aria-labelledby'?: string;
+  /** Lets children pick their dark variants through CSS. Section sets it. */
+  'data-tone'?: 'dark' | 'light' | 'stone';
 };
 
 /**
  * A dark section that develops from the page as it arrives.
  *
- * The element itself is ordinary — `bg-ink` and all — and stays that way with
- * no JavaScript. The ivory cover that fades away lives in CSS behind
+ * The element itself is ordinary — `bg-forest` and all — and stays that way
+ * with no JavaScript. The ivory cover that fades away lives in CSS behind
  * `html[data-js] [data-ground]`, so this component only has to say when the
  * section has come into view.
  */

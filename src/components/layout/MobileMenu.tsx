@@ -5,9 +5,9 @@ import { usePathname } from 'next/navigation';
 import * as m from 'motion/react-m';
 import { AnimatePresence } from 'motion/react';
 import { useEffect, useRef, type RefObject } from 'react';
-import { primaryNav, ctaNav, site } from '@/lib/site';
-import { ease } from '@/lib/motion';
-import { Tick } from '@/components/ui/Editorial';
+import { site, type NavItem } from '@/lib/site';
+import { duration, ease } from '@/lib/motion';
+import { Arrow } from '@/components/ui/Button';
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -17,19 +17,22 @@ type MobileMenuProps = {
   onClose: () => void;
   /** The control that opened the menu; focus returns to it on close. */
   returnFocusTo: RefObject<HTMLElement | null>;
+  primary: NavItem[];
+  cta: NavItem;
 };
 
 /**
- * A full-screen editorial overlay rather than a drawer.
+ * A full-screen forest-deep sheet rather than a drawer.
  *
- * The links arrive as masked lines, the same reveal the display type uses, so
- * opening the menu feels like turning to a contents page.
+ * The links are set in the serif at `.h3`, ruled, and rise 60ms apart, so
+ * opening the menu feels like turning to a contents page. Under reduced motion
+ * Motion drops the movement and the stylesheet pins `[data-menu-item]`.
  *
  * It behaves as a modal should: while it is open the rest of the page is
  * `inert`, Tab wraps inside the panel, Escape closes it, and focus goes back
  * to the button that opened it.
  */
-export function MobileMenu({ open, onClose, returnFocusTo }: MobileMenuProps) {
+export function MobileMenu({ open, onClose, returnFocusTo, primary, cta }: MobileMenuProps) {
   const scrollY = useRef(0);
   const panelRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
@@ -139,71 +142,82 @@ export function MobileMenu({ open, onClose, returnFocusTo }: MobileMenuProps) {
           role="dialog"
           aria-modal="true"
           aria-label="Menu"
-          className="fixed inset-0 z-40 bg-ivory lg:hidden"
+          data-tone="dark"
+          className="fixed inset-0 z-40 bg-forest-deep text-on-dark outline-none lg:hidden"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.35, ease: ease.exit } }}
-          transition={{ duration: 0.45, ease: ease.editorial }}
+          exit={{ opacity: 0, transition: { duration: duration.ui, ease: ease.exit } }}
+          transition={{ duration: duration.uiSlow, ease: ease.editorial }}
         >
-          <div className="gutter flex h-full flex-col overflow-y-auto pb-10 pt-[calc(var(--nav-h)+24px)]">
-            <nav aria-label="Primary" className="flex flex-col border-t border-line">
-              {primaryNav.map((item, i) => (
-                <span key={item.href} className="overflow-hidden border-b border-line">
-                  <m.span
-                    className="block"
-                    initial={{ y: '105%', opacity: 0 }}
-                    animate={{ y: '0%', opacity: 1 }}
-                    transition={{
-                      duration: 0.7,
-                      ease: ease.reveal,
-                      delay: 0.1 + i * 0.06,
-                    }}
-                  >
-                    <Link
-                      href={item.href}
-                      onClick={onClose}
-                      className="flex items-baseline gap-4 py-5"
+          <div className="container-site flex h-full flex-col overflow-y-auto pb-10 pt-[calc(var(--nav-h)+16px)]">
+            <nav aria-label="Primary" className="flex flex-col border-t border-line-dark">
+              {primary.map((item, i) => {
+                const active = pathname?.startsWith(item.href);
+                return (
+                  <span key={item.href} className="overflow-hidden border-b border-line-dark">
+                    <m.span
+                      data-menu-item
+                      className="block"
+                      initial={{ y: '100%', opacity: 0 }}
+                      animate={{ y: '0%', opacity: 1 }}
+                      transition={{ duration: 0.6, ease: ease.reveal, delay: 0.08 + i * 0.06 }}
                     >
-                      <span className="kicker-sm w-8 shrink-0">
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
-                      <span className="h4">{item.label}</span>
-                    </Link>
-                  </m.span>
-                </span>
-              ))}
+                      <Link
+                        href={item.href}
+                        onClick={onClose}
+                        aria-current={active ? 'page' : undefined}
+                        className="group flex items-baseline gap-4 py-4 transition-colors duration-300 hover:text-acqua aria-[current=page]:text-acqua"
+                      >
+                        <span className="kicker-sm w-7 shrink-0">
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                        <span className="h3">{item.label}</span>
+                      </Link>
+                    </m.span>
+                  </span>
+                );
+              })}
             </nav>
 
             <m.div
-              className="mt-auto flex flex-col gap-6 pt-10"
-              initial={{ opacity: 0, y: 14 }}
+              data-menu-item
+              className="mt-auto flex flex-col gap-7 pt-10"
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: ease.editorial, delay: 0.42 }}
+              transition={{
+                duration: 0.6,
+                ease: ease.editorial,
+                delay: 0.08 + primary.length * 0.06,
+              }}
             >
-              <div className="kicker flex items-start gap-3 leading-[1.6]">
-                <Tick className="mt-2 shrink-0" />
-                Small-group journeys · max. {site.maxGuests} guests
-              </div>
               <Link
-                href={ctaNav.href}
+                href={cta.href}
                 onClick={onClose}
-                className="btn inline-flex self-start justify-start bg-ink px-[26px] py-4 font-ui text-[11px] font-medium uppercase leading-none tracking-[0.16em] text-ivory"
+                className="btn inline-flex min-h-11 items-center gap-3 self-start bg-ivory px-7 py-[17px] font-ui text-[11.5px] font-medium uppercase leading-none tracking-[0.16em] text-ink hover:bg-white"
               >
-                {ctaNav.label}
+                {cta.label}
+                <Arrow />
               </Link>
               <div className="prose-body-sm">
-                <a href={`mailto:${site.email}`} className="hover:text-acqua-text">
+                <a
+                  href={`mailto:${site.email}`}
+                  className="transition-colors duration-300 hover:text-acqua"
+                >
                   {site.email}
                 </a>
-                {site.phone && (
+                {site.phone && site.phoneHref && (
                   <>
                     <br />
-                    <a href={`tel:${site.phoneHref}`} className="hover:text-acqua-text">
+                    <a
+                      href={`tel:${site.phoneHref}`}
+                      className="transition-colors duration-300 hover:text-acqua"
+                    >
                       {site.phone}
                     </a>
                   </>
                 )}
               </div>
+              <p className="kicker-sm m-0 text-on-dark-muted">{site.locations}</p>
             </m.div>
           </div>
         </m.div>

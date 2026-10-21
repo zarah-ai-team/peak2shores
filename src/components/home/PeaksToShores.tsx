@@ -1,101 +1,151 @@
-'use client';
-
-import { useRef } from 'react';
-import * as m from 'motion/react-m';
-import { useScroll, useTransform } from 'motion/react';
 import { Frame } from '@/components/ui/Frame';
-import { Ground } from '@/components/motion/Ground';
-import { Reveal } from '@/components/motion/Reveal';
-import { useMotionScale } from '@/components/motion/useMotionScale';
+import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal';
 import { SectionLabel } from '@/components/ui/Editorial';
-import { peaksToShores } from '@/lib/content';
+import { peaksToShores as defaultContent, type HomeContent } from '@/lib/content';
+import { Section } from '@/components/ui/Section';
+import { PeaksShoresSlider } from './PeaksShoresSlider';
+
+type Content = HomeContent['peaksToShores'];
+
+/*
+ * The signature strip runs Alps → alpine lake → Mediterranean → Miami across
+ * twelve columns as a staggered, descending line of unequal frames: each a
+ * different shape, each set a little lower or higher than its neighbour, so
+ * the eye travels down and across like a route on a map (DESIGN-SPEC §4.3).
+ * On a phone it becomes two columns, alternating tall and square, the second
+ * column dropped by 48px.
+ */
+const signature = [
+  { ratio: 'aspect-[2/3]', offset: 'lg:mt-0', mobile: 'aspect-[2/3]' },
+  { ratio: 'lg:aspect-square', offset: 'mt-12 lg:mt-16', mobile: 'aspect-square' },
+  { ratio: 'lg:aspect-[4/5]', offset: 'lg:mt-8', mobile: 'aspect-[2/3]' },
+  { ratio: 'lg:aspect-[3/4]', offset: 'mt-12 lg:mt-28', mobile: 'aspect-square' },
+] as const;
 
 /**
- * The signature moment: the name read as a journey.
+ * 4.3 — The name (forest).
  *
- * The ink ground develops as the section arrives. Then four frames run
- * Alps → alpine lake → Mediterranean → Miami, each drifting at a slightly
- * different rate as the section passes. The movement is small on purpose —
- * it should register as depth, not as an effect. Under reduced motion the
- * stylesheet pins the frames (`data-parallax`).
+ * `variant="signature"` is the homepage composition: the name, then one
+ * full-bleed Peaks/Shores picture the reader drags across (PeaksShoresSlider)
+ * — it replaced the four-frame strip in the October 2026 review. On a desktop
+ * the name and the picture share one screen, the picture taking what is left. `variant="compact"` (the default, used by
+ * /destinations) keeps the headline and lays the four frames in an even
+ * strip. Both are server-rendered; each frame drifts a few pixels on scroll
+ * through Frame's own parallax, pinned under reduced motion.
  */
-export function PeaksToShores() {
-  const ref = useRef<HTMLDivElement>(null);
-  const motionScale = useMotionScale();
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'end start'],
-  });
-
-  return (
-    <Ground
-      id="destinations"
-      className="border-b border-line bg-ink pt-20 text-on-dark md:pt-[112px]"
-    >
-      <div className="gutter editorial-grid mb-12 lg:mb-16">
-        <SectionLabel tone="dark" className="lg:pt-4">
-          06 — The name
-        </SectionLabel>
-        <Reveal variant="mask">
-          <h2 className="h2">
-            {peaksToShores.headlineParts[0]}{' '}
-            <span className="text-acqua">{peaksToShores.headlineParts[1]}</span>{' '}
-            {peaksToShores.headlineParts[2]}
-          </h2>
-        </Reveal>
-        <Reveal delay={0.12} className="lg:pt-4">
-          <p className="prose-body max-w-[460px] text-on-dark-body">{peaksToShores.body}</p>
-        </Reveal>
-      </div>
-
-      <div ref={ref} className="grid gap-0.5 bg-ink sm:grid-cols-2 lg:grid-cols-4">
-        {peaksToShores.frames.map((frame, i) => (
-          <ParallaxFrame
-            key={frame.media}
-            progress={scrollYProgress}
-            index={i}
-            scale={motionScale}
-            frame={frame}
-          />
-        ))}
-      </div>
-    </Ground>
-  );
-}
-
-function ParallaxFrame({
-  progress,
-  index,
-  scale,
-  frame,
+export function PeaksToShores({
+  content = defaultContent,
+  variant = 'compact',
+  label = '02 — The name',
 }: {
-  progress: ReturnType<typeof useScroll>['scrollYProgress'];
-  index: number;
-  scale: number;
-  frame: (typeof peaksToShores.frames)[number];
+  content?: Content;
+  variant?: 'signature' | 'compact';
+  label?: string;
 }) {
-  // Alternating, shallow drift. Even columns rise, odd columns lag. Shallower
-  // still on a phone, where the frames stack.
-  const distance = (28 + index * 6) * scale;
-  const y = useTransform(progress, [0, 1], [distance, -distance]);
+  const [peaks, two, shores] = content.headlineParts;
+  const isSignature = variant === 'signature';
+
+  if (isSignature) {
+    return (
+      <Section
+        contained={false}
+        ground="forest"
+        screen
+        id="destinations"
+        aria-labelledby="p2s-title"
+        className="lg:pb-0"
+      >
+        <div className="container-site grid-site gap-y-8 max-lg:pb-section-sm lg:items-end lg:pb-[4svh]">
+          <div className="col-span-4 md:col-span-8 lg:col-span-7">
+            <SectionLabel tone="dark" className="mb-8 lg:mb-[2.5svh]">
+              {label}
+            </SectionLabel>
+            <Reveal variant="mask">
+              <h2 id="p2s-title" className="display">
+                {peaks} <span className="text-acqua">{two}</span> {shores}
+              </h2>
+            </Reveal>
+          </div>
+          <Reveal
+            delay={0.1}
+            className="col-span-4 md:col-span-6 lg:col-span-5 lg:col-start-8 lg:pb-3"
+          >
+            <p className="prose-body measure text-on-dark-body">{content.between}</p>
+            <p className="kicker-sm mt-6 text-on-dark-muted">
+              Drag to travel from one to the other
+            </p>
+          </Reveal>
+        </div>
+        <PeaksShoresSlider content={content} />
+      </Section>
+    );
+  }
 
   return (
-    <div className="relative h-[420px] overflow-hidden lg:h-[620px]">
-      <m.div data-parallax className="absolute inset-x-0 -top-12 -bottom-12" style={{ y }}>
-        <Frame
-          media={frame.media}
-          decorative
-          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-          className="h-full"
-          overlay="caption"
-        />
-      </m.div>
-      <div className="pointer-events-none absolute bottom-7 left-7 text-white">
-        <div className="mb-2.5 font-ui text-[10px] uppercase leading-none tracking-[0.2em]">
-          {frame.n}
+    <Section
+      contained={false}
+      ground="forest"
+      id="destinations"
+      aria-labelledby="p2s-title"
+      // The strip's staggered floor already reads as a pause; a full section's
+      // padding under it left a band of empty forest (DESIGN-REVIEW P2.10).
+      className="pb-section-sm"
+    >
+      <div className="container-site">
+        <div className="grid-site gap-y-10">
+          <div className="col-span-4 md:col-span-8 lg:col-span-7">
+            <SectionLabel tone="dark" className="mb-8 lg:mb-10">
+              {label}
+            </SectionLabel>
+            <Reveal variant="mask">
+              <h2 id="p2s-title" className={isSignature ? 'display' : 'h2'}>
+                {peaks} <span className="text-acqua">{two}</span> {shores}
+              </h2>
+            </Reveal>
+          </div>
+          <Reveal
+            delay={0.1}
+            className="col-span-4 md:col-span-6 lg:col-span-5 lg:col-start-8 lg:self-end"
+          >
+            <p className="prose-body measure text-on-dark-body">{content.body}</p>
+          </Reveal>
         </div>
-        <div className="font-display text-[26px] leading-[1.1]">{frame.label}</div>
+
+        <RevealGroup
+          as="ol"
+          stagger={0.08}
+          className="grid-site m-0 mt-block list-none gap-y-12 p-0 lg:mt-[clamp(80px,8vw,128px)]"
+        >
+          {content.frames.map((frame, i) => {
+            const shape = signature[i % signature.length];
+            const ratio = isSignature ? `${shape.mobile} ${shape.ratio}` : 'aspect-[3/4]';
+            return (
+              <RevealItem
+                as="li"
+                key={frame.media}
+                distance={16}
+                className={`col-span-2 md:col-span-4 lg:col-span-3 ${
+                  isSignature ? shape.offset : i % 2 ? 'mt-12 md:mt-0' : ''
+                }`}
+              >
+                <figure className="m-0">
+                  <Frame
+                    media={frame.media}
+                    parallax={28 + i * 6}
+                    decorative
+                    sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 50vw"
+                    className={ratio}
+                  />
+                  <figcaption className="mt-5 border-t border-line-dark pt-4">
+                    <span className="kicker-sm mb-2 block text-on-dark-muted">{frame.n}</span>
+                    <span className="h5 block text-on-dark">{frame.label}</span>
+                  </figcaption>
+                </figure>
+              </RevealItem>
+            );
+          })}
+        </RevealGroup>
       </div>
-    </div>
+    </Section>
   );
 }

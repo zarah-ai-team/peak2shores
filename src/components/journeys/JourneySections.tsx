@@ -1,0 +1,584 @@
+import Link from 'next/link';
+import Image from 'next/image';
+import { Frame } from '@/components/ui/Frame';
+import { Ground } from '@/components/motion/Ground';
+import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal';
+import { TextReveal } from '@/components/motion/TextReveal';
+import { ButtonLink } from '@/components/ui/Button';
+import { FactList, MetaItem, SectionLabel, Tick } from '@/components/ui/Editorial';
+import { StatusTag } from '@/components/ui/StatusTag';
+import { journeyTagStatus } from '@/components/pages/journeyStatus';
+import { isNew, type Journey, type JourneyDetail, type JourneySummary } from '@/lib/content';
+import { enterAt } from '@/lib/motion';
+import { site } from '@/lib/site';
+
+/* -- 1. Hero --------------------------------------------------------------- */
+
+/**
+ * The photograph, full-bleed at 92svh. Title bottom-left in display type —
+ * "Amalfi, *Slowly.*", the qualifier dropping to an italic second line — and
+ * the journey's one-line lead bottom-right.
+ */
+export function JourneyHero({ journey }: { journey: Journey }) {
+  const [first, ...rest] = journey.title.split(', ');
+  const tag = journeyTagStatus({ ...journey, isNew: isNew(journey) });
+
+  return (
+    <section
+      data-hero
+      className="relative isolate flex h-[92svh] min-h-[620px] flex-col justify-end overflow-hidden"
+    >
+      <div className="absolute inset-0 -z-10">
+        <Frame
+          media={journey.detail?.heroMedia ?? journey.heroMedia ?? journey.listMedia}
+          priority
+          reveal={false}
+          drift
+          decorative
+          sizes="100vw"
+          overlay="hero"
+          className="h-full"
+        />
+      </div>
+      <div className="container-site grid-site items-end gap-y-7 pb-[clamp(40px,7vh,88px)] pt-[calc(var(--nav-h)+48px)] text-on-dark">
+        <div className="col-span-4 md:col-span-8 lg:col-span-8">
+          <nav aria-label="Breadcrumb" className="enter mb-7" style={enterAt(0.05)}>
+            <ol className="kicker m-0 flex list-none flex-wrap items-center gap-x-3.5 gap-y-2 p-0 !text-on-dark">
+              <li>
+                <Link href="/journeys" className="transition-colors duration-300 hover:text-acqua">
+                  Journeys
+                </Link>
+              </li>
+              <li aria-hidden className="opacity-60">
+                /
+              </li>
+              <li aria-current="page">
+                {journey.region} · {journey.country}
+              </li>
+            </ol>
+          </nav>
+          {tag !== 'open' && (
+            <p className="enter m-0 mb-5" style={enterAt(0.1)}>
+              <StatusTag status={tag} tone="dark" />
+            </p>
+          )}
+          <TextReveal
+            as="h1"
+            immediate
+            delay={0.15}
+            className="display max-w-[12ch]"
+            lines={
+              rest.length
+                ? [{ text: `${first},` }, { text: `${rest.join(', ')}.`, italic: true }]
+                : [{ text: journey.title }]
+            }
+          />
+        </div>
+        <p
+          className="lead enter measure-lead col-span-4 m-0 md:col-span-6 lg:col-span-3 lg:col-start-10 lg:pb-3"
+          style={enterAt(0.45)}
+        >
+          {journey.lead}
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/* -- 2. Facts -------------------------------------------------------------- */
+
+export function JourneyFacts({ journey }: { journey: Journey }) {
+  const tag = journeyTagStatus({ ...journey, isNew: isNew(journey) });
+  const facts: { label: string; value: React.ReactNode }[] = [
+    { label: 'Days', value: `${journey.days} days · ${journey.days - 1} nights` },
+    { label: 'Departure', value: journey.departureWindow },
+    { label: 'Group', value: `Max. ${journey.groupMax} guests` },
+    { label: 'From', value: `${journey.priceFrom} per person` },
+    {
+      label: 'Hosted by',
+      value: journey.hostedByMarc ? site.founder.name : 'Our team on the ground',
+    },
+    {
+      label: 'Status',
+      value: <StatusTag status={tag}>{tag === 'open' ? 'Open' : undefined}</StatusTag>,
+    },
+  ];
+
+  return (
+    <section aria-label="At a glance" className="border-b border-line">
+      <div className="container-site">
+        <RevealGroup as="div" stagger={0.06} amount={0.3}>
+          <dl className="m-0 grid grid-cols-2 border-line md:grid-cols-3 lg:grid-cols-6">
+            {facts.map((fact, i) => (
+              <RevealItem
+                key={fact.label}
+                distance={12}
+                className={`border-line py-7 pr-5 ${i % 2 === 1 ? 'pl-5 md:pl-0' : ''} border-b lg:border-b-0 ${
+                  i < 5 ? 'lg:border-r lg:pl-0' : ''
+                } lg:px-6 lg:first:pl-0`}
+              >
+                <dt className="kicker-sm mb-3">{fact.label}</dt>
+                <dd className="h5 m-0">{fact.value}</dd>
+              </RevealItem>
+            ))}
+          </dl>
+        </RevealGroup>
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-4 py-7 lg:justify-end">
+          <ButtonLink href="#enquire" variant="forest" arrow>
+            Enquire
+          </ButtonLink>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* -- 3. Overview ---------------------------------------------------------- */
+
+export function Overview({ detail }: { detail: JourneyDetail }) {
+  const [first, ...more] = detail.overview;
+  return (
+    <section aria-labelledby="overview-title" className="py-section">
+      <div className="container-site grid-site gap-y-block">
+        <div className="col-span-4 md:col-span-8">
+          <SectionLabel className="mb-stack">The journey</SectionLabel>
+          <Reveal variant="mask">
+            <h2 id="overview-title" className="h2 max-w-[20ch]">
+              {detail.overviewHeadline}
+            </h2>
+          </Reveal>
+        </div>
+        {first && (
+          <Reveal className="col-span-4 md:col-span-6 lg:col-span-6 lg:col-start-2">
+            <p className="lead measure-lead m-0">{first}</p>
+          </Reveal>
+        )}
+        {more.length > 0 && (
+          <Reveal
+            delay={0.1}
+            className="col-span-4 md:col-span-6 md:col-start-3 lg:col-span-4 lg:col-start-8 lg:pt-24"
+          >
+            {more.map((paragraph) => (
+              <p key={paragraph} className="prose-body measure mb-stack">
+                {paragraph}
+              </p>
+            ))}
+            <ButtonLink href="#days" variant="rule" arrow>
+              Day by day
+            </ButtonLink>
+          </Reveal>
+        )}
+      </div>
+    </section>
+  );
+}
+
+export function WhyThisJourney({ detail }: { detail: JourneyDetail }) {
+  return (
+    <section aria-labelledby="why-title" className="bg-panel py-section-sm">
+      <div className="container-site grid-site items-start gap-y-block">
+        <Frame
+          ratio="4/5"
+          media={detail.why.media}
+          parallax={30}
+          decorative
+          sizes="(min-width: 1024px) 45vw, 100vw"
+          className="col-span-4  md:col-span-6 lg:col-span-6"
+        />
+        <div className="col-span-4 md:col-span-8 lg:col-span-5 lg:col-start-8 lg:pt-block">
+          <Reveal>
+            <SectionLabel className="mb-stack">Why this journey</SectionLabel>
+            <h2 id="why-title" className="h3 mb-block max-w-[22ch]">
+              {detail.why.headline}
+            </h2>
+          </Reveal>
+          <RevealGroup as="ol" className="m-0 list-none p-0" stagger={0.06}>
+            {detail.why.highlights.map((highlight) => (
+              <RevealItem
+                as="li"
+                key={highlight.n}
+                distance={14}
+                className="grid grid-cols-[56px_minmax(0,1fr)] gap-4 border-t border-line py-6"
+              >
+                <span aria-hidden className="h5 text-acqua-text">
+                  {highlight.n}
+                </span>
+                <div>
+                  <h3 className="h5 mb-1.5">{highlight.title}</h3>
+                  <p className="prose-body-sm">{highlight.body}</p>
+                </div>
+              </RevealItem>
+            ))}
+          </RevealGroup>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* -- 6. Where you stay ----------------------------------------------------- */
+
+export function WhereYouStay({ detail }: { detail: JourneyDetail }) {
+  return (
+    <section aria-labelledby="hotels-title" className="pb-section">
+      <div className="container-site">
+        <div className="rule pt-section-sm">
+          <SectionLabel className="mb-stack">Where you stay</SectionLabel>
+          <Reveal variant="mask" className="mb-block">
+            <h2 id="hotels-title" className="h2 max-w-[20ch]">
+              {detail.hotelsHeadline}
+            </h2>
+          </Reveal>
+        </div>
+        <div className="flex flex-col gap-section-sm">
+          {detail.hotels.map((hotel, i) => {
+            const flip = i % 2 === 1;
+            return (
+              <article key={hotel.name} className="grid-site items-center gap-y-8">
+                <Frame
+                  ratio="4/5"
+                  media={hotel.media}
+                  decorative
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                  className={`col-span-4  md:col-span-6 lg:col-span-6 ${
+                    flip ? 'lg:order-2 lg:col-start-7' : ''
+                  }`}
+                />
+                <Reveal
+                  className={`col-span-4 md:col-span-7 lg:col-span-5 ${
+                    flip ? 'lg:order-1 lg:col-start-1' : 'lg:col-start-8'
+                  }`}
+                >
+                  <p className="kicker mb-4">
+                    {hotel.place}
+                    {hotel.nights && <> · {hotel.nights}</>}
+                  </p>
+                  <h3 className="h3 mb-stack max-w-[18ch]">{hotel.name}</h3>
+                  <p className="prose-body measure mb-7">{hotel.why}</p>
+                  <div className="grid gap-6 border-t border-line pt-5 sm:grid-cols-2">
+                    <MetaItem label="Signature detail">{hotel.detail}</MetaItem>
+                    {hotel.nearby && <MetaItem label="Nearby">{hotel.nearby}</MetaItem>}
+                  </div>
+                </Reveal>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* -- 7. On pacing ---------------------------------------------------------- */
+
+export function OnPacing({ detail }: { detail: JourneyDetail }) {
+  const { pacing } = detail;
+  return (
+    <Ground aria-label="On pacing" className="bg-charcoal pb-section-sm text-on-dark">
+      <Frame
+        media={pacing.media}
+        decorative
+        sizes="100vw"
+        className="aspect-[4/3] w-full md:aspect-[16/9]"
+      />
+      <div data-tone="dark" className="container-site grid-site gap-y-block pt-section-sm">
+        <div className="col-span-4 md:col-span-8 lg:col-span-6">
+          <SectionLabel tone="dark" className="mb-stack">
+            On pacing
+          </SectionLabel>
+          <Reveal variant="mask">
+            <h2 className="h2 max-w-[18ch]">{pacing.headline}</h2>
+          </Reveal>
+        </div>
+        <Reveal
+          delay={0.1}
+          className="col-span-4 md:col-span-6 lg:col-span-5 lg:col-start-7 lg:pt-12"
+        >
+          <p className="prose-body measure">{pacing.body}</p>
+        </Reveal>
+        <RevealGroup className="col-span-4 md:col-span-8 lg:col-span-12" stagger={0.1}>
+          <dl className="m-0 grid grid-cols-3 border-t border-line-dark">
+            {pacing.stats.map((stat, i) => (
+              <RevealItem
+                key={stat.label}
+                variant="scale"
+                distance={10}
+                className={`flex flex-col-reverse gap-3 pt-7 ${i > 0 ? 'border-l border-line-dark pl-4 md:pl-8' : ''} pr-4`}
+              >
+                <dt className="kicker-sm">{stat.label}</dt>
+                <dd className="numeral m-0">{stat.value}</dd>
+              </RevealItem>
+            ))}
+          </dl>
+        </RevealGroup>
+      </div>
+    </Ground>
+  );
+}
+
+/* -- 8. Practicalities ----------------------------------------------------- */
+
+export function Practicalities({ detail }: { detail: JourneyDetail }) {
+  return (
+    <section aria-labelledby="included-title" className="py-section-sm">
+      <div className="container-site grid-site gap-y-block">
+        <Reveal className="col-span-4 md:col-span-8 lg:col-span-7">
+          <SectionLabel className="mb-stack">Practicalities</SectionLabel>
+          <h2 id="included-title" className="h3 mb-block">
+            What’s included
+          </h2>
+          <FactList
+            labelWidth={200}
+            rows={detail.included.map((item) => ({ label: item.label, value: item.value }))}
+          />
+        </Reveal>
+        <Reveal
+          delay={0.1}
+          className="col-span-4 md:col-span-6 lg:col-span-4 lg:col-start-9 lg:pt-[calc(var(--spacing-block)+3.5rem)]"
+        >
+          <h3 className="kicker mb-4">Not included</h3>
+          <p className="prose-body-sm measure mb-stack">{notIncluded(detail.notIncluded)}</p>
+          <ButtonLink href="/booking-terms" variant="rule" arrow>
+            Booking terms
+          </ButtonLink>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/** "Not included: x, y." → "X, y." — it sits under its own label. */
+function notIncluded(text: string) {
+  const rest = text.replace(/^Not included:\s*/, '');
+  return rest.charAt(0).toUpperCase() + rest.slice(1);
+}
+
+/* -- 9. From Marc ---------------------------------------------------------- */
+
+export function FromMarc({ detail }: { detail: JourneyDetail }) {
+  return (
+    <section aria-labelledby="marc-title" className="bg-stone py-section-sm">
+      <div data-tone="stone" className="container-site grid-site gap-y-block">
+        <Reveal className="col-span-4 md:col-span-8 lg:col-span-8">
+          <h2 id="marc-title" className="kicker mb-block flex items-center gap-3.5">
+            <Tick />
+            From Marc
+          </h2>
+          <blockquote className="quote m-0 max-w-[30ch]">“{detail.marc.quote}”</blockquote>
+        </Reveal>
+        <Reveal
+          delay={0.12}
+          className="col-span-4 md:col-span-6 lg:col-span-4 lg:col-start-9 lg:self-end"
+        >
+          <div className="mb-stack flex items-center gap-4">
+            <div className="flex size-16 shrink-0 items-end justify-center overflow-hidden rounded-full bg-tone-sand">
+              <Image
+                src="/brand/marc.webp"
+                alt=""
+                width={1150}
+                height={1400}
+                sizes="56px"
+                className="mb-[-8px] h-auto w-14"
+              />
+            </div>
+            <p className="m-0">
+              <span className="h5 block">{site.founder.name}</span>
+              <span className="kicker-sm">{detail.marc.role}</span>
+            </p>
+          </div>
+          <p className="prose-body measure">{detail.marc.note}</p>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* -- 10. Gallery ----------------------------------------------------------- */
+
+export function Gallery({ journey, detail }: { journey: Journey; detail: JourneyDetail }) {
+  return (
+    <section aria-label={`${journey.title} in pictures`} className="py-section-sm">
+      <div className="container-site">
+        <ul className="m-0 grid list-none grid-cols-2 gap-2 p-0 lg:grid-cols-12">
+          {detail.gallery.map((item) => {
+            const wide = item.span === 'wide';
+            const ratio = wide
+              ? item.height === 'tall'
+                ? 'aspect-[16/10]'
+                : 'aspect-[16/9]'
+              : item.height === 'tall'
+                ? 'aspect-[4/5]'
+                : 'aspect-square';
+            return (
+              <li key={item.media} className={wide ? 'col-span-2 lg:col-span-8' : 'lg:col-span-4'}>
+                <Frame
+                  media={item.media}
+                  sizes={
+                    wide ? '(min-width: 1024px) 66vw, 100vw' : '(min-width: 1024px) 33vw, 50vw'
+                  }
+                  className={`${ratio} ${!wide && item.height === 'tall' ? 'lg:aspect-auto lg:h-full' : ''}`}
+                />
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+/* -- 11. Guests (verified quotes only) ------------------------------------- */
+
+export function Guests({ detail }: { detail: JourneyDetail }) {
+  // The provider strips unverified quotes; this guards the template too.
+  const quotes = detail.quotes.filter((q) => q.verified === true);
+  if (quotes.length === 0) return null;
+  return (
+    <section aria-labelledby="guests-title" className="pb-section-sm">
+      <div className="container-site">
+        <div className="rule grid-site gap-y-block pt-section-sm">
+          <h2 id="guests-title" className="kicker col-span-4 md:col-span-8 lg:col-span-12">
+            Guests
+          </h2>
+          {quotes.map((quote) => (
+            <figure key={quote.who} className="col-span-4 m-0 md:col-span-4 lg:col-span-6">
+              <blockquote className="quote m-0 mb-stack">“{quote.text}”</blockquote>
+              <figcaption className="kicker-sm">{quote.who}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* -- In preparation -------------------------------------------------------- */
+
+export function InPreparation({ journey }: { journey: Journey }) {
+  const hasDays = !!journey.itinerary?.length;
+
+  return (
+    <section aria-labelledby="prep-title" className="py-section">
+      <div className="container-site grid-site gap-y-block">
+        <div className="col-span-4 md:col-span-8 lg:col-span-7">
+          <Reveal>
+            <p className="kicker mb-stack flex items-center gap-3.5 !text-acqua-text">
+              <Tick />
+              In preparation
+            </p>
+          </Reveal>
+          <Reveal variant="mask">
+            <h2 id="prep-title" className="h2 mb-stack max-w-[20ch]">
+              {journey.lead}
+            </h2>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <p className="lead measure-lead m-0">{journey.blurb}</p>
+          </Reveal>
+        </div>
+
+        <Reveal
+          delay={0.15}
+          className="col-span-4 md:col-span-6 lg:col-span-4 lg:col-start-9 lg:pt-12"
+        >
+          <div className="border-t border-line pt-6">
+            {hasDays ? (
+              <>
+                <p className="kicker mb-4">Day by day · working plan</p>
+                <p className="prose-body measure mb-4">
+                  The day-by-day below is the plan as it stands. The hotels, the tables and the
+                  people on the ground are being confirmed; we would rather publish those late than
+                  publish them wrong.
+                </p>
+                <p className="prose-body measure mb-stack">
+                  Ask and we will send the full write-up as soon as it is signed off — usually
+                  within a few days.
+                </p>
+                <div className="flex flex-wrap gap-x-8">
+                  <ButtonLink href="#days" variant="rule" arrow>
+                    Day by day
+                  </ButtonLink>
+                  <ButtonLink href="#enquire" variant="rule">
+                    Register interest
+                  </ButtonLink>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="kicker mb-4">Day by day · in preparation</p>
+                <p className="prose-body measure mb-4">
+                  The written itinerary for this journey is still being finalised with our people on
+                  the ground. We would rather publish it late than publish it wrong.
+                </p>
+                <p className="prose-body measure mb-stack">
+                  Ask for it and we will send the day-by-day as soon as it is signed off — usually
+                  within a few days.
+                </p>
+                <ButtonLink href="#enquire" variant="rule" arrow>
+                  Request the itinerary
+                </ButtonLink>
+              </>
+            )}
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* -- 12. Also on the list -------------------------------------------------- */
+
+export function RelatedJourneys({ journeys }: { journeys: JourneySummary[] }) {
+  if (journeys.length === 0) return null;
+  return (
+    <section aria-labelledby="related-title" className="pb-section-sm">
+      <div className="container-site">
+        <div className="rule flex flex-wrap items-end justify-between gap-6 pt-section-sm">
+          <h2 id="related-title" className="h3">
+            Also on the list
+          </h2>
+          <ButtonLink href="/journeys" variant="rule" arrow>
+            All journeys
+          </ButtonLink>
+        </div>
+        <ul className="m-0 mt-block list-none p-0">
+          {journeys.map((journey) => {
+            const tag = journeyTagStatus(journey);
+            return (
+              <li key={journey.slug} className="border-t border-line last:border-b">
+                <Link
+                  href={`/journeys/${journey.slug}`}
+                  className="group grid-site items-center gap-y-5 py-7"
+                >
+                  <Frame
+                    ratio="3/2"
+                    media={journey.listMedia}
+                    hover
+                    decorative
+                    sizes="(min-width: 1024px) 30vw, 100vw"
+                    className="col-span-4  md:col-span-3 lg:col-span-4"
+                  />
+                  <span className="col-span-4 flex flex-col gap-3 md:col-span-5 lg:col-span-5 lg:col-start-6">
+                    <span className="kicker-sm flex flex-wrap items-center gap-x-4 gap-y-2">
+                      {tag !== 'open' && <StatusTag status={tag} />}
+                      <span>
+                        {journey.country} · {journey.days} days · {journey.departure}
+                      </span>
+                    </span>
+                    <span className="h4 transition-colors duration-300 group-hover:text-acqua-text">
+                      {journey.title}
+                    </span>
+                    <span className="prose-body-sm measure">{journey.lead}</span>
+                  </span>
+                  <span className="link-rule col-span-4 justify-self-start md:col-span-8 lg:col-span-2 lg:col-start-11 lg:justify-self-end">
+                    View the journey
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  );
+}

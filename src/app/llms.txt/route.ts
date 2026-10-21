@@ -1,5 +1,4 @@
-import { liveJourneys } from '@/lib/journeys';
-import { site } from '@/lib/site';
+import { getJourneys, getSiteSettings } from '@/lib/content';
 
 /* Rebuilt hourly, with the journeys, so a released journey is listed on time. */
 export const revalidate = 3600;
@@ -9,8 +8,8 @@ export const revalidate = 3600;
  * links to the pages that answer most questions. Assembled from the same data
  * as the site, so it is never out of step with it.
  */
-export function GET() {
-  const journeys = liveJourneys();
+export async function GET() {
+  const [site, journeys] = await Promise.all([getSiteSettings(), getJourneys()]);
   const url = (path: string) => `${site.url}${path}`;
 
   const lines = [

@@ -165,10 +165,59 @@ writeIfChanged(generatedPath, generated);
 
 /* -- PHOTOGRAPHY-BRIEF.md ------------------------------------------------ */
 
-const row = (s) =>
-  `| \`${s.key}\` | ${s.label} | ${s.brief} | ${
-    dropped.has(s.key) ? '✅ supplied' : s.declaredSrc ? '✅ in repo' : '— outstanding'
-  } |`;
+// Provenance of whatever is in the slot today, so the shot list can say what
+// is licensed stock (a stand-in), what is a brand asset (final) and what is
+// still empty. Written by scripts/source-photography.mjs and fetch-stock.mjs.
+const creditsPath = join(imagesDir, 'credits.json');
+const credits = existsSync(creditsPath) ? JSON.parse(readFileSync(creditsPath, 'utf8')) : {};
+
+/** How a slot is filled today. */
+function provenance(s) {
+  if (s.declaredSrc && !dropped.has(s.key)) return { kind: 'brand', text: '✅ brand asset (final)' };
+  if (!dropped.has(s.key)) return { kind: 'empty', text: '— outstanding' };
+  const c = credits[s.key];
+  if (!c) return { kind: 'supplied', text: '✅ supplied' };
+  const source = c.source ?? 'wikimedia';
+  const name = { unsplash: 'Unsplash', pexels: 'Pexels', wikimedia: 'Commons' }[source] ?? source;
+  return { kind: 'stock', text: `stock · ${name} · ${c.licence}` };
+}
+
+/**
+ * Frames to commission first: every hero and featured frame, and anything that
+ * stands in for Peaks2Shores' own people and hosts. Stock can carry the rest
+ * until a second shoot.
+ */
+const COMMISSION_FIRST = new Set([
+  'home-hero',
+  'home-hero-2',
+  'home-hero-3',
+  'am-hero',
+  'jl-1',
+  'jl-2',
+  'jl-3',
+  'jl-4',
+  'jl-5',
+  'feat-1',
+  'feat-2',
+  'feat-3',
+  'pillar-1',
+  'pillar-3',
+  'ex-2',
+  'd7',
+  'g3',
+  'hotel-1',
+  'hotel-2',
+  'hotel-3',
+  'am-h1',
+  'am-h2',
+]);
+
+const row = (s) => `| \`${s.key}\` | ${s.label} | ${s.brief} | ${provenance(s).text} |`;
+
+const byKind = (kind) => slots.filter((s) => provenance(s).kind === kind);
+const stockSlots = byKind('stock');
+const brandSlots = byKind('brand');
+const commissionFirst = slots.filter((s) => COMMISSION_FIRST.has(s.key));
 
 const brief = `# Peaks2Shores — photography shot list
 
@@ -192,6 +241,28 @@ Then run \`npm run images\`. Nothing else needs editing. \`.jpg\`, \`.png\`,
 **Sizing.** Full-bleed heroes (\`home-hero\`, \`am-hero\`) want at least 2400px on
 the long edge. Half-width and column frames are fine at 1600px. Everything is
 cropped with \`object-fit: cover\`, so keep the subject away from the edges.
+
+## What is in the slots today
+
+- **${brandSlots.length} brand asset${brandSlots.length === 1 ? '' : 's'}, final:** ${
+  brandSlots.map((s) => `\`${s.key}\``).join(', ') || 'none'
+}. Never substitute these.
+- **${stockSlots.length} licensed stock stand-ins**, chosen against the brief below
+  for destination, light and calm. Provenance and licences are in
+  \`public/images/credits.json\`, \`public/images/CREDITS.md\` and on \`/credits\`.
+  They are good enough to launch on, but they are not ours: anyone can use them.
+- **${outstanding.length} empty.**
+
+## Commission first
+
+Stock can carry the day-by-day frames. These ${commissionFirst.length} cannot, because they carry the
+brand or stand in for our own hosts, guests and partner properties. Book them
+first:
+
+${commissionFirst.map((s) => `- \`${s.key}\` — ${s.label}: ${s.brief}`).join('\n')}
+
+Hotel slots currently show generic regional properties; replace them only with
+photography of a partner hotel that we are licensed to use.
 
 ## The shot list
 

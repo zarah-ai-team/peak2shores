@@ -1,7 +1,7 @@
 'use client';
 
 import * as m from 'motion/react-m';
-import { ease } from '@/lib/motion';
+import { ease, stagger as staggerDefaults } from '@/lib/motion';
 
 export type RevealLine = { text: string; italic?: boolean };
 
@@ -39,8 +39,12 @@ export function TextReveal({
   return (
     <Tag className={className}>
       {lines.map((line, i) => {
-        const content = line.italic ? <em>{line.text}</em> : line.text;
-        const stagger = delay + i * 0.11;
+        const content = line.italic ? (
+          <em className="italic font-normal">{line.text}</em>
+        ) : (
+          line.text
+        );
+        const stagger = delay + i * staggerDefaults.lines;
 
         return (
           <span key={i} className="block overflow-hidden pb-[0.06em]">
@@ -55,7 +59,7 @@ export function TextReveal({
                 initial={{ y: '110%' }}
                 whileInView={{ y: '0%' }}
                 viewport={{ once: true, amount: 0.4 }}
-                transition={{ duration: 1.15, ease: ease.reveal, delay: stagger }}
+                transition={{ duration: 1.0, ease: ease.reveal, delay: stagger }}
               >
                 {content}
               </m.span>

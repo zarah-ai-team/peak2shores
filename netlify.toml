@@ -16,3 +16,15 @@
 #   `staging` to branch deploys.
 # Neither is ever indexed: the build reads CONTEXT and sends noindex headers and
 # a closed robots.txt anywhere but production (see next.config.mjs, robots.ts).
+
+# Form delivery (src/lib/delivery.ts). Set these in Netlify → Site configuration
+# → Environment variables, scoped to Functions — never in this file and never
+# with a NEXT_PUBLIC_ prefix. Until they are set, /api/enquiry and
+# /api/subscribe answer { ok: true, delivered: false } and nothing is kept.
+#   ENQUIRY_WEBHOOK_URL    https endpoint for journey enquiries
+#   SUBSCRIBE_WEBHOOK_URL  https endpoint for circle sign-ups (double opt-in)
+#   FORMS_WEBHOOK_SECRET   optional HMAC key → X-Peaks2Shores-Signature header
+#
+# Rate limiting: the limiter in src/lib/api.ts is in-memory per function
+# instance (best effort). For a hard limit add a rate-limit rule for /api/*
+# in the Netlify UI.

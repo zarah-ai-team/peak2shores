@@ -20,93 +20,115 @@ Next.js 15 (App Router) · React 19 · TypeScript · Tailwind CSS 4 · Motion 12
 
 ## The design system
 
-Everything visual comes from `src/app/globals.css`. The tokens are declared once
-in `@theme` and every colour, font and rule reads from them.
+Everything visual comes from `src/app/globals.css`. Tokens are declared once in `@theme`.
+The binding spec is `docs/redesign/DESIGN-SPEC.md`. The component reference is
+`docs/redesign/PRIMITIVES.md`.
 
-| Token                | Value     | Role                                                 |
-| -------------------- | --------- | ---------------------------------------------------- |
-| `--color-ivory`      | `#f4f1ea` | The ground                                           |
-| `--color-panel`      | `#ede9df` | Tinted sections and row hovers                       |
-| `--color-ink`        | `#1e1f1d` | Type, and the dark fields                            |
-| `--color-body`       | `#3a3b38` | Body copy                                            |
-| `--color-muted`      | `#6f6a60` | Metadata, caps labels — 4.8:1 on ivory (AA at 10px)  |
-| `--color-acqua`      | `#0cc0df` | A hairline, a hover over a photograph — never a field |
-| `--color-acqua-deep` | `#0b9fb8` | Hairlines on the light ground. Not text-safe.        |
-| `--color-acqua-text` | `#06758a` | The only acqua allowed as *text* on a light ground   |
-| `--color-gorse`      | `#d7da5e` | A tick mark and a quote rule. Nothing else.          |
-| `--color-line`       | 18% ink   | Every rule in the layout                             |
-| `--nav-h`            | 68/88px   | The fixed header. Every offset that clears it reads this. |
+| Token                  | Value                 | Role                                                                |
+| ---------------------- | --------------------- | ------------------------------------------------------------------- |
+| `--color-ivory`        | `#f4f1ea`             | Main paper ground                                                   |
+| `--color-panel`        | `#ede9df`             | Second paper                                                        |
+| `--color-stone`        | `#d9d0bf`             | Founder blocks, image grounds (labels in `stone-text`)              |
+| `--color-ink` / `body` | `#1e1f1d` / `#3a3b38` | Headlines / body copy on paper                                      |
+| `--color-muted`        | `#6f6a60`             | Kickers on ivory/panel only                                         |
+| `--color-forest`       | `#1d2a25`             | Primary dark ground                                                 |
+| `--color-forest-deep`  | `#151e1a`             | Footer, mobile menu, globe band                                     |
+| `--color-charcoal`     | `#232422`             | Secondary dark ground (never next to forest)                        |
+| `--color-acqua`        | `#8cc2b8`             | Sea-glass: hairlines/hover on dark or photo; text-safe on dark only |
+| `--color-acqua-deep`   | `#5f948c`             | Hairlines on paper. Not text                                        |
+| `--color-acqua-text`   | `#2f6b64`             | The only acqua as text on paper                                     |
+| `--color-gorse`        | `#b39e64`             | Muted brass: tick, quote rule, preloader rule. Never text on paper  |
+| `--color-error`        | `#8a3b2e`             | Errors on paper (`error-dark` `#e8a594` on dark)                    |
+| `--nav-h`              | 68/84px               | The fixed header. Every offset that clears it reads this.           |
 
-Georgia carries the emotion (`--font-display`, a system serif with its italic); Poppins is
-demoted to metadata and interface (`--font-ui`). Zero corner radius anywhere,
-1px rules, flush-left type, editorial numbering — as the canvas' own
-exploration sheet specified.
+Type is set in two faces, both loaded with `next/font`:
 
-Type classes: `.display` (journey heroes) · `.page-title` (index pages) · `.h1`–`.h5`
-· `.lead` (italic Georgia) · `.prose-body` · `.kicker` / `.kicker-sm`.
-Layout classes: `.gutter` (the 56px page inset, tightened on small screens),
-`.editorial-grid` (the 140px numbered rail + two columns), `.editorial-grid--wide`.
-Shared blocks: `<PageTitle>`, `<FactList>`, `<DarkCta>`, `<SectionLabel>`, `<MetaItem>`.
+- **Cormorant Garamond** (`--font-display`). Weight 500 for headings, 600 for `.h5` and numerals, and 400 italic for `.lead` and `.quote`.
+- **Manrope** (`--font-ui`). Weight 400 for body text, 500 for labels and buttons.
 
-Focus is ink on the light ground and ivory on ink or a photograph. Anchor
-targets clear the header through one rule — `scroll-padding-top` on `html` —
-and never add their own `scroll-margin`.
+Corners are square everywhere and rules are 1px. Type classes are `.display`, `.h1`,
+`.page-title`, `.h2`–`.h5`, `.lead`, `.quote`, `.numeral`, `.prose-body(-sm)`,
+`.kicker(-sm)`, `.nav-label` and `.meta`.
+
+Layout uses `.container-site` (max 1680px plus the 20/40/56/72px gutter) and `.grid-site`
+(4 / 8 / 12 columns, 12 from `lg`). Spacing utilities are `py-section`, `py-section-sm`,
+`mb-block` and `gap-stack`. `.editorial-grid` is legacy.
+
+Shared blocks: `Section`/`Container`, `PhotoHero`, `PageTitle`, `Frame`, `Rail`,
+`StatusTag`, `Quote`, `FactList`, `MetaItem`, `SectionLabel`, `DarkCta`, `Button`/`ButtonLink`
+and `NewsletterForm`.
+
+Dark grounds set `data-tone="dark"`. Kickers, body text, rule links, fields and focus
+rings then pick their dark treatment in CSS.
+
+Focus rings are 2px. They are ink on paper and sea-glass on dark grounds and photographs.
+Anchor targets clear the header through one rule, `scroll-padding-top` on `html`, and
+never add their own `scroll-margin`.
 
 ## Motion
 
 One runtime, in `src/components/motion/MotionProvider.tsx`: `LazyMotion` with
 the `domAnimation` feature set (no drag, no layout projection) and
 `MotionConfig reducedMotion="user"`. Every animated element is an `m.*`
-component; `strict` mode throws in development if a bare `motion.*` sneaks in
-and drags the full bundle back.
+component; `strict` mode throws in development if a bare `motion.*` sneaks in.
 
-Timings live in `src/lib/motion.ts`: interface feedback 200–450ms, editorial
-reveals ~1.1s, page transitions 720ms, signature moments 1.4s+. No springs.
+Timings live in `src/lib/motion.ts`:
 
-- `<Reveal>` / `<RevealGroup>` + `<RevealItem>` — the scroll reveal and its stagger.
-- `<TextReveal>` — masked line reveal for display type. Hero headlines animate in
-  **CSS** (`.line-rise`), not JavaScript: that headline is usually the largest
-  contentful paint and must not depend on a bundle loading.
-- `<Frame>` — the image primitive. One viewport observer, on an unclipped
-  layer, lifts the tonal curtain and settles the picture together (a clip-path
-  hidden state was never counted as visible by Chrome, so the reveal never
-  fired and the lazy photograph beneath it never loaded); scroll-tied parallax exists only on frames that
-  ask for it (`parallax={n}`), so a page with forty photographs has a handful of
-  scroll subscriptions, not forty.
-- Hero carousel — all three slides are in the tree from the start (the waiting
-  ones fetched at low priority), cross-fading rather than sliding. Autoplay
-  pauses on hover and focus, stops with the pause control, and never starts
-  under reduced motion; the slide rules always work.
-- `<ScrollProgress>` — the acqua rule across the top. Driven by the scroll event,
-  not the animation library: it is an indicator and must track the scrollbar.
-- `<Preloader>` — PEAKS → 2 → SHORES. Resolves on the window's own `load`, floored
-  at 900ms and capped at 1800ms, once per session. It never invents a delay.
-- `<PageTransition>` — the incoming page rises under a mask. The **first** page of
-  a session is deliberately not animated.
+- interface feedback 250–400ms
+- reveals 0.9s (16px travel)
+- page transitions 0.6s
+- signature moments 1.2s
+
+Nothing runs longer than 1.4s except the 9s hero drift. There are no springs, no
+scroll-jacking and no pinned horizontal scroll.
+
+- `<Reveal>` / `<RevealGroup>` + `<RevealItem>`: the scroll reveal and its stagger (60ms).
+- `<TextReveal>`: masked line reveal for display type. Hero headlines animate in
+  **CSS** (`.line-rise`, 1.0s, lines 90ms apart), not JavaScript. That headline is
+  usually the largest contentful paint and must not depend on a bundle loading.
+- `<Frame>`: the image primitive. A tonal curtain lifts over 1.2s while the picture
+  settles from 1.04 to 1 over 1.6s. One viewport observer sits on an unclipped layer,
+  and scroll-tied parallax runs only on frames that ask for it (`parallax={n}`).
+- `<Rail>`: native `overflow-x` with scroll-snap. The prev/next buttons scroll by one item.
+- `<ScrollProgress>`: a 1px rule across the top. It is sea-glass over a photograph and
+  the hairline step on paper. It is driven by the scroll event.
+- `<Preloader>`: PEAKS → 2 → SHORES.
+  - It resolves on the window's `load` event, with a floor of 600ms and a cap of 1400ms.
+  - It plays once per 24h.
+  - On exit, the ivory cover lifts away.
+  - The inline boot script in `layout.tsx` sets `data-preload` before first paint and
+    clears it after 2.4s if the bundle never arrives.
+- `<PageTransition>`: the incoming page fades and rises 12px over 600ms. The **first**
+  page of a session is deliberately not animated.
 
 **Reduced motion and no-JavaScript are handled by the stylesheet, never by
 rendering different markup.** Motion serialises each block's hidden start state
-into the server HTML; the `[data-reveal]` and `[data-parallax]` rules in
-`globals.css` hand readers with reduced motion — and anyone whose bundle fails —
-the finished layout over the top of it. The tree is identical for every reader,
-so server and client always hydrate cleanly.
+into the server HTML. The `[data-reveal]`, `[data-curtain]`, `[data-parallax]` and
+`[data-menu-item]` rules in `globals.css` hand readers with reduced motion, and anyone
+whose bundle fails, the finished layout. The tree is identical for every reader.
 
 ## Photography
 
-**The images currently on the site are comps, not art direction.** No photography
-was shot for Peaks2Shores, so every frame except Marc's portrait is filled with a
-freely-licensed image pulled from Wikimedia Commons by keyword
-(`node scripts/fetch-stock.mjs`). Sources, authors and licences are recorded in
-`public/images/credits.json`, which generates both `public/images/CREDITS.md`
-and the public **`/credits`** page linked from the footer — most of the files are
-CC BY or CC BY-SA and require that visible attribution while they are in use.
+**The images on the site are licensed stock, not commissioned work.** No photography
+was shot for Peaks2Shores. Every frame except Marc's portrait is a hand-picked
+Unsplash photograph (Unsplash License — commercial use allowed, no attribution
+required), apart from two Wikimedia Commons frames (`d8`, `ce-9`, CC BY-SA 4.0,
+attribution required). The picks live in `scripts/photography-manifest.json`
+(slot → Unsplash id); `node scripts/source-photography.mjs` downloads them,
+refuses anything not under the Unsplash License, and records provenance in
+`public/images/credits.json`, which generates `public/images/CREDITS.md` and the
+public **`/credits`** page linked from the footer.
 
 Still to settle before launch:
 
+- **Commissioned photography.** `PHOTOGRAPHY-BRIEF.md` lists each slot's status
+  and a "Commission first" list (heroes, featured journeys, hotels and more).
 - **Model releases.** A copyright licence is not a model release. Selection avoids
   portraits deliberately, but check any frame with a recognisable face.
-- **Replacing the comps.** Once commissioned photography lands, delete
-  `credits.json`, the `/credits` route and the footer link together.
+- **Location tags.** Unsplash locations are the photographers' own tags, recorded
+  as published. A few generic slots use frames from elsewhere (noted in the brief).
+- **Keep `/credits`** while any Commons frame is in use; it can go only once
+  every credited frame is replaced.
 
 Every frame is registered in **`src/lib/media.ts`** with its art direction.
 To ship a real photograph, name the file after the slot key, drop it in, sync:
@@ -133,7 +155,7 @@ generated from those sources.
 
 ## Content
 
-`src/lib/journeys.ts` and `src/lib/content.ts` hold every word on the site, lifted
+`src/lib/journeys.ts` and `src/lib/data/copy.ts` (served through `src/lib/content`) hold every word on the site, lifted
 from the approved canvas. **Nothing factual has been invented.** The canvas
 carried a placeholder phone number; it is `null` in `src/lib/site.ts` and every
 phone link on the site appears when a real one is set.

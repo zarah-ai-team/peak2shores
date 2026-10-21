@@ -1,10 +1,17 @@
 import { Frame } from '@/components/ui/Frame';
-import { RevealGroup, RevealItem, Reveal } from '@/components/motion/Reveal';
-import { PageTitle, SectionLabel } from '@/components/ui/Editorial';
+import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal';
+import { FactList, PageTitle, SectionLabel } from '@/components/ui/Editorial';
+import { Section } from '@/components/ui/Section';
+import { StatusTag } from '@/components/ui/StatusTag';
 import { NewsletterForm } from '@/components/ui/NewsletterForm';
-import { journal, journalCategories, circle } from '@/lib/content';
 import { enterAt } from '@/lib/motion';
-import { pageMetadata } from '@/lib/seo';
+import {
+  getForthcomingArticles,
+  getPageContent,
+  getPublishedArticles,
+  pageMetadata,
+  type ForthcomingArticle,
+} from '@/lib/content';
 
 export const metadata = pageMetadata({
   title: 'Journal',
@@ -13,7 +20,29 @@ export const metadata = pageMetadata({
   path: '/journal',
 });
 
-export default function JournalPage() {
+/* A piece can be scheduled with publishAt, so the index rebuilds hourly. */
+export const revalidate = 3600;
+
+/**
+ * The journal index as a magazine spread: one lead piece, then a row of
+ * three in different shapes. Every entry is still in preparation, so each
+ * is an unlinked teaser — no address exists for a draft — with its picture
+ * held back a little (85%, slightly desaturated) so it reads as forthcoming.
+ *
+ * When a piece is written (getPublishedArticles), it will need its own
+ * /journal/[slug] route before it can be linked; until then nothing here links.
+ */
+export default async function JournalPage() {
+  const [{ categories, circle }, published, forthcoming] = await Promise.all([
+    getPageContent('journal'),
+    getPublishedArticles(),
+    getForthcomingArticles(),
+  ]);
+  // Published pieces lead once they exist; there is no route for them yet,
+  // so they are shown the same way (unlinked) rather than linking to a 404.
+  const entries: ForthcomingArticle[] = [...published, ...forthcoming];
+  const [lead, ...rest] = entries;
+
   return (
     <>
       <PageTitle kicker="Journal" title="Notes, not newsletters.">
@@ -22,66 +51,108 @@ export default function JournalPage() {
       </PageTitle>
 
       {/* A list, not a nav: these are the journal's sections, not yet links. */}
-      <ul
-        aria-label="Journal categories"
-        className="gutter enter m-0 flex list-none flex-wrap gap-x-7 gap-y-3 border-y border-line py-5"
-        style={enterAt(0.36)}
-      >
-        {journalCategories.map((category) => (
-          <li key={category} className="kicker-sm">
-            {category}
-          </li>
-        ))}
-      </ul>
-
-      <section className="gutter pb-24 pt-14 md:pb-[104px]">
-        <RevealGroup
-          as="ul"
-          className="grid list-none gap-x-14 gap-y-16 p-0 sm:grid-cols-2"
-          stagger={0.09}
+      <div className="container-site enter" style={enterAt(0.36)}>
+        <ul
+          aria-label="Journal categories"
+          className="m-0 flex list-none flex-wrap gap-x-4 gap-y-3 border-y border-line px-0 py-5"
         >
-          {journal.map((entry) => (
-            <RevealItem as="li" key={entry.slug} distance={22}>
-              <article className="flex h-full flex-col">
-                <Frame
-                  media={entry.media}
-                  decorative
-                  sizes="(min-width: 640px) 50vw, 100vw"
-                  className="h-[280px] lg:h-[420px]"
-                />
-                <div className="flex flex-1 flex-col pt-7">
-                  <div className="kicker-sm mb-4 flex flex-wrap justify-between gap-4">
-                    <span>{entry.category}</span>
-                    <span>{entry.date}</span>
-                  </div>
-                  <h2 className="h4 mb-4 max-w-[460px]">{entry.title}</h2>
-                  <p className="prose-body-sm mb-6 max-w-[460px]">{entry.standfirst}</p>
-                  {entry.draft && (
-                    <p className="mt-auto border-t border-line pt-4 font-ui text-[10px] uppercase leading-none tracking-[0.18em] text-muted">
-                      In preparation — announced to the circle first
-                    </p>
-                  )}
-                </div>
-              </article>
-            </RevealItem>
+          {categories.map((category, i) => (
+            <li key={category} className="kicker flex items-center gap-4">
+              {i > 0 && (
+                <span aria-hidden className="text-acqua-deep">
+                  ·
+                </span>
+              )}
+              {category}
+            </li>
           ))}
-        </RevealGroup>
-      </section>
+        </ul>
+      </div>
 
-      <section className="gutter editorial-grid border-t border-line pb-20 pt-20 md:pb-[104px] md:pt-[112px]">
-        <SectionLabel className="lg:pt-4">The circle</SectionLabel>
-        <div>
-          <Reveal variant="mask" className="mb-8">
-            <h2 className="h2">{circle.headline}</h2>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p className="prose-body max-w-[480px]">{circle.body}</p>
+      {lead && (
+        <section aria-label="In the journal" className="pb-section-sm pt-block">
+          <div className="container-site">
+            <article className="grid-site items-end gap-y-8">
+              <Frame
+                media={lead.media}
+                ratio="16/10"
+                decorative
+                sizes="(min-width: 1024px) 66vw, 100vw"
+                className="col-span-4 opacity-85 grayscale-[.25] md:col-span-8 lg:col-span-8"
+              />
+              <div className="col-span-4 md:col-span-6 lg:col-span-4 lg:col-start-9">
+                <Teaser entry={lead} size="lead" />
+              </div>
+            </article>
+
+            {rest.length > 0 && (
+              <RevealGroup
+                as="ul"
+                className="mt-section-sm grid list-none gap-x-[var(--grid-gap)] gap-y-block border-t border-line p-0 pt-block md:grid-cols-3"
+              >
+                {rest.slice(0, 3).map((entry, i) => (
+                  <RevealItem as="li" key={entry.slug} distance={16}>
+                    <article>
+                      <Frame
+                        media={entry.media}
+                        ratio={i === 1 ? '1/1' : '4/5'}
+                        decorative
+                        sizes="(min-width: 768px) 33vw, 100vw"
+                        className="mb-7 opacity-85 grayscale-[.25]"
+                      />
+                      <Teaser entry={entry} />
+                    </article>
+                  </RevealItem>
+                ))}
+              </RevealGroup>
+            )}
+          </div>
+        </section>
+      )}
+
+      <Section ground="panel" aria-labelledby="circle-title">
+        <div className="grid-site gap-y-block">
+          <div className="col-span-4 md:col-span-8 lg:col-span-7">
+            <SectionLabel className="mb-stack">The circle</SectionLabel>
+            <Reveal variant="mask">
+              <h2 id="circle-title" className="h2 mb-stack max-w-[20ch]">
+                {circle.headline}
+              </h2>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <p className="prose-body measure mb-block">{circle.body}</p>
+              <FactList labelWidth={130} rows={circle.notes} />
+            </Reveal>
+          </div>
+          <Reveal
+            delay={0.15}
+            className="col-span-4 md:col-span-6 lg:col-span-4 lg:col-start-9 lg:self-end"
+          >
+            <NewsletterForm variant="large" />
           </Reveal>
         </div>
-        <Reveal delay={0.15} className="lg:pt-4">
-          <NewsletterForm />
-        </Reveal>
-      </section>
+      </Section>
+    </>
+  );
+}
+
+function Teaser({ entry, size = 'row' }: { entry: ForthcomingArticle; size?: 'lead' | 'row' }) {
+  return (
+    <>
+      <p className="kicker-sm mb-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+        <span>{entry.category}</span>
+        <span aria-hidden>·</span>
+        <span>{entry.date}</span>
+      </p>
+      <h2 className={`${size === 'lead' ? 'h3' : 'h4'} mb-4 max-w-[22ch]`}>{entry.title}</h2>
+      <p className={`${size === 'lead' ? 'prose-body' : 'prose-body-sm'} measure mb-6`}>
+        {entry.standfirst}
+      </p>
+      {entry.draft && (
+        <p className="m-0 border-t border-line pt-4">
+          <StatusTag status="draft">In preparation — announced to the circle first</StatusTag>
+        </p>
+      )}
     </>
   );
 }

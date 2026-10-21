@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { Ground } from '@/components/motion/Ground';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Reveal } from '@/components/motion/Reveal';
-import { Button } from '@/components/ui/Button';
+import { Button, ButtonLink } from '@/components/ui/Button';
 import { SectionLabel, Tick } from '@/components/ui/Editorial';
 import { site } from '@/lib/site';
 import { failureMessage } from '@/lib/forms';
@@ -12,15 +11,27 @@ import { readFirstTouch } from '@/lib/attribution';
 
 const PARTY_OPTIONS = ['Couple', 'Friends', 'Family', 'Solo'] as const;
 
-type Status = 'idle' | 'sending' | 'sent' | 'error';
+/**
+ * idle → sending → one of:
+ *   sent       the API accepted it AND forwarded it (`delivered: true`)
+ *   undelivered the API accepted it but no delivery is configured
+ *              (`delivered: false`) — nothing reached anyone, so we say so
+ *              and hand the reader a prefilled email instead
+ *   error      refused (422/429) or the provider failed (502)
+ */
+type Status = 'idle' | 'sending' | 'sent' | 'undelivered' | 'error';
+
+type Submitted = Record<string, string>;
 
 export type EnquiryFormProps = {
   /** The journey being enquired about, if any. */
   journeyTitle?: string;
-  /** e.g. "12 September 2027". */
+  /** e.g. "12 – 20 September 2027". */
   departure?: string;
   spotsLeft?: number;
   groupMax?: number;
+  /** The caps label above the headline. */
+  kicker?: string;
   headline?: string;
   intro?: string;
   /**
@@ -28,34 +39,46 @@ export type EnquiryFormProps = {
    * from. A private journey is always offered as well.
    */
   journeyOptions?: string[];
+  /** Extra content under the intro, e.g. contact lines. */
+  children?: ReactNode;
 };
+
+const inputClass =
+  'prose-body w-full border-0 bg-transparent p-0 !text-ink outline-none placeholder:text-stone-text';
 
 /**
  * "Tell us a little. We'll call you, not the other way round."
  *
- * Fields are rules, not boxes: a caps label, an underline, and type at reading
- * size. Nothing is placed on a filled input. The rule above a field turns
- * acqua while it has focus.
+ * On stone (so the page never runs dark into the dark footer): the headline
+ * in the first five columns, the form in the last
+ * six. Fields are rules, not boxes: a caps label, an underline, and type at
+ * reading size. The rule above a field turns sea-glass while it has focus.
  *
- * The status line is a persistent live region so success and failure are
- * announced; on success focus moves to the confirmation heading.
+ * The status line is a persistent live region so failures are announced; on
+ * success focus moves to the confirmation heading. The confirmation never
+ * claims more than the server confirmed: when the API reports the enquiry was
+ * not delivered anywhere, the reader is told so and offered an email with
+ * their details already written.
  */
 export function EnquiryForm({
   journeyTitle,
   departure,
   spotsLeft,
   groupMax = site.maxGuests,
+  kicker = 'Plan your journey',
   headline = 'Tell us a little. We’ll call you, not the other way round.',
   intro,
   journeyOptions,
+  children,
 }: EnquiryFormProps) {
   const [party, setParty] = useState<string>('Couple');
   const [status, setStatus] = useState<Status>('idle');
   const [errorText, setErrorText] = useState('');
-  const sentRef = useRef<HTMLHeadingElement>(null);
+  const [submitted, setSubmitted] = useState<Submitted>({});
+  const doneRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
-    if (status === 'sent') sentRef.current?.focus();
+    if (status === 'sent' || status === 'undelivered') doneRef.current?.focus();
   }, [status]);
 
   const firstName = site.founder.name.split(' ')[0];
@@ -69,6 +92,11 @@ export function EnquiryForm({
     if (status === 'sending') return;
 
     const data = new FormData(event.currentTarget);
+    const field = (name: string) => {
+      const value = data.get(name);
+      return typeof value === 'string' ? value.trim() : '';
+    };
+    const journey = journeyTitle ?? (field('journey') || undefined);
     setStatus('sending');
 
     try {
@@ -84,7 +112,7 @@ export function EnquiryForm({
           heardFrom: data.get('heardFrom'),
           notes: data.get('notes'),
           party,
-          journey: journeyTitle ?? (data.get('journey') || undefined),
+          journey,
           // Where this visitor first came from — stored with the enquiry.
           source: readFirstTouch(),
           // Honeypot: a field no person sees or fills. The server drops
@@ -93,8 +121,31 @@ export function EnquiryForm({
         }),
       });
       if (res.ok) {
-        setStatus('sent');
-        track('enquiry_sent', { journey: journeyTitle ?? (data.get('journey') || 'private') });
+        let delivered = false;
+        try {
+          const body: unknown = await res.json();
+          delivered =
+            !!body && typeof body === 'object' && 'delivered' in body && body.delivered === true;
+        } catch {
+          delivered = false;
+        }
+        track('enquiry_sent', { journey: journey ?? 'private', delivered });
+        if (delivered) {
+          setStatus('sent');
+        } else {
+          setSubmitted({
+            Name: field('name'),
+            Email: field('email'),
+            Phone: field('phone'),
+            Journey: journey ?? 'A private journey, or not sure yet',
+            'Travelling as': party,
+            Guests: field('guests'),
+            When: field('travelWindow'),
+            'Heard about us': field('heardFrom'),
+            Notes: field('notes'),
+          });
+          setStatus('undelivered');
+        }
       } else {
         setErrorText(await failureMessage(res));
         setStatus('error');
@@ -105,195 +156,233 @@ export function EnquiryForm({
     }
   }
 
+  const mailto = (() => {
+    const subject = `Enquiry: ${submitted.Journey ?? 'a journey'}`;
+    const body = Object.entries(submitted)
+      .filter(([, value]) => value)
+      .map(([label, value]) => `${label}: ${value}`)
+      .join('\n');
+    return `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  })();
+
   return (
-    <Ground
-      id="enquire"
-      className="gutter grid gap-14 bg-ink py-24 text-on-dark md:py-[140px] lg:grid-cols-2 lg:gap-24"
-    >
-      <Reveal className="flex flex-col gap-7">
-        <SectionLabel tone="dark" className="flex items-center gap-3.5">
-          <Tick className="bg-acqua" />
-          Plan your journey
-        </SectionLabel>
-        <h2 className="h2">{headline}</h2>
-        <p className="prose-body max-w-[440px] text-on-dark-body">{intro ?? defaultIntro}</p>
-        <div
-          id="contact"
-          className="font-ui text-[14px] font-light leading-[1.8] text-on-dark-body"
-        >
-          <a href={`mailto:${site.email}`} className="hover:text-acqua">
-            {site.email}
-          </a>
-          {site.phone && (
-            <>
-              <br />
-              <a href={`tel:${site.phoneHref}`} className="hover:text-acqua">
+    <section id="enquire" aria-label={headline} className="bg-stone py-section-sm text-ink">
+      <div data-tone="stone" className="container-site grid-site gap-y-block">
+        <Reveal className="col-span-4 flex flex-col gap-stack md:col-span-8 lg:col-span-5">
+          <SectionLabel tone="stone" className="flex items-center gap-3.5">
+            <Tick />
+            {kicker}
+          </SectionLabel>
+          <h2 className="h2">{headline}</h2>
+          <p className="prose-body measure-lead">{intro ?? defaultIntro}</p>
+          <div id="contact" className="meta flex flex-col gap-1 text-body">
+            <a href={`mailto:${site.email}`} className="prose-link self-start">
+              {site.email}
+            </a>
+            {site.phone && site.phoneHref && (
+              <a href={`tel:${site.phoneHref}`} className="prose-link self-start">
                 {site.phone}
               </a>
-            </>
+            )}
+          </div>
+          {children}
+        </Reveal>
+
+        <div className="col-span-4 md:col-span-8 lg:col-span-6 lg:col-start-7">
+          {status === 'sent' ? (
+            <div role="status" className="border-t border-line py-12">
+              <h3 ref={doneRef} tabIndex={-1} className="h3 mb-stack outline-none">
+                Thank you. Marc will be in touch within two days.
+              </h3>
+              <p className="prose-body measure">
+                If anything changes before then, write to{' '}
+                <a href={`mailto:${site.email}`} className="prose-link">
+                  {site.email}
+                </a>
+                .
+              </p>
+            </div>
+          ) : status === 'undelivered' ? (
+            <div role="status" className="border-t border-line py-12">
+              <h3 ref={doneRef} tabIndex={-1} className="h3 mb-stack outline-none">
+                One more step, please.
+              </h3>
+              <p className="prose-body measure mb-stack">
+                Your details were not sent to us automatically. Please email them to {site.email} —
+                the button below opens a message with what you have written already filled in.
+              </p>
+              <ButtonLink href={mailto} variant="forest" arrow>
+                Email your enquiry
+              </ButtonLink>
+            </div>
+          ) : (
+            <Reveal delay={0.1}>
+              <form onSubmit={onSubmit} className="flex flex-col">
+                <div className="grid gap-x-10 sm:grid-cols-2">
+                  <Field label="Name">
+                    <input
+                      name="name"
+                      required
+                      maxLength={200}
+                      autoComplete="name"
+                      placeholder="Your name"
+                      className={inputClass}
+                    />
+                  </Field>
+
+                  <Field label="Email">
+                    <input
+                      name="email"
+                      type="email"
+                      required
+                      maxLength={254}
+                      pattern="[^\s@]+@[^\s@]+\.[^\s@]{2,}"
+                      title="An address like name@example.com"
+                      autoComplete="email"
+                      placeholder="you@example.com"
+                      className={inputClass}
+                    />
+                  </Field>
+
+                  <Field label="Phone (optional)">
+                    <input
+                      name="phone"
+                      type="tel"
+                      maxLength={40}
+                      autoComplete="tel"
+                      placeholder="+1 305 000 0000"
+                      className={inputClass}
+                    />
+                  </Field>
+
+                  <fieldset className="m-0 flex flex-col gap-2.5 border-0 border-t border-line p-0 py-[22px]">
+                    <legend className="kicker-sm float-left mb-2.5 p-0">Travelling as</legend>
+                    <div className="clear-left flex flex-wrap gap-x-[18px]">
+                      {PARTY_OPTIONS.map((option) => {
+                        const on = party === option;
+                        return (
+                          <button
+                            key={option}
+                            type="button"
+                            aria-pressed={on}
+                            onClick={() => setParty(option)}
+                            className={`toggle-link prose-body-sm min-h-11 border-0 bg-transparent px-0 py-2 transition-colors hover:!text-ink ${
+                              on ? '!text-ink' : '!text-stone-text'
+                            }`}
+                          >
+                            {option}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </fieldset>
+
+                  <Field label="Guests">
+                    <input
+                      name="guests"
+                      type="number"
+                      inputMode="numeric"
+                      min={1}
+                      max={groupMax}
+                      placeholder="2"
+                      className={inputClass}
+                    />
+                  </Field>
+
+                  {!journeyTitle && journeyOptions && (
+                    <Field label="Journey of interest" className="sm:col-span-2">
+                      <span className="relative block">
+                        <select
+                          name="journey"
+                          defaultValue=""
+                          className={`${inputClass} appearance-none pr-8`}
+                        >
+                          <option value="" className="text-ink">
+                            A private journey, or not sure yet
+                          </option>
+                          {journeyOptions.map((title) => (
+                            <option key={title} value={title} className="text-ink">
+                              {title}
+                            </option>
+                          ))}
+                        </select>
+                        <svg
+                          aria-hidden
+                          width="12"
+                          height="8"
+                          viewBox="0 0 12 8"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1"
+                          className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-stone-text"
+                        >
+                          <path d="M1 1.5l5 5 5-5" />
+                        </svg>
+                      </span>
+                    </Field>
+                  )}
+
+                  <Field label="When would you like to travel">
+                    <input
+                      name="travelWindow"
+                      maxLength={120}
+                      placeholder="September 2027, or flexible"
+                      className={inputClass}
+                    />
+                  </Field>
+
+                  <Field label="How did you hear about us">
+                    <input
+                      name="heardFrom"
+                      maxLength={120}
+                      placeholder="Instagram, a friend, Google…"
+                      className={inputClass}
+                    />
+                  </Field>
+
+                  <Field label="Anything we should know" className="border-b sm:col-span-2">
+                    <textarea
+                      name="notes"
+                      rows={3}
+                      maxLength={2000}
+                      placeholder="Dates, dietary notes, whether you’ve travelled with us before…"
+                      className={`${inputClass} resize-y`}
+                    />
+                  </Field>
+
+                  {/* Honeypot. Out of the accessibility tree and off screen; real
+                      browsers never fill it, and autofill ignores the name. */}
+                  <div
+                    aria-hidden
+                    className="absolute -left-[9999px] top-0 h-0 w-0 overflow-hidden"
+                  >
+                    <label>
+                      Leave this empty
+                      <input name="website" type="text" tabIndex={-1} autoComplete="off" />
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center justify-between gap-6 pt-7">
+                  <span className="prose-body-sm max-w-[34ch] !text-stone-text">
+                    We reply personally. No newsletters unless you ask.
+                  </span>
+                  <Button type="submit" variant="forest" arrow aria-disabled={status === 'sending'}>
+                    {status === 'sending' ? 'Sending' : 'Send enquiry'}
+                  </Button>
+                </div>
+
+                <p role="alert" aria-live="assertive" className="prose-body-sm mt-5 !text-error">
+                  {status === 'error'
+                    ? errorText || `That didn’t send. Please try again, or email ${site.email}.`
+                    : ''}
+                </p>
+              </form>
+            </Reveal>
           )}
         </div>
-      </Reveal>
-
-      {status === 'sent' ? (
-        <div role="status" className="border-t border-line-dark py-12">
-          <h3 ref={sentRef} tabIndex={-1} className="h4 mb-4 outline-none">
-            Thank you. Marc will be in touch within two days.
-          </h3>
-          <p className="prose-body text-[15px] text-on-dark-body">
-            In the meantime, the journal has a note on the coast in September.
-          </p>
-        </div>
-      ) : (
-        <Reveal delay={0.12}>
-          <form onSubmit={onSubmit} className="flex flex-col">
-            <div className="grid gap-x-10 sm:grid-cols-2">
-              <Field label="Name">
-                <input
-                  name="name"
-                  required
-                  maxLength={200}
-                  autoComplete="name"
-                  placeholder="Your name"
-                  className="w-full border-0 bg-transparent p-0 font-ui text-[16px] font-light leading-[1.3] text-on-dark outline-none placeholder:text-on-dark-muted"
-                />
-              </Field>
-
-              <Field label="Email">
-                <input
-                  name="email"
-                  type="email"
-                  required
-                  maxLength={254}
-                  pattern="[^\s@]+@[^\s@]+\.[^\s@]{2,}"
-                  title="An address like name@example.com"
-                  autoComplete="email"
-                  placeholder="you@example.com"
-                  className="w-full border-0 bg-transparent p-0 font-ui text-[16px] font-light leading-[1.3] text-on-dark outline-none placeholder:text-on-dark-muted"
-                />
-              </Field>
-
-              <Field label="Phone (optional)">
-                <input
-                  name="phone"
-                  type="tel"
-                  maxLength={40}
-                  autoComplete="tel"
-                  placeholder="+1 305 000 0000"
-                  className="w-full border-0 bg-transparent p-0 font-ui text-[16px] font-light leading-[1.3] text-on-dark outline-none placeholder:text-on-dark-muted"
-                />
-              </Field>
-
-              <fieldset className="m-0 flex flex-col gap-2.5 border-0 border-t border-line-dark p-0 py-[22px]">
-                <legend className="kicker-sm p-0 text-on-dark-muted">Travelling as</legend>
-                <div className="flex flex-wrap gap-[18px]">
-                  {PARTY_OPTIONS.map((option) => {
-                    const on = party === option;
-                    return (
-                      <button
-                        key={option}
-                        type="button"
-                        aria-pressed={on}
-                        onClick={() => setParty(option)}
-                        className="toggle-link min-h-6 border-0 bg-transparent py-1.5 font-ui text-[15px] font-light hover:text-acqua"
-                        style={{
-                          color: on ? 'var(--color-on-dark)' : 'var(--color-on-dark-muted)',
-                        }}
-                      >
-                        {option}
-                      </button>
-                    );
-                  })}
-                </div>
-              </fieldset>
-
-              <Field label="Guests">
-                <input
-                  name="guests"
-                  type="number"
-                  inputMode="numeric"
-                  min={1}
-                  max={groupMax}
-                  placeholder="2"
-                  className="w-full border-0 bg-transparent p-0 font-ui text-[16px] font-light leading-[1.3] text-on-dark outline-none placeholder:text-on-dark-muted"
-                />
-              </Field>
-
-              {!journeyTitle && journeyOptions && (
-                <Field label="Journey of interest" className="sm:col-span-2">
-                  <select
-                    name="journey"
-                    defaultValue=""
-                    className="w-full border-0 bg-transparent p-0 font-ui text-[16px] font-light leading-[1.3] text-on-dark outline-none"
-                  >
-                    <option value="" className="text-ink">
-                      A private journey, or not sure yet
-                    </option>
-                    {journeyOptions.map((title) => (
-                      <option key={title} value={title} className="text-ink">
-                        {title}
-                      </option>
-                    ))}
-                  </select>
-                </Field>
-              )}
-
-              <Field label="When would you like to travel">
-                <input
-                  name="travelWindow"
-                  maxLength={120}
-                  placeholder="September 2027, or flexible"
-                  className="w-full border-0 bg-transparent p-0 font-ui text-[16px] font-light leading-[1.3] text-on-dark outline-none placeholder:text-on-dark-muted"
-                />
-              </Field>
-
-              <Field label="How did you hear about us">
-                <input
-                  name="heardFrom"
-                  maxLength={120}
-                  placeholder="Instagram, a friend, Google…"
-                  className="w-full border-0 bg-transparent p-0 font-ui text-[16px] font-light leading-[1.3] text-on-dark outline-none placeholder:text-on-dark-muted"
-                />
-              </Field>
-
-              <Field label="Anything we should know" className="border-b sm:col-span-2">
-                <textarea
-                  name="notes"
-                  rows={3}
-                  maxLength={2000}
-                  placeholder="Dates, dietary notes, whether you’ve travelled with us before…"
-                  className="w-full resize-y border-0 bg-transparent p-0 font-ui text-[16px] font-light leading-[1.5] text-on-dark outline-none placeholder:text-on-dark-muted"
-                />
-              </Field>
-
-              {/* Honeypot. Out of the accessibility tree and off screen; real
-                  browsers never fill it, and autofill ignores the name. */}
-              <div aria-hidden className="absolute -left-[9999px] top-0 h-0 w-0 overflow-hidden">
-                <label>
-                  Leave this empty
-                  <input name="website" type="text" tabIndex={-1} autoComplete="off" />
-                </label>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-between gap-6 pt-7">
-              <span className="max-w-[300px] font-ui text-[12px] font-light leading-[1.5] text-on-dark-muted">
-                We reply personally. No newsletters unless you ask.
-              </span>
-              <Button type="submit" variant="light" aria-disabled={status === 'sending'}>
-                {status === 'sending' ? 'Sending' : 'Send enquiry'}
-              </Button>
-            </div>
-
-            <p role="alert" aria-live="assertive" className="prose-body-sm mt-5 text-acqua">
-              {status === 'error'
-                ? errorText || `That didn’t send. Please try again, or email ${site.email}.`
-                : ''}
-            </p>
-          </form>
-        </Reveal>
-      )}
-    </Ground>
+      </div>
+    </section>
   );
 }
 
@@ -303,15 +392,14 @@ function Field({
   className = '',
 }: {
   label: string;
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
 }) {
   return (
     <label
-      className={`field-rule field-rule--top group flex flex-col gap-2.5 border-t border-line-dark py-[22px] ${className}`}
-      style={{ borderColor: 'var(--color-line-dark)' }}
+      className={`field-rule field-rule--top group flex flex-col gap-2.5 border-t border-line py-[22px] ${className}`}
     >
-      <span className="kicker-sm text-on-dark-muted transition-colors duration-300 group-focus-within:text-acqua">
+      <span className="kicker-sm transition-colors duration-300 group-focus-within:!text-ink">
         {label}
       </span>
       {children}

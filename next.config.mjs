@@ -50,10 +50,11 @@ const nextConfig = {
     // small instance with a cold cache that encode is what keeps a page of
     // photographs blank.
     formats: ['image/webp'],
-    // The editorial grid tops out at a 1440-wide canvas with full-bleed
-    // heroes. Sources are 2400px wide, so a 2560 variant would only re-encode
-    // the original at full size.
-    deviceSizes: [420, 640, 828, 1080, 1280, 1600, 1920],
+    // Full-bleed photographs on retina and 4K screens need 2560 and 3840
+    // variants; Marc's photographs are exported at up to 3840px for them.
+    deviceSizes: [420, 640, 828, 1080, 1280, 1600, 1920, 2560, 3840],
+    // One quality step, high enough that skies and water show no banding.
+    qualities: [85],
     // Next's default is 60 seconds, so browsers and the CDN come back for every
     // photograph almost immediately. Files in public/images are replaced by
     // name rarely enough that a month is safe.

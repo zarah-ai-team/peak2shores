@@ -1,25 +1,53 @@
 import { Reveal } from '@/components/motion/Reveal';
 import { SectionLabel } from '@/components/ui/Editorial';
-import { pillars } from '@/lib/content';
-import { PillarsIndex } from './PillarsIndex';
+import { Tick } from '@/components/ui/Tick';
+import type { Pillar } from '@/lib/content';
+import { Section } from '@/components/ui/Section';
+import { PrincipleCards } from './PrincipleCards';
 
 /**
- * The four pillars as one spread: a numbered index down the right, and a
- * single photograph on the left that stays put and changes as each pillar
- * comes level with it. Four ideas, one frame — rather than four full-height
- * spreads that read as the same page repeated.
+ * 4.5 — 02 Principles (panel).
+ *
+ * What used to be two sections — the four pillars and the six-box "why us" —
+ * is one: the why-us headline above the four principles, which open on hover
+ * as photographs, and the one reason the principles do not already cover set
+ * as a single closing line. Four of the six reasons repeated the pillars and
+ * a fifth the hotels section (client review, October 2026).
+ *
+ * On a desktop it is one screen: the headline, then the cards taking whatever
+ * height is left, then the closing line.
  */
-export function Pillars() {
+export function Pillars({ pillars }: { pillars: Pillar[] }) {
   return (
-    <section id="pillars" className="border-b border-line">
-      <div className="gutter editorial-grid--wide mb-12 pt-20 md:pt-[112px] lg:mb-16">
-        <SectionLabel className="lg:pt-3">02 — Principles</SectionLabel>
-        <Reveal variant="mask">
-          <h2 className="h3 max-w-[820px]">What every journey is held to.</h2>
+    <Section contained={false} screen ground="panel" id="pillars" aria-labelledby="pillars-title">
+      <div className="container-site lg:flex lg:min-h-0 lg:flex-1 lg:flex-col">
+        <div className="grid-site mb-block gap-y-8 lg:mb-[4svh] lg:items-end">
+          <div className="col-span-4 md:col-span-8 lg:col-span-8">
+            <SectionLabel className="mb-8 lg:mb-[2.5svh]">
+              02 — What every journey is held to
+            </SectionLabel>
+            <Reveal variant="mask">
+              <h2 id="pillars-title" className="h2 max-w-[34ch]">
+                Someone who really knows travel has already done the filtering for you.
+              </h2>
+            </Reveal>
+          </div>
+        </div>
+
+        <Reveal distance={16} className="lg:min-h-0 lg:flex-1">
+          <PrincipleCards pillars={pillars} />
+        </Reveal>
+
+        <Reveal delay={0.1} className="mt-10 flex items-start gap-4 lg:mt-[3.5svh]">
+          <Tick className="mt-[0.7em] w-[22px] shrink-0" />
+          <p className="h5 m-0">
+            Seamless by nature.{' '}
+            <span className="prose-body text-muted">
+              The complexity happens behind the scenes, so you can stay present.
+            </span>
+          </p>
         </Reveal>
       </div>
-
-      <PillarsIndex pillars={pillars} />
-    </section>
+    </Section>
   );
 }
