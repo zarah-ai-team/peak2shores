@@ -71,7 +71,7 @@ export default async function LinksPage() {
         {lead && (
           <Link href={`/journeys/${lead.slug}`} className="group mb-block block">
             <Frame
-              media={lead.cardMedia}
+              media={lead.promoMedia ?? lead.cardMedia}
               ratio="4/5"
               hover
               priority

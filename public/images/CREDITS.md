@@ -9,7 +9,7 @@ calm light, no crowds, the right destination) and its provenance read from the
 source page itself. None of it was shot for Peaks2Shores; see
 `PHOTOGRAPHY-BRIEF.md` for what a commissioned shoot should replace first.
 
-- **83** frames from Unsplash under the
+- **85** frames from Unsplash under the
   [Unsplash License](https://unsplash.com/license): free for commercial use, no
   attribution required (credited here and on `/credits` anyway). The licence
   does not allow selling the photos unaltered or compiling them into a
@@ -48,6 +48,7 @@ source page itself. None of it was shot for Peaks2Shores; see
 | `ce-7` | ce-7.jpg | [Unsplash](https://unsplash.com/photos/a-close-up-of-a-pine-tree-with-yellow-leaves-ZgWALE6YGxY) | Pix Tresa | Unsplash License |
 | `ce-8` | ce-8.jpg | [Unsplash](https://unsplash.com/photos/a-lake-with-trees-and-mountains-in-the-background-UjNmwXiOvpY) | Perspective Nature | Unsplash License |
 | `ce-9` | ce-9.jpg | [Commons](https://commons.wikimedia.org/wiki/File:Soglio_by_night.jpg) | Kuhnmi | CC BY-SA 4.0 |
+| `ce-list` | ce-hero.jpg | [Unsplash](https://unsplash.com/photos/gI67EMO0i5w) | Kristaps Dokans | Unsplash License |
 | `cp-1` | cp-1.jpg | [Unsplash](https://unsplash.com/photos/sandy-beach-at-sunset-L6EP96_w1Fc) | Brent Ninaber | Unsplash License |
 | `cp-10` | cp-10.jpg | [Unsplash](https://unsplash.com/photos/green-grass-during-sunrise-IpE-bIbCfBo) | Tim Johnson | Unsplash License |
 | `cp-11` | cp-11.jpg | [Unsplash](https://unsplash.com/photos/city-buildings-near-body-of-water-during-daytime-v59Et7cDz7A) | Sebastian Canaves | Unsplash License |
@@ -102,6 +103,7 @@ source page itself. None of it was shot for Peaks2Shores; see
 | `ma-5` | ma-5.jpg | [Unsplash](https://unsplash.com/photos/boats-in-a-harbor-with-a-town-on-the-hill-jQdyA49RId0) | Alexis Presa | Unsplash License |
 | `ma-6` | ma-6.jpg | [Unsplash](https://unsplash.com/photos/a-house-with-a-pool-in-the-middle-of-it-Irn0tSJPPWY) | Max Harlynking | Unsplash License |
 | `ma-7` | ma-7.jpg | [Unsplash](https://unsplash.com/photos/palma-cathedral-reflected-in-calm-water-under-a-clear-sky-w1tXiQDe-Gg) | Lucas Klein | Unsplash License |
+| `ma-list` | ma-hero.jpg | [Unsplash](https://unsplash.com/photos/a-view-of-the-ocean-from-the-top-of-a-mountain--ng6LPq1Dg8) | Muzykalne Podróże | Unsplash License |
 | `pillar-1` | pillar-1.jpg | [Unsplash](https://unsplash.com/photos/people-walking-down-a-narrow-street-towards-a-castle-m8uV_9gO9M0) | Domenico Adornato | Unsplash License |
 | `pillar-2` | pillar-2.jpg | [Unsplash](https://unsplash.com/photos/terraced-buildings-overlook-a-calm-blue-ocean-under-clear-skies-pDZpDy_KCeg) | Vasilis Caravitis | Unsplash License |
 | `pillar-3` | pillar-3.jpg | [Unsplash](https://unsplash.com/photos/orange-fruits-on-brown-wooden-crate-tDyPWf0PUwc) | Egor Myznik | Unsplash License |

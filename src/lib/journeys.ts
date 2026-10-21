@@ -121,6 +121,8 @@ export type Journey = {
    * photograph the reader just clicked. Falls back to `listMedia`.
    */
   heroMedia?: MediaKey;
+  /** The photograph on one-off promotions (the Instagram links page). Falls back to `cardMedia`. */
+  promoMedia?: MediaKey;
   featured: boolean;
   detail?: JourneyDetail;
   /**
@@ -365,6 +367,7 @@ const allJourneys: Journey[] = [
     tags: ['Coast & Islands', 'Food & Wine', 'Hosted by Marc'],
     listMedia: 'jl-1',
     cardMedia: 'feat-1',
+    promoMedia: 'links-amalfi',
     featured: true,
     detail: amalfiDetail,
   },
@@ -390,7 +393,7 @@ const allJourneys: Journey[] = [
     who: ['Couples', 'Solo', 'Friends'],
     inspire: ['Mountains & Lakes', 'Nature', 'Wellness'],
     tags: ['Mountains & Lakes', 'Nature', 'Hosted by Marc'],
-    listMedia: 'jl-2',
+    listMedia: 'sl-list',
     cardMedia: 'feat-2',
     heroMedia: 'sl-hero',
     featured: true,
@@ -492,8 +495,9 @@ const allJourneys: Journey[] = [
     who: ['Couples', 'Friends'],
     inspire: ['Coast & Islands', 'Food & Wine', 'Nature'],
     tags: ['Coast & Islands', 'Food & Wine'],
-    listMedia: 'jl-3',
+    listMedia: 'ma-list',
     cardMedia: 'feat-3',
+    heroMedia: 'jl-3',
     featured: true,
     itineraryHeadline: 'Seven days, after the season leaves.',
     itinerary: [
@@ -584,9 +588,9 @@ const allJourneys: Journey[] = [
     who: ['Couples', 'Friends', 'Families'],
     inspire: ['Food & Wine', 'Nature', 'Culture'],
     tags: ['Food & Wine', 'Nature', 'Hosted by Marc'],
-    listMedia: 'jl-4',
+    listMedia: 'cp-list',
     cardMedia: 'jl-4',
-    heroMedia: 'cp-hero',
+    heroMedia: 'jl-4',
     featured: false,
     itineraryHeadline: 'Eleven days. Two nights in town, four in the vines, four on the water.',
     itinerary: [
@@ -713,8 +717,9 @@ const allJourneys: Journey[] = [
     who: ['Couples', 'Solo'],
     inspire: ['Mountains & Lakes', 'Art & Design', 'Culture'],
     tags: ['Mountains & Lakes', 'Art & Design'],
-    listMedia: 'jl-5',
+    listMedia: 'ce-list',
     cardMedia: 'jl-5',
+    heroMedia: 'jl-5',
     featured: false,
     itineraryHeadline: 'Ten days, from the lake to the peaks.',
     itinerary: [
@@ -882,6 +887,7 @@ export type JourneySummary = Pick<
   | 'tags'
   | 'listMedia'
   | 'cardMedia'
+  | 'promoMedia'
   | 'status'
 > & { isNew: boolean };
 
@@ -908,6 +914,7 @@ export function toSummary(journey: Journey): JourneySummary {
     tags,
     listMedia,
     cardMedia,
+    promoMedia,
     status,
   } = journey;
   return {
@@ -932,6 +939,7 @@ export function toSummary(journey: Journey): JourneySummary {
     tags,
     listMedia,
     cardMedia,
+    promoMedia,
     status,
     isNew: isNew(journey),
   };
