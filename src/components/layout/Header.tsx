@@ -18,7 +18,12 @@ const HIDE_AFTER = 480;
  * - a little shorter as soon as the page moves (`data-compact`)
  * - out of the way on a long scroll down, back on any scroll up (`data-hidden`),
  *   unless the page pins a bar beneath it (`[data-pin-header]`)
- * - on-dark over the open forest mobile menu (`data-menu`)
+ * - on-dark over the open navy mobile menu (`data-menu`)
+ * - on the homepage, over the film, the bar belongs to the hero: the links
+ *   centre, the logo steps out (the hero carries it, large) and the bar
+ *   scrolls away with the film instead of following the page (`data-home`).
+ *   As the next section reaches the top, the solid bar drops in (`data-drop`)
+ *   and holds for a stretch before the scroll-down hide applies.
  *
  * Both logo files are in the tree; CSS cross-fades between them, so the swap
  * never waits on a render.
@@ -47,9 +52,12 @@ export function Header({ primary, cta }: { primary: NavItem[]; cta: NavItem }) {
       const hero = overHero ? document.querySelector<HTMLElement>('[data-hero]') : null;
 
       // The header solidifies once the hero's bottom edge has passed behind it.
+      let heroEnd = 0;
       if (hero) {
         const barHeight = barRef.current?.offsetHeight ?? 84;
-        setScrolled(hero.getBoundingClientRect().bottom <= barHeight + 8);
+        const bottom = hero.getBoundingClientRect().bottom;
+        setScrolled(bottom <= barHeight + 8);
+        heroEnd = bottom + y;
       } else {
         setScrolled(true);
       }
@@ -60,8 +68,12 @@ export function Header({ primary, cta }: { primary: NavItem[]; cta: NavItem }) {
       // the header in place; hiding it would leave that bar floating.
       const pinned = document.querySelector('[data-pin-header]') !== null;
 
+      // On the homepage the bar has only just dropped in as the film ends, so
+      // the hide waits until the page is well past it.
+      const holdUntil = pathname === '/' ? heroEnd + HIDE_AFTER : HIDE_AFTER;
+
       const delta = y - lastY;
-      if (pinned || y < HIDE_AFTER || delta < -4) setHidden(false);
+      if (pinned || y < holdUntil || delta < -4) setHidden(false);
       else if (delta > 8) setHidden(true);
       lastY = y;
     };
@@ -96,6 +108,8 @@ export function Header({ primary, cta }: { primary: NavItem[]; cta: NavItem }) {
   // Stable, so the menu's keyboard effect is not re-run on every header render.
   const closeMenu = useCallback(() => setMenuOpen(false), []);
 
+  const home = pathname === '/';
+
   return (
     <>
       <header
@@ -103,15 +117,21 @@ export function Header({ primary, cta }: { primary: NavItem[]; cta: NavItem }) {
         className="site-header fixed inset-x-0 top-0 z-50"
         data-solid={scrolled || menuOpen ? '' : undefined}
         data-menu={menuOpen ? '' : undefined}
-        data-compact={compact && !menuOpen ? '' : undefined}
+        data-home={home ? '' : undefined}
+        data-drop={home && scrolled ? '' : undefined}
+        // Over the film the bar scrolls away at full height rather than shrinking.
+        data-compact={compact && !menuOpen && !(home && !scrolled) ? '' : undefined}
         data-hidden={hidden && !menuOpen ? '' : undefined}
       >
         {/* The entrance sits on the inner row, not the bar: an animation's fill
             would otherwise pin the bar's transform and defeat the hide. */}
-        <div className="container-site enter-down flex h-full items-center" style={enterAt(0.05)}>
+        <div
+          className="header-row container-site enter-down flex h-full items-center"
+          style={enterAt(0.05)}
+        >
           <Link
             href="/"
-            className="relative z-50 mr-auto flex min-h-11 items-center"
+            className="header-home relative z-50 mr-auto flex min-h-11 items-center"
             aria-label={`${site.name} — home`}
           >
             <span className="site-logo">
@@ -121,7 +141,7 @@ export function Header({ primary, cta }: { primary: NavItem[]; cta: NavItem }) {
                 width={2454}
                 height={1017}
                 priority
-                sizes="80px"
+                sizes="120px"
                 className="logo-on-photo"
               />
               <Image
@@ -130,7 +150,7 @@ export function Header({ primary, cta }: { primary: NavItem[]; cta: NavItem }) {
                 width={2454}
                 height={1017}
                 priority
-                sizes="80px"
+                sizes="120px"
                 className="logo-on-paper"
               />
             </span>

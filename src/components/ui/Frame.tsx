@@ -23,7 +23,7 @@ type FrameProps = {
    * the grid with that) and `frameClassName` on the picture box.
    */
   caption?: ReactNode;
-  /** Caption colour: `dark` for forest / charcoal grounds. */
+  /** Caption colour: `dark` for navy / charcoal grounds. */
   tone?: 'light' | 'dark';
   /** Classes for the picture box when a caption wraps it in a figure. */
   frameClassName?: string;
@@ -211,14 +211,14 @@ export function Frame({
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
-          // Forest-tinted (spec §2.1, raised in the design review): the bottom
+          // Navy-tinted (spec §2.1, raised in the design review): the bottom
           // protects the headline block, the left the lead and breadcrumb on
           // bright midday photographs, the top the transparent header.
           style={{
             background: [
-              'linear-gradient(to top, rgb(21 30 26 / 0.78), rgb(21 30 26 / 0) 62%)',
-              'linear-gradient(to right, rgb(21 30 26 / 0.45), rgb(21 30 26 / 0) 55%)',
-              'linear-gradient(to bottom, rgb(21 30 26 / 0.28), rgb(21 30 26 / 0) 22%)',
+              'linear-gradient(to top, rgb(10 34 50 / 0.78), rgb(10 34 50 / 0) 62%)',
+              'linear-gradient(to right, rgb(10 34 50 / 0.45), rgb(10 34 50 / 0) 55%)',
+              'linear-gradient(to bottom, rgb(10 34 50 / 0.28), rgb(10 34 50 / 0) 22%)',
             ].join(', '),
           }}
         />
@@ -228,7 +228,7 @@ export function Frame({
           aria-hidden
           className="pointer-events-none absolute inset-0"
           style={{
-            background: 'linear-gradient(to top, rgb(21 30 26 / 0.55), rgb(21 30 26 / 0) 40%)',
+            background: 'linear-gradient(to top, rgb(10 34 50 / 0.55), rgb(10 34 50 / 0) 40%)',
           }}
         />
       )}

@@ -142,7 +142,7 @@ export function Preloader() {
             </div>
 
             <m.div
-              className="mt-8 h-px w-full max-w-[420px] origin-left bg-gorse"
+              className="mt-8 h-px w-full max-w-[420px] origin-left bg-brand"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
               transition={{ duration: 0.8, ease: ease.editorial, delay: 0.15 }}

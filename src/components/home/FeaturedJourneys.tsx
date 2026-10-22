@@ -20,8 +20,8 @@ import { AllDepartures } from './AllDepartures';
  * With two featured journeys the third simply is not there; with one, the
  * lead stands alone. On a phone everything stacks in reading order.
  *
- * Under them, every departure as one slim list (`all`), so the journeys can
- * be compared on dates, length and price without opening each.
+ * Under them, every departure as a simple card (`all`): photograph, dates,
+ * name and a line, so the journeys can be compared without opening each.
  */
 export function FeaturedJourneys({
   journeys,

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 
 export type ButtonVariant =
-  'ink' | 'forest' | 'light' | 'outline' | 'outline-dark' | 'rule' | 'rule-dark';
+  'ink' | 'navy' | 'light' | 'outline' | 'outline-dark' | 'rule' | 'rule-dark';
 
 /* `.btn` (globals.css) owns the transitions: colour, a 2px lift on hover with
    the lift's own faint shadow, a settle on press, and the disabled fade.
@@ -12,19 +12,19 @@ const base =
 
 const variants: Record<ButtonVariant, string> = {
   /* On paper. */
-  ink: 'bg-ink text-ivory px-7 py-[17px] hover:bg-forest',
+  ink: 'bg-ink text-ivory px-7 py-[17px] hover:bg-brand',
   /* On paper — the primary CTA ("Plan your journey"). */
-  forest: 'bg-forest text-ivory px-7 py-[17px] hover:bg-forest-deep',
+  navy: 'bg-navy text-ivory px-7 py-[17px] hover:bg-brand',
   /* On a photograph or a dark ground. */
-  light: 'bg-ivory text-ink px-7 py-[17px] hover:bg-white',
-  /* On paper; fills with ink. Inherits colour, so it also works in the header. */
+  light: 'bg-ivory text-ink px-7 py-[17px] hover:bg-brand hover:text-white',
+  /* On paper; fills with the brand blue. Inherits colour, so it also works in the header. */
   outline:
-    'btn--flat border border-current px-[26px] py-4 text-current hover:bg-ink hover:text-ivory hover:border-ink',
-  /* On a dark ground; fills with ivory. */
+    'btn--flat border border-current px-[26px] py-4 text-current hover:bg-brand hover:text-white hover:border-brand',
+  /* On a dark ground; fills with the brand blue. */
   'outline-dark':
-    'btn--flat border border-on-dark/70 px-[26px] py-4 text-on-dark hover:bg-ivory hover:text-ink hover:border-ivory',
-  /* The sea-glass hairline link. Picks dark colours automatically inside a
-     dark ground ([data-tone="dark"], .bg-forest…, [data-hero]). */
+    'btn--flat border border-on-dark/70 px-[26px] py-4 text-on-dark hover:bg-brand hover:text-white hover:border-brand',
+  /* The blue hairline link. Picks dark colours automatically inside a
+     dark ground ([data-tone="dark"], .bg-navy…, [data-hero]). */
   rule: 'link-rule',
   /* Forces the dark treatment where the ground can't be detected. */
   'rule-dark': 'link-rule link-rule--dark',

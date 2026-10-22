@@ -10,7 +10,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
  * Day by day — the journey page's signature block.
  *
  * The days are ordinary server-rendered articles. Only the contents rail is a
- * client component: it watches which day is in view and slides a sea-glass
+ * client component: it watches which day is in view and slides a water-blue
  * hairline down to it. On a phone the rail is hidden and the days simply read
  * down the page.
  *

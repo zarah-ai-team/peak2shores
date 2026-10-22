@@ -53,7 +53,7 @@ export function PeaksShoresSlider({ content }: { content: Content }) {
   return (
     <div
       ref={box}
-      className="relative h-[70svh] min-h-[420px] touch-pan-y lg:h-auto lg:min-h-0 lg:flex-1 select-none overflow-hidden bg-forest-deep text-on-dark"
+      className="relative h-[70svh] min-h-[420px] touch-pan-y lg:h-auto lg:min-h-0 lg:flex-1 select-none overflow-hidden bg-navy-deep text-on-dark"
       onPointerDown={(e) => {
         dragging.current = true;
         e.currentTarget.setPointerCapture(e.pointerId);
@@ -71,7 +71,7 @@ export function PeaksShoresSlider({ content }: { content: Content }) {
       </div>
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-forest-deep/70 via-forest-deep/10 to-forest-deep/40"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-navy-deep/70 via-navy-deep/10 to-navy-deep/40"
       />
 
       {/* The two lines, each on its own side. */}
@@ -107,7 +107,7 @@ export function PeaksShoresSlider({ content }: { content: Content }) {
         style={{ left: `${split}%` }}
       >
         <i aria-hidden className="absolute inset-y-0 left-1/2 w-px bg-on-dark/80" />
-        <span className="relative flex h-14 w-14 items-center justify-center rounded-full border border-on-dark/80 bg-forest-deep/40 backdrop-blur-sm">
+        <span className="relative flex h-14 w-14 items-center justify-center rounded-full border border-on-dark/80 bg-navy-deep/40 backdrop-blur-sm">
           <span aria-hidden className="h5 leading-none text-acqua">
             {two.replace('.', '')}
           </span>
