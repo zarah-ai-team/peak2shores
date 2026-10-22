@@ -311,6 +311,70 @@ export const media = {
     alt: '',
   },
 
+  /* ---- Home, Sample C (bright stills where the sample repeated a frame) - */
+  'home-curated': {
+    label: 'Principle · Personally curated',
+    brief: 'One exceptional place in full sun — a lakeside villa, a garden, still water.',
+    tone: '#7f9aa3',
+    alt: 'Villa del Balbianello on its wooded point above the still water of Lake Como',
+  },
+  'home-way-cruises': {
+    label: 'Ways · Cruises',
+    brief: 'A yacht on clear, bright water, from above. Upright crop.',
+    tone: '#3f8da0',
+    alt: 'A motor yacht crossing turquoise water, seen from above',
+  },
+  'home-way-villas': {
+    label: 'Ways · Private villas',
+    brief: 'A private pool and terrace in warm light, the landscape beyond. Upright crop.',
+    tone: '#a59a82',
+    alt: 'A curved infinity pool and terrace chairs above wooded hills',
+  },
+  'home-cove': {
+    label: 'Shores · a turquoise cove',
+    brief: 'Clear water below pine cliffs, a boat at anchor. Wide, room for type on the right.',
+    tone: '#2f7f8f',
+    alt: 'A white motor yacht at anchor in a turquoise cove below pine-covered cliffs',
+  },
+  'home-circle': {
+    label: 'The circle',
+    brief: 'A bright, wide Mediterranean coastline — room for type over it.',
+    tone: '#3f7f93',
+    alt: '',
+  },
+
+  /* ---- Home, all departures (one small bright frame per journey) ------- */
+  'dep-swiss-lakes': {
+    label: 'Departures · The Swiss Lakes',
+    brief: 'A paddle steamer on Lake Lucerne under a clear sky. Small landscape crop.',
+    tone: '#5f8fae',
+    alt: 'A white paddle steamer on Lake Lucerne below Mount Pilatus',
+  },
+  'dep-amalfi': {
+    label: 'Departures · Amalfi, Slowly',
+    brief: 'Positano in full sun above the sea. Small landscape crop.',
+    tone: '#4f8aa0',
+    alt: 'Positano’s pastel houses climbing the hillside above a blue sea',
+  },
+  'dep-como': {
+    label: 'Departures · Como & the Engadin',
+    brief: 'A villa balcony with flowers, the lake and mountains beyond. Small landscape crop.',
+    tone: '#6f8f9f',
+    alt: 'A stone balcony with flowers above the lake and mountains',
+  },
+  'dep-mallorca': {
+    label: 'Departures · Mallorca, Beyond the Coast',
+    brief: 'A bright bay with boats at anchor and palms. Small landscape crop.',
+    tone: '#4f97a3',
+    alt: 'Boats at anchor in a turquoise bay below a hillside town, palms in the foreground',
+  },
+  'dep-cape': {
+    label: 'Departures · The Cape, Unhurried',
+    brief: 'The Twelve Apostles above the Atlantic shore. Small landscape crop.',
+    tone: '#4a7f99',
+    alt: 'The Twelve Apostles above the Atlantic coast near Cape Town',
+  },
+
   /* ---- One photograph, one place --------------------------------------- */
   // Each of these gives a page its own frame where it used to borrow one that
   // already appears elsewhere on the site.

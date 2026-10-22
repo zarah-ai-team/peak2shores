@@ -54,10 +54,10 @@ export default async function LinksPage() {
     <section className="container-site pb-section-sm pt-block">
       <div className="mx-auto w-full max-w-[520px]">
         <Image
-          src="/brand/logo-dark.png"
+          src="/brand/p2s-logo.png"
           alt={site.name}
-          width={900}
-          height={485}
+          width={2454}
+          height={1017}
           sizes="96px"
           className="mb-block h-auto w-24"
         />

@@ -116,19 +116,19 @@ export function Header({ primary, cta }: { primary: NavItem[]; cta: NavItem }) {
           >
             <span className="site-logo">
               <Image
-                src="/brand/logo-light.png"
+                src="/brand/p2s-logo-white.png"
                 alt=""
-                width={900}
-                height={485}
+                width={2454}
+                height={1017}
                 priority
                 sizes="80px"
                 className="logo-on-photo"
               />
               <Image
-                src="/brand/logo-dark.png"
+                src="/brand/p2s-logo.png"
                 alt=""
-                width={900}
-                height={485}
+                width={2454}
+                height={1017}
                 priority
                 sizes="80px"
                 className="logo-on-paper"

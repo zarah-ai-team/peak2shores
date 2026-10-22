@@ -1,0 +1,1347 @@
+/*
+ * The homepage, after Sample C ("Marc's flow"). Scoped to `.hc` so none of it
+ * reaches another page. The palette is the sample's: paper (= ivory), night,
+ * deep lake blue and a warm gold, with Georgia for display and Poppins for the
+ * interface — the same two faces as the rest of the site.
+ */
+
+.hc {
+  --paper: var(--color-ivory);
+  --ink: #141d24;
+  --muted: #5a646d;
+  --lake: #0b5c85;
+  --brand: #018fc9;
+  --sky: #7accfd;
+  --night: #0b1a24;
+  --deep: #0e2f42;
+  --gold: #d8b27a;
+  --serif: var(--font-display);
+  --sans: var(--font-ui);
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --gut: clamp(20px, 4.4vw, 64px);
+  -webkit-font-smoothing: antialiased;
+}
+.hc * {
+  box-sizing: border-box;
+}
+.hc a {
+  color: inherit;
+}
+.hc .lab {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+.hc .fill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* -- Buttons ------------------------------------------------------------- */
+.hc .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 0 30px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 999px;
+  transition: all 0.9s var(--ease);
+}
+.hc .btn-light {
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid #fff;
+}
+.hc .btn-light:hover {
+  background: var(--paper);
+}
+.hc .btn-line {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgb(255 255 255 / 0.6);
+}
+.hc .btn-line:hover {
+  background: #fff;
+  color: var(--ink);
+}
+.hc .btn-ink {
+  background: var(--ink);
+  color: #fff;
+  border: 1px solid var(--ink);
+}
+.hc .btn-ink:hover {
+  background: var(--lake);
+  border-color: var(--lake);
+}
+.hc .circ {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 1px solid rgb(255 255 255 / 0.55);
+  background: transparent;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.8s var(--ease);
+  flex: 0 0 auto;
+}
+.hc .circ:hover {
+  background: #fff;
+  color: var(--ink);
+}
+.hc .circ svg {
+  width: 18px;
+  height: 18px;
+}
+.hc .dk .circ {
+  border-color: rgb(20 29 36 / 0.45);
+  color: var(--ink);
+}
+.hc .dk .circ:hover {
+  background: var(--ink);
+  color: #fff;
+}
+.hc .ctarow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px 30px;
+  margin-top: 44px;
+}
+.hc .ctarow.left {
+  justify-content: flex-start;
+}
+.hc .tlink {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+  border-bottom: 1px solid currentColor;
+  padding: 12px 0 4px;
+  transition: color 0.4s var(--ease);
+}
+.hc .tlink:hover {
+  color: var(--lake);
+}
+.hc .tlink.light {
+  color: #fff;
+}
+.hc .tlink.light:hover {
+  color: var(--sky);
+}
+.hc .hint {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 15px;
+  color: #3a434a;
+}
+.hc .tbtns {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* -- 01 Hero ------------------------------------------------------------- */
+.hc-hero {
+  position: relative;
+  height: 100svh;
+  min-height: 640px;
+  max-height: 1100px;
+  overflow: hidden;
+  background: var(--night);
+  color: #fff;
+}
+.hc-hero .hv {
+  opacity: 0;
+  transition: opacity 1.2s var(--ease);
+}
+.hc-hero .hv.on {
+  opacity: 1;
+}
+.hc-hero .shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgb(8 20 28 / 0.6) 0%, rgb(8 20 28 / 0.22) 45%, rgb(8 20 28 / 0) 70%),
+    linear-gradient(
+      180deg,
+      rgb(8 20 28 / 0.5) 0%,
+      rgb(8 20 28 / 0) 24%,
+      rgb(8 20 28 / 0) 60%,
+      rgb(8 20 28 / 0.62) 100%
+    );
+}
+.hc-hero .copy {
+  position: absolute;
+  left: var(--gut);
+  right: var(--gut);
+  bottom: clamp(96px, 12svh, 120px);
+  z-index: 4;
+  max-width: 900px;
+}
+.hc .eb {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.hc .eb i {
+  width: 34px;
+  height: 1.5px;
+  background: var(--gold);
+}
+.hc-hero h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(50px, 7.5vw, 108px);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  margin: 24px 0 26px;
+}
+.hc-hero h1 em {
+  display: block;
+  font-style: italic;
+}
+.hc-hero .copy p {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 1.6;
+  max-width: 42ch;
+  margin: 0 0 32px;
+  color: #eef2f4;
+}
+.hc-hero .ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.hc-hero .vctl {
+  position: absolute;
+  right: var(--gut);
+  /* Clear of the "Speak to an expert" button, which is fixed bottom right. */
+  bottom: 104px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.hc-hero .vctl .circ {
+  width: 48px;
+  height: 48px;
+}
+.hc-hero .vdots {
+  display: flex;
+  gap: 2px;
+}
+.hc-hero .vdot {
+  width: 40px;
+  height: 44px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+.hc-hero .vdot i {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: rgb(255 255 255 / 0.4);
+  transition: background 0.6s var(--ease);
+}
+.hc-hero .vdot.on i {
+  background: var(--gold);
+}
+
+/* -- 02 Introduction ----------------------------------------------------- */
+.hc-intro {
+  background: var(--paper);
+  color: var(--ink);
+  padding: clamp(96px, 10vw, 150px) var(--gut) clamp(90px, 9.5vw, 140px);
+  text-align: center;
+}
+.hc-intro .lab {
+  color: var(--lake);
+}
+.hc-intro p {
+  font-family: var(--serif);
+  font-size: clamp(28px, 2.8vw, 40px);
+  line-height: 1.32;
+  letter-spacing: -0.015em;
+  max-width: 30ch;
+  margin: 30px auto 0;
+}
+.hc-intro p em {
+  font-style: italic;
+  color: var(--lake);
+}
+
+/* -- 03 Ways to experience ------------------------------------------------ */
+.hc-ways {
+  background: var(--paper);
+  color: var(--ink);
+  padding: 20px 0 clamp(96px, 9vw, 130px);
+}
+.hc-ways .head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 48px;
+  padding: 0 var(--gut);
+  margin-bottom: 44px;
+}
+.hc-ways .head .lab {
+  color: var(--lake);
+}
+.hc-ways h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(42px, 4.4vw, 64px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin: 16px 0 0;
+}
+.hc-ways .wnav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hc-ways .count {
+  font-family: var(--sans);
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  margin-right: 8px;
+}
+.hc-ways .rail {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 0 var(--gut) 6px;
+  scrollbar-width: none;
+  scroll-padding-left: var(--gut);
+}
+.hc-ways .rail::-webkit-scrollbar {
+  display: none;
+}
+.hc-ways .wt {
+  position: relative;
+  flex: 0 0 380px;
+  height: 540px;
+  border-radius: 10px;
+  overflow: hidden;
+  scroll-snap-align: start;
+  color: #fff;
+  text-decoration: none;
+  display: block;
+  background: #15262f;
+}
+.hc-ways .wt.lead {
+  flex-basis: 460px;
+}
+.hc-ways .wt video,
+.hc-ways .wt img {
+  transition: transform 1.8s var(--ease);
+}
+.hc-ways .wt:hover video,
+.hc-ways .wt:hover img {
+  transform: scale(1.05);
+}
+.hc-ways .ws {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgb(8 20 28 / 0.3) 0%,
+    rgb(8 20 28 / 0) 32%,
+    rgb(8 20 28 / 0.86) 100%
+  );
+}
+.hc-ways .wn {
+  position: absolute;
+  top: 22px;
+  left: 24px;
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+}
+.hc-ways .wplay {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgb(255 255 255 / 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s var(--ease);
+}
+.hc-ways .wt:hover .wplay {
+  opacity: 0;
+}
+.hc-ways .badge {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  background: var(--gold);
+  color: var(--ink);
+  padding: 7px 12px;
+  border-radius: 999px;
+}
+.hc-ways .wb {
+  position: absolute;
+  left: 26px;
+  right: 26px;
+  bottom: 26px;
+}
+.hc-ways h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 32px;
+  line-height: 1.08;
+  margin: 0;
+}
+.hc-ways .wl {
+  display: block;
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #e6edf1;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition:
+    max-height 1s var(--ease),
+    opacity 0.8s var(--ease),
+    margin 0.8s var(--ease);
+}
+.hc-ways .wt:hover .wl,
+.hc-ways .wt:focus-visible .wl {
+  max-height: 140px;
+  opacity: 1;
+  margin-top: 12px;
+}
+.hc-ways .more {
+  display: inline-block;
+  margin-top: 14px;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgb(255 255 255 / 0.6);
+  padding-bottom: 3px;
+}
+.hc-ways .prog {
+  margin: 30px var(--gut) 0;
+  height: 1px;
+  background: rgb(20 29 36 / 0.2);
+  position: relative;
+}
+.hc-ways .prog i {
+  position: absolute;
+  left: 0;
+  top: -1px;
+  height: 3px;
+  background: var(--ink);
+  transition: width 0.9s var(--ease);
+}
+.hc-ways .ctarow {
+  padding: 0 var(--gut);
+  margin-top: 30px;
+}
+
+/* -- 05 The founder's line ----------------------------------------------- */
+.hc-pause {
+  background: var(--paper);
+  color: var(--ink);
+  padding: clamp(110px, 13vw, 190px) var(--gut) clamp(100px, 12.5vw, 180px);
+  text-align: center;
+  border-top: 1px solid rgb(20 29 36 / 0.12);
+}
+.hc-pause blockquote {
+  margin: 0 auto;
+  max-width: 21ch;
+  font-family: var(--serif);
+  font-size: clamp(36px, 4.7vw, 68px);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+}
+.hc-pause blockquote em {
+  font-style: italic;
+  color: var(--lake);
+}
+.hc-pause .mark {
+  display: block;
+  font-family: var(--serif);
+  font-size: 120px;
+  line-height: 0.5;
+  color: var(--gold);
+  margin-bottom: 26px;
+}
+.hc-pause cite {
+  display: block;
+  margin-top: 46px;
+  font-style: normal;
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* -- 06 Why Peaks2Shores ------------------------------------------------- */
+.hc-why {
+  background: var(--paper);
+  color: var(--ink);
+  padding: 40px var(--gut) clamp(100px, 10vw, 150px);
+  border-top: 1px solid rgb(20 29 36 / 0.12);
+}
+.hc-why .head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 48px;
+  margin: clamp(56px, 6vw, 90px) 0 52px;
+}
+.hc-why .head .lab {
+  color: var(--lake);
+}
+.hc-why h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(34px, 3.75vw, 54px);
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+  margin: 18px 0 0;
+  max-width: 22ch;
+}
+.hc-why .row {
+  display: flex;
+  gap: 14px;
+  height: 600px;
+}
+.hc-why .pc {
+  position: relative;
+  flex: 1 1 0;
+  overflow: hidden;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: flex-grow 1.2s var(--ease);
+  background: #15262f;
+  border: 0;
+  padding: 0;
+  color: #fff;
+  text-align: left;
+  font: inherit;
+  min-width: 0;
+}
+.hc-why .pc.on {
+  flex-grow: 2.6;
+  cursor: default;
+}
+.hc-why .pc img,
+.hc-why .pc video {
+  transition: transform 2s var(--ease);
+}
+.hc-why .pc.on img,
+.hc-why .pc.on video {
+  transform: scale(1.05);
+}
+.hc-why .ps {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgb(8 20 28 / 0.3) 0%,
+    rgb(8 20 28 / 0) 35%,
+    rgb(8 20 28 / 0.85) 100%
+  );
+}
+.hc-why .pn {
+  position: absolute;
+  top: 24px;
+  left: 26px;
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+}
+.hc-why .pv {
+  position: absolute;
+  left: 24px;
+  bottom: 28px;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  font-family: var(--serif);
+  font-size: 32px;
+  line-height: 1;
+  transition: opacity 0.5s var(--ease);
+}
+.hc-why .pc.on .pv {
+  opacity: 0;
+}
+.hc-why .pb {
+  position: absolute;
+  left: 30px;
+  bottom: 30px;
+  width: min(500px, calc(100% - 60px));
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.5s var(--ease),
+    transform 0.7s var(--ease);
+}
+.hc-why .pc.on .pb {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.8s var(--ease) 0.55s,
+    transform 1s var(--ease) 0.55s;
+}
+.hc-why h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(30px, 2.9vw, 42px);
+  line-height: 1.05;
+  margin: 0;
+}
+.hc-why .d {
+  display: block;
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.7;
+  margin-top: 14px;
+  max-width: 40ch;
+  color: #e6edf1;
+}
+
+/* -- 07 Peaks / Shores --------------------------------------------------- */
+.hc-cmp {
+  position: relative;
+  height: min(860px, 100svh);
+  min-height: 560px;
+  overflow: hidden;
+  user-select: none;
+  color: #fff;
+  background: var(--night);
+}
+.hc-cmp .side {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.hc-cmp .peaks {
+  z-index: 2;
+}
+.hc-cmp .shade {
+  position: absolute;
+  inset: 0;
+  background: rgb(8 20 28 / 0.22);
+}
+.hc-cmp .drift {
+  animation: hc-drift 24s ease-in-out infinite alternate;
+}
+@keyframes hc-drift {
+  from {
+    transform: scale(1.12) translate(-1.5%, 1%);
+  }
+  to {
+    transform: scale(1.02) translate(1.5%, -1%);
+  }
+}
+.hc-cmp .word {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--serif);
+  font-size: clamp(64px, 11.8vw, 170px);
+  letter-spacing: -0.05em;
+  line-height: 1;
+  pointer-events: none;
+  text-shadow: 0 4px 40px rgb(8 20 28 / 0.35);
+  transition: opacity 0.25s linear;
+}
+.hc-cmp .l {
+  left: var(--gut);
+}
+.hc-cmp .r {
+  right: var(--gut);
+}
+.hc-cmp .cap {
+  position: absolute;
+  bottom: 56px;
+  margin: 0;
+  max-width: 30ch;
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.7;
+  text-shadow: 0 1px 14px rgb(8 20 28 / 0.6);
+  transition: opacity 0.25s linear;
+}
+.hc-cmp .cap.r {
+  text-align: right;
+  /* Clear of the fixed "Speak to an expert" button. */
+  bottom: 104px;
+}
+.hc-cmp .handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 5;
+  width: 0;
+  pointer-events: none;
+}
+.hc-cmp .handle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -1px;
+  width: 2px;
+  background: #fff;
+}
+.hc-cmp .handle b {
+  position: absolute;
+  top: 50%;
+  left: -56px;
+  width: 112px;
+  height: 112px;
+  margin-top: -56px;
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 64px;
+  box-shadow: 0 10px 40px rgb(0 0 0 / 0.3);
+}
+.hc-cmp .handle b::before,
+.hc-cmp .handle b::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  margin-top: -6px;
+  border: 6px solid transparent;
+}
+.hc-cmp .handle b::before {
+  left: -22px;
+  border-right-color: #fff;
+}
+.hc-cmp .handle b::after {
+  right: -22px;
+  border-left-color: #fff;
+}
+.hc-cmp input {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: ew-resize;
+  margin: 0;
+}
+.hc-cmp input:focus-visible + .handle b {
+  outline: 2px solid var(--sky);
+  outline-offset: 4px;
+}
+.hc-cmp .top {
+  position: absolute;
+  top: clamp(88px, 10svh, 110px);
+  left: var(--gut);
+  right: var(--gut);
+  z-index: 5;
+  text-align: center;
+  pointer-events: none;
+}
+.hc-cmp .top p {
+  margin: 14px auto 0;
+  max-width: 34ch;
+  font-family: var(--serif);
+  font-size: clamp(20px, 1.8vw, 26px);
+  line-height: 1.3;
+  text-shadow: 0 2px 24px rgb(8 20 28 / 0.5);
+}
+
+/* -- 07b The founder ----------------------------------------------------- */
+.hc-fd {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 760px;
+}
+.hc-fd .img {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-stone);
+}
+.hc-fd .img img {
+  object-fit: contain;
+  object-position: 50% 100%;
+}
+.hc-fd .c {
+  padding: clamp(64px, 8vw, 120px) clamp(20px, 7.6vw, 110px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.hc-fd .lab {
+  color: var(--lake);
+}
+.hc-fd h2 {
+  margin: 26px 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(40px, 4vw, 58px);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  max-width: 15ch;
+}
+.hc-fd p {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.8;
+  color: #3a434a;
+  max-width: 46ch;
+  margin: 0 0 36px;
+}
+
+/* -- 08 Hotels, lodges & camps ------------------------------------------- */
+.hc-hot {
+  background: var(--deep);
+  color: #fff;
+  padding: clamp(96px, 9.7vw, 140px) var(--gut) clamp(100px, 10vw, 150px);
+}
+.hc-hot .head {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  gap: 64px;
+  align-items: end;
+  margin-bottom: 64px;
+}
+.hc-hot .head .lab {
+  color: var(--gold);
+}
+.hc-hot h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(38px, 4.2vw, 60px);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  margin: 18px 0 0;
+}
+.hc-hot .head p {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.75;
+  color: #dce6ec;
+  margin: 0;
+}
+.hc-hot .flips {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+.hc-hot .flip {
+  position: relative;
+  height: 600px;
+  perspective: 1600px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: #fff;
+  text-align: left;
+  font: inherit;
+}
+.hc-hot .fin {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 1.2s var(--ease);
+}
+.hc-hot .flip:hover .fin,
+.hc-hot .flip.on .fin {
+  transform: rotateY(180deg);
+}
+.hc-hot .face {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.hc-hot .fs {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(8 20 28 / 0) 45%, rgb(8 20 28 / 0.85) 100%);
+}
+.hc-hot .fb {
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  bottom: 28px;
+}
+.hc-hot h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 1.12;
+  margin: 10px 0 0;
+}
+.hc-hot .back {
+  transform: rotateY(180deg);
+  background: var(--paper);
+  color: var(--ink);
+  padding: 40px 34px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.hc-hot .back .lab {
+  color: var(--lake);
+}
+.hc-hot .back h3 {
+  margin-top: 12px;
+}
+.hc-hot dl {
+  margin: 0;
+  display: grid;
+  gap: 26px;
+}
+.hc-hot dt {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.hc-hot dd {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 20px;
+  line-height: 1.4;
+}
+.hc-hot dd.ph {
+  color: #8a4f2e;
+  font-family: var(--sans);
+  font-size: 15px;
+}
+.hc-hot .flip-hint {
+  margin-top: 26px;
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #c9d6de;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* -- 08b Experiences & connections --------------------------------------- */
+.hc-xp {
+  position: relative;
+  height: min(860px, 100svh);
+  min-height: 620px;
+  overflow: hidden;
+  background: var(--night);
+  color: #fff;
+}
+.hc-xp .xbg {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.3s var(--ease);
+}
+.hc-xp .xbg.on {
+  opacity: 1;
+}
+.hc-xp .xshade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgb(8 20 28 / 0.78) 0%,
+    rgb(8 20 28 / 0.4) 52%,
+    rgb(8 20 28 / 0.1) 100%
+  );
+}
+.hc-xp .xin {
+  position: absolute;
+  left: var(--gut);
+  top: clamp(80px, 12svh, 110px);
+  z-index: 3;
+}
+.hc-xp .xin .lab {
+  color: var(--gold);
+}
+.hc-xp ul {
+  list-style: none;
+  margin: 30px 0 0;
+  padding: 0;
+}
+.hc-xp .xw {
+  background: transparent;
+  border: 0;
+  padding: 4px 0;
+  cursor: pointer;
+  font-family: var(--serif);
+  font-size: clamp(56px, 8.9vw, 128px);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  color: rgb(255 255 255 / 0.32);
+  transition:
+    color 0.8s var(--ease),
+    padding 0.8s var(--ease);
+}
+.hc-xp .xw:hover,
+.hc-xp .xw.on {
+  color: #fff;
+}
+.hc-xp .xw.on {
+  padding-left: 28px;
+  font-style: italic;
+}
+.hc-xp .xside {
+  position: absolute;
+  right: var(--gut);
+  bottom: 72px;
+  z-index: 3;
+  width: 330px;
+}
+.hc-xp .xside p {
+  margin: 0 0 24px;
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #eef2f4;
+  min-height: 3.4em;
+}
+
+/* -- 09 The circle ------------------------------------------------------- */
+.hc-circle {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(110px, 9.7vw, 140px) var(--gut) clamp(96px, 8.3vw, 120px);
+  text-align: center;
+  color: #fff;
+  background: var(--night);
+}
+.hc-circle .bg img {
+  filter: brightness(0.62) saturate(1.05);
+}
+.hc-circle .in {
+  position: relative;
+  z-index: 2;
+}
+.hc-circle .lab {
+  color: var(--gold);
+}
+.hc-circle h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(44px, 5.5vw, 80px);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  margin: 22px auto 26px;
+  max-width: 14ch;
+}
+.hc-circle .in > p {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.75;
+  margin: 0 auto 40px;
+  max-width: 46ch;
+  color: #eef2f4;
+  text-shadow: 0 1px 14px rgb(8 20 28 / 0.5);
+}
+.hc-circle .form {
+  max-width: 560px;
+  margin: 0 auto;
+  text-align: left;
+}
+.hc-circle .talk {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px 36px;
+  margin-top: 44px;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: #eef2f4;
+}
+.hc-circle .talk b {
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-right: 10px;
+}
+.hc-circle .talk a {
+  text-decoration: none;
+  border-bottom: 1px solid rgb(255 255 255 / 0.4);
+  padding-bottom: 2px;
+}
+.hc-circle .talk a:hover {
+  color: var(--sky);
+}
+
+/* -- Speak to an expert (fixed, bottom right) ---------------------------- */
+.hc-fab {
+  position: fixed;
+  right: 28px;
+  bottom: 28px;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  font-family: var(--sans);
+}
+.hc-fab .fab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 54px;
+  padding: 0 26px 0 20px;
+  border-radius: 999px;
+  background: var(--gold);
+  color: var(--ink);
+  border: 0;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 14px 34px rgb(0 0 0 / 0.32);
+  transition:
+    background 0.6s var(--ease),
+    transform 0.6s var(--ease);
+}
+.hc-fab .fab-btn:hover {
+  background: #e6c79c;
+  transform: translateY(-2px);
+}
+.hc-fab .panel {
+  width: 330px;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 16px;
+  padding: 24px 24px 10px;
+  box-shadow: 0 24px 60px rgb(0 0 0 / 0.35);
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  transform-origin: bottom right;
+  pointer-events: none;
+  visibility: hidden;
+  transition:
+    opacity 0.5s var(--ease),
+    transform 0.6s var(--ease),
+    visibility 0s linear 0.6s;
+}
+.hc-fab.open .panel {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  visibility: visible;
+  transition:
+    opacity 0.5s var(--ease),
+    transform 0.6s var(--ease);
+}
+.hc-fab .panel .lab {
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  color: var(--lake);
+}
+.hc-fab .panel p {
+  margin: 10px 0 14px;
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.4;
+}
+.hc-fab .panel a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  min-height: 52px;
+  border-top: 1px solid rgb(20 29 36 / 0.14);
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.hc-fab .panel a span {
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--muted);
+}
+.hc-fab .panel a:hover span {
+  color: var(--lake);
+}
+
+/* -- Tablet and phone ---------------------------------------------------- */
+@media (max-width: 1100px) {
+  .hc-hot .flips {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hc-hot .flip {
+    height: 520px;
+  }
+}
+@media (max-width: 900px) {
+  .hc-ways .head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .hc-ways .wnav {
+    display: none;
+  }
+  .hc-ways .wt,
+  .hc-ways .wt.lead {
+    flex-basis: 80vw;
+    height: 460px;
+  }
+  .hc-ways .wl {
+    max-height: 140px;
+    opacity: 1;
+    margin-top: 10px;
+  }
+  .hc-why .head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .hc-why .head .nav {
+    display: none;
+  }
+  .hc-why .row {
+    flex-direction: column;
+    height: auto;
+  }
+  .hc-why .pc {
+    flex: 0 0 110px;
+    transition: flex-basis 1s var(--ease);
+  }
+  .hc-why .pc.on {
+    flex: 0 0 440px;
+  }
+  .hc-why .pv {
+    writing-mode: horizontal-tb;
+    transform: none;
+    left: 70px;
+    bottom: auto;
+    top: 20px;
+    font-size: 26px;
+  }
+  .hc-why .pb {
+    width: auto;
+    right: 24px;
+    left: 24px;
+  }
+  .hc-cmp .cap {
+    max-width: 16ch;
+    bottom: 32px;
+  }
+  .hc-cmp .handle b {
+    width: 80px;
+    height: 80px;
+    left: -40px;
+    margin-top: -40px;
+    font-size: 44px;
+  }
+  .hc-fd,
+  .hc-hot .head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hc-hot .head {
+    gap: 24px;
+  }
+  .hc-fd .img {
+    height: 480px;
+  }
+  .hc-xp .xside {
+    left: var(--gut);
+    right: var(--gut);
+    width: auto;
+    bottom: 32px;
+  }
+}
+@media (max-width: 600px) {
+  .hc-hero .vctl > span:first-child {
+    display: none;
+  }
+  .hc-fab {
+    right: 14px;
+    bottom: 14px;
+  }
+  .hc-fab .panel {
+    width: calc(100vw - 28px);
+  }
+  .hc-fab .fab-btn {
+    min-height: 48px;
+    padding: 0 18px 0 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hc *,
+  .hc-fab * {
+    transition: none !important;
+  }
+  .hc-cmp .drift {
+    animation: none;
+  }
+}

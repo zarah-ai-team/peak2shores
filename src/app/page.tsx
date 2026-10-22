@@ -1,20 +1,17 @@
 import type { Metadata } from 'next';
-import { Hero } from '@/components/home/Hero';
-import { Philosophy } from '@/components/home/Philosophy';
-import { PeaksToShores } from '@/components/home/PeaksToShores';
+import '@/components/home/home.css';
+import { HomeHero } from '@/components/home/HomeHero';
+import { WaysToTravel } from '@/components/home/WaysToTravel';
 import { FeaturedJourneys } from '@/components/home/FeaturedJourneys';
-import { Pillars } from '@/components/home/Pillars';
-import { FounderStrip } from '@/components/home/FounderStrip';
-import { HotelsStrip } from '@/components/home/HotelsStrip';
-import { ExperiencesStrip } from '@/components/home/ExperiencesStrip';
-import { Circle } from '@/components/home/Circle';
-import { ServicesStrip } from '@/components/home/ServicesStrip';
-import { SpeakToUs } from '@/components/home/SpeakToUs';
+import { WhyPeaks } from '@/components/home/WhyPeaks';
+import { NameSlider } from '@/components/home/NameSlider';
+import { HotelFlips } from '@/components/home/HotelFlips';
+import { ExperienceWords } from '@/components/home/ExperienceWords';
+import { ExpertButton } from '@/components/home/ExpertButton';
+import { CircleBand, FounderStory, Intro, Statement } from '@/components/home/HomeSections';
 import {
-  getExperiences,
   getFeaturedJourneys,
   getJourneySummaries,
-  getPageContent,
   getSiteSettings,
   pageMetadata,
 } from '@/lib/content';
@@ -39,39 +36,38 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 /**
- * The homepage, as one sequence (DESIGN-SPEC §4, revised in the October 2026
- * client review — more full-screen photography and film, less text):
- * arrive → the belief → what every journey is held to → the journeys and
- * every departure → the other ways to travel → the name → the man → what you
- * do → where you sleep → speak to us → stay in touch.
+ * The homepage, after Sample C ("Marc's flow", October 2026), with the
+ * editorial journeys section (one lead, two smaller, every departure) kept
+ * from the earlier design:
  *
- * Grounds: film → ivory → panel → ivory → ivory (ruled) → forest + photo →
- * stone → photo → ivory → photo → ivory → footer (forest-deep). The ivory
- * Circle sits between the last dark and the footer (DESIGN-REVIEW P1.5); the
- * footer hides its own sign-up on /.
+ * the reel → who we are → ways to travel → the journeys and every departure →
+ * Marc's line → why us → the name → the founder → where we stay → what you do
+ * → the circle. "Speak to an expert" stays in reach throughout.
+ *
+ * Grounds: film → paper → paper → paper → paper (ruled) → paper (ruled) →
+ * photo → paper + stone → deep lake → film → photo → footer.
  */
 export default async function HomePage() {
-  const [home, featured, all, experiences, settings] = await Promise.all([
-    getPageContent('home'),
+  const [featured, all, settings] = await Promise.all([
     getFeaturedJourneys(),
     getJourneySummaries(),
-    getExperiences(),
     getSiteSettings(),
   ]);
 
   return (
-    <>
-      <Hero maxGuests={settings.maxGuests} />
-      <Philosophy philosophy={home.philosophy} />
-      <Pillars pillars={home.pillars} />
+    <div className="hc">
+      <HomeHero maxGuests={settings.maxGuests} />
+      <Intro />
+      <WaysToTravel />
       <FeaturedJourneys journeys={featured} all={all} />
-      <ServicesStrip services={home.services} />
-      <PeaksToShores variant="signature" content={home.peaksToShores} label="05 — The name" />
-      <FounderStrip founder={home.founder} />
-      <ExperiencesStrip experiences={experiences} />
-      <HotelsStrip hotels={home.signatureHotels} />
-      <SpeakToUs speak={home.speak} />
-      <Circle circle={home.circle} />
-    </>
+      <Statement />
+      <WhyPeaks />
+      <NameSlider />
+      <FounderStory />
+      <HotelFlips />
+      <ExperienceWords />
+      <CircleBand />
+      <ExpertButton />
+    </div>
   );
 }
