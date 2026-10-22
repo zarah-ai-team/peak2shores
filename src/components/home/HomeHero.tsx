@@ -1,0 +1,139 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useReducedMotion } from 'motion/react';
+import { reel } from '@/lib/data/home';
+
+/**
+ * 01 — The opening: a reel of four of Marc's clips (Italy, the Alps by rail,
+ * safari, the Adriatic). Only the clip on screen plays; when it ends the next
+ * fades in. The dashes pick a clip, the button pauses. Under reduced motion
+ * the first clip's still holds until the reader presses play. The reel rests
+ * while the hero is scrolled away.
+ */
+export function HomeHero({ maxGuests }: { maxGuests: number }) {
+  const reduced = useReducedMotion();
+  const [current, setCurrent] = useState(0);
+  const [choice, setChoice] = useState<'auto' | 'play' | 'pause'>('auto');
+  const [visible, setVisible] = useState(true);
+  const section = useRef<HTMLElement>(null);
+  const videos = useRef<(HTMLVideoElement | null)[]>([]);
+  const last = useRef(-1);
+
+  const paused = choice === 'pause' || (choice === 'auto' && !!reduced);
+  const playing = !paused && visible;
+
+  useEffect(() => {
+    const el = section.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting));
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    videos.current.forEach((el, i) => {
+      if (!el) return;
+      if (i !== current) {
+        el.pause();
+        return;
+      }
+      if (last.current !== current) {
+        el.currentTime = 0;
+        last.current = current;
+      }
+      if (playing) el.play().catch(() => {});
+      else el.pause();
+    });
+  }, [current, playing]);
+
+  const next = () => setCurrent((c) => (c + 1) % reel.length);
+
+  return (
+    <section ref={section} data-hero aria-label="Introduction" className="hc-hero">
+      {reel.map((clip, i) => (
+        <div key={clip.video} className={`hv fill ${i === current ? 'on' : ''}`} aria-hidden>
+          <Image src={clip.img} alt="" fill sizes="100vw" priority={i === 0} className="fill" />
+          <video
+            ref={(el) => {
+              videos.current[i] = el;
+            }}
+            className="fill"
+            src={clip.video}
+            poster={clip.img}
+            muted
+            playsInline
+            // The clip on screen and the one after it load; the rest wait.
+            preload={i === current || i === (current + 1) % reel.length ? 'auto' : 'none'}
+            onEnded={() => i === current && next()}
+            tabIndex={-1}
+          />
+        </div>
+      ))}
+      <div className="shade" />
+
+      <div className="copy">
+        <div className="eb lab">
+          <i />
+          Small-group journeys · Max. {maxGuests} guests
+        </div>
+        <h1>
+          Luxury travel,<em>personally curated.</em>
+        </h1>
+        <p>
+          Thoughtfully paced journeys designed to inspire, connect and experience the world
+          differently.
+        </p>
+        <div className="ctas">
+          <Link className="btn btn-light" href="/journeys">
+            Explore Journeys
+          </Link>
+          <Link className="btn btn-line" href="/our-story">
+            Discover Peaks2Shores
+          </Link>
+        </div>
+      </div>
+
+      <div className="vctl">
+        <span aria-live="polite">{reel[current].place}</span>
+        <span className="vdots">
+          {reel.map((clip, i) => (
+            <button
+              key={clip.place}
+              type="button"
+              className={`vdot ${i === current ? 'on' : ''}`}
+              aria-label={`Show ${clip.place}`}
+              aria-current={i === current}
+              onClick={() => {
+                setCurrent(i);
+                setChoice('play');
+              }}
+            >
+              <i />
+            </button>
+          ))}
+        </span>
+        <button
+          type="button"
+          className="circ"
+          aria-label={paused ? 'Play the film' : 'Pause the film'}
+          aria-pressed={paused}
+          onClick={() => setChoice(paused ? 'play' : 'pause')}
+        >
+          {paused ? (
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+              <rect x="7" y="5" width="3" height="14" />
+              <rect x="14" y="5" width="3" height="14" />
+            </svg>
+          )}
+        </button>
+      </div>
+    </section>
+  );
+}

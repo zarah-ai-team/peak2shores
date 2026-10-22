@@ -45,10 +45,10 @@ export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
               className="mb-6 inline-flex min-h-11 items-center"
             >
               <Image
-                src="/brand/logo-light.png"
+                src="/brand/p2s-logo-white.png"
                 alt=""
-                width={900}
-                height={485}
+                width={2454}
+                height={1017}
                 sizes="100px"
                 className="h-11 w-auto"
               />

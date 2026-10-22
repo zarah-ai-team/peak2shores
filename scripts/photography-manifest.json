@@ -423,5 +423,55 @@
     "slot": "ce-list",
     "source": "unsplash",
     "photo": "gI67EMO0i5w"
+  },
+  {
+    "slot": "home-curated",
+    "source": "unsplash",
+    "photo": "white-concrete-building-near-body-of-water-during-daytime-ZAPIBe5pbx0"
+  },
+  {
+    "slot": "home-way-cruises",
+    "source": "unsplash",
+    "photo": "a-boat-speeds-through-crystal-blue-waters-C0iBeLnhuLU"
+  },
+  {
+    "slot": "home-way-villas",
+    "source": "unsplash",
+    "photo": "a-pool-with-a-patio-and-chairs-Ti9XCg6QOn4"
+  },
+  {
+    "slot": "home-cove",
+    "source": "unsplash",
+    "photo": "a-white-boat-in-the-middle-of-a-body-of-water-2MbCS4--aSo"
+  },
+  {
+    "slot": "home-circle",
+    "source": "unsplash",
+    "photo": "a-view-of-a-beach-with-boats-in-the-water-F88j1nmoHLk"
+  },
+  {
+    "slot": "dep-swiss-lakes",
+    "source": "unsplash",
+    "photo": "historic-paddle-steamer-cruising-serene-lake-before-a-towering-mountain-uo8tzpinBG4"
+  },
+  {
+    "slot": "dep-amalfi",
+    "source": "unsplash",
+    "photo": "colorful-town-on-a-steep-hillside-overlooking-the-blue-ocean-RpZ70IXS4DQ"
+  },
+  {
+    "slot": "dep-como",
+    "source": "unsplash",
+    "photo": "a-balcony-with-a-view-of-a-lake-and-mountains--sfd2AOOW6k"
+  },
+  {
+    "slot": "dep-mallorca",
+    "source": "unsplash",
+    "photo": "boats-anchored-in-a-bay-with-palm-trees-and-buildings-N46bZr4krOo"
+  },
+  {
+    "slot": "dep-cape",
+    "source": "unsplash",
+    "photo": "aerial-view-photography-of-seashore-rqrv0bbzMLg"
   }
 ]

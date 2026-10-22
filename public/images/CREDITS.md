@@ -9,7 +9,7 @@ calm light, no crowds, the right destination) and its provenance read from the
 source page itself. None of it was shot for Peaks2Shores; see
 `PHOTOGRAPHY-BRIEF.md` for what a commissioned shoot should replace first.
 
-- **85** frames from Unsplash under the
+- **95** frames from Unsplash under the
   [Unsplash License](https://unsplash.com/license): free for commercial use, no
   attribution required (credited here and on `/credits` anyway). The licence
   does not allow selling the photos unaltered or compiling them into a
@@ -69,6 +69,11 @@ source page itself. None of it was shot for Peaks2Shores; see
 | `d7` | d7.jpg | [Unsplash](https://unsplash.com/photos/a-person-is-mixing-a-mixture-in-a-bowl-O-hPtwG--ik) | Ivan Pergasi | Unsplash License |
 | `d8` | d8.jpg | [Commons](https://commons.wikimedia.org/wiki/File:Il_Sentiero_degli_dei.jpg) | Stiflele | CC BY-SA 4.0 |
 | `d9` | d9.jpg | [Unsplash](https://unsplash.com/photos/a-pastry-and-a-cup-of-coffee-on-a-table-Xt8ARul4H8o) | Andrea Riezzo | Unsplash License |
+| `dep-amalfi` | dep-amalfi.jpg | [Unsplash](https://unsplash.com/photos/colorful-town-on-a-steep-hillside-overlooking-the-blue-ocean-RpZ70IXS4DQ) | Rafael Peier | Unsplash License |
+| `dep-cape` | dep-cape.jpg | [Unsplash](https://unsplash.com/photos/aerial-view-photography-of-seashore-rqrv0bbzMLg) | John O'Nolan | Unsplash License |
+| `dep-como` | dep-como.jpg | [Unsplash](https://unsplash.com/photos/a-balcony-with-a-view-of-a-lake-and-mountains--sfd2AOOW6k) | Anton B | Unsplash License |
+| `dep-mallorca` | dep-mallorca.jpg | [Unsplash](https://unsplash.com/photos/boats-anchored-in-a-bay-with-palm-trees-and-buildings-N46bZr4krOo) | Alexis Presa | Unsplash License |
+| `dep-swiss-lakes` | dep-swiss-lakes.jpg | [Unsplash](https://unsplash.com/photos/historic-paddle-steamer-cruising-serene-lake-before-a-towering-mountain-uo8tzpinBG4) | Reto Muff | Unsplash License |
 | `ex-1` | ex-1.jpg | [Unsplash](https://unsplash.com/photos/a-table-set-up-for-a-meal-under-a-pergolated-roof-z9MAxYlXv3s) | Steffen Lemmerzahl | Unsplash License |
 | `ex-2` | ex-2.jpg | [Unsplash](https://unsplash.com/photos/a-person-making-a-bowl-on-a-pottery-wheel-EETgT0lmAiQ) | Monika Bienert | Unsplash License |
 | `ex-3` | ex-3.jpg | [Unsplash](https://unsplash.com/photos/a-narrow-plant-lined-alleyway-in-an-old-european-town-1mgFxLxwQOc) | Wojciech Wyszkowski | Unsplash License |
@@ -82,9 +87,14 @@ source page itself. None of it was shot for Peaks2Shores; see
 | `g3` | g3.jpg | [Unsplash](https://unsplash.com/photos/table-set-with-lemons-and-crystal-f6QoaTtdyGw) | Guillaume de Germain | Unsplash License |
 | `g4` | g4.jpg | [Unsplash](https://unsplash.com/photos/stone-arches-and-columns-in-a-cloister-with-greenery-DnwNr7GBeEA) | Ilia | Unsplash License |
 | `g5` | g5.jpg | [Unsplash](https://unsplash.com/photos/a-white-wall-with-a-chair-and-a-city-in-the-background-G56s81sNzIQ) | Theo | Unsplash License |
+| `home-circle` | home-circle.jpg | [Unsplash](https://unsplash.com/photos/a-view-of-a-beach-with-boats-in-the-water-F88j1nmoHLk) | Simon Nham | Unsplash License |
+| `home-cove` | home-cove.jpg | [Unsplash](https://unsplash.com/photos/a-white-boat-in-the-middle-of-a-body-of-water-2MbCS4--aSo) | Fadi Al Shami | Unsplash License |
+| `home-curated` | home-curated.jpg | [Unsplash](https://unsplash.com/photos/white-concrete-building-near-body-of-water-during-daytime-ZAPIBe5pbx0) | Lewis J Goetz | Unsplash License |
 | `home-hero` | home-hero.jpg | [Unsplash](https://unsplash.com/photos/sailing-boat-Fzp8kL9jAiM) | KaLisa Veer | Unsplash License |
 | `home-hero-2` | home-hero-2.jpg | [Unsplash](https://unsplash.com/photos/green-trees-near-lake-and-mountain-during-daytime-kokjC1WcD4M) | Susan Flynn | Unsplash License |
 | `home-hero-3` | home-hero-3.jpg | [Unsplash](https://unsplash.com/photos/mountains-in-body-of-water-F8ru8OvpRzA) | Adolfo Ruiz | Unsplash License |
+| `home-way-cruises` | home-way-cruises.jpg | [Unsplash](https://unsplash.com/photos/a-boat-speeds-through-crystal-blue-waters-C0iBeLnhuLU) | Héctor Mavare | Unsplash License |
+| `home-way-villas` | home-way-villas.jpg | [Unsplash](https://unsplash.com/photos/a-pool-with-a-patio-and-chairs-Ti9XCg6QOn4) | Uzuri Safaris Tanzania | Unsplash License |
 | `hotel-1` | hotel-1.jpg | [Unsplash](https://unsplash.com/photos/coastal-town-buildings-overlooking-a-vibrant-blue-sea-with-boats-GasM0nsuews) | Rafael Peier | Unsplash License |
 | `hotel-2` | hotel-2.jpg | [Unsplash](https://unsplash.com/photos/brown-and-white-concrete-building-beside-body-of-water-during-daytime-CNVYC8IR4tY) | Simon Schwyter | Unsplash License |
 | `hotel-3` | hotel-3.jpg | [Unsplash](https://unsplash.com/photos/a-courtyard-with-a-tree-in-the-middle-of-it-sjB6J6113l0) | Max Harlynking | Unsplash License |

@@ -77,7 +77,7 @@ const organization = {
       url: site.url,
       email: site.email,
       ...(site.phone ? { telephone: site.phone } : {}),
-      logo: `${site.url}/brand/logo-dark.png`,
+      logo: `${site.url}/brand/p2s-logo.png`,
       founder: { '@type': 'Person', name: site.founder.name },
       foundingDate: String(site.founded),
       ...(site.instagram ? { sameAs: [site.instagram] } : {}),

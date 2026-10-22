@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useId, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import * as m from 'motion/react-m';
 import { Frame } from '@/components/ui/Frame';
 import { Reveal } from '@/components/motion/Reveal';
@@ -22,9 +22,8 @@ type Selection = Partial<Record<FilterKey, string>>;
  * 1. The globe band — choosing a country there is the same choice as the
  *    Destination filter, and hovering a journey anywhere on the page (the
  *    band's list or a row below) flies the globe to it.
- * 2. A sticky filter bar: four word lists in one row on a desktop; behind a
- *    "Refine" disclosure on a phone. One option per group, tapped again to
- *    clear — the same semantics the page has always had.
+ * 2. A slim sticky filter bar: one dropdown per group in a single row, the
+ *    count and Clear beside them. One option per group; "Any" clears it.
  * 3. Editorial rows, photograph alternating sides, a rule between each.
  *    A filter change fades the list in (no layout animation).
  *
@@ -34,9 +33,7 @@ type Selection = Partial<Record<FilterKey, string>>;
 export function JourneyExplorer({ journeys }: { journeys: JourneySummary[] }) {
   const [selection, setSelection] = useState<Selection>({});
   const [touched, setTouched] = useState(false);
-  const [open, setOpen] = useState(false);
   const [hover, setHover] = useState<string | null>(null);
-  const panelId = useId();
   const listRef = useRef<HTMLElement>(null);
 
   const { visible, activeCount } = useMemo(() => {
@@ -59,6 +56,11 @@ export function JourneyExplorer({ journeys }: { journeys: JourneySummary[] }) {
       ...current,
       [key]: current[key] === value ? undefined : value,
     }));
+  }
+
+  function setFilter(key: FilterKey, value: string) {
+    setTouched(true);
+    setSelection((current) => ({ ...current, [key]: value || undefined }));
   }
 
   function clear() {
@@ -92,75 +94,57 @@ export function JourneyExplorer({ journeys }: { journeys: JourneySummary[] }) {
         data-pin-header
         className="sticky top-[var(--nav-h-compact)] z-20 border-b border-line bg-panel/95 backdrop-blur-[14px]"
       >
-        <div className="container-site">
-          {/* Phone: one line — Refine, the count, Clear. */}
-          <div className="flex min-h-14 items-center justify-between gap-4 lg:hidden">
-            <button
-              type="button"
-              aria-expanded={open}
-              aria-controls={panelId}
-              onClick={() => setOpen((v) => !v)}
-              className="kicker inline-flex min-h-11 items-center gap-3 border-0 bg-transparent p-0 !text-ink"
-            >
-              Refine{activeCount > 0 && ` (${activeCount})`}
-              <svg
-                aria-hidden
-                width="12"
-                height="8"
-                viewBox="0 0 12 8"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1"
-                className={`transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
-              >
-                <path d="M1 1.5l5 5 5-5" />
-              </svg>
-            </button>
-            <span className="kicker-sm" aria-hidden>
+        <div className="container-site flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-2.5 lg:flex-nowrap">
+          {/* One compact row of dropdowns — a single line on a desktop, two
+              short rows on a phone — so the bar never crowds the list. */}
+          <div className="grid w-full grid-cols-2 gap-2 md:flex md:w-auto md:flex-wrap md:items-center">
+            {filterGroups.map((group) => {
+              const value = selection[group.key] ?? '';
+              return (
+                <label key={group.key} className="relative block min-w-0">
+                  <span className="sr-only">{group.label}</span>
+                  <select
+                    value={value}
+                    onChange={(e) => setFilter(group.key, e.target.value)}
+                    className={`meta h-10 w-full cursor-pointer appearance-none truncate rounded-full border bg-ivory pl-4 pr-9 transition-colors duration-300 hover:border-ink md:w-auto ${
+                      value ? 'border-ink text-ink' : 'border-line text-body'
+                    }`}
+                  >
+                    <option value="">{group.label}: Any</option>
+                    {group.options.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                  <svg
+                    aria-hidden
+                    width="10"
+                    height="7"
+                    viewBox="0 0 12 8"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.25"
+                    className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-ink"
+                  >
+                    <path d="M1 1.5l5 5 5-5" />
+                  </svg>
+                </label>
+              );
+            })}
+          </div>
+          <div className="flex items-center gap-5">
+            <span role="status" aria-live="polite" className="meta whitespace-nowrap text-muted">
               {countText}
             </span>
-          </div>
-
-          <div
-            id={panelId}
-            className={`${open ? 'grid' : 'hidden'} max-h-[65svh] overflow-y-auto border-t border-line pb-4 sm:grid-cols-2 lg:grid lg:max-h-none lg:grid-cols-[minmax(0,1fr)_minmax(0,0.8fr)_minmax(0,1fr)_minmax(0,1.6fr)] lg:gap-x-10 lg:overflow-visible lg:border-0 lg:pb-0 xl:gap-x-14`}
-          >
-            {filterGroups.map((group) => (
-              <fieldset key={group.key} className="m-0 min-w-0 border-0 p-0 py-4 lg:py-5">
-                <legend className="kicker-sm float-left mb-2.5 p-0">{group.label}</legend>
-                <div className="clear-left flex flex-wrap gap-x-[18px]">
-                  {group.options.map((option) => {
-                    const on = selection[group.key] === option;
-                    return (
-                      <button
-                        key={option}
-                        type="button"
-                        aria-pressed={on}
-                        onClick={() => toggle(group.key, option)}
-                        className={`toggle-link meta min-h-11 border-0 bg-transparent px-0 py-2 hover:text-acqua-text lg:min-h-8 lg:py-1 ${
-                          on ? 'text-ink' : 'text-muted'
-                        }`}
-                      >
-                        {option}
-                      </button>
-                    );
-                  })}
-                </div>
-              </fieldset>
-            ))}
-            <div className="flex items-center justify-between gap-4 pt-2 sm:col-span-2 lg:col-span-4 lg:border-t lg:border-line lg:py-1">
-              <span role="status" aria-live="polite" className="kicker-sm whitespace-nowrap">
-                {countText}
-              </span>
-              <button
-                type="button"
-                onClick={clear}
-                className="kicker-sm min-h-11 border-0 bg-transparent px-0 !text-acqua-text transition-colors duration-300 hover:!text-ink lg:min-h-8"
-                style={{ visibility: hasFilters ? 'visible' : 'hidden' }}
-              >
-                Clear
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={clear}
+              className="meta min-h-10 border-0 bg-transparent px-0 !text-acqua-text underline-offset-4 transition-colors duration-300 hover:!text-ink hover:underline"
+              style={{ visibility: hasFilters ? 'visible' : 'hidden' }}
+            >
+              Clear
+            </button>
           </div>
         </div>
       </section>
