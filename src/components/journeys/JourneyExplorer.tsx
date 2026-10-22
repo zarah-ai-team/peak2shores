@@ -248,7 +248,7 @@ function JourneyRow({
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-gradient-to-t from-forest-deep/70 via-forest-deep/25 to-transparent px-6 pb-6 pt-24 text-on-dark opacity-0 transition-[opacity,transform] duration-700 ease-[var(--ease-editorial)] motion-safe:translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
+          className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-gradient-to-t from-navy-deep/70 via-navy-deep/25 to-transparent px-6 pb-6 pt-24 text-on-dark opacity-0 transition-[opacity,transform] duration-700 ease-[var(--ease-editorial)] motion-safe:translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
         >
           <span className="kicker-sm !text-on-dark">
             {journey.region} · {journey.departure}

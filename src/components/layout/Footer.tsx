@@ -9,16 +9,16 @@ import { Ground } from '@/components/motion/Ground';
 const link = 'transition-colors duration-300 hover:text-acqua';
 
 /**
- * The page ends dark: forest-deep, with the closing line and the journal
+ * The page ends dark: navy-deep, with the closing line and the journal
  * sign-up, then the brand, the two footer groups and the contact column, then
  * the legal row. Phone, WhatsApp and the Seller of Travel number appear only
  * when they are set in `site.ts` — nothing is shown that hasn't been confirmed.
  */
 export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
   return (
-    <Ground as="footer" data-tone="dark" className="bg-forest-deep pb-10 text-on-dark">
+    <Ground as="footer" data-tone="dark" className="bg-navy-deep pb-10 text-on-dark">
       <div className="container-site">
-        {/* Forest sections often end the page; forest against forest-deep
+        {/* Navy sections often end the page; navy against navy-deep
             barely differs, so the footer opens on its own rule. */}
         <div aria-hidden className="border-t border-line-dark" />
         <div className="grid-site gap-y-12 pb-block pt-section">

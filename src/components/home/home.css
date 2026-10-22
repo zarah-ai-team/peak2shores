@@ -1,8 +1,9 @@
 /*
  * The homepage, after Sample C ("Marc's flow"). Scoped to `.hc` so none of it
- * reaches another page. The palette is the sample's: paper (= ivory), night,
- * deep lake blue and a warm gold, with Georgia for display and Poppins for the
- * interface — the same two faces as the rest of the site.
+ * reaches another page. The palette: paper (= ivory), night, deep lake blue
+ * and the Peaks2Shores blue for every small accent (ice white instead, where
+ * the accent is a label on a dark ground), with Georgia for display and
+ * Poppins for the interface — the same two faces as the rest of the site.
  */
 
 .hc {
@@ -10,11 +11,11 @@
   --ink: #141d24;
   --muted: #5a646d;
   --lake: #0b5c85;
-  --brand: #018fc9;
+  --brand: var(--color-brand);
   --sky: #7accfd;
   --night: #0b1a24;
-  --deep: #0e2f42;
-  --gold: #d8b27a;
+  --deep: var(--color-navy);
+  --ice: #eaf5fb;
   --serif: var(--font-display);
   --sans: var(--font-ui);
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
@@ -67,7 +68,9 @@
   border: 1px solid #fff;
 }
 .hc .btn-light:hover {
-  background: var(--paper);
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
 }
 .hc .btn-line {
   background: transparent;
@@ -75,8 +78,9 @@
   border: 1px solid rgb(255 255 255 / 0.6);
 }
 .hc .btn-line:hover {
-  background: #fff;
-  color: var(--ink);
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
 }
 .hc .btn-ink {
   background: var(--ink);
@@ -84,8 +88,8 @@
   border: 1px solid var(--ink);
 }
 .hc .btn-ink:hover {
-  background: var(--lake);
-  border-color: var(--lake);
+  background: var(--brand);
+  border-color: var(--brand);
 }
 .hc .circ {
   width: 54px;
@@ -102,8 +106,9 @@
   flex: 0 0 auto;
 }
 .hc .circ:hover {
-  background: #fff;
-  color: var(--ink);
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
 }
 .hc .circ svg {
   width: 18px;
@@ -114,7 +119,8 @@
   color: var(--ink);
 }
 .hc .dk .circ:hover {
-  background: var(--ink);
+  background: var(--brand);
+  border-color: var(--brand);
   color: #fff;
 }
 .hc .ctarow {
@@ -182,7 +188,7 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgb(8 20 28 / 0.6) 0%, rgb(8 20 28 / 0.22) 45%, rgb(8 20 28 / 0) 70%),
+    radial-gradient(ellipse 70% 60% at 50% 55%, rgb(8 20 28 / 0.42) 0%, rgb(8 20 28 / 0) 100%),
     linear-gradient(
       180deg,
       rgb(8 20 28 / 0.5) 0%,
@@ -193,11 +199,31 @@
 }
 .hc-hero .copy {
   position: absolute;
-  left: var(--gut);
-  right: var(--gut);
-  bottom: clamp(96px, 12svh, 120px);
+  inset: var(--nav-h) var(--gut) clamp(84px, 11svh, 112px);
   z-index: 4;
-  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.hc-hero .hlogo {
+  display: block;
+  margin-bottom: clamp(20px, 3.5svh, 36px);
+}
+.hc-hero .hlogo img {
+  display: block;
+  width: auto;
+  height: clamp(64px, 9svh, 104px);
+}
+.hc-hero .copy .eb {
+  justify-content: center;
+}
+.hc-hero .copy .eb::after {
+  content: '';
+  width: 34px;
+  height: 1.5px;
+  background: var(--brand);
 }
 .hc .eb {
   display: flex;
@@ -207,12 +233,12 @@
 .hc .eb i {
   width: 34px;
   height: 1.5px;
-  background: var(--gold);
+  background: var(--brand);
 }
 .hc-hero h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(50px, 7.5vw, 108px);
+  font-size: clamp(50px, 5.7vw, 82px);
   line-height: 0.98;
   letter-spacing: -0.035em;
   margin: 24px 0 26px;
@@ -227,12 +253,13 @@
   font-size: 18px;
   line-height: 1.6;
   max-width: 42ch;
-  margin: 0 0 32px;
+  margin: 0 auto 32px;
   color: #eef2f4;
 }
 .hc-hero .ctas {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 12px;
 }
 .hc-hero .vctl {
@@ -276,14 +303,14 @@
   transition: background 0.6s var(--ease);
 }
 .hc-hero .vdot.on i {
-  background: var(--gold);
+  background: var(--brand);
 }
 
 /* -- 02 Introduction ----------------------------------------------------- */
 .hc-intro {
   background: var(--paper);
   color: var(--ink);
-  padding: clamp(96px, 10vw, 150px) var(--gut) clamp(90px, 9.5vw, 140px);
+  padding: clamp(64px, 6.5vw, 100px) var(--gut) clamp(60px, 6vw, 92px);
   text-align: center;
 }
 .hc-intro .lab {
@@ -294,8 +321,13 @@
   font-size: clamp(28px, 2.8vw, 40px);
   line-height: 1.32;
   letter-spacing: -0.015em;
-  max-width: 30ch;
-  margin: 30px auto 0;
+  /* Three balanced lines on a desktop (30ch set it in five). */
+  max-width: 50ch;
+  margin: 22px auto 0;
+  text-wrap: balance;
+}
+.hc-intro .ctarow {
+  margin-top: 34px;
 }
 .hc-intro p em {
   font-style: italic;
@@ -306,7 +338,7 @@
 .hc-ways {
   background: var(--paper);
   color: var(--ink);
-  padding: 20px 0 clamp(96px, 9vw, 130px);
+  padding: 10px 0 clamp(48px, 4.5vw, 65px);
 }
 .hc-ways .head {
   display: flex;
@@ -416,8 +448,8 @@
   font-size: 10px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  background: var(--gold);
-  color: var(--ink);
+  background: var(--brand);
+  color: #fff;
   padding: 7px 12px;
   border-radius: 999px;
 }
@@ -486,11 +518,22 @@
 
 /* -- 05 The founder's line ----------------------------------------------- */
 .hc-pause {
-  background: var(--paper);
-  color: var(--ink);
+  position: relative;
+  overflow: hidden;
+  background: var(--night);
+  color: #fff;
   padding: clamp(110px, 13vw, 190px) var(--gut) clamp(100px, 12.5vw, 180px);
   text-align: center;
-  border-top: 1px solid rgb(20 29 36 / 0.12);
+}
+/* The film plays in its own colour, with no tint over it; the words carry
+   their own shadow instead: a tight one for the edges, a soft one behind. */
+.hc-pause .bg {
+  position: absolute;
+  inset: 0;
+}
+.hc-pause .in {
+  position: relative;
+  z-index: 2;
 }
 .hc-pause blockquote {
   margin: 0 auto;
@@ -499,18 +542,25 @@
   font-size: clamp(36px, 4.7vw, 68px);
   line-height: 1.12;
   letter-spacing: -0.025em;
+  text-shadow:
+    0 1px 2px rgb(8 20 28 / 0.22),
+    0 2px 24px rgb(8 20 28 / 0.28);
 }
 .hc-pause blockquote em {
   font-style: italic;
-  color: var(--lake);
+  color: var(--brand);
+  text-shadow:
+    0 1px 2px rgb(8 20 28 / 0.25),
+    0 2px 24px rgb(8 20 28 / 0.3);
 }
 .hc-pause .mark {
   display: block;
   font-family: var(--serif);
   font-size: 120px;
   line-height: 0.5;
-  color: var(--gold);
+  color: var(--brand);
   margin-bottom: 26px;
+  text-shadow: 0 2px 14px rgb(8 20 28 / 0.22);
 }
 .hc-pause cite {
   display: block;
@@ -520,7 +570,15 @@
   font-size: 12px;
   letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: #fff;
+  text-shadow:
+    0 1px 2px rgb(8 20 28 / 0.38),
+    0 1px 12px rgb(8 20 28 / 0.35);
+}
+.hc-pause .tlink {
+  text-shadow:
+    0 1px 2px rgb(8 20 28 / 0.38),
+    0 1px 12px rgb(8 20 28 / 0.35);
 }
 
 /* -- 06 Why Peaks2Shores ------------------------------------------------- */
@@ -861,7 +919,7 @@
   margin-bottom: 64px;
 }
 .hc-hot .head .lab {
-  color: var(--gold);
+  color: var(--ice);
 }
 .hc-hot h2 {
   font-family: var(--serif);
@@ -1018,7 +1076,7 @@
   z-index: 3;
 }
 .hc-xp .xin .lab {
-  color: var(--gold);
+  color: var(--ice);
 }
 .hc-xp ul {
   list-style: none;
@@ -1031,7 +1089,7 @@
   padding: 4px 0;
   cursor: pointer;
   font-family: var(--serif);
-  font-size: clamp(56px, 8.9vw, 128px);
+  font-size: clamp(48px, 7.6vw, 110px);
   line-height: 1.02;
   letter-spacing: -0.04em;
   color: rgb(255 255 255 / 0.32);
@@ -1081,7 +1139,7 @@
   z-index: 2;
 }
 .hc-circle .lab {
-  color: var(--gold);
+  color: var(--ice);
 }
 .hc-circle h2 {
   font-family: var(--serif);
@@ -1122,7 +1180,7 @@
   font-size: 11px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--ice);
   margin-right: 10px;
 }
 .hc-circle .talk a {
@@ -1153,8 +1211,8 @@
   min-height: 54px;
   padding: 0 26px 0 20px;
   border-radius: 999px;
-  background: var(--gold);
-  color: var(--ink);
+  background: var(--brand);
+  color: #fff;
   border: 0;
   font-family: inherit;
   font-size: 12px;
@@ -1168,7 +1226,7 @@
     transform 0.6s var(--ease);
 }
 .hc-fab .fab-btn:hover {
-  background: #e6c79c;
+  background: var(--color-brand-deep);
   transform: translateY(-2px);
 }
 .hc-fab .panel {
@@ -1333,6 +1391,15 @@
   .hc-fab .fab-btn {
     min-height: 48px;
     padding: 0 18px 0 16px;
+  }
+  /* The hero's eyebrow on one line, without the dashes either side. */
+  .hc-hero .copy .eb {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+  }
+  .hc-hero .copy .eb i,
+  .hc-hero .copy .eb::after {
+    display: none;
   }
 }
 

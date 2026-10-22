@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useReducedMotion } from 'motion/react';
 import { reel } from '@/lib/data/home';
+import { site } from '@/lib/site';
 
 /**
  * 01 — The opening: a reel of four of Marc's clips (Italy, the Alps by rail,
@@ -75,6 +76,19 @@ export function HomeHero({ maxGuests }: { maxGuests: number }) {
       <div className="shade" />
 
       <div className="copy">
+        {/* Over the film the logo sits here, large, and the header bar keeps
+            only the links; it returns to the bar once the hero has passed.
+            Like every logo on the site, it leads home. */}
+        <Link href="/" className="hlogo" aria-label={`${site.name} — home`}>
+          <Image
+            src="/brand/p2s-logo-white.png"
+            alt=""
+            width={2454}
+            height={1017}
+            priority
+            sizes="(min-width: 1024px) 260px, 180px"
+          />
+        </Link>
         <div className="eb lab">
           <i />
           Small-group journeys · Max. {maxGuests} guests

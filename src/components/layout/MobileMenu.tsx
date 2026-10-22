@@ -22,7 +22,7 @@ type MobileMenuProps = {
 };
 
 /**
- * A full-screen forest-deep sheet rather than a drawer.
+ * A full-screen navy-deep sheet rather than a drawer.
  *
  * The links are set in the serif at `.h3`, ruled, and rise 60ms apart, so
  * opening the menu feels like turning to a contents page. Under reduced motion
@@ -143,7 +143,7 @@ export function MobileMenu({ open, onClose, returnFocusTo, primary, cta }: Mobil
           aria-modal="true"
           aria-label="Menu"
           data-tone="dark"
-          className="fixed inset-0 z-40 bg-forest-deep text-on-dark outline-none lg:hidden"
+          className="fixed inset-0 z-40 bg-navy-deep text-on-dark outline-none lg:hidden"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0, transition: { duration: duration.ui, ease: ease.exit } }}
@@ -193,7 +193,7 @@ export function MobileMenu({ open, onClose, returnFocusTo, primary, cta }: Mobil
               <Link
                 href={cta.href}
                 onClick={onClose}
-                className="btn inline-flex min-h-11 items-center gap-3 self-start bg-ivory px-7 py-[17px] font-ui text-[11.5px] font-medium uppercase leading-none tracking-[0.16em] text-ink hover:bg-white"
+                className="btn inline-flex min-h-11 items-center gap-3 self-start bg-ivory px-7 py-[17px] font-ui text-[11.5px] font-medium uppercase leading-none tracking-[0.16em] text-ink hover:bg-brand hover:text-white"
               >
                 {cta.label}
                 <Arrow />

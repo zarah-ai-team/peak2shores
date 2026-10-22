@@ -3,8 +3,10 @@ import Link from 'next/link';
 import { NewsletterForm } from '@/components/ui/NewsletterForm';
 import { circle, founderStory, statement } from '@/lib/data/home';
 import { site } from '@/lib/site';
+import { HomeMedia } from './HomeMedia';
 
-/** 02 — The short introduction, set large and centred after the film. */
+/** 02 — The short introduction, set large and centred after the film. The
+    hero above already offers the journeys, so this offers a conversation. */
 export function Intro() {
   return (
     <section className="hc-intro" aria-label="About Peaks2Shores">
@@ -15,9 +17,6 @@ export function Intro() {
         travellers.
       </p>
       <div className="ctarow">
-        <Link className="btn btn-ink" href="/journeys">
-          Explore Journeys
-        </Link>
         <Link className="tlink" href="/plan#contact">
           Speak to a travel designer →
         </Link>
@@ -26,25 +25,30 @@ export function Intro() {
   );
 }
 
-/** 05 — Marc's line: a visual pause between the journeys and the principles. */
+/** 05 — Marc's line over his film of the journeys: a pause between the journeys and the principles. */
 export function Statement() {
   return (
     <section className="hc-pause" aria-label="Founder statement">
-      <span className="mark" aria-hidden>
-        “
-      </span>
-      <blockquote>
-        {statement.before}
-        <em>{statement.emphasis}</em>
-        {statement.after}
-      </blockquote>
-      <cite>
-        {site.founder.name} · Founder, {site.name}
-      </cite>
-      <div className="ctarow">
-        <Link className="tlink" href="#name">
-          Discover the Peaks2Shores story →
-        </Link>
+      <div className="bg" aria-hidden>
+        <HomeMedia visual={statement.film} sizes="100vw" />
+      </div>
+      <div className="in">
+        <span className="mark" aria-hidden>
+          “
+        </span>
+        <blockquote>
+          {statement.before}
+          <em>{statement.emphasis}</em>
+          {statement.after}
+        </blockquote>
+        <cite>
+          {site.founder.name} · Founder, {site.name}
+        </cite>
+        <div className="ctarow">
+          <Link className="tlink light" href="#name">
+            Discover the Peaks2Shores story →
+          </Link>
+        </div>
       </div>
     </section>
   );

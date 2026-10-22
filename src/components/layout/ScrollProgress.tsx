@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * A 1px rule across the very top that fills as the page is read — sea-glass
+ * A 1px rule across the very top that fills as the page is read — water-blue
  * over a photograph, the hairline step on paper (`.scroll-progress` in CSS).
  *
  * It sits above the header, so it reads as a property of the page rather than

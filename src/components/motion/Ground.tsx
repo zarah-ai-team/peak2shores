@@ -18,7 +18,7 @@ type GroundProps = {
 /**
  * A dark section that develops from the page as it arrives.
  *
- * The element itself is ordinary — `bg-forest` and all — and stays that way
+ * The element itself is ordinary — `bg-navy` and all — and stays that way
  * with no JavaScript. The ivory cover that fades away lives in CSS behind
  * `html[data-js] [data-ground]`, so this component only has to say when the
  * section has come into view.

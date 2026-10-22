@@ -124,7 +124,7 @@ export function JourneyFacts({ journey }: { journey: Journey }) {
           </dl>
         </RevealGroup>
         <div className="flex flex-wrap items-center gap-x-8 gap-y-4 py-7 lg:justify-end">
-          <ButtonLink href="#enquire" variant="forest" arrow>
+          <ButtonLink href="#enquire" variant="navy" arrow>
             Enquire
           </ButtonLink>
         </div>

@@ -47,7 +47,7 @@ function km([lon1, lat1]: [number, number], [lon2, lat2]: [number, number]) {
  *
  * Paper ground, the globe framed close on the region with the most journeys,
  * and down the left every live journey by name with its dates. Hovering or
- * focusing a name — here or in the rows below — lights its pin in brass and
+ * focusing a name — here or in the rows below — lights its pin in brand blue and
  * flies the globe to it; pointing at a pin lights the name and labels the pin.
  * The region buttons reframe it on purpose. Choosing a country on the globe is
  * the same act as the Destination filter — the explorer owns that choice — so
@@ -125,7 +125,7 @@ export function JourneyGlobe({
                   >
                     <span
                       aria-hidden
-                      className={`absolute inset-y-2 left-0 w-px origin-top bg-gorse transition-transform duration-500 ease-[var(--ease-editorial)] ${
+                      className={`absolute inset-y-2 left-0 w-px origin-top bg-brand transition-transform duration-500 ease-[var(--ease-editorial)] ${
                         on ? 'scale-y-100' : 'scale-y-0'
                       }`}
                     />
@@ -144,7 +144,7 @@ export function JourneyGlobe({
                     <span
                       aria-hidden
                       className={`status-mark shrink-0 transition-[background-color,transform] duration-300 ${
-                        on ? 'scale-150 bg-gorse' : 'bg-acqua-deep'
+                        on ? 'scale-150 bg-brand' : 'bg-acqua'
                       }`}
                     />
                   </Link>

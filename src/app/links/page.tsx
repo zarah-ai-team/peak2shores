@@ -53,14 +53,16 @@ export default async function LinksPage() {
   return (
     <section className="container-site pb-section-sm pt-block">
       <div className="mx-auto w-full max-w-[520px]">
-        <Image
-          src="/brand/p2s-logo.png"
-          alt={site.name}
-          width={2454}
-          height={1017}
-          sizes="96px"
-          className="mb-block h-auto w-24"
-        />
+        <Link href="/" aria-label={`${site.name} — home`} className="mb-block block w-fit">
+          <Image
+            src="/brand/p2s-logo.png"
+            alt=""
+            width={2454}
+            height={1017}
+            sizes="96px"
+            className="h-auto w-24"
+          />
+        </Link>
         <p className="kicker mb-4">From Instagram</p>
         <h1 className="h3 mb-4">Fewer, better journeys.</h1>
         <p className="prose-body mb-block">

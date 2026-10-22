@@ -119,12 +119,12 @@ export default async function OurStoryPage() {
         <RevealGroup as="ol" className="m-0 grid list-none grid-cols-2 gap-y-10 p-0 lg:grid-cols-4">
           {peaksToShores.frames.map((frame, i) => (
             <RevealItem as="li" key={frame.label} distance={12} className="relative pr-4 pt-9">
-              {/* The route: one ruled line, a brass stop at each place. */}
+              {/* The route: one ruled line, a blue stop at each place. */}
               <span aria-hidden className="absolute inset-x-0 top-[3px] h-px bg-line" />
               <span
                 aria-hidden
                 className={`status-mark absolute left-0 top-0 ${
-                  i === 0 || i === peaksToShores.frames.length - 1 ? 'bg-gorse' : 'bg-acqua-deep'
+                  i === 0 || i === peaksToShores.frames.length - 1 ? 'bg-brand' : 'bg-acqua'
                 }`}
               />
               <span className="kicker-sm mb-2 block">

@@ -52,7 +52,7 @@ const inputClass =
  * On stone (so the page never runs dark into the dark footer): the headline
  * in the first five columns, the form in the last
  * six. Fields are rules, not boxes: a caps label, an underline, and type at
- * reading size. The rule above a field turns sea-glass while it has focus.
+ * reading size. The rule above a field turns blue while it has focus.
  *
  * The status line is a persistent live region so failures are announced; on
  * success focus moves to the confirmation heading. The confirmation never
@@ -211,7 +211,7 @@ export function EnquiryForm({
                 Your details were not sent to us automatically. Please email them to {site.email} —
                 the button below opens a message with what you have written already filled in.
               </p>
-              <ButtonLink href={mailto} variant="forest" arrow>
+              <ButtonLink href={mailto} variant="navy" arrow>
                 Email your enquiry
               </ButtonLink>
             </div>
@@ -367,7 +367,7 @@ export function EnquiryForm({
                   <span className="prose-body-sm max-w-[34ch] !text-stone-text">
                     We reply personally. No newsletters unless you ask.
                   </span>
-                  <Button type="submit" variant="forest" arrow aria-disabled={status === 'sending'}>
+                  <Button type="submit" variant="navy" arrow aria-disabled={status === 'sending'}>
                     {status === 'sending' ? 'Sending' : 'Send enquiry'}
                   </Button>
                 </div>
