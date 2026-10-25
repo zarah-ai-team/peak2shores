@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { NewsletterForm } from '@/components/ui/NewsletterForm';
 import { circle, founderStory, statement } from '@/lib/data/home';
-import { site } from '@/lib/site';
+import { site, whatsappHref } from '@/lib/site';
 
 /** 02 — The short introduction, set large and centred after the film. */
 export function Intro() {
@@ -11,17 +11,12 @@ export function Intro() {
       <div className="lab">Peaks2Shores</div>
       <p>
         From the peaks to the shores, we design journeys to the places we know and love —{' '}
-        <em>personally curated</em>, thoughtfully paced and shared with a few like-minded
-        travellers.
+        <em>personally curated</em>, thoughtfully paced and enriched by meaningful experiences and
+        connections.
       </p>
-      <div className="ctarow">
-        <Link className="btn btn-ink" href="/journeys">
-          Explore Journeys
-        </Link>
-        <Link className="tlink" href="/plan#contact">
-          Speak to a travel designer →
-        </Link>
-      </div>
+      {/* No call to action: this is the brand statement, an editorial pause
+          between the film (which already offers the way on) and the ways to
+          travel. */}
     </section>
   );
 }
@@ -71,9 +66,6 @@ export function FounderStory() {
           <Link className="btn btn-ink" href="/our-story">
             Our story
           </Link>
-          <Link className="tlink" href="/plan#contact">
-            Speak to a travel designer →
-          </Link>
         </div>
       </div>
     </section>
@@ -82,7 +74,7 @@ export function FounderStory() {
 
 /** 09 — The circle: the letter sign-up and every way to talk, over the coast. */
 export function CircleBand() {
-  const whatsapp = site.whatsapp ? `https://wa.me/${site.whatsapp}` : null;
+  const whatsapp = whatsappHref();
   return (
     <section className="hc-circle" id="circle" aria-labelledby="circle-title">
       <div className="bg" aria-hidden>

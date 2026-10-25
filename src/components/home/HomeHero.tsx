@@ -4,16 +4,17 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useReducedMotion } from 'motion/react';
-import { reel } from '@/lib/data/home';
+import type { ReelClip } from '@/lib/data/home';
 
 /**
- * 01 — The opening: a reel of four of Marc's clips (Italy, the Alps by rail,
- * safari, the Adriatic). Only the clip on screen plays; when it ends the next
+ * 01 — The opening: a reel of four clips in Marc's order (safari, Switzerland,
+ * Positano, Hvar), resolved on the server so only files that exist are named.
+ * Only the clip on screen plays, from its `start`; when it ends the next
  * fades in. The dashes pick a clip, the button pauses. Under reduced motion
  * the first clip's still holds until the reader presses play. The reel rests
  * while the hero is scrolled away.
  */
-export function HomeHero({ maxGuests }: { maxGuests: number }) {
+export function HomeHero({ reel }: { reel: ReelClip[] }) {
   const reduced = useReducedMotion();
   const [current, setCurrent] = useState(0);
   const [choice, setChoice] = useState<'auto' | 'play' | 'pause'>('auto');
@@ -41,13 +42,13 @@ export function HomeHero({ maxGuests }: { maxGuests: number }) {
         return;
       }
       if (last.current !== current) {
-        el.currentTime = 0;
+        el.currentTime = reel[i].start ?? 0;
         last.current = current;
       }
       if (playing) el.play().catch(() => {});
       else el.pause();
     });
-  }, [current, playing]);
+  }, [current, playing, reel]);
 
   const next = () => setCurrent((c) => (c + 1) % reel.length);
 
@@ -75,10 +76,6 @@ export function HomeHero({ maxGuests }: { maxGuests: number }) {
       <div className="shade" />
 
       <div className="copy">
-        <div className="eb lab">
-          <i />
-          Small-group journeys · Max. {maxGuests} guests
-        </div>
         <h1>
           Luxury travel,<em>personally curated.</em>
         </h1>

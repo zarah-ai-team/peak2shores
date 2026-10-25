@@ -108,7 +108,7 @@ export function Header({ primary, cta }: { primary: NavItem[]; cta: NavItem }) {
       >
         {/* The entrance sits on the inner row, not the bar: an animation's fill
             would otherwise pin the bar's transform and defeat the hide. */}
-        <div className="container-site enter-down flex h-full items-center" style={enterAt(0.05)}>
+        <div className="site-header-row enter-down flex h-full items-center" style={enterAt(0.05)}>
           <Link
             href="/"
             className="relative z-50 mr-auto flex min-h-11 items-center"

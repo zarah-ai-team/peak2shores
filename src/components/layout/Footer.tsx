@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { site } from '@/lib/site';
+import { site, whatsappHref } from '@/lib/site';
 import type { Navigation } from '@/lib/content';
 import { FooterSignup } from '@/components/layout/FooterSignup';
 import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal';
@@ -54,8 +54,8 @@ export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
               />
             </Link>
             <p className="prose-body-sm max-w-[300px]">
-              Curated travel experiences. Small-group journeys of no more than {site.maxGuests}{' '}
-              guests, personally curated by {site.founder.name}.
+              Curated travel experiences. Small luxury group journeys of no more than{' '}
+              {site.maxGuests} guests, personally curated by {site.founder.name}.
             </p>
           </RevealItem>
 
@@ -89,7 +89,7 @@ export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
               )}
               {site.whatsapp && (
                 <a
-                  href={`https://wa.me/${site.whatsapp}`}
+                  href={whatsappHref() ?? undefined}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`py-1.5 ${link}`}

@@ -6,9 +6,10 @@ import { experiences } from '@/lib/data/home';
 import { HomeMedia } from './HomeMedia';
 
 /**
- * 08b — Experiences & connections: four words set very large down the left.
- * Pointing at one (or focusing or tapping it) brings up its photograph or
- * film behind the whole section and its line on the right.
+ * 08b — Experiences (the experiences and the connections behind them, as one
+ * section): four words set very large down the left. Pointing at one (or
+ * focusing or tapping it) brings up its photograph or film behind the whole
+ * section and its line on the right. One way on: plan a journey.
  */
 export function ExperienceWords() {
   const [current, setCurrent] = useState(0);
@@ -24,7 +25,7 @@ export function ExperienceWords() {
 
       <div className="xin">
         <div className="lab" id="xp-title">
-          Experiences &amp; connections
+          Experiences
         </div>
         <ul>
           {experiences.map((x, i) => (
@@ -47,10 +48,7 @@ export function ExperienceWords() {
       <div className="xside">
         <p aria-live="polite">{experiences[current].line}</p>
         <div className="tbtns">
-          <Link className="btn btn-light" href="/experiences">
-            All experiences
-          </Link>
-          <Link className="btn btn-line" href="/plan">
+          <Link className="btn btn-light" href="/plan">
             Plan your journey
           </Link>
         </div>

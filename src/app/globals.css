@@ -126,6 +126,10 @@
     scroll-padding-top: calc(var(--nav-h) + 24px);
     -webkit-text-size-adjust: 100%;
   }
+  /* A journey page pins its tab bar under the header; anchors clear both. */
+  html:has([data-journey-tabs]) {
+    scroll-padding-top: calc(var(--nav-h-compact) + 88px);
+  }
 
   body {
     margin: 0;
@@ -854,6 +858,38 @@
 /* Two logo files, cross-faded: light over a photograph or the menu, dark on paper. */
 .photo-grade {
   filter: var(--photo-grade);
+}
+
+/* A day of the itinerary: no browser marker, a 1px plus that turns to a minus. */
+.journey-day > summary::-webkit-details-marker {
+  display: none;
+}
+.journey-day .day-toggle::before,
+.journey-day .day-toggle::after {
+  content: '';
+  position: absolute;
+  inset: 50% 0 auto;
+  height: 1px;
+  background: currentColor;
+  transition: transform 0.3s var(--ease-editorial);
+}
+.journey-day .day-toggle::after {
+  transform: rotate(90deg);
+}
+.journey-day[open] .day-toggle::after {
+  transform: rotate(0deg);
+}
+.journey-day > summary:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 4px;
+}
+
+/* The header runs edge to edge, not in the 1680px container, so the logo sits
+   top left on any screen — on the same gutter as the homepage film's copy
+   (`.hc --gut`). */
+.site-header-row {
+  width: 100%;
+  padding-inline: clamp(20px, 4.4vw, 64px);
 }
 
 .site-logo {

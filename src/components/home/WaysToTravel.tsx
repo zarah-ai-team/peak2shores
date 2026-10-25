@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useReducedMotion } from 'motion/react';
@@ -12,14 +12,48 @@ const pad = (n: number) => String(n).padStart(2, '0');
 /**
  * 03 — Ways to experience: six upright tiles on a rail that scrolls sideways,
  * group journeys first as "our signature". A tile's film plays only while the
- * pointer (or focus) is on it; its line opens beneath the name. On a phone the
- * rail is swiped and every line shows.
+ * pointer (or focus) is on it; its line opens beneath the name. Every tile is
+ * the same size; the signature one is marked by its badge and blue name.
+ *
+ * A touch screen has no hover, so there the tile that is mostly on screen
+ * plays instead, as it is swiped into view, and every line shows.
  */
 export function WaysToTravel() {
   const rail = useRef<HTMLDivElement>(null);
   const films = useRef<(HTMLVideoElement | null)[]>([]);
   const [index, setIndex] = useState(0);
+  const [inView, setInView] = useState(-1);
   const reduced = useReducedMotion();
+
+  useEffect(() => {
+    const el = rail.current;
+    if (!el || reduced || !window.matchMedia('(hover: none)').matches) return;
+    const tiles = [...el.querySelectorAll<HTMLElement>('.wt')];
+    const shown = new Map<number, number>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries)
+          shown.set(tiles.indexOf(entry.target as HTMLElement), entry.intersectionRatio);
+        let best = -1;
+        let ratio = 0.6;
+        shown.forEach((r, i) => {
+          if (r >= ratio) [best, ratio] = [i, r];
+        });
+        setInView(best);
+      },
+      { threshold: [0, 0.6, 0.8, 1] },
+    );
+    tiles.forEach((tile) => observer.observe(tile));
+    return () => observer.disconnect();
+  }, [reduced]);
+
+  useEffect(() => {
+    films.current.forEach((film, i) => {
+      if (!film) return;
+      if (i === inView) film.play().catch(() => {});
+      else film.pause();
+    });
+  }, [inView]);
 
   const step = () => {
     const card = rail.current?.querySelector<HTMLElement>('.wt');
@@ -75,7 +109,7 @@ export function WaysToTravel() {
           <Link
             key={way.title}
             href={way.href}
-            className={`wt ${way.lead ? 'lead' : ''}`}
+            className={`wt ${way.lead ? 'lead' : ''} ${i === inView ? 'playing' : ''}`}
             onMouseEnter={() => play(i)}
             onMouseLeave={() => stop(i)}
             onFocus={() => play(i)}

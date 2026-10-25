@@ -1,15 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { hotels } from '@/lib/data/home';
 import { HomeMedia } from './HomeMedia';
 
 /**
- * 08 — Hotels, lodges & camps: three tall cards that turn over on hover or
+ * 08 — Hotels, lodges & camps: five tall cards that turn over on hover or
  * tap to show the one detail that earns the place its booking and what lies
- * near it. A bracketed value is still to come from Marc and is set in rust so
- * it cannot ship unnoticed.
+ * near it. Five across on a wide screen, a swiped rail below that. A bracketed
+ * value is still to come from Marc and is set in rust so it cannot ship
+ * unnoticed.
  */
 export function HotelFlips() {
   const [flipped, setFlipped] = useState(-1);
@@ -19,7 +21,9 @@ export function HotelFlips() {
       <div className="head">
         <div>
           <div className="lab">Hotels, lodges &amp; camps</div>
-          <h2 id="hotels-title">Chosen for what they add to the journey, not their star rating.</h2>
+          <h2 id="hotels-title">
+            Chosen for what they contribute to the journey, far beyond their star rating.
+          </h2>
         </div>
         <p>Each place we stay earns its place for a reason we can name.</p>
       </div>
@@ -46,6 +50,16 @@ export function HotelFlips() {
                   </span>
                 </span>
                 <span className="face back">
+                  {/* A second view of the place, so the turned side is a picture too. */}
+                  <span className="bimg" aria-hidden>
+                    <Image
+                      src={h.back ?? h.img}
+                      alt=""
+                      fill
+                      sizes="(max-width: 1400px) 360px, 20vw"
+                      className="fill"
+                    />
+                  </span>
                   <span>
                     <span className="lab">{h.place}</span>
                     <h3>{h.name}</h3>
@@ -84,9 +98,6 @@ export function HotelFlips() {
       <div className="ctarow left">
         <Link className="btn btn-light" href="/destinations">
           Where we stay
-        </Link>
-        <Link className="tlink light" href="/journeys">
-          See them on our journeys →
         </Link>
       </div>
     </section>

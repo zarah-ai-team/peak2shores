@@ -9,8 +9,10 @@ import { FactList, MetaItem, SectionLabel, Tick } from '@/components/ui/Editoria
 import { StatusTag } from '@/components/ui/StatusTag';
 import { journeyTagStatus } from '@/components/pages/journeyStatus';
 import { isNew, type Journey, type JourneyDetail, type JourneySummary } from '@/lib/content';
+import { journeyStays } from '@/lib/journeys';
 import { enterAt } from '@/lib/motion';
 import { site } from '@/lib/site';
+import { JourneyCard } from './JourneyCard';
 
 /* -- 1. Hero --------------------------------------------------------------- */
 
@@ -123,7 +125,8 @@ export function JourneyFacts({ journey }: { journey: Journey }) {
             ))}
           </dl>
         </RevealGroup>
-        <div className="flex flex-wrap items-center gap-x-8 gap-y-4 py-7 lg:justify-end">
+        {/* From a tablet up the tab bar carries the way to enquire. */}
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-4 py-7 md:hidden">
           <ButtonLink href="#enquire" variant="forest" arrow>
             Enquire
           </ButtonLink>
@@ -163,8 +166,8 @@ export function Overview({ detail }: { detail: JourneyDetail }) {
                 {paragraph}
               </p>
             ))}
-            <ButtonLink href="#days" variant="rule" arrow>
-              Day by day
+            <ButtonLink href="#itinerary" variant="rule" arrow>
+              Itinerary
             </ButtonLink>
           </Reveal>
         )}
@@ -216,54 +219,76 @@ export function WhyThisJourney({ detail }: { detail: JourneyDetail }) {
   );
 }
 
-/* -- 6. Where you stay ----------------------------------------------------- */
+/* -- Stays ----------------------------------------------------------------- */
 
-export function WhereYouStay({ detail }: { detail: JourneyDetail }) {
+/**
+ * Where you stay, A&K-style: every hotel as a card — photograph, where and
+ * for how long, the name, why we chose it, then its signature detail and
+ * what is near it. A journey still in preparation lists its stays from the
+ * working day by day (place and nights), marked as being confirmed.
+ */
+export function Stays({ journey }: { journey: Journey }) {
+  const detail = journey.detail;
+  const planned = detail ? [] : journeyStays(journey);
+  if (!detail && planned.length === 0) return null;
+
   return (
-    <section aria-labelledby="hotels-title" className="pb-section">
+    <section id="stays" aria-labelledby="stays-title" className="bg-panel py-section-sm">
       <div className="container-site">
-        <div className="rule pt-section-sm">
-          <SectionLabel className="mb-stack">Where you stay</SectionLabel>
-          <Reveal variant="mask" className="mb-block">
-            <h2 id="hotels-title" className="h2 max-w-[20ch]">
-              {detail.hotelsHeadline}
-            </h2>
-          </Reveal>
-        </div>
-        <div className="flex flex-col gap-section-sm">
-          {detail.hotels.map((hotel, i) => {
-            const flip = i % 2 === 1;
-            return (
-              <article key={hotel.name} className="grid-site items-center gap-y-8">
-                <Frame
-                  ratio="4/5"
-                  media={hotel.media}
-                  decorative
-                  sizes="(min-width: 1024px) 50vw, 100vw"
-                  className={`col-span-4  md:col-span-6 lg:col-span-6 ${
-                    flip ? 'lg:order-2 lg:col-start-7' : ''
-                  }`}
-                />
-                <Reveal
-                  className={`col-span-4 md:col-span-7 lg:col-span-5 ${
-                    flip ? 'lg:order-1 lg:col-start-1' : 'lg:col-start-8'
-                  }`}
-                >
-                  <p className="kicker mb-4">
+        <SectionLabel className="mb-stack">Stays</SectionLabel>
+        <Reveal variant="mask" className="mb-block">
+          <h2 id="stays-title" className="h2 max-w-[22ch]">
+            {detail?.hotelsHeadline ?? 'Where you stay, as the plan stands.'}
+          </h2>
+        </Reveal>
+
+        {detail ? (
+          <ul className="m-0 grid list-none gap-x-10 gap-y-16 p-0 md:grid-cols-2">
+            {detail.hotels.map((hotel) => (
+              <Reveal as="li" key={hotel.name} distance={16}>
+                <article aria-labelledby={`stay-${hotel.media}`}>
+                  <Frame
+                    ratio="3/2"
+                    media={hotel.media}
+                    decorative
+                    sizes="(min-width: 768px) 45vw, 100vw"
+                    className="mb-7"
+                  />
+                  <p className="kicker mb-3">
                     {hotel.place}
                     {hotel.nights && <> · {hotel.nights}</>}
                   </p>
-                  <h3 className="h3 mb-stack max-w-[18ch]">{hotel.name}</h3>
-                  <p className="prose-body measure mb-7">{hotel.why}</p>
+                  <h3 id={`stay-${hotel.media}`} className="h4 mb-4 max-w-[24ch]">
+                    {hotel.name}
+                  </h3>
+                  <p className="prose-body measure mb-6">{hotel.why}</p>
                   <div className="grid gap-6 border-t border-line pt-5 sm:grid-cols-2">
                     <MetaItem label="Signature detail">{hotel.detail}</MetaItem>
                     {hotel.nearby && <MetaItem label="Nearby">{hotel.nearby}</MetaItem>}
                   </div>
-                </Reveal>
-              </article>
-            );
-          })}
-        </div>
+                </article>
+              </Reveal>
+            ))}
+          </ul>
+        ) : (
+          <div className="grid-site gap-y-8">
+            <ol className="col-span-4 m-0 list-none border-t border-ink p-0 md:col-span-8 lg:col-span-7">
+              {planned.map((stay) => (
+                <li
+                  key={stay.name}
+                  className="flex items-baseline justify-between gap-6 border-b border-line py-5"
+                >
+                  <span className="h5">{stay.name}</span>
+                  <span className="meta whitespace-nowrap text-muted">{stay.nights}</span>
+                </li>
+              ))}
+            </ol>
+            <p className="prose-body-sm measure col-span-4 md:col-span-6 lg:col-span-4 lg:col-start-9">
+              The hotels themselves are being confirmed. We would rather name them late than name
+              them wrong — ask, and we will tell you where things stand.
+            </p>
+          </div>
+        )}
       </div>
     </section>
   );
@@ -316,32 +341,125 @@ export function OnPacing({ detail }: { detail: JourneyDetail }) {
   );
 }
 
-/* -- 8. Practicalities ----------------------------------------------------- */
+/* -- Dates & rates --------------------------------------------------------- */
 
-export function Practicalities({ detail }: { detail: JourneyDetail }) {
+/** How a departure stands for booking, in words. */
+function availability(journey: Journey) {
+  switch (journey.status) {
+    case 'sold-out':
+      return 'Sold out · waitlist open';
+    case 'waitlist':
+      return 'Waitlist';
+    case 'past':
+      return 'Departed';
+    default:
+      return journey.detail?.spotsLeft
+        ? `${journey.detail.spotsLeft} places left`
+        : 'Open for enquiries';
+  }
+}
+
+/**
+ * Dates & Rates, A&K-style: each departure as a row — dates, length, group,
+ * the rate and where it stands — with the way to enquire on the row. Below
+ * it, what the rate includes and what it does not.
+ */
+export function DatesAndRates({ journey, cta }: { journey: Journey; cta: string }) {
+  const detail = journey.detail;
+  const departed = journey.status === 'past';
+
   return (
-    <section aria-labelledby="included-title" className="py-section-sm">
-      <div className="container-site grid-site gap-y-block">
-        <Reveal className="col-span-4 md:col-span-8 lg:col-span-7">
-          <SectionLabel className="mb-stack">Practicalities</SectionLabel>
-          <h2 id="included-title" className="h3 mb-block">
-            What’s included
+    <section id="dates" aria-labelledby="dates-title" className="py-section-sm">
+      <div className="container-site">
+        <SectionLabel className="mb-stack">Dates &amp; Rates</SectionLabel>
+        <Reveal variant="mask" className="mb-block">
+          <h2 id="dates-title" className="h2 max-w-[22ch]">
+            {departed ? 'This departure has run.' : 'Dates and rates for this journey.'}
           </h2>
-          <FactList
-            labelWidth={200}
-            rows={detail.included.map((item) => ({ label: item.label, value: item.value }))}
-          />
         </Reveal>
-        <Reveal
-          delay={0.1}
-          className="col-span-4 md:col-span-6 lg:col-span-4 lg:col-start-9 lg:pt-[calc(var(--spacing-block)+3.5rem)]"
-        >
-          <h3 className="kicker mb-4">Not included</h3>
-          <p className="prose-body-sm measure mb-stack">{notIncluded(detail.notIncluded)}</p>
-          <ButtonLink href="/booking-terms" variant="rule" arrow>
-            Booking terms
-          </ButtonLink>
-        </Reveal>
+
+        <table className="mb-6 w-full border-collapse text-left">
+          <thead className="sr-only md:not-sr-only">
+            <tr className="border-b border-ink">
+              {['Departure', 'Length', 'Group', 'From', 'Availability'].map((h) => (
+                <th key={h} scope="col" className="kicker-sm pb-3 pr-6 font-medium text-muted">
+                  {h}
+                </th>
+              ))}
+              <th scope="col" className="pb-3">
+                <span className="sr-only">Enquire</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="grid grid-cols-2 gap-x-6 gap-y-4 border-b border-line py-6 md:table-row md:py-0">
+              <th scope="row" className="col-span-2 py-0 pr-6 text-left font-normal md:py-6">
+                <span className="kicker-sm mb-1.5 block md:hidden">Departure</span>
+                <span className="h5">{journey.departureWindow}</span>
+              </th>
+              <td className="meta py-0 pr-6 text-body md:py-6">
+                <span className="kicker-sm mb-1.5 block md:hidden">Length</span>
+                {journey.days} days · {journey.days - 1} nights
+              </td>
+              <td className="meta py-0 pr-6 text-body md:py-6">
+                <span className="kicker-sm mb-1.5 block md:hidden">Group</span>
+                Max. {journey.groupMax} guests
+              </td>
+              <td className="meta py-0 pr-6 text-body md:py-6">
+                <span className="kicker-sm mb-1.5 block md:hidden">From</span>
+                <span className="font-semibold text-ink">{journey.priceFrom}</span> per person
+              </td>
+              <td className="meta py-0 pr-6 md:py-6">
+                <span className="kicker-sm mb-1.5 block md:hidden">Availability</span>
+                <StatusTag status={journeyTagStatus(journey)}>{availability(journey)}</StatusTag>
+              </td>
+              <td className="col-span-2 py-0 md:py-6 md:text-right">
+                <ButtonLink href="#enquire" variant="rule" arrow>
+                  {cta}
+                </ButtonLink>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p className="prose-body-sm measure mb-section-sm text-muted">
+          Rates are per person, in US dollars. The same journey can be arranged privately on your
+          own dates —{' '}
+          <Link href="/plan#private" className="underline underline-offset-4 hover:text-ink">
+            ask about private travel
+          </Link>
+          .
+        </p>
+
+        {detail ? (
+          <div className="grid-site gap-y-block">
+            <Reveal className="col-span-4 md:col-span-8 lg:col-span-7">
+              <h3 className="h3 mb-block">What’s included</h3>
+              <FactList
+                labelWidth={200}
+                rows={detail.included.map((item) => ({ label: item.label, value: item.value }))}
+              />
+            </Reveal>
+            <Reveal
+              delay={0.1}
+              className="col-span-4 md:col-span-6 lg:col-span-4 lg:col-start-9 lg:pt-[calc(var(--spacing-block)+3.5rem)]"
+            >
+              <h3 className="kicker mb-4">Not included</h3>
+              <p className="prose-body-sm measure mb-stack">{notIncluded(detail.notIncluded)}</p>
+              <ButtonLink href="/booking-terms" variant="rule" arrow>
+                Booking terms
+              </ButtonLink>
+            </Reveal>
+          </div>
+        ) : (
+          <div className="flex flex-wrap items-baseline gap-x-10 gap-y-4 border-t border-line pt-6">
+            <p className="prose-body-sm measure m-0">
+              What the rate includes is confirmed with the full write-up of the journey.
+            </p>
+            <ButtonLink href="/booking-terms" variant="rule" arrow>
+              Booking terms
+            </ButtonLink>
+          </div>
+        )}
       </div>
     </section>
   );
@@ -495,8 +613,8 @@ export function InPreparation({ journey }: { journey: Journey }) {
                   within a few days.
                 </p>
                 <div className="flex flex-wrap gap-x-8">
-                  <ButtonLink href="#days" variant="rule" arrow>
-                    Day by day
+                  <ButtonLink href="#itinerary" variant="rule" arrow>
+                    Itinerary
                   </ButtonLink>
                   <ButtonLink href="#enquire" variant="rule">
                     Register interest
@@ -526,7 +644,7 @@ export function InPreparation({ journey }: { journey: Journey }) {
   );
 }
 
-/* -- 12. Also on the list -------------------------------------------------- */
+/* -- You may also like ----------------------------------------------------- */
 
 export function RelatedJourneys({ journeys }: { journeys: JourneySummary[] }) {
   if (journeys.length === 0) return null;
@@ -535,42 +653,20 @@ export function RelatedJourneys({ journeys }: { journeys: JourneySummary[] }) {
       <div className="container-site">
         <div className="rule flex flex-wrap items-end justify-between gap-6 pt-section-sm">
           <h2 id="related-title" className="h3">
-            Also on the list
+            You may also like
           </h2>
           <ButtonLink href="/journeys" variant="rule" arrow>
             All journeys
           </ButtonLink>
         </div>
-        <ul className="m-0 mt-block list-none p-0">
-          {journeys.map((journey) => {
-            const tag = journeyTagStatus(journey);
-            return (
-              <li key={journey.slug} className="border-t border-line last:border-b">
-                <Link
-                  href={`/journeys/${journey.slug}`}
-                  className="group grid-site items-center gap-y-5 py-7"
-                >
-                  {/* Text only: the journey's photograph belongs to the Journeys
-                      index, and repeating it here would show it twice. */}
-                  <span className="col-span-4 flex flex-col gap-3 md:col-span-6 lg:col-span-8">
-                    <span className="kicker-sm flex flex-wrap items-center gap-x-4 gap-y-2">
-                      {tag !== 'open' && <StatusTag status={tag} />}
-                      <span>
-                        {journey.country} · {journey.days} days · {journey.departure}
-                      </span>
-                    </span>
-                    <span className="h4 transition-colors duration-300 group-hover:text-acqua-text">
-                      {journey.title}
-                    </span>
-                    <span className="prose-body-sm measure">{journey.lead}</span>
-                  </span>
-                  <span className="link-rule col-span-4 justify-self-start md:col-span-8 lg:col-span-2 lg:col-start-11 lg:justify-self-end">
-                    View the journey
-                  </span>
-                </Link>
-              </li>
-            );
-          })}
+        {/* The card frame, not the list frame: each journey's own page and the
+            Journeys index open on other photographs. */}
+        <ul className="m-0 mt-block grid list-none gap-x-8 gap-y-16 p-0 sm:grid-cols-2 lg:grid-cols-3">
+          {journeys.map((journey) => (
+            <li key={journey.slug}>
+              <JourneyCard journey={journey} media={journey.cardMedia} />
+            </li>
+          ))}
         </ul>
       </div>
     </section>

@@ -17,7 +17,7 @@ export async function GET() {
     '',
     `> ${site.description}`,
     '',
-    `${site.name} (${site.legalName}) designs small-group luxury journeys of no more than ${site.maxGuests} guests, ` +
+    `${site.name} (${site.legalName}) designs small luxury group journeys of no more than ${site.maxGuests} guests, ` +
       `each personally curated by founder ${site.founder.name}, plus private journeys on the traveller's own dates. ` +
       `Based in ${site.locations.replace(' · ', ' and ')}. Founded ${site.founded}. ` +
       'Prices are per person in US dollars. Enquiring commits the traveller to nothing.',

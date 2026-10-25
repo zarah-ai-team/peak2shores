@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { site } from '@/lib/site';
+import { site, whatsappHref } from '@/lib/site';
 
 /**
  * "Speak to an expert", fixed bottom right on the homepage: one tap opens the
@@ -40,8 +40,8 @@ export function ExpertButton() {
           </a>
         )}
         {site.whatsapp && (
-          <a href={`https://wa.me/${site.whatsapp}`} target="_blank" rel="noopener">
-            WhatsApp<span>Message us</span>
+          <a href={whatsappHref() ?? undefined} target="_blank" rel="noopener">
+            WhatsApp<span>Message Peaks2Shores</span>
           </a>
         )}
         <a

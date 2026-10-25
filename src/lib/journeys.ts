@@ -889,7 +889,30 @@ export type JourneySummary = Pick<
   | 'cardMedia'
   | 'promoMedia'
   | 'status'
-> & { isNew: boolean };
+> & { isNew: boolean; stays: JourneyStay[] };
+
+/** One stop of a journey: where we sleep, and for how long. */
+export type JourneyStay = { name: string; nights: string };
+
+/**
+ * Where a journey sleeps, in order: its hotels once the write-up exists,
+ * else the stops of the working day by day (consecutive nights in one place).
+ */
+export function journeyStays(journey: Journey): JourneyStay[] {
+  if (journey.detail)
+    return journey.detail.hotels.map((h) => ({ name: h.name, nights: h.nights ?? '' }));
+  const stops: { name: string; nights: number }[] = [];
+  for (const day of journey.itinerary ?? []) {
+    if (!day.stay || day.stay === '—') continue;
+    const last = stops[stops.length - 1];
+    if (last && last.name === day.stay) last.nights++;
+    else stops.push({ name: day.stay, nights: 1 });
+  }
+  return stops.map((s) => ({
+    name: s.name,
+    nights: `${s.nights} ${s.nights === 1 ? 'night' : 'nights'}`,
+  }));
+}
 
 export function toSummary(journey: Journey): JourneySummary {
   const {
@@ -942,6 +965,7 @@ export function toSummary(journey: Journey): JourneySummary {
     promoMedia,
     status,
     isNew: isNew(journey),
+    stays: journeyStays(journey),
   };
 }
 

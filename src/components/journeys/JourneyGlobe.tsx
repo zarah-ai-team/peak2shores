@@ -98,10 +98,15 @@ export function JourneyGlobe({
   // What the globe frames: a hovered journey, else a chosen country (the globe
   // finds it), else the region chosen here.
   const frame = hover ?? (selected ? null : framed);
-  const framedRegion = regions.findIndex((r) => r.some((p) => p.slug === (frame ?? regions[0]?.[0]?.slug)));
+  const framedRegion = regions.findIndex((r) =>
+    r.some((p) => p.slug === (frame ?? regions[0]?.[0]?.slug)),
+  );
 
   return (
-    <section aria-labelledby="globe-title" className="overflow-hidden border-y border-line bg-panel">
+    <section
+      aria-labelledby="globe-title"
+      className="overflow-hidden border-y border-line bg-panel"
+    >
       <div className="container-site grid-site items-center gap-y-8 py-section-sm lg:min-h-[min(100svh,860px)] lg:py-10">
         <Reveal className="order-2 col-span-4 md:col-span-8 lg:order-1 lg:col-span-4">
           <h2 id="globe-title" className="kicker mb-stack">

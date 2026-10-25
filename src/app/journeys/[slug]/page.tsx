@@ -2,7 +2,10 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Itinerary } from '@/components/journeys/Itinerary';
 import { EnquiryForm } from '@/components/journeys/EnquiryForm';
+import { JourneyMap } from '@/components/journeys/JourneyMap';
+import { JourneyTabs, type JourneyTab } from '@/components/journeys/JourneyTabs';
 import {
+  DatesAndRates,
   FromMarc,
   Gallery,
   Guests,
@@ -11,9 +14,8 @@ import {
   JourneyHero,
   OnPacing,
   Overview,
-  Practicalities,
   RelatedJourneys,
-  WhereYouStay,
+  Stays,
   WhyThisJourney,
 } from '@/components/journeys/JourneySections';
 import {
@@ -95,7 +97,7 @@ export default async function JourneyPage({ params }: Params) {
   const journey = await getJourneyBySlug(slug);
   if (!journey) notFound();
 
-  const [related, site] = await Promise.all([getRelatedJourneys(slug, 2), getSiteSettings()]);
+  const [related, site] = await Promise.all([getRelatedJourneys(slug, 3), getSiteSettings()]);
 
   const url = `${site.url}/journeys/${journey.slug}`;
   const days = journey.detail?.days ?? journey.itinerary ?? [];
@@ -163,6 +165,20 @@ export default async function JourneyPage({ params }: Params) {
 
   const detail = journey.detail;
   const enquiry = enquiryCopy(journey, site.founder.name);
+  const cta =
+    journey.status === 'sold-out' || journey.status === 'waitlist'
+      ? 'Join the waitlist'
+      : 'Enquire';
+
+  /* The A&K menu: Overview │ Itinerary │ Stays │ Dates & Rates. A tab whose
+     section has nothing to show yet is left out rather than linking nowhere. */
+  const hasStays = !!detail || !!journey.itinerary?.some((d) => d.stay && d.stay !== '—');
+  const tabs: JourneyTab[] = [
+    { id: 'overview', label: 'Overview' },
+    ...(days.length ? [{ id: 'itinerary', label: 'Itinerary' }] : []),
+    ...(hasStays ? [{ id: 'stays', label: 'Stays' }] : []),
+    { id: 'dates', label: 'Dates & Rates' },
+  ];
 
   return (
     <>
@@ -173,33 +189,43 @@ export default async function JourneyPage({ params }: Params) {
       />
 
       <JourneyHero journey={journey} />
-      <JourneyFacts journey={journey} />
+      <JourneyTabs tabs={tabs} priceFrom={journey.priceFrom} cta={cta} />
+
+      <div id="overview">
+        <JourneyFacts journey={journey} />
+        {detail ? (
+          <>
+            <Overview detail={detail} />
+            <WhyThisJourney detail={detail} />
+            <JourneyMap journey={journey} />
+            <OnPacing detail={detail} />
+            <FromMarc detail={detail} />
+            <Gallery journey={journey} detail={detail} />
+          </>
+        ) : (
+          <>
+            <InPreparation journey={journey} />
+            <JourneyMap journey={journey} />
+          </>
+        )}
+      </div>
 
       {detail ? (
-        <>
-          <Overview detail={detail} />
-          <WhyThisJourney detail={detail} />
-          <Itinerary days={detail.days} headline={detail.itineraryHeadline} />
-          <WhereYouStay detail={detail} />
-          <OnPacing detail={detail} />
-          <Practicalities detail={detail} />
-          <FromMarc detail={detail} />
-          <Gallery journey={journey} detail={detail} />
-          {detail.quotes.length > 0 && <Guests detail={detail} />}
-        </>
+        <Itinerary days={detail.days} headline={detail.itineraryHeadline} />
       ) : (
-        <>
-          <InPreparation journey={journey} />
-          {journey.itinerary && journey.itinerary.length > 0 && (
-            <Itinerary
-              variant="compact"
-              kicker="Day by day · working plan"
-              days={journey.itinerary}
-              headline={journey.itineraryHeadline ?? 'Day by day.'}
-            />
-          )}
-        </>
+        journey.itinerary &&
+        journey.itinerary.length > 0 && (
+          <Itinerary
+            variant="compact"
+            kicker="Itinerary · working plan"
+            days={journey.itinerary}
+            headline={journey.itineraryHeadline ?? 'Day by day.'}
+          />
+        )
       )}
+      <Stays journey={journey} />
+      <DatesAndRates journey={journey} cta={cta} />
+      {detail && detail.quotes.length > 0 && <Guests detail={detail} />}
 
       <RelatedJourneys journeys={related} />
 

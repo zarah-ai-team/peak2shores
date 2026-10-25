@@ -7,9 +7,9 @@ import { getJourneySummaries, getSiteSettings, pageMetadata } from '@/lib/conten
 export const revalidate = 3600;
 
 export const metadata = pageMetadata({
-  title: 'Journeys',
+  title: 'Small Luxury Group Journeys',
   description:
-    'A short list, on purpose. Small-group luxury journeys of no more than 18 guests, each one somewhere Marc Haeni knows well.',
+    'Intimate journeys for no more than 18 guests — exceptional places, meaningful experiences and the joy of discovering the world together, each one somewhere Marc Haeni knows well.',
   path: '/journeys',
 });
 
@@ -19,9 +19,10 @@ export default async function JourneysPage() {
 
   return (
     <>
-      <PageTitle kicker="Journeys" title="A short list, on purpose.">
-        {journeys.length} journeys on the calendar. Each limited to {site.maxGuests} guests, each
-        one somewhere Marc knows well. If nothing here fits, we also design private journeys.
+      <PageTitle kicker="Small Luxury Group Journeys" title="A short list, on purpose.">
+        Intimate journeys for no more than {site.maxGuests} guests, bringing together exceptional
+        places, meaningful experiences and the joy of discovering the world together.{' '}
+        {journeys.length} on the calendar, each one somewhere Marc knows well.
       </PageTitle>
 
       <JourneyExplorer journeys={journeys} />

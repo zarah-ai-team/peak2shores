@@ -2,7 +2,7 @@ export const site = {
   name: 'Peaks2Shores',
   tagline: 'Luxury travel, personally curated.',
   description:
-    'Small-group luxury journeys of no more than 18 guests, personally curated by Marc Haeni. Fewer, better journeys to the places one person actually knows.',
+    'Small luxury group journeys of no more than 18 guests, personally curated by Marc Haeni. Fewer, better journeys to the places one person actually knows.',
   url: 'https://peaks2shores.com',
   founded: 2022,
   maxGuests: 18,
@@ -53,6 +53,19 @@ export const site = {
     role: 'Founder',
   },
 } as const;
+
+/**
+ * The WhatsApp link, or null while no number is set. It opens the chat with a
+ * first message already naming Peaks2Shores, so both sides know who the
+ * conversation is with. (What the visitor sees as the chat's name comes from
+ * the WhatsApp Business profile on Marc's number — set it to "Peaks2Shores"
+ * with the logo as its photo.)
+ */
+export function whatsappHref(): string | null {
+  if (!site.whatsapp) return null;
+  const text = `Hello ${site.name}, I’d like to talk about a journey.`;
+  return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`;
+}
 
 export type NavItem = { label: string; href: string };
 

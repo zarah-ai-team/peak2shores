@@ -18,12 +18,10 @@ export function WhyPeaks() {
   return (
     <section className="hc-why" aria-labelledby="why-title">
       <div className="head dk">
+        {/* The name is the heading; the line under it is its subtitle. */}
         <div>
-          <div className="lab">Why Peaks2Shores</div>
-          <h2 id="why-title">
-            It’s not about seeing more of the world. It’s about the moments that bring a journey to
-            life.
-          </h2>
+          <h2 id="why-title">Why Peaks2Shores</h2>
+          <p className="sub">The moments that bring a journey to life.</p>
         </div>
         <div className="nav" style={{ display: 'flex', gap: 10 }}>
           <button
@@ -73,9 +71,6 @@ export function WhyPeaks() {
       <div className="ctarow left">
         <Link className="btn btn-ink" href="/our-story">
           How we travel
-        </Link>
-        <Link className="tlink" href="/journeys">
-          Explore Journeys →
         </Link>
       </div>
     </section>

@@ -5,7 +5,7 @@ import { site } from '@/lib/site';
 export const metadata = {
   ...pageMetadata({
     title: 'Booking terms',
-    description: `Booking terms and conditions for ${site.name} small-group journeys: deposit, payment schedule, cancellation and travel insurance.`,
+    description: `Booking terms and conditions for ${site.name} small luxury group journeys: deposit, payment schedule, cancellation and travel insurance.`,
     path: '/booking-terms',
   }),
   robots: legalRobots,

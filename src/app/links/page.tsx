@@ -64,7 +64,7 @@ export default async function LinksPage() {
         <p className="kicker mb-4">From Instagram</p>
         <h1 className="h3 mb-4">Fewer, better journeys.</h1>
         <p className="prose-body mb-block">
-          Small-group journeys of no more than {site.maxGuests} guests, personally curated by{' '}
+          Small luxury group journeys of no more than {site.maxGuests} guests, personally curated by{' '}
           {site.founder.name}.
         </p>
 

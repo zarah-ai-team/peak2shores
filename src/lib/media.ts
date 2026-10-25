@@ -144,7 +144,7 @@ export const media = {
     alt: 'A quiet stone lane in an old Tuscan village, lined with potted plants',
   },
   'ex-4': {
-    label: 'Move',
+    label: 'Explore',
     brief: 'A ridge trail or a sailboat, two people, wide.',
     tone: '#7f8c85',
     alt: 'A lone sailboat on calm open sea',
@@ -248,7 +248,7 @@ export const media = {
     alt: 'Chapel Bridge and Water Tower on the clear Reuss, Lucerne',
   },
   'exp-move': {
-    label: 'Move',
+    label: 'Explore',
     brief: 'On foot, on the water or on safari — the outdoors. Wide.',
     tone: '#7f8c85',
     src: '/images/drive/botswana-chobe-wild-dogs.jpg',
@@ -341,6 +341,108 @@ export const media = {
     brief: 'A bright, wide Mediterranean coastline — room for type over it.',
     tone: '#3f7f93',
     alt: '',
+  },
+
+  /* ---- Home, Marc's update of 23 October 2026 ----------------------------
+     Marc's own photographs, from the shared Google Drive. Save each one as
+     public/images/<slot>.jpg and run `npm run images`; until a file lands the
+     homepage keeps the frame (or film) it shows today. A slot with `src`
+     already has a photograph of the same place standing in. */
+  'client-way-group': {
+    label: 'Ways · Small luxury group journeys',
+    brief: 'Drive › Destinations › Kenya — the group journeys frame Marc chose. A still, no film.',
+    tone: '#8a7a5c',
+    alt: 'Guests together on a small-group journey in Kenya',
+  },
+  'client-way-cruises': {
+    label: 'Ways · Cruises',
+    brief: 'Drive › Cruises — the cruise frame Marc chose.',
+    tone: '#3f8da0',
+    alt: 'A luxury yacht on open water',
+  },
+  'client-way-events': {
+    label: 'Ways · Sports & events',
+    brief: 'Drive › Sport & Event — the events frame Marc chose.',
+    tone: '#6f7a63',
+    alt: 'Guests at a sporting event',
+  },
+  'client-way-villas': {
+    label: 'Ways · Private villas',
+    brief: 'Drive › Private Villas — the villa frame Marc chose.',
+    tone: '#a59a82',
+    alt: 'A private villa in an extraordinary setting',
+  },
+  'client-why-curated': {
+    label: 'Why · Personally curated',
+    brief: 'Drive › Marc — Marc on the road.',
+    tone: '#7f9aa3',
+    alt: 'Marc Haeni on one of his journeys',
+  },
+  'client-why-paced': {
+    label: 'Why · Thoughtfully paced',
+    brief: 'Drive › Egypt — the frame Marc chose.',
+    tone: '#b39e74',
+    alt: 'An unhurried moment in Egypt',
+  },
+  'client-why-moments': {
+    label: 'Why · Meaningful experiences',
+    brief: 'Drive › Morocco — the frame Marc chose.',
+    tone: '#a8785a',
+    alt: 'An experience in Morocco',
+  },
+  'client-why-local': {
+    label: 'Why · Local connections',
+    brief: 'Drive › Kenya — the frame Marc chose.',
+    tone: '#8a7a5c',
+    alt: 'Guests with local friends in Kenya',
+  },
+  'client-peaks': {
+    label: 'Name · Peaks',
+    brief: 'Drive › Marc — the "Peaks" photograph of Marc in the Alps. Wide, subject on the left.',
+    tone: '#31383c',
+    alt: 'Marc Haeni in the Swiss Alps',
+  },
+  'client-shores': {
+    label: 'Name · Shores',
+    brief:
+      'Drive › Marc — the "Shores" photograph of Marc on the coast. Wide, subject on the right.',
+    tone: '#2f7f8f',
+    alt: 'Marc Haeni on the shore in Miami',
+  },
+  'client-hotel-lucerne': {
+    label: 'Stay · Mandarin Oriental Palace, Lucerne',
+    brief: 'Drive — Mandarin Oriental Palace, Lucerne. Upright crop.',
+    tone: '#5d7a78',
+    src: '/images/drive/switzerland-lake-lucerne-grand-hotel.jpg',
+    alt: 'The Belle Époque façade of the Mandarin Oriental Palace on Lake Lucerne',
+  },
+  'client-hotel-stresa': {
+    label: 'Stay · Hotel La Palma, Stresa',
+    brief: 'Drive — Hotel La Palma, Stresa. Upright crop.',
+    tone: '#4f7f95',
+    src: '/images/drive/italy-stresa-sky-pool.jpg',
+    alt: 'The rooftop infinity pool of Hotel La Palma above Lake Maggiore',
+  },
+  'client-hotel-victoria-falls': {
+    label: 'Stay · The Palm River Hotel, Victoria Falls',
+    brief: 'Drive — The Palm River Hotel, Victoria Falls. Upright crop.',
+    tone: '#6b5f4a',
+    src: '/images/drive/zimbabwe-palm-river-hotel-interior.jpg',
+    alt: 'The colonial dining room of The Palm River Hotel on the Zambezi',
+  },
+  'client-hotel-rovinj': {
+    label: 'Stay · Grand Park Hotel Rovinj',
+    brief: 'Drive — Grand Park Hotel Rovinj. Upright crop.',
+    tone: '#4f7f95',
+    src: '/images/drive/croatia-rovinj-grand-park-pool.jpg',
+    alt: 'Poolside loungers at Grand Park Hotel Rovinj, the old town across the water',
+  },
+  'client-hotel-vipingo': {
+    label: 'Stay · Cardamom House, Vipingo',
+    brief: 'Drive — Cardamom House, Vipingo. Upright crop.',
+    tone: '#a59a82',
+    src: '/images/home/hotel-cardamom.jpg',
+    alt: 'Cardamom House, a thatched white villa among trees and bougainvillea',
   },
 
   /* ---- Home, all departures (one small bright frame per journey) ------- */
@@ -887,4 +989,9 @@ export function getMedia(key: MediaKey): MediaSlot {
   // A file dropped into public/images/ wins over anything declared here.
   const found = discovered[key];
   return found ? { ...slot, ...found } : slot;
+}
+
+/** Whether a photograph has been dropped into public/images/ for this slot. */
+export function hasPhoto(key: MediaKey): boolean {
+  return key in discovered;
 }

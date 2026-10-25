@@ -1,17 +1,11 @@
 'use client';
 
-import Link from 'next/link';
 import { useMemo, useRef, useState } from 'react';
 import * as m from 'motion/react-m';
-import { Frame } from '@/components/ui/Frame';
-import { Reveal } from '@/components/motion/Reveal';
-import { MetaItem } from '@/components/ui/Editorial';
-import { Arrow, ButtonLink } from '@/components/ui/Button';
-import { StatusTag } from '@/components/ui/StatusTag';
-import { journeyTagStatus } from '@/components/pages/journeyStatus';
+import { ButtonLink } from '@/components/ui/Button';
 import { filterGroups, type FilterKey, type JourneySummary } from '@/lib/journeys';
 import { ease } from '@/lib/motion';
-import { site } from '@/lib/site';
+import { JourneyListing } from './JourneyCard';
 import { JourneyGlobe } from './JourneyGlobe';
 
 type Selection = Partial<Record<FilterKey, string>>;
@@ -24,8 +18,9 @@ type Selection = Partial<Record<FilterKey, string>>;
  *    band's list or a row below) flies the globe to it.
  * 2. A slim sticky filter bar: one dropdown per group in a single row, the
  *    count and Clear beside them. One option per group; "Any" clears it.
- * 3. Editorial rows, photograph alternating sides, a rule between each.
- *    A filter change fades the list in (no layout animation).
+ * 3. The journeys as horizontal listings, A&K-style: photograph left, then
+ *    overview, stays, dates and price, one standard row each. A filter change
+ *    fades the list in (no layout animation).
  *
  * Takes summaries, not whole journeys: itineraries and hotel notes never
  * reach the browser for this page.
@@ -163,15 +158,18 @@ export function JourneyExplorer({ journeys }: { journeys: JourneySummary[] }) {
           className="container-site"
         >
           {visible.length > 0 ? (
-            <ol className="m-0 list-none p-0">
+            <ol className="m-0 list-none p-0 pt-block">
               {visible.map((journey, i) => (
-                <li key={journey.slug} className="border-b border-line last:border-b-0">
-                  <JourneyRow
-                    journey={journey}
-                    flip={i % 2 === 1}
-                    first={journey.slug === journeys[0]?.slug}
-                    onHover={setHover}
-                  />
+                // Pointing at a card flies the globe to it.
+                <li
+                  key={journey.slug}
+                  className="border-b border-line pb-block [&+li]:pt-block last:border-b-0"
+                  onPointerEnter={() => setHover(journey.slug)}
+                  onPointerLeave={() => setHover(null)}
+                  onFocus={() => setHover(journey.slug)}
+                  onBlur={() => setHover(null)}
+                >
+                  <JourneyListing journey={journey} priority={i === 0} />
                 </li>
               ))}
             </ol>
@@ -202,97 +200,5 @@ export function JourneyExplorer({ journeys }: { journeys: JourneySummary[] }) {
         </m.div>
       </section>
     </>
-  );
-}
-
-function JourneyRow({
-  journey,
-  flip,
-  first,
-  onHover,
-}: {
-  journey: JourneySummary;
-  flip: boolean;
-  /** The top row of the full list is the page's largest paint, so it loads eagerly. */
-  first: boolean;
-  /** Tells the globe which journey the reader is looking at. */
-  onHover: (slug: string | null) => void;
-}) {
-  const titleId = `journey-${journey.slug}-title`;
-  const tag = journeyTagStatus(journey);
-  const hosted = journey.tags.includes('Hosted by Marc');
-
-  return (
-    <Link
-      href={`/journeys/${journey.slug}`}
-      aria-labelledby={titleId}
-      onPointerEnter={() => onHover(journey.slug)}
-      onPointerLeave={() => onHover(null)}
-      onFocus={() => onHover(journey.slug)}
-      onBlur={() => onHover(null)}
-      className="group grid-site items-center gap-y-8 py-block"
-    >
-      {/* The photograph eases in closer on hover or focus; a caption rises over it. */}
-      <div
-        className={`relative isolate col-span-4 overflow-hidden md:col-span-6 lg:col-span-6 ${
-          flip ? 'md:col-start-3 lg:order-2 lg:col-start-7' : ''
-        }`}
-      >
-        <Frame
-          ratio="4/5"
-          media={journey.listMedia}
-          hover
-          decorative
-          priority={first}
-          sizes="(min-width: 1024px) 50vw, 100vw"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-gradient-to-t from-forest-deep/70 via-forest-deep/25 to-transparent px-6 pb-6 pt-24 text-on-dark opacity-0 transition-[opacity,transform] duration-700 ease-[var(--ease-editorial)] motion-safe:translate-y-3 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
-        >
-          <span className="kicker-sm !text-on-dark">
-            {journey.region} · {journey.departure}
-          </span>
-          <span className="kicker-sm inline-flex items-center gap-2 !text-on-dark">
-            View the journey
-            <Arrow />
-          </span>
-        </div>
-      </div>
-
-      <Reveal
-        distance={16}
-        delay={0.08}
-        className={`col-span-4 flex flex-col md:col-span-8 lg:col-span-5 ${
-          flip ? 'lg:order-1 lg:col-start-1' : 'lg:col-start-8'
-        }`}
-      >
-        {tag !== 'open' && <StatusTag status={tag} className="mb-4" />}
-        <p className="kicker mb-5">
-          {journey.country} · {journey.days} days · {journey.departure}
-        </p>
-        <h2
-          id={titleId}
-          className="h3 mb-5 max-w-[16ch] transition-colors duration-300 group-hover:text-acqua-text"
-        >
-          {journey.title}
-        </h2>
-        <p className="lead measure-lead mb-4">{journey.lead}</p>
-        <p className="prose-body measure mb-7">{journey.blurb}</p>
-
-        <div className="mb-7 flex flex-wrap gap-x-10 gap-y-4 border-t border-line pt-5">
-          <MetaItem label="Group">Max. {journey.groupMax} guests</MetaItem>
-          {hosted && <MetaItem label="Hosted by">{site.founder.name}</MetaItem>}
-          <MetaItem label="From">
-            <span className="font-semibold text-ink">{journey.priceFrom}</span> per person
-          </MetaItem>
-        </div>
-
-        <span className="link-rule self-start">
-          View the journey
-          <Arrow />
-        </span>
-      </Reveal>
-    </Link>
   );
 }

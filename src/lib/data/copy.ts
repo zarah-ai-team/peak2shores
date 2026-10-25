@@ -186,8 +186,8 @@ export const experiences: Experience[] = [
     media: 'ex-3',
   },
   {
-    slug: 'move',
-    title: 'Move',
+    slug: 'explore',
+    title: 'Explore',
     body: 'Hiking, sailing, cycling, nature, the outdoors.',
     media: 'ex-4',
   },

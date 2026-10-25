@@ -1,11 +1,12 @@
-import { getMedia } from '@/lib/media';
+import { getMedia, hasPhoto, type MediaKey } from '@/lib/media';
 
 /**
  * The homepage copy and media, as laid out in Sample C ("Marc's flow",
- * October 2026). Copy is Marc's own; film and stills are his footage and the
- * frames chosen with him, in public/video/home and public/images/home. Where
- * the sample repeated a photograph, a licensed 4K still from the registry
- * (media.ts → credits.json) stands in, so every frame on the page is shown once.
+ * October 2026) and revised in Marc's update of 23 October 2026. Copy is
+ * Marc's own; film and stills are his footage and the frames chosen with him,
+ * in public/video/home and public/images/home. Where the sample repeated a
+ * photograph, a licensed 4K still from the registry (media.ts → credits.json)
+ * stands in, so every frame on the page is shown once.
  */
 
 export type HomeVisual = {
@@ -21,23 +22,58 @@ const still = (key: Parameters<typeof getMedia>[0]): Pick<HomeVisual, 'img' | 'a
   return { img: slot.src ?? '', alt: slot.alt ?? '' };
 };
 
-/* 01 — The reel: Italy, the Alps, safari, the Adriatic (Marc's order). */
-export const reel = [
+/**
+ * Marc's own photograph for a slot once its file has landed (a still: his
+ * frames replace the film), and the frame the page shows today until then.
+ */
+const marcs = (key: MediaKey, today: HomeVisual): HomeVisual =>
+  hasPhoto(key) ? still(key) : today;
+
+export type ReelClip = {
+  place: string;
+  video: string;
+  img: string;
+  /** Where in the clip to begin, in seconds. */
+  start?: number;
+};
+
+/**
+ * 01 — The reel, in Marc's order: safari, Switzerland, Positano, Hvar.
+ *
+ * Positano and Hvar are licensed Shutterstock clips (4088645319 from 0:27,
+ * 4150349679 from 0:02), saved as reel-positano.mp4 / reel-hvar.mp4 with a
+ * poster frame beside them in public/images/home. Until a file is there the
+ * page resolves the clip to `fallback` (HomePage, on the server), so the reel
+ * never points at a missing file.
+ */
+export const reel: (ReelClip & { fallback?: ReelClip })[] = [
+  { place: 'On safari', video: '/video/home/reel-safari.mp4', img: '/images/home/reel-safari.jpg' },
   {
-    place: 'Capri · Italy',
-    video: '/video/home/reel-capri.mp4',
-    img: '/images/home/reel-capri.jpg',
-  },
-  {
-    place: 'The mountains, by rail',
+    place: 'Switzerland, by rail',
     video: '/video/home/reel-rail.mp4',
     img: '/images/home/reel-rail.jpg',
   },
-  { place: 'On safari', video: '/video/home/reel-safari.mp4', img: '/images/home/reel-safari.jpg' },
   {
-    place: 'The Adriatic',
-    video: '/video/home/reel-adriatic.mp4',
-    img: '/images/home/reel-adriatic.jpg',
+    place: 'Positano · Italy',
+    video: '/video/home/reel-positano.mp4',
+    img: '/images/home/reel-positano.jpg',
+    start: 27,
+    fallback: {
+      place: 'Capri · Italy',
+      video: '/video/home/reel-capri.mp4',
+      img: '/images/home/reel-capri.jpg',
+    },
+  },
+  {
+    place: 'Hvar · Croatia',
+    video: '/video/home/reel-hvar.mp4',
+    img: '/images/home/reel-hvar.jpg',
+    start: 2,
+    fallback: {
+      place: 'The Adriatic',
+      video: '/video/home/reel-adriatic.mp4',
+      img: '/images/home/reel-adriatic.jpg',
+    },
   },
 ];
 
@@ -45,17 +81,20 @@ export const reel = [
 export const ways: (HomeVisual & { title: string; line: string; href: string; lead?: boolean })[] =
   [
     {
-      title: 'Curated Group Journeys',
-      line: 'Thoughtfully paced journeys that bring a small group of like-minded travellers together for extraordinary shared experiences.',
+      title: 'Small Luxury Group Journeys',
+      line: 'Intimate journeys for no more than 18 guests, bringing together exceptional places, meaningful experiences and the joy of discovering the world together.',
       href: '/journeys',
-      video: '/video/home/way-group.mp4',
-      img: '/images/home/way-group.jpg',
-      alt: 'A table laid for a long lunch, candles and flowers',
+      // Marc's Kenya frame is a still; the film goes once it lands.
+      ...marcs('client-way-group', {
+        video: '/video/home/way-group.mp4',
+        img: '/images/home/way-group.jpg',
+        alt: 'A table laid for a long lunch, candles and flowers',
+      }),
       lead: true,
     },
     {
-      title: 'Private Journeys',
-      line: 'Journeys designed around you — personal, seamless and shaped by the way you want to experience the world.',
+      title: 'Private Travel',
+      line: 'Bespoke destinations, exceptional stays and authentic experiences — exclusively designed around you and the way you love to travel.',
       href: '/plan#private',
       video: '/video/home/way-private.mp4',
       img: '/images/home/way-private.jpg',
@@ -71,25 +110,31 @@ export const ways: (HomeVisual & { title: string; line: string; href: string; le
     },
     {
       title: 'Cruises',
-      line: 'Extraordinary journeys on the water — from intimate yachts to ocean and river voyages, enriched by immersive experiences ashore.',
+      line: 'Discover extraordinary destinations aboard handpicked luxury yachts, intimate cruises and elegant river voyages, with exceptional experiences both onboard and ashore.',
       href: '/plan#private',
-      video: '/video/home/way-cruises.mp4',
-      ...still('home-way-cruises'),
+      ...marcs('client-way-cruises', {
+        video: '/video/home/way-cruises.mp4',
+        ...still('home-way-cruises'),
+      }),
     },
     {
       title: 'Sports & Events',
-      line: 'Be there for the moments that matter — extraordinary sporting and cultural events transformed into unforgettable journeys.',
+      line: 'Iconic sporting events, extraordinary cultural celebrations and exceptional travel experiences — thoughtfully brought together in one unforgettable journey.',
       href: '/plan#private',
-      video: '/video/home/way-events.mp4',
-      img: '/images/home/way-events.jpg',
-      alt: 'A polo match on an English summer lawn',
+      ...marcs('client-way-events', {
+        video: '/video/home/way-events.mp4',
+        img: '/images/home/way-events.jpg',
+        alt: 'A polo match on an English summer lawn',
+      }),
     },
     {
       title: 'Private Villas',
-      line: 'Exceptional homes in extraordinary places — where privacy, space and a true sense of place come together.',
+      line: 'Handpicked villas in extraordinary settings — where privacy, personalized service and unforgettable moments come together.',
       href: '/plan#private',
-      video: '/video/home/way-villas.mp4',
-      ...still('home-way-villas'),
+      ...marcs('client-way-villas', {
+        video: '/video/home/way-villas.mp4',
+        ...still('home-way-villas'),
+      }),
     },
   ];
 
@@ -97,89 +142,125 @@ export const ways: (HomeVisual & { title: string; line: string; href: string; le
 export const statement = {
   before: 'The journeys we remember most aren’t measured by how much we see, but by how ',
   emphasis: 'deeply',
-  after: ' we experience a place.',
+  after: ' we experience the moments along the way.',
 };
 
 /* 06 — Why Peaks2Shores. */
 export const principles: (HomeVisual & { title: string; line: string })[] = [
   {
     title: 'Personally curated',
-    line: 'Every journey selected and designed by Marc — never simply added to a catalogue.',
-    ...still('home-curated'),
+    line: 'Every journey begins with a personal passion for travel, shaped by decades of experience and personal connections to the places we explore.',
+    ...marcs('client-why-curated', still('home-curated')),
   },
   {
     title: 'Thoughtfully paced',
-    line: 'Enough time to genuinely experience a place, with free time built in on purpose.',
-    img: '/images/home/why-paced.jpg',
-    alt: 'An empty chair at the end of a jetty on a misty lake',
+    line: 'Beautifully balanced journeys, allowing time to explore, unwind and truly immerse yourself in each destination.',
+    ...marcs('client-why-paced', {
+      img: '/images/home/why-paced.jpg',
+      alt: 'An empty chair at the end of a jetty on a misty lake',
+    }),
   },
   {
     title: 'Meaningful experiences',
-    line: 'The moments that bring a journey to life, rather than a checklist of sights.',
-    img: '/images/home/why-moments.jpg',
-    alt: 'A dhow under sail off a palm-fringed coast at dusk',
+    line: 'Immersive experiences, authentic encounters and exceptional stays that create unforgettable memories long after the journey ends.',
+    ...marcs('client-why-moments', {
+      img: '/images/home/why-moments.jpg',
+      alt: 'A dhow under sail off a palm-fringed coast at dusk',
+    }),
   },
   {
     title: 'Local connections',
-    line: 'People we have known for years, who open doors no guidebook can.',
-    video: '/video/home/why-local.mp4',
-    img: '/images/home/why-local.jpg',
-    alt: 'Guests in a wine cellar',
+    line: 'People we’ve known and trusted for years, opening doors to experiences no guidebook can offer.',
+    ...marcs('client-why-local', {
+      video: '/video/home/why-local.mp4',
+      img: '/images/home/why-local.jpg',
+      alt: 'Guests in a wine cellar',
+    }),
   },
 ];
 
 /* 07 — The name. */
 export const peaksShores = {
-  between: 'Between them sit the places we love most: where mountains, lakes and oceans meet.',
+  between:
+    'Inspired by a journey from the Swiss Alps to the shores of Miami, and a lifelong passion for the extraordinary places in between.',
   peaks: {
-    line: 'Peaks is where the journey began — the Alps, childhood, the outdoors.',
-    video: '/video/home/peaks.mp4',
-    img: '/images/home/peaks.jpg',
+    line: 'Rooted in Switzerland, where a childhood surrounded by the Alps inspired a lifelong passion for mountains, nature and discovery.',
+    ...marcs('client-peaks', {
+      video: '/video/home/peaks.mp4',
+      img: '/images/home/peaks.jpg',
+      alt: '',
+    }),
   },
   shores: {
-    line: 'Shores is where it lives now — Miami, the ocean, a different light.',
-    ...still('home-cove'),
+    line: 'Where the journey continued — Miami, my second home for over 25 years, inspiring a lifelong love for oceans, beautiful coastlines and diverse cultures.',
+    ...marcs('client-shores', still('home-cove')),
   },
 };
 
 /* 07b — The founder. */
 export const founderStory = {
-  headline: 'From the peaks of Switzerland to the shores of Miami.',
-  body: 'Marc Haeni was born and raised in Switzerland and lives in Miami. More than 25 years in international travel have given him the destination knowledge and trusted relationships behind every journey — and the reason each one is selected and designed, never simply added to a catalogue.',
+  headline: 'A lifetime of travel. A passion for extraordinary journeys.',
+  body: 'Born and raised in Switzerland and based in Miami for over 25 years, founder Marc Haeni brings decades of international travel experience, trusted relationships and a genuine passion for discovering extraordinary destinations. Every Peaks2Shores journey reflects that experience — thoughtfully designed, personally curated and created to inspire lasting memories.',
   portrait: still('marc-portrait'),
 };
 
-/* 08 — Hotels, lodges & camps. A bracketed value is still to come from Marc. */
+/* 08 — Hotels, lodges & camps: five places Marc names, each in his words. */
 export const hotels: (HomeVisual & {
   place: string;
   name: string;
   signature: string;
   nearby: string;
+  /** A second view of the place, on the turned-over side. Falls back to the front. */
+  back?: string;
 })[] = [
   {
-    place: 'Lake Lucerne, Switzerland',
-    name: 'A lakeside grand hotel',
-    signature: 'The lake bath — a wooden jetty and a cold swim before breakfast.',
-    nearby: 'The Bürgenstock ridge walk, an hour on foot from the door.',
-    img: '/images/home/hotel-lakeside.jpg',
-    alt: 'A grand hotel terrace above a misty lake at dawn',
+    place: 'Lucerne | Switzerland',
+    name: 'Mandarin Oriental Palace',
+    signature:
+      'Belle Époque elegance meets contemporary luxury, with spectacular views across Lake Lucerne and the Swiss Alps.',
+    nearby:
+      'Explore Lucerne’s charming Old Town, discover the “Queen of the Mountains,” or cruise across the lake into the heart of the Swiss Alps.',
+    ...still('client-hotel-lucerne'),
+    back: '/images/drive/switzerland-lake-lucerne-balcony-view.jpg',
   },
   {
-    place: 'Southern Africa',
-    name: 'A safari lodge',
-    signature: '[Signature detail — from Marc]',
-    nearby: '[Nearby — from Marc]',
-    video: '/video/home/hotel-lodge.mp4',
-    img: '/images/home/hotel-lodge.jpg',
-    alt: 'An elephant drinking at a lodge pool',
+    place: 'Stresa | Italy',
+    name: 'Hotel La Palma',
+    signature:
+      'Contemporary lakeside elegance on the shores of Lake Maggiore, featuring a spectacular rooftop Sky Bar and infinity pool with breathtaking Alpine views.',
+    nearby:
+      'Explore the enchanting Borromean Islands, stroll through Stresa’s charming lakeside streets, or venture into the surrounding mountains for spectacular panoramic views.',
+    ...still('client-hotel-stresa'),
+    back: '/images/drive/italy-stresa-sky-bar.jpg',
   },
   {
-    place: 'Vipingo, Kenyan coast',
+    place: 'Victoria Falls | Zimbabwe',
+    name: 'The Palm River Hotel',
+    signature:
+      'Understated riverside luxury on the banks of the Zambezi, where lush gardens meet the wilderness and elephants occasionally wander past.',
+    nearby:
+      'Marvel at the thundering Victoria Falls, enjoy a sunset cruise along the Zambezi, or discover the wildlife of nearby Zambezi National Park.',
+    ...still('client-hotel-victoria-falls'),
+    back: '/images/drive/zimbabwe-zambezi-sunset-cruise.jpg',
+  },
+  {
+    place: 'Rovinj | Croatia',
+    name: 'Grand Park Hotel Rovinj',
+    signature:
+      'Contemporary Mediterranean elegance overlooking Rovinj’s picturesque Old Town, where breathtaking Adriatic views meet exceptional design and understated luxury.',
+    nearby:
+      'Wander Rovinj’s charming cobblestone streets, explore the beautiful Istrian countryside with its vineyards and truffle treasures, or sail along the Adriatic coast.',
+    ...still('client-hotel-rovinj'),
+    back: '/images/drive/croatia-rovinj-grand-park-room.jpg',
+  },
+  {
+    place: 'Vipingo | Kenya',
     name: 'Cardamom House',
-    signature: '[Signature detail — from Marc]',
-    nearby: '[Nearby — from Marc]',
-    img: '/images/home/hotel-cardamom.jpg',
-    alt: 'A thatched white villa among trees and bougainvillea',
+    signature:
+      'An intimate coastal hideaway overlooking the Indian Ocean, where Swahili-inspired elegance, barefoot luxury and warm Kenyan hospitality create a truly personal escape.',
+    nearby:
+      'Discover pristine beaches and turquoise waters, explore the vibrant Swahili culture of the Kenyan coast, or sail the Indian Ocean aboard a traditional dhow.',
+    ...still('client-hotel-vipingo'),
   },
 ];
 
@@ -205,7 +286,7 @@ export const experiences: (HomeVisual & { word: string; line: string })[] = [
     alt: '',
   },
   {
-    word: 'Move',
+    word: 'Explore',
     line: 'Hiking, sailing, cycling and skiing — the outdoors, at your own pace.',
     video: '/video/home/xp-move.mp4',
     img: '/images/home/xp-move.jpg',

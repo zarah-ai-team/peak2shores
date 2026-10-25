@@ -74,7 +74,9 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 function regions(pins: GlobePin[], fit: number) {
   const groups: GlobePin[][] = [];
   for (const pin of pins) {
-    const near = groups.find((g) => geoDistance(g[0].coords, pin.coords) < (REGION_DEG * Math.PI) / 180);
+    const near = groups.find(
+      (g) => geoDistance(g[0].coords, pin.coords) < (REGION_DEG * Math.PI) / 180,
+    );
     if (near) near.push(pin);
     else groups.push([pin]);
   }
@@ -208,9 +210,8 @@ export function Globe({
   const target = (): View | null => {
     const L = live.current;
     if (!L.width) return null;
-    const all = regions(L.pins, 0.42 * Math.min(L.width, L.height) / baseRadius(L));
-    const want =
-      L.frame ?? L.pins.find((p) => p.country === L.selected)?.slug ?? null;
+    const all = regions(L.pins, (0.42 * Math.min(L.width, L.height)) / baseRadius(L));
+    const want = L.frame ?? L.pins.find((p) => p.country === L.selected)?.slug ?? null;
     const region = (want && all.find((r) => r.slugs.includes(want))) || all[0];
     if (region) return region.view;
     if (L.selected) {
@@ -382,7 +383,7 @@ export function Globe({
 
         if (active && !L.reduced) {
           for (const offset of [0, 0.5]) {
-            const t = ((now / 1600 + offset) % 1 + 1) % 1;
+            const t = (((now / 1600 + offset) % 1) + 1) % 1;
             ctx.beginPath();
             ctx.arc(x, y, dot + 3 + t * 18, 0, Math.PI * 2);
             ctx.strokeStyle = hexAlpha(palette.pinActive, (1 - t) * 0.7);
