@@ -127,7 +127,7 @@ export function JourneyFacts({ journey }: { journey: Journey }) {
         </RevealGroup>
         {/* From a tablet up the tab bar carries the way to enquire. */}
         <div className="flex flex-wrap items-center gap-x-8 gap-y-4 py-7 md:hidden">
-          <ButtonLink href="#enquire" variant="forest" arrow>
+          <ButtonLink href="#enquire" variant="navy" arrow>
             Enquire
           </ButtonLink>
         </div>

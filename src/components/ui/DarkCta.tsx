@@ -16,7 +16,7 @@ export function DarkCta({
   body,
   href,
   cta,
-  ground = 'forest',
+  ground = 'navy',
   media,
   id,
 }: {
@@ -25,7 +25,7 @@ export function DarkCta({
   body: string;
   href: string;
   cta: string;
-  ground?: 'forest' | 'charcoal';
+  ground?: 'navy' | 'charcoal';
   media?: MediaKey;
   id?: string;
 }) {

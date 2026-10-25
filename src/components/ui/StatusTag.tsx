@@ -24,13 +24,13 @@ function labelFor(status: TagStatus): string | null {
   }
 }
 
-/** Sea-glass for something you can act on, brass for something pending, a rule for closed. */
+/** Brand blue for something you can act on, a paler blue for something pending, a rule for closed. */
 const markFor: Record<TagStatus, { light: string; dark: string }> = {
   open: { light: 'bg-acqua-deep', dark: 'bg-acqua' },
   new: { light: 'bg-acqua-deep', dark: 'bg-acqua' },
-  waitlist: { light: 'bg-gorse', dark: 'bg-gorse' },
-  preparation: { light: 'bg-gorse', dark: 'bg-gorse' },
-  draft: { light: 'bg-gorse', dark: 'bg-gorse' },
+  waitlist: { light: 'bg-acqua', dark: 'bg-brand' },
+  preparation: { light: 'bg-acqua', dark: 'bg-brand' },
+  draft: { light: 'bg-acqua', dark: 'bg-brand' },
   'sold-out': { light: 'bg-muted', dark: 'bg-on-dark-muted' },
   past: { light: 'bg-muted', dark: 'bg-on-dark-muted' },
 };

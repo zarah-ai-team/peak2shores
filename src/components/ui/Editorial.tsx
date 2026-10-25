@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { enterAt } from '@/lib/motion';
 
-/** The brass tick. A 1px mark, never a fill. Draws itself inside a Reveal. */
+/** The blue tick. A 1px mark, never a fill. Draws itself inside a Reveal. */
 export { Tick } from './Tick';
 
 export type Tone = 'light' | 'dark' | 'stone';
@@ -165,7 +165,7 @@ export function FactList({
 }
 
 /**
- * A pull quote: a 48px brass rule, the italic serif `.quote`, and an optional
+ * A pull quote: a 48px blue rule, the italic serif `.quote`, and an optional
  * attribution in caps. Never for unverified guest testimonials.
  */
 export function Quote({
@@ -181,7 +181,7 @@ export function Quote({
 }) {
   return (
     <figure className={`m-0 ${className}`}>
-      <span aria-hidden className="mb-7 block h-px w-12 bg-gorse" />
+      <span aria-hidden className="mb-7 block h-px w-12 bg-brand" />
       <blockquote className={`quote m-0 ${tone === 'dark' ? 'text-on-dark' : 'text-ink'}`}>
         {children}
       </blockquote>

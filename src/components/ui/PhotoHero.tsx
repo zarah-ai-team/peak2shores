@@ -109,7 +109,7 @@ export function PhotoHero({
       id={id}
       data-hero
       data-tone="dark"
-      className={`relative isolate overflow-hidden bg-forest-deep text-on-dark ${heights[height]} ${className}`}
+      className={`relative isolate overflow-hidden bg-navy-deep text-on-dark ${heights[height]} ${className}`}
     >
       <Frame
         media={media}

@@ -1,14 +1,14 @@
 import type { CSSProperties, ReactNode } from 'react';
 import { Ground } from '@/components/motion/Ground';
 
-export type SectionGround = 'ivory' | 'panel' | 'stone' | 'forest' | 'forest-deep' | 'charcoal';
+export type SectionGround = 'ivory' | 'panel' | 'stone' | 'navy' | 'navy-deep' | 'charcoal';
 
 const groundClass: Record<SectionGround, string> = {
   ivory: 'bg-ivory text-ink',
   panel: 'bg-panel text-ink',
   stone: 'bg-stone text-ink',
-  forest: 'bg-forest text-on-dark',
-  'forest-deep': 'bg-forest-deep text-on-dark',
+  navy: 'bg-navy text-on-dark',
+  'navy-deep': 'bg-navy-deep text-on-dark',
   charcoal: 'bg-charcoal text-on-dark',
 };
 
@@ -18,7 +18,7 @@ const padClass = {
   none: '',
 } as const;
 
-const isDark = (g: SectionGround) => g === 'forest' || g === 'forest-deep' || g === 'charcoal';
+const isDark = (g: SectionGround) => g === 'navy' || g === 'navy-deep' || g === 'charcoal';
 
 type Tag = 'section' | 'div' | 'aside' | 'article' | 'footer';
 
@@ -47,7 +47,7 @@ export function Container({
 /**
  * A page section on one of the six grounds.
  *
- * - `ground` (default ivory). Dark grounds (forest, forest-deep, charcoal)
+ * - `ground` (default ivory). Dark grounds (navy, navy-deep, charcoal)
  *   render through `Ground`, so they develop from the paper as they arrive,
  *   and set `data-tone="dark"` so kickers, body copy, rule links, fields and
  *   focus rings switch to their dark treatment through CSS. Stone sets

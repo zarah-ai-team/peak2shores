@@ -83,7 +83,7 @@ export function JourneyTabs({
           <p className="meta m-0 text-body">
             From <span className="font-semibold text-ink">{priceFrom}</span> per person
           </p>
-          <ButtonLink href="#enquire" variant="forest" className="!py-3.5">
+          <ButtonLink href="#enquire" variant="navy" className="!py-3.5">
             {cta}
           </ButtonLink>
         </div>

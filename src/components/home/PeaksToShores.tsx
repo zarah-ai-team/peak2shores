@@ -23,7 +23,7 @@ const signature = [
 ] as const;
 
 /**
- * 4.3 — The name (forest).
+ * 4.3 — The name (navy).
  *
  * `variant="signature"` is the homepage composition: the name, then one
  * full-bleed Peaks/Shores picture the reader drags across (PeaksShoresSlider)
@@ -49,7 +49,7 @@ export function PeaksToShores({
     return (
       <Section
         contained={false}
-        ground="forest"
+        ground="navy"
         screen
         id="destinations"
         aria-labelledby="p2s-title"
@@ -84,11 +84,11 @@ export function PeaksToShores({
   return (
     <Section
       contained={false}
-      ground="forest"
+      ground="navy"
       id="destinations"
       aria-labelledby="p2s-title"
       // The strip's staggered floor already reads as a pause; a full section's
-      // padding under it left a band of empty forest (DESIGN-REVIEW P2.10).
+      // padding under it left a band of empty navy (DESIGN-REVIEW P2.10).
       className="pb-section-sm"
     >
       <div className="container-site">

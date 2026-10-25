@@ -143,6 +143,14 @@ export const statement = {
   before: 'The journeys we remember most aren’t measured by how much we see, but by how ',
   emphasis: 'deeply',
   after: ' we experience the moments along the way.',
+  /* Behind it, a slow flight along a sandstone headland above the sea: the sea
+     stack offshore, then the walkers at the lookout. Not shown anywhere else
+     on the page. The poster is the film's first frame, so play starts clean. */
+  film: {
+    img: '/images/home/pause-dune.jpg',
+    alt: 'A sandstone headland above the sea, a sea stack offshore',
+    video: '/video/home/pause-dune.mp4',
+  } satisfies HomeVisual,
 };
 
 /* 06 — Why Peaks2Shores. */

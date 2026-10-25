@@ -32,8 +32,8 @@ function atlas(): Country[] {
 
 /**
  * Where the journey is — a quiet map of the region drawn on the server as
- * SVG: the land, the journey's country (or countries) picked out in sea-glass,
- * and a brass pin at the journey with its region named. Beside it, the stays
+ * SVG: the land, the journey's country (or countries) picked out in water-blue,
+ * and a navy pin at the journey with its region named. Beside it, the stays
  * in order, so the reader sees the shape of the trip on the ground.
  */
 export function JourneyMap({ journey }: { journey: Journey }) {
@@ -109,8 +109,8 @@ export function JourneyMap({ journey }: { journey: Journey }) {
                 />
               );
             })}
-            <circle cx={x} cy={y} r={34} className="fill-gorse/25" />
-            <circle cx={x} cy={y} r={13} className="fill-gorse stroke-ivory" strokeWidth={4} />
+            <circle cx={x} cy={y} r={34} className="fill-navy/20" />
+            <circle cx={x} cy={y} r={13} className="fill-navy stroke-ivory" strokeWidth={4} />
             <text
               x={x + 22}
               y={y - 22}

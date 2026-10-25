@@ -31,7 +31,7 @@ type GlobeProps = {
   pins: GlobePin[];
   selected?: string;
   onSelect: (country: string) => void;
-  /** A journey whose pin is lit (brass), e.g. while its name in a list is hovered. */
+  /** A journey whose pin is lit (brand blue), e.g. while its name in a list is hovered. */
   highlight?: string | null;
   /** Reports the pin under the pointer, so a list beside the globe can answer it. */
   onHoverPin?: (slug: string | null) => void;
@@ -102,13 +102,13 @@ function readPalette() {
   const ink = token('--color-ink', '#1e1f1d');
   const ivory = token('--color-ivory', '#f4f1ea');
   const sand = token('--color-tone-sand', '#e5dfd1');
-  const acqua = token('--color-acqua', '#8cc2b8');
-  const acquaDeep = token('--color-acqua-deep', '#5f948c');
-  const acquaText = token('--color-acqua-text', '#2f6b64');
-  const forest = token('--color-forest', '#1d2a25');
-  const gorse = token('--color-gorse', '#b39e64');
-  // A printed atlas on the house paper: sea-glass water, ivory land, the
-  // journeys' countries in deep acqua, pins in forest with a brass light.
+  const acqua = token('--color-acqua', '#7accfd');
+  const acquaDeep = token('--color-acqua-deep', '#1190cb');
+  const acquaText = token('--color-acqua-text', '#0b5c85');
+  const navy = token('--color-navy', '#0e2f42');
+  const brand = token('--color-brand', '#1190cb');
+  // A printed atlas on the house paper: water-blue sea, ivory land, the
+  // journeys' countries in deep acqua, pins in navy with a brand-blue light.
   return {
     oceanIn: mix(acqua, ivory, 0.62),
     oceanOut: mix(acquaDeep, sand, 0.55),
@@ -118,14 +118,14 @@ function readPalette() {
     landStroke: hexAlpha(ink, 0.14),
     dest: hexAlpha(acquaText, 0.55),
     destHover: hexAlpha(acquaText, 0.78),
-    destSelected: forest,
+    destSelected: navy,
     destStroke: hexAlpha(ivory, 0.7),
-    limb: hexAlpha(forest, 0.16),
+    limb: hexAlpha(navy, 0.16),
     highlight: hexAlpha(ivory, 0.32),
     edge: hexAlpha(acquaText, 0.35),
     pinHalo: ivory,
-    pin: forest,
-    pinActive: gorse,
+    pin: navy,
+    pinActive: brand,
   };
 }
 
@@ -133,8 +133,8 @@ function readPalette() {
  * The destinations globe.
  *
  * An orthographic projection drawn to a canvas, set as a printed atlas on the
- * house paper: sea-glass water that deepens toward the limb, ivory land, the
- * journeys' countries in deep acqua, each journey a forest pin. It opens
+ * house paper: water-blue sea that deepens toward the limb, ivory land, the
+ * journeys' countries in deep acqua, each journey a navy pin. It opens
  * framed on the region with the most journeys, close enough that every pin
  * stands apart, and flies — rotate and zoom together, easing out a little in
  * the middle like a camera — to any other journey that is hovered or chosen.
@@ -302,7 +302,7 @@ export function Globe({
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
 
-      // A faint sea-glass atmosphere just beyond the limb.
+      // A faint water-blue atmosphere just beyond the limb.
       let g = ctx.createRadialGradient(cx, cy, r * 0.96, cx, cy, r * 1.12);
       g.addColorStop(0, palette.glow);
       g.addColorStop(1, hexAlpha(palette.pinHalo, 0));
@@ -609,13 +609,13 @@ export function Globe({
       />
       <div
         ref={labelRef}
-        className="pointer-events-none absolute left-0 top-0 whitespace-nowrap bg-forest-deep px-3 py-2 text-on-dark shadow-[0_8px_24px_rgb(21_30_26/0.18)] transition-opacity duration-200"
+        className="pointer-events-none absolute left-0 top-0 whitespace-nowrap bg-navy-deep px-3 py-2 text-on-dark shadow-[0_8px_24px_rgb(10_34_50/0.18)] transition-opacity duration-200"
         style={{ opacity: hovered ? 1 : 0 }}
       >
         {pin ? (
           <>
             <span className="h5 block !text-[15px] leading-tight">{pin.title}</span>
-            <span className="kicker-sm mt-1 block !text-gorse">From {pin.when}</span>
+            <span className="kicker-sm mt-1 block !text-acqua">From {pin.when}</span>
           </>
         ) : (
           <span className="kicker-sm block !text-on-dark">

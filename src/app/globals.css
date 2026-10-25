@@ -3,16 +3,19 @@
 /* ==========================================================================
    Peaks2Shores — design tokens (wave 2, docs/redesign/DESIGN-SPEC.md §2)
 
-   A printed travel journal kept by one person: warm paper, deep forest ink,
-   sea-glass hairlines, photographs given room. Every page alternates reading
-   (paper) and looking (a dark ground or a full-bleed photograph).
+   A printed travel journal kept by one person: warm paper, deep lake-blue
+   grounds, water-blue hairlines, photographs given room. Every page alternates
+   reading (paper) and looking (a dark ground or a full-bleed photograph).
 
-   Acqua is sea-glass: a hairline, a hover, an active rule — never a field.
-   Gorse is muted brass: a tick, a quote rule, a progress rule.
+   Brand blue is the accent: a button's hover, a tick, a quote rule, a
+   progress rule. Acqua is its water-blue family: a hairline, a hover, an
+   active rule — never a field. The palette has no green and no gold.
    ========================================================================== */
 
 @theme {
   /* Paper */
+  --color-brand: #1190cb; /* Peaks2Shores blue — the primary; every button's hover */
+  --color-brand-deep: #0d77a9; /* a blue fill's own hover */
   --color-ivory: #f4f1ea;
   --color-panel: #ede9df;
   --color-stone: #d9d0bf; /* Founder blocks, image grounds */
@@ -25,25 +28,24 @@
      stone (use stone-text). */
   --color-muted: #6c675d;
 
-  /* Dark grounds */
-  --color-forest: #1d2a25; /* Primary dark ground */
-  --color-forest-deep: #151e1a; /* Footer, mobile menu, globe band */
-  --color-charcoal: #232422; /* Secondary dark ground. Never adjacent to forest */
+  /* Dark grounds — deep lake blues */
+  --color-navy: #0e2f42; /* Primary dark ground */
+  --color-navy-deep: #0a2232; /* Footer, mobile menu, globe band */
+  --color-charcoal: #232422; /* Secondary dark ground. Never adjacent to navy */
 
   /* On dark */
   --color-on-dark: #f4f1ea;
-  --color-on-dark-body: #c9c4b6;
-  --color-on-dark-muted: #a3a89f;
+  --color-on-dark-body: #c8d3da; /* 10:1 on navy-deep */
+  --color-on-dark-muted: #9fb1bc; /* 7:1 on navy-deep */
 
   /* Brand accents — used sparingly */
-  --color-acqua: #8cc2b8; /* sea-glass; text-safe on dark (7.5:1 on forest), not on light */
-  --color-acqua-deep: #5f948c; /* hairlines on light; NOT text (3.05:1) */
-  --color-acqua-text: #2f6b64; /* the only acqua as text on light — 5.46:1 ivory */
-  --color-gorse: #b39e64; /* muted brass; never text on light. Text on forest only ≥14px */
+  --color-acqua: #7accfd; /* water-blue; text-safe on dark (9:1 on navy-deep), not on light */
+  --color-acqua-deep: #1190cb; /* the brand blue as a hairline on light; NOT text (3.2:1) */
+  --color-acqua-text: #0b5c85; /* the only acqua as text on light — 6.4:1 ivory */
 
   /* Feedback */
   --color-error: #8a3b2e; /* 6.6:1 on ivory */
-  --color-error-dark: #e8a594; /* on forest / charcoal */
+  --color-error-dark: #e8a594; /* on navy / charcoal */
 
   /* Rules */
   --color-line: rgb(30 31 29 / 0.16);
@@ -150,7 +152,7 @@
     background: rgb(140 194 184 / 0.35);
   }
 
-  /* Focus is a 2px ink ring on paper and a 2px sea-glass ring on a dark ground
+  /* Focus is a 2px ink ring on paper and a 2px water-blue ring on a dark ground
      or a photograph. Every dark surface is listed here (or carries
      data-tone="dark"); a light island inside one resets with data-tone="light". */
   :focus-visible {
@@ -159,8 +161,8 @@
   }
   :where(
       .bg-ink,
-      .bg-forest,
-      .bg-forest-deep,
+      .bg-navy,
+      .bg-navy-deep,
       .bg-charcoal,
       [data-tone='dark'],
       [data-ground],
@@ -462,10 +464,10 @@
 
   /* Tone-aware defaults. A dark ground sets data-tone="dark"; any utility
      colour on the element itself still wins (utilities come later). */
-  :where([data-tone='dark'], .bg-forest, .bg-forest-deep, .bg-charcoal) :is(.kicker, .kicker-sm) {
+  :where([data-tone='dark'], .bg-navy, .bg-navy-deep, .bg-charcoal) :is(.kicker, .kicker-sm) {
     color: var(--color-on-dark-muted);
   }
-  :where([data-tone='dark'], .bg-forest, .bg-forest-deep, .bg-charcoal)
+  :where([data-tone='dark'], .bg-navy, .bg-navy-deep, .bg-charcoal)
     :is(.prose-body, .prose-body-sm) {
     color: var(--color-on-dark-body);
   }
@@ -483,7 +485,7 @@
      Links and rules
      ------------------------------------------------------------------------ */
 
-  /* The rule link: a 1px sea-glass underline that sweeps out to the right on
+  /* The rule link: a 1px blue underline that sweeps out to the right on
      hover and redraws from the left — the same line, re-ruled. */
   .link-rule {
     --rule-colour: var(--color-acqua-deep);
@@ -531,9 +533,9 @@
   .link-rule:hover::after {
     transform: scaleX(1);
   }
-  /* On a dark ground or a photograph: on-dark text, sea-glass line. */
+  /* On a dark ground or a photograph: on-dark text, water-blue line. */
   .link-rule--dark,
-  :where([data-tone='dark'], [data-hero], .bg-forest, .bg-forest-deep, .bg-charcoal, .bg-ink)
+  :where([data-tone='dark'], [data-hero], .bg-navy, .bg-navy-deep, .bg-charcoal, .bg-ink)
     .link-rule {
     --rule-colour: var(--color-acqua);
     --rule-hover: var(--color-acqua);
@@ -559,10 +561,10 @@
     color: var(--color-acqua-text);
     text-decoration-color: currentColor;
   }
-  :where([data-tone='dark'], .bg-forest, .bg-forest-deep, .bg-charcoal) .prose-link {
+  :where([data-tone='dark'], .bg-navy, .bg-navy-deep, .bg-charcoal) .prose-link {
     text-decoration-color: var(--color-acqua);
   }
-  :where([data-tone='dark'], .bg-forest, .bg-forest-deep, .bg-charcoal) .prose-link:hover {
+  :where([data-tone='dark'], .bg-navy, .bg-navy-deep, .bg-charcoal) .prose-link:hover {
     color: var(--color-acqua);
   }
 
@@ -626,8 +628,7 @@
     transform-origin: right center;
     transition: transform 0.4s var(--ease-editorial);
   }
-  :where([data-tone='dark'], .bg-forest, .bg-forest-deep, .bg-charcoal, .bg-ink)
-    .toggle-link::after {
+  :where([data-tone='dark'], .bg-navy, .bg-navy-deep, .bg-charcoal, .bg-ink) .toggle-link::after {
     background: var(--color-acqua);
   }
   .toggle-link[aria-pressed='true']::after {
@@ -663,12 +664,12 @@
   @media (hover: hover) and (pointer: fine) {
     .btn:not(:disabled):not([aria-disabled='true']):hover {
       transform: translateY(-2px);
-      box-shadow: 0 14px 24px -16px rgb(21 30 26 / 0.55);
+      box-shadow: 0 14px 24px -16px rgb(10 34 50 / 0.55);
     }
   }
   .btn:not(:disabled):not([aria-disabled='true']):active {
     transform: translateY(0) scale(0.985);
-    box-shadow: 0 2px 6px -5px rgb(21 30 26 / 0.4);
+    box-shadow: 0 2px 6px -5px rgb(10 34 50 / 0.4);
     transition-duration: 0.12s;
   }
   .btn:disabled,
@@ -699,7 +700,7 @@
      Fields
      ------------------------------------------------------------------------ */
 
-  /* Text fields are rules, not boxes. Focus re-rules the line in sea-glass. */
+  /* Text fields are rules, not boxes. Focus re-rules the line in water-blue. */
   .field-rule {
     position: relative;
   }
@@ -717,8 +718,7 @@
     transform-origin: left center;
     transition: transform 0.5s var(--ease-editorial);
   }
-  :where([data-tone='dark'], .bg-forest, .bg-forest-deep, .bg-charcoal, .bg-ink)
-    .field-rule::after {
+  :where([data-tone='dark'], .bg-navy, .bg-navy-deep, .bg-charcoal, .bg-ink) .field-rule::after {
     background: var(--color-acqua);
   }
   .field-rule--top::after {
@@ -754,7 +754,7 @@
     transform-origin: left center;
     transition: transform 0.4s var(--ease-editorial);
   }
-  :where([data-tone='dark'], .bg-forest, .bg-forest-deep, .bg-charcoal) .frame-caption-rule {
+  :where([data-tone='dark'], .bg-navy, .bg-navy-deep, .bg-charcoal) .frame-caption-rule {
     background: var(--color-acqua);
   }
   .group:hover .frame-caption-rule,
@@ -895,22 +895,54 @@
 .site-logo {
   position: relative;
   display: block;
-  height: 32px;
+  height: 36px;
   transform-origin: left center;
   transition: transform 0.45s var(--ease-editorial);
 }
 @media (min-width: 1024px) {
   .site-logo {
-    height: 40px;
+    height: 48px;
   }
 }
 .site-header[data-compact] .site-logo {
-  transform: scale(0.875); /* 32 → 28px */
+  transform: scale(0.89); /* 36 → 32px */
 }
 @media (min-width: 1024px) {
   .site-header[data-compact] .site-logo {
-    transform: scale(0.8); /* 40 → 32px */
+    transform: scale(0.85); /* 48 → 41px */
   }
+}
+
+/* The homepage over its film: the bar is part of the hero. It scrolls away with
+   the film rather than following the page, and as the hero carries the logo,
+   the bar drops it and centres the links. As the next section reaches the top
+   the usual solid bar drops in from above. */
+.site-header[data-home]:not([data-solid]):not([data-menu]) {
+  position: absolute;
+}
+.site-header[data-drop] {
+  animation: header-drop 0.6s var(--ease-editorial);
+}
+@keyframes header-drop {
+  from {
+    transform: translateY(-100%);
+  }
+}
+.site-header[data-home]:not([data-solid]):not([data-menu]) .header-home {
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+@media (min-width: 1024px) {
+  .site-header[data-home]:not([data-solid]):not([data-menu]) .header-row {
+    justify-content: center;
+  }
+}
+.header-home {
+  transition:
+    opacity 0.45s var(--ease-editorial),
+    visibility 0s;
 }
 .site-logo img {
   display: block;
@@ -931,18 +963,14 @@
 }
 
 /* The header CTA: an outline that fills on hover. */
-.site-header .header-cta:hover {
-  background-color: var(--color-on-dark);
-  border-color: var(--color-on-dark);
-  color: var(--color-ink);
-}
+.site-header .header-cta:hover,
 .site-header[data-solid]:not([data-menu]) .header-cta:hover {
-  background-color: var(--color-ink);
-  border-color: var(--color-ink);
-  color: var(--color-ivory);
+  background-color: var(--color-brand);
+  border-color: var(--color-brand);
+  color: #ffffff;
 }
 
-/* The scroll progress rule sits above the header: sea-glass over a photograph,
+/* The scroll progress rule sits above the header: water-blue over a photograph,
    the hairline step on paper. */
 .scroll-progress {
   background: var(--color-acqua-deep);
@@ -1193,6 +1221,10 @@ html:not([data-js]) [data-curtain] {
 
   .site-header[data-hidden] {
     transform: none !important;
+  }
+
+  .site-header[data-drop] {
+    animation: none !important;
   }
 
   .site-header[data-compact] .site-logo {

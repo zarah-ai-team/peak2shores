@@ -10,7 +10,7 @@ const tickVariants: Variants = {
 };
 
 /**
- * The brass tick. A 1px mark, never a fill.
+ * The blue tick. A 1px mark, never a fill.
  *
  * Inside a Reveal it draws itself from the left as the block arrives — the
  * variants are inherited from the nearest animated ancestor. Anywhere else
@@ -22,7 +22,7 @@ export function Tick({ className = '' }: { className?: string }) {
     <m.span
       aria-hidden
       data-reveal
-      className={`inline-block h-px w-7 origin-left bg-gorse ${className}`}
+      className={`inline-block h-px w-7 origin-left bg-brand ${className}`}
       variants={tickVariants}
     />
   );

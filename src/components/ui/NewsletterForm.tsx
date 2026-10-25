@@ -16,7 +16,7 @@ export type NewsletterVariant = 'compact' | 'large' | 'dark';
  * - `compact`: the small inline form (sans field).
  * - `large`: the homepage / journal form — the field is set in the serif at
  *   `.h5` size, with an ink submit.
- * - `dark`: for forest / forest-deep grounds (the footer) — on-dark rule,
+ * - `dark`: for navy / navy-deep grounds (the footer) — on-dark rule,
  *   text and placeholder.
  *
  * Posts to /api/subscribe, which answers `{ ok, delivered }`. `delivered:
@@ -118,14 +118,14 @@ export function NewsletterForm({
 
   const submit =
     variant === 'large'
-      ? 'btn ml-5 shrink-0 bg-ink px-6 py-[15px] text-ivory hover:bg-forest'
+      ? 'btn ml-5 shrink-0 bg-ink px-6 py-[15px] text-ivory hover:bg-brand'
       : `shrink-0 py-3 pl-5 transition-colors duration-300 ${
           dark ? 'text-on-dark hover:text-acqua' : 'hover:text-acqua-text'
         }`;
 
   return (
     <div className={`w-full ${variant === 'compact' ? '' : 'max-w-[520px]'} ${className}`}>
-      {/* `.field-rule` re-rules the line in sea-glass while the field has focus. */}
+      {/* `.field-rule` re-rules the line in water-blue while the field has focus. */}
       <form
         onSubmit={onSubmit}
 

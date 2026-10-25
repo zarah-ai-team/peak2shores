@@ -18,7 +18,7 @@ const HIDE_AFTER = 480;
  * - a little shorter as soon as the page moves (`data-compact`)
  * - out of the way on a long scroll down, back on any scroll up (`data-hidden`),
  *   unless the page pins a bar beneath it (`[data-pin-header]`)
- * - on-dark over the open forest mobile menu (`data-menu`)
+ * - on-dark over the open navy mobile menu (`data-menu`)
  *
  * Both logo files are in the tree; CSS cross-fades between them, so the swap
  * never waits on a render.
