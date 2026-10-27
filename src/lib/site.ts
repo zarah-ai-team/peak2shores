@@ -6,7 +6,7 @@ export const site = {
   url: 'https://peaks2shores.com',
   founded: 2022,
   maxGuests: 18,
-  email: 'hello@peaks2shores.com',
+  email: 'welcome@peak2shores.com',
   /**
    * Confirmed by Marc, October 2026. (The old site's "Call" button dialled
    * 250-5050 by mistake.) Shown as a one-tap link in the footer and in the

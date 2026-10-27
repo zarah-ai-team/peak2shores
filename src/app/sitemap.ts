@@ -29,12 +29,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/experiences', priority: 0.8 },
     { path: '/our-story', priority: 0.7 },
     { path: '/journal', priority: 0.6 },
-    ...(site.legalDraft
-      ? []
-      : ['/privacy', '/cookies', '/terms', '/booking-terms'].map((path) => ({
-          path,
-          priority: 0.3,
-        }))),
+    /* The privacy policy and terms are final; the other two await Marc. */
+    ...['/privacy', '/terms', ...(site.legalDraft ? [] : ['/cookies', '/booking-terms'])].map(
+      (path) => ({ path, priority: 0.3 }),
+    ),
   ];
 
   return [

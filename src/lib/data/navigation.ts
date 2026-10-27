@@ -10,7 +10,7 @@ import type { NavItem } from '../site';
 export const legalNav: NavItem[] = [
   { label: 'Privacy', href: '/privacy' },
   { label: 'Cookies', href: '/cookies' },
-  { label: 'Terms', href: '/terms' },
+  { label: 'Terms & conditions', href: '/terms' },
   { label: 'Booking terms', href: '/booking-terms' },
   { label: 'Photography credits', href: '/credits' },
 ];

@@ -16,21 +16,24 @@ const slug = (s: string) =>
 
 /**
  * The shared shell for the legal pages: a title, an optional draft notice
- * (driven by `site.legalDraft`), a sticky contents list and numbered sections
- * in reading measure. The structure is final; the wording comes from Marc and
- * replaces each section's body.
+ * (driven by `site.legalDraft` unless the page passes `draft`), a sticky
+ * contents list and numbered sections in reading measure. The structure is
+ * final; the wording comes from Marc and replaces each section's body.
  */
 export function LegalPage({
   title,
   intro,
   updated,
   sections,
+  draft = site.legalDraft,
 }: {
   title: string;
   intro: string;
   /** e.g. "October 2026". */
   updated: string;
   sections: LegalSection[];
+  /** Whether to show the draft notice. Pages whose wording is final pass false. */
+  draft?: boolean;
 }) {
   const items = sections.map((s, i) => ({ ...s, id: slug(s.heading) || `section-${i + 1}` }));
 
@@ -53,7 +56,7 @@ export function LegalPage({
         </div>
       </section>
 
-      {site.legalDraft && (
+      {draft && (
         <div className="bg-panel">
           <p className="container-site kicker m-0 flex items-center gap-4 py-5 text-ink">
             <Tick className="shrink-0" />
@@ -118,4 +121,7 @@ export function LegalPage({
 }
 
 /** Legal pages stay out of search while their wording is a draft. */
-export const legalRobots = site.legalDraft ? { index: false, follow: true } : undefined;
+export const legalRobotsFor = (draft: boolean) =>
+  draft ? { index: false, follow: true } : undefined;
+
+export const legalRobots = legalRobotsFor(site.legalDraft);
