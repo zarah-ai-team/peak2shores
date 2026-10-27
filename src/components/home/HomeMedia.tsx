@@ -57,8 +57,9 @@ export function HomeMedia({
         <video
           ref={video}
           className={className}
+          // No poster: the <Image> beneath already shows the optimised still,
+          // and a poster would download the original file beside it.
           src={visual.video}
-          poster={visual.img}
           muted
           loop
           playsInline

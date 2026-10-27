@@ -9,7 +9,7 @@ calm light, no crowds, the right destination) and its provenance read from the
 source page itself. None of it was shot for Peaks2Shores; see
 `PHOTOGRAPHY-BRIEF.md` for what a commissioned shoot should replace first.
 
-- **95** frames from Unsplash under the
+- **93** frames from Unsplash under the
   [Unsplash License](https://unsplash.com/license): free for commercial use, no
   attribution required (credited here and on `/credits` anyway). The licence
   does not allow selling the photos unaltered or compiling them into a
@@ -77,8 +77,6 @@ source page itself. None of it was shot for Peaks2Shores; see
 | `ex-1` | ex-1.jpg | [Unsplash](https://unsplash.com/photos/a-table-set-up-for-a-meal-under-a-pergolated-roof-z9MAxYlXv3s) | Steffen Lemmerzahl | Unsplash License |
 | `ex-2` | ex-2.jpg | [Unsplash](https://unsplash.com/photos/a-person-making-a-bowl-on-a-pottery-wheel-EETgT0lmAiQ) | Monika Bienert | Unsplash License |
 | `ex-3` | ex-3.jpg | [Unsplash](https://unsplash.com/photos/a-narrow-plant-lined-alleyway-in-an-old-european-town-1mgFxLxwQOc) | Wojciech Wyszkowski | Unsplash License |
-| `ex-4` | ex-4.jpg | [Unsplash](https://unsplash.com/photos/white-sailboat-on-body-of-water-during-daytime-oLh30da4k3w) | Sylvain Perona | Unsplash License |
-| `ex-5` | ex-5.jpg | [Unsplash](https://unsplash.com/photos/an-open-window-with-a-view-of-a-body-of-water-uH8GHfmgS3Y) | Bjorn Agerbeek | Unsplash License |
 | `feat-1` | feat-1.jpg | [Unsplash](https://unsplash.com/photos/houses-near-mountains-and-sea-jvaahYi7_Po) | Jeff Cooper | Unsplash License |
 | `feat-2` | feat-2.jpg | [Unsplash](https://unsplash.com/photos/closeup-photo-of-brown-wooden-dock-facing-mountain-and-calm-body-of-water-Q-AQrJr4LSI) | C Boyd | Unsplash License |
 | `feat-3` | feat-3.jpg | [Unsplash](https://unsplash.com/photos/a-house-in-a-field-with-mountains-in-the-background-oP0_l1xHUOo) | Alex Kulikov | Unsplash License |

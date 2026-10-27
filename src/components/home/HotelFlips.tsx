@@ -31,13 +31,17 @@ export function HotelFlips() {
       <div className="flips">
         {hotels.map((h, i) => {
           const placeholder = (v: string) => (v.startsWith('[') ? 'ph' : undefined);
+          const id = `hotel-${i}`;
           return (
             <button
               key={h.name}
               type="button"
               className={`flip ${i === flipped ? 'on' : ''}`}
               aria-pressed={i === flipped}
-              aria-label={`${h.name} — show details`}
+              // Named by what it shows (place and hotel); the turned side's
+              // details are its description, so they are read without turning.
+              aria-labelledby={`${id}-place ${id}-name`}
+              aria-describedby={`${id}-more`}
               onClick={() => setFlipped(i === flipped ? -1 : i)}
             >
               <span className="fin">
@@ -45,8 +49,10 @@ export function HotelFlips() {
                   <HomeMedia visual={h} sizes="(max-width: 1100px) 100vw, 33vw" />
                   <span className="fs" />
                   <span className="fb">
-                    <span className="lab">{h.place}</span>
-                    <h3>{h.name}</h3>
+                    <span className="lab" id={`${id}-place`}>
+                      {h.place}
+                    </span>
+                    <h3 id={`${id}-name`}>{h.name}</h3>
                   </span>
                 </span>
                 <span className="face back">
@@ -60,11 +66,12 @@ export function HotelFlips() {
                       className="fill"
                     />
                   </span>
-                  <span>
+                  {/* The name again, for the eye only: it is already the button's name. */}
+                  <span aria-hidden>
                     <span className="lab">{h.place}</span>
-                    <h3>{h.name}</h3>
+                    <span className="hn">{h.name}</span>
                   </span>
-                  <dl>
+                  <dl id={`${id}-more`}>
                     <div>
                       <dt>Signature detail</dt>
                       <dd className={placeholder(h.signature)}>{h.signature}</dd>

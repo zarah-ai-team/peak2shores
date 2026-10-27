@@ -128,8 +128,8 @@ export function WaysToTravel() {
                   films.current[i] = el;
                 }}
                 className="fill"
+                // No poster: the optimised still beneath shows until it plays.
                 src={way.video}
-                poster={way.img}
                 muted
                 loop
                 playsInline

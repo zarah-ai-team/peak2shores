@@ -53,14 +53,10 @@ const REGION_PAD_DEG = 4.5;
 const LONE_PAD_DEG = 22;
 /** Zoom limits: 1 shows the whole sphere; the top is a single coast. */
 const ZOOM: Point = [1, 4.6];
-/** The idle drift: a slow breath around the framed region, not a spin. */
-const DRIFT_DEG = 1.4;
-const DRIFT_PERIOD_MS = 22_000;
 /** Flights scale with distance: a neighbour is quick, a hemisphere unhurried. */
 const FLIGHT_MS: Point = [900, 2000];
 
 const graticule = geoGraticule10();
-const sphere = { type: 'Sphere' } as const;
 
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 const clamp = (value: number, [min, max]: Point) => Math.max(min, Math.min(max, value));
@@ -140,8 +136,11 @@ function readPalette() {
  * the middle like a camera — to any other journey that is hovered or chosen.
  *
  * Drag turns it (horizontally only on touch, so the page still scrolls), a
- * click or tap on a highlighted country or pin selects it. When left alone it
- * drifts gently around the framed region, and only draws while on screen.
+ * click or tap on a highlighted country or pin selects it. Left alone it holds
+ * still: the sphere is painted once into an offscreen layer and repainted only
+ * when the view, the selection or the hover changes (with the light 110m
+ * outlines while it moves, the 50m ones once it settles), so a frame at rest
+ * is a copy of that layer plus the pins. It only draws while on screen.
  * Under reduced motion every move is a cut.
  *
  * The canvas is hidden from assistive technology: the journey list and the
@@ -167,8 +166,6 @@ export function Globe({
   // never restarted by a render.
   const live = useRef({
     view: { centre: [0, 0] as Point, zoom: 1 } as View,
-    /** Where the drift breathes around: the last framed view. */
-    rest: null as View | null,
     velocity: 0,
     dragging: false,
     moved: 0,
@@ -181,6 +178,8 @@ export function Globe({
       ms: number;
     },
     countries: [] as Country[],
+    /** The light 110m outlines, drawn while the globe is moving. */
+    coarse: [] as Country[],
     byName: new Map<string, Country>(),
     width: 0,
     height: 0,
@@ -224,7 +223,6 @@ export function Globe({
   /** Fly to a view: rotate along the great circle and zoom, easing out mid-way. */
   const flyTo = (to: View) => {
     const L = live.current;
-    L.rest = to;
     L.velocity = 0;
     const from = L.view;
     const distance = geoDistance(from.centre, to.centre);
@@ -277,7 +275,10 @@ export function Globe({
             Geometry,
             { name: string }
           >;
+          if (!L.coarse.length) L.coarse = collection.features;
           L.countries = collection.features;
+          // New outlines: the layer is repainted on the next frame.
+          painted = '';
           L.byName = new Map(collection.features.map((f) => [f.properties.name, f]));
         });
     load('/geo/countries-110m.json')
@@ -289,85 +290,153 @@ export function Globe({
     /** Point under the canvas centre, as a projection rotation. */
     const rotation = (): [number, number, number] => [-L.view.centre[0], -L.view.centre[1], 0];
 
-    function draw(now: number) {
-      if (!ctx || !L.width) return;
-      const { width: w, height: h } = L;
-      const cx = w / 2;
-      const cy = h / 2;
-      const r = baseRadius(L) * L.view.zoom;
-      const dpr = window.devicePixelRatio || 1;
-      projection.translate([cx, cy]).scale(r).rotate(rotation());
-      const path = geoPath(projection, ctx);
+    /** The offscreen layer: sphere, graticule and countries — everything but the pins. */
+    const layer = document.createElement('canvas');
+    const layerCtx = layer.getContext('2d');
+    /** What the layer was last painted for; a frame with the same key reuses it. */
+    let painted = '';
 
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0, 0, w, h);
+    /** Paints the sphere and its countries for the current projection. */
+    function paint(
+      c: CanvasRenderingContext2D,
+      countries: Country[],
+      cx: number,
+      cy: number,
+      r: number,
+    ) {
+      const path = geoPath(projection, c);
+      const w = L.width;
+      const h = L.height;
+      const dpr = window.devicePixelRatio || 1;
+      c.setTransform(dpr, 0, 0, dpr, 0, 0);
+      c.clearRect(0, 0, w, h);
 
       // A faint water-blue atmosphere just beyond the limb.
-      let g = ctx.createRadialGradient(cx, cy, r * 0.96, cx, cy, r * 1.12);
+      let g = c.createRadialGradient(cx, cy, r * 0.96, cx, cy, r * 1.12);
       g.addColorStop(0, palette.glow);
       g.addColorStop(1, hexAlpha(palette.pinHalo, 0));
-      ctx.beginPath();
-      ctx.arc(cx, cy, r * 1.12, 0, Math.PI * 2);
-      ctx.fillStyle = g;
-      ctx.fill();
+      c.beginPath();
+      c.arc(cx, cy, r * 1.12, 0, Math.PI * 2);
+      c.fillStyle = g;
+      c.fill();
 
       // Water, lit from the upper left and deepening toward the edge.
-      g = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.35, r * 0.05, cx, cy, r);
+      g = c.createRadialGradient(cx - r * 0.3, cy - r * 0.35, r * 0.05, cx, cy, r);
       g.addColorStop(0, palette.oceanIn);
       g.addColorStop(1, palette.oceanOut);
-      ctx.beginPath();
-      path(sphere);
-      ctx.fillStyle = g;
-      ctx.fill();
+      c.beginPath();
+      c.arc(cx, cy, r, 0, Math.PI * 2);
+      c.fillStyle = g;
+      c.fill();
 
-      ctx.beginPath();
+      c.beginPath();
       path(graticule);
-      ctx.strokeStyle = palette.graticule;
-      ctx.lineWidth = 0.6;
-      ctx.stroke();
+      c.strokeStyle = palette.graticule;
+      c.lineWidth = 0.6;
+      c.stroke();
 
       // Everywhere without a journey: ivory, for bearings only.
       const destinationSet = new Set(L.destinations);
-      ctx.beginPath();
-      for (const country of L.countries) {
+      c.beginPath();
+      for (const country of countries) {
         if (!destinationSet.has(country.properties.name)) path(country);
       }
-      ctx.fillStyle = palette.land;
-      ctx.fill();
-      ctx.strokeStyle = palette.landStroke;
-      ctx.lineWidth = 0.6;
-      ctx.stroke();
+      c.fillStyle = palette.land;
+      c.fill();
+      c.strokeStyle = palette.landStroke;
+      c.lineWidth = 0.6;
+      c.stroke();
 
-      // Destinations.
+      // Destinations, from the same outlines as everything else in the frame.
+      const shapes = new Map(
+        countries
+          .filter((country) => destinationSet.has(country.properties.name))
+          .map((country) => [country.properties.name, country]),
+      );
       for (const name of L.destinations) {
-        const country = L.byName.get(name);
+        const country = shapes.get(name);
         if (!country) continue;
-        ctx.beginPath();
+        c.beginPath();
         path(country);
-        ctx.fillStyle =
+        c.fillStyle =
           name === L.selected
             ? palette.destSelected
             : name === L.hovered
               ? palette.destHover
               : palette.dest;
-        ctx.fill();
-        ctx.strokeStyle = palette.destStroke;
-        ctx.lineWidth = 0.8;
-        ctx.stroke();
+        c.fill();
+        c.strokeStyle = palette.destStroke;
+        c.lineWidth = 0.8;
+        c.stroke();
       }
 
       // Light and fall-off, so it reads as a sphere rather than a disc.
-      g = ctx.createRadialGradient(cx - r * 0.35, cy - r * 0.4, 0, cx, cy, r);
+      g = c.createRadialGradient(cx - r * 0.35, cy - r * 0.4, 0, cx, cy, r);
       g.addColorStop(0, palette.highlight);
       g.addColorStop(0.55, 'rgba(0, 0, 0, 0)');
       g.addColorStop(1, palette.limb);
-      ctx.beginPath();
-      path(sphere);
-      ctx.fillStyle = g;
-      ctx.fill();
-      ctx.strokeStyle = palette.edge;
-      ctx.lineWidth = 1;
-      ctx.stroke();
+      c.beginPath();
+      c.arc(cx, cy, r, 0, Math.PI * 2);
+      c.fillStyle = g;
+      c.fill();
+      c.strokeStyle = palette.edge;
+      c.lineWidth = 1;
+      c.stroke();
+    }
+
+    function draw(now: number) {
+      if (!ctx || !layerCtx || !L.width) return;
+      const { width: w, height: h } = L;
+      const cx = w / 2;
+      const cy = h / 2;
+      const r = baseRadius(L) * L.view.zoom;
+      const dpr = window.devicePixelRatio || 1;
+      // Geometry outside the canvas is culled before it is drawn — at regional
+      // zoom most of the near hemisphere lies beyond the frame.
+      projection
+        .translate([cx, cy])
+        .scale(r)
+        .rotate(rotation())
+        .clipExtent([
+          [-4, -4],
+          [w + 4, h + 4],
+        ]);
+
+      const moving = !!L.flight || L.dragging || Math.abs(L.velocity) > 0.01;
+      const key = [
+        L.view.centre[0],
+        L.view.centre[1],
+        L.view.zoom,
+        w,
+        h,
+        L.selected,
+        L.hovered,
+        moving,
+      ].join('|');
+      // A lit pin pulses, so its frames always draw; otherwise a frame whose
+      // view has not changed has nothing new to show.
+      const pulsing =
+        !L.reduced &&
+        L.pins.some(
+          (pin) =>
+            pin.slug === L.highlight || pin.slug === L.hoveredPin || pin.country === L.selected,
+        );
+      if (key === painted && !pulsing) return;
+      if (key !== painted) {
+        if (layer.width !== canvas!.width || layer.height !== canvas!.height) {
+          layer.width = canvas!.width;
+          layer.height = canvas!.height;
+        }
+        // In motion: the light outlines, resampled loosely; at rest, full detail.
+        projection.precision(moving ? 2 : 0.4);
+        paint(layerCtx, moving && L.coarse.length ? L.coarse : L.countries, cx, cy, r);
+        painted = key;
+      }
+
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas!.width, canvas!.height);
+      ctx.drawImage(layer, 0, 0);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       // Pins, on the near side only. Lit pins draw last, over their neighbours.
       const visible = L.pins
@@ -423,12 +492,6 @@ export function Globe({
         L.view.centre[0] -= L.velocity * (dt / 16);
         L.velocity *= 0.92;
         return;
-      }
-      // Drift: breathe a degree or so either side of the framed region.
-      if (L.rest && !L.reduced && !L.hovered && !L.highlight && !L.hoveredPin) {
-        const phase = Math.sin((now / DRIFT_PERIOD_MS) * Math.PI * 2);
-        const goal = L.rest.centre[0] + (phase * DRIFT_DEG) / Math.sqrt(L.rest.zoom);
-        L.view.centre[0] = lerp(L.view.centre[0], goal, Math.min(1, dt / 900));
       }
     }
 
@@ -512,9 +575,6 @@ export function Globe({
         L.velocity = 0;
         const name = hit(...at);
         if (name) L.onSelect(name);
-      } else {
-        // Wherever the hand left it becomes the place the drift rests.
-        L.rest = { centre: [...L.view.centre], zoom: L.view.zoom };
       }
       showLabel(event.pointerType === 'mouse' ? at : null);
     };
@@ -541,11 +601,12 @@ export function Globe({
       L.height = wrap.clientHeight;
       canvas.width = Math.round(L.width * dpr);
       canvas.height = Math.round(L.height * dpr);
+      // Resizing clears the canvas, so the next frame paints in full.
+      painted = '';
       const view = target();
       if (view && (first || !L.flight)) {
         // The first frame is placed, not flown to; later resizes keep the frame.
         L.view = { centre: [...view.centre], zoom: view.zoom };
-        L.rest = view;
       }
       draw(performance.now());
     };

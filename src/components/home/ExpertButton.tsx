@@ -11,7 +11,28 @@ import { site, whatsappHref } from '@/lib/site';
  */
 export function ExpertButton() {
   const [open, setOpen] = useState(false);
+  const [away, setAway] = useState(false);
   const box = useRef<HTMLDivElement>(null);
+
+  // The circle and the footer already offer every way to reach a designer,
+  // and the button would sit over their fields and links: it steps aside
+  // while either is on screen.
+  useEffect(() => {
+    const targets = [...document.querySelectorAll('[data-fab-away], footer')];
+    if (!targets.length) return;
+    const showing = new Set<Element>();
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) showing.add(entry.target);
+        else showing.delete(entry.target);
+      }
+      const hidden = showing.size > 0;
+      setAway(hidden);
+      if (hidden) setOpen(false);
+    });
+    targets.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -28,7 +49,7 @@ export function ExpertButton() {
   }, [open]);
 
   return (
-    <div ref={box} className={`hc hc-fab ${open ? 'open' : ''}`}>
+    <div ref={box} className={`hc hc-fab ${open ? 'open' : ''} ${away ? 'away' : ''}`}>
       <div className="panel" id="expert-panel" aria-hidden={!open}>
         <div className="lab">Speak to an expert</div>
         <p>

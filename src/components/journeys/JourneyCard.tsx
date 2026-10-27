@@ -20,12 +20,15 @@ export function JourneyCard({
   journey,
   media,
   priority = false,
+  wide = false,
   as: Heading = 'h3',
 }: {
   journey: JourneySummary;
   /** The photograph, when the page needs one other than the list frame. */
   media?: MediaKey;
   priority?: boolean;
+  /** A card set half the row wide, which takes a longer, lower frame. */
+  wide?: boolean;
   as?: 'h2' | 'h3';
 }) {
   const titleId = `card-${journey.slug}-title`;
@@ -34,12 +37,16 @@ export function JourneyCard({
     <article aria-labelledby={titleId} className="group relative flex h-full flex-col">
       <div className="relative">
         <Frame
-          ratio="4/3"
+          ratio={wide ? '16/10' : '4/3'}
           media={media ?? journey.listMedia}
           hover
           decorative
           priority={priority}
-          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          sizes={
+            wide
+              ? '(min-width: 1024px) 50vw, (min-width: 640px) 50vw, 100vw'
+              : '(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'
+          }
         />
         <Badges journey={journey} />
       </div>

@@ -20,8 +20,6 @@ export const discovered: Record<string, { src: string }> = {
   'ex-1': { src: '/images/ex-1.jpg' },
   'ex-2': { src: '/images/ex-2.jpg' },
   'ex-3': { src: '/images/ex-3.jpg' },
-  'ex-4': { src: '/images/ex-4.jpg' },
-  'ex-5': { src: '/images/ex-5.jpg' },
   'hotel-1': { src: '/images/hotel-1.jpg' },
   'hotel-2': { src: '/images/hotel-2.jpg' },
   'hotel-3': { src: '/images/hotel-3.jpg' },

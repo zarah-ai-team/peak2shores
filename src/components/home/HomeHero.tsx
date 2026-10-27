@@ -19,12 +19,25 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
   const [current, setCurrent] = useState(0);
   const [choice, setChoice] = useState<'auto' | 'play' | 'pause'>('auto');
   const [visible, setVisible] = useState(true);
+  // The films join only once the page has loaded: until then the first
+  // clip's still (a priority image) holds the frame, and the clips' megabytes
+  // do not compete with the scripts and the headline for the connection.
+  const [armed, setArmed] = useState(false);
   const section = useRef<HTMLElement>(null);
   const videos = useRef<(HTMLVideoElement | null)[]>([]);
   const last = useRef(-1);
 
-  const paused = choice === 'pause' || (choice === 'auto' && !!reduced);
+  // The reader's motion setting is only known in the browser, so it applies
+  // from the moment the films arm — the first render matches the server's.
+  const paused = choice === 'pause' || (choice === 'auto' && armed && !!reduced);
   const playing = !paused && visible;
+
+  useEffect(() => {
+    const arm = () => setArmed(true);
+    if (document.readyState === 'complete') arm();
+    else window.addEventListener('load', arm, { once: true });
+    return () => window.removeEventListener('load', arm);
+  }, []);
 
   useEffect(() => {
     const el = section.current;
@@ -35,6 +48,7 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
   }, []);
 
   useEffect(() => {
+    if (!armed) return;
     videos.current.forEach((el, i) => {
       if (!el) return;
       if (i !== current) {
@@ -48,7 +62,7 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
       if (playing) el.play().catch(() => {});
       else el.pause();
     });
-  }, [current, playing, reel]);
+  }, [armed, current, playing, reel]);
 
   const next = () => setCurrent((c) => (c + 1) % reel.length);
 
@@ -62,8 +76,8 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
               videos.current[i] = el;
             }}
             className="fill"
-            src={clip.video}
-            poster={clip.img}
+            // No poster: the still beneath is the optimised image already.
+            src={armed ? clip.video : undefined}
             muted
             playsInline
             // The clip on screen and the one after it load; the rest wait.

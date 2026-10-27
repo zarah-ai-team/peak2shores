@@ -147,13 +147,17 @@ export const media = {
     label: 'Explore',
     brief: 'A ridge trail or a sailboat, two people, wide.',
     tone: '#7f8c85',
-    alt: 'A lone sailboat on calm open sea',
+    // Marc's own photograph (Drive), in place of the stock sailboat.
+    src: '/images/drive/switzerland-alpine-suspension-bridge.jpg',
+    alt: 'A suspension bridge strung across a forested alpine valley above Zermatt',
   },
   'ex-5': {
     label: 'Stay',
     brief: 'A hotel room with the doors open to a view.',
     tone: '#a09a8c',
-    alt: 'Tall windows open onto a balcony, pines and the Ligurian coast beyond',
+    // Marc's own photograph (Drive) of a lodge the journeys use, in place of stock.
+    src: '/images/drive/south-africa-qwabi-lodge-suite.jpg',
+    alt: 'A thatched safari suite at Qwabi, its glass doors open onto a pool deck and the bush',
   },
   'hotel-1': {
     label: 'Amalfi Coast',
@@ -514,6 +518,13 @@ export const media = {
     tone: '#6c7f86',
     src: '/images/drive/south-africa-lions-head-table-mountain.jpg',
     alt: 'Lion’s Head and the Atlantic seaboard from Table Mountain',
+  },
+  'dest-private': {
+    label: 'Destinations · private travel',
+    brief: 'A wide, quiet view with room for type over it — mountains, meadow, sky.',
+    tone: '#4d5c5e',
+    src: '/images/drive/switzerland-grindelwald-eiger.jpg',
+    alt: '',
   },
   'sl-hero': {
     label: 'Hero · The Swiss Lakes',

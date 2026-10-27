@@ -82,7 +82,7 @@ export function FounderStory() {
 export function CircleBand() {
   const whatsapp = whatsappHref();
   return (
-    <section className="hc-circle" id="circle" aria-labelledby="circle-title">
+    <section className="hc-circle" id="circle" aria-labelledby="circle-title" data-fab-away>
       <div className="bg" aria-hidden>
         <Image src={circle.img} alt="" fill sizes="100vw" className="fill" />
       </div>

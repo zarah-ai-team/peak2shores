@@ -98,11 +98,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     // The boot script writes attributes onto <html> before hydration; React
     // must not treat them as a mismatch.
-    <html
-      lang="en"
-      className={poppins.variable}
-      suppressHydrationWarning
-    >
+    <html lang="en" className={poppins.variable} suppressHydrationWarning>
       <body>
         <script dangerouslySetInnerHTML={{ __html: boot }} />
         {/* Consent Mode defaults must exist before Tag Manager loads. */}

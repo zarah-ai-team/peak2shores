@@ -1,0 +1,461 @@
+/* ==========================================================================
+   Destinations — set in the homepage's language (home.css supplies the .hc
+   tokens, buttons, labels, the hero and the intro). Photograph tiles at the
+   homepage radius, deep-lake bands, pill buttons, nothing square.
+   ========================================================================== */
+
+/* -- 01 Opening ---------------------------------------------------------- */
+/* The photograph settles once as the page opens, and then holds still. */
+.dz-settle {
+  animation: dz-settle 2.4s var(--ease) both;
+}
+@keyframes dz-settle {
+  from {
+    transform: scale(1.06);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+.dz-hero .dz-eb {
+  margin-bottom: 22px;
+  color: var(--ice);
+}
+.dz-hero .copy p {
+  max-width: 40ch;
+}
+/* The countries, as a way into the page, along the foot of the photograph. */
+.dz-index {
+  position: absolute;
+  left: var(--gut);
+  right: var(--gut);
+  bottom: clamp(24px, 4svh, 40px);
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+}
+.dz-index a {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 20px;
+  border-radius: 999px;
+  border: 1px solid rgb(255 255 255 / 0.32);
+  background: rgb(8 20 28 / 0.22);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition:
+    background 0.4s var(--ease),
+    border-color 0.4s var(--ease);
+}
+.dz-index a span {
+  color: var(--sky);
+  letter-spacing: 0.1em;
+}
+.dz-index a:hover {
+  background: var(--color-brand-deep);
+  border-color: var(--color-brand-deep);
+}
+.dz-index a:hover span {
+  color: #fff;
+}
+.dz-index a:focus-visible {
+  outline: 2px solid var(--sky);
+  outline-offset: 3px;
+}
+
+/* -- 02 Statement -------------------------------------------------------- */
+.dz-intro p em {
+  white-space: nowrap;
+}
+.dz-facts {
+  list-style: none;
+  margin: clamp(40px, 4vw, 56px) auto 0;
+  padding: 0;
+  max-width: 980px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid rgb(20 29 36 / 0.14);
+}
+.dz-facts li {
+  padding: 28px 16px 0;
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+}
+.dz-facts li + li {
+  border-left: 1px solid rgb(20 29 36 / 0.14);
+}
+.dz-facts b {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(40px, 4vw, 56px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--lake);
+}
+.dz-facts span {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* -- 03 Where we go ------------------------------------------------------ */
+.dz-where {
+  background: var(--paper);
+  color: var(--ink);
+  padding: clamp(24px, 3vw, 48px) var(--gut) clamp(96px, 9vw, 140px);
+}
+.dz-head {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  gap: 64px;
+  align-items: end;
+  margin-bottom: clamp(48px, 5vw, 72px);
+}
+.dz-head .lab {
+  color: var(--lake);
+}
+.dz-head h2,
+.dz-name h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(38px, 4.2vw, 60px);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  margin: 16px 0 0;
+  max-width: 20ch;
+}
+.dz-head p,
+.dz-name-head p {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.75;
+  margin: 0;
+  color: #3a434a;
+}
+
+.dz-place {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(28px, 3.4vw, 56px);
+  align-items: center;
+}
+.dz-place + .dz-place {
+  margin-top: clamp(56px, 6vw, 96px);
+}
+.dz-place.flip {
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+}
+.dz-place.flip .dz-tile {
+  order: 2;
+}
+
+.dz-tile {
+  position: relative;
+  height: clamp(440px, 44vw, 660px);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--deep);
+  color: #fff;
+  isolation: isolate;
+}
+.dz-tile img {
+  transition: transform 1.8s var(--ease);
+}
+.dz-place:hover .dz-tile img {
+  transform: scale(1.04);
+}
+.dz-tile .ws,
+.dz-frame .ws {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgb(8 20 28 / 0.38) 0%, rgb(8 20 28 / 0) 26%),
+    linear-gradient(180deg, rgb(8 20 28 / 0) 42%, rgb(8 20 28 / 0.82) 100%);
+}
+.dz-num {
+  position: absolute;
+  top: 24px;
+  left: 28px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+}
+.dz-tile-cap {
+  position: absolute;
+  left: clamp(24px, 3vw, 44px);
+  right: clamp(24px, 3vw, 44px);
+  bottom: clamp(24px, 3vw, 40px);
+}
+.dz-tile-cap .lab {
+  color: var(--ice);
+}
+.dz-tile h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(48px, 6.4vw, 104px);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  margin: 12px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.dz-count {
+  color: var(--lake);
+  margin-bottom: 18px;
+}
+.dz-journeys {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+/* A journey: a card on the paper, lifting a little to the pointer. */
+.dz-j {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px 24px 24px 28px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid rgb(20 29 36 / 0.1);
+  box-shadow: 0 1px 2px rgb(20 29 36 / 0.04);
+  color: var(--ink);
+  text-decoration: none;
+  transition:
+    transform 0.4s var(--ease),
+    box-shadow 0.4s var(--ease),
+    border-color 0.4s var(--ease);
+}
+.dz-j:hover {
+  transform: translateY(-2px);
+  border-color: rgb(17 144 203 / 0.45);
+  box-shadow: 0 18px 40px rgb(20 29 36 / 0.1);
+}
+.dz-j:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+.dz-j-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+}
+.dz-j-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.dz-j-title {
+  font-family: var(--serif);
+  font-size: clamp(24px, 2vw, 30px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  transition: color 0.4s var(--ease);
+}
+.dz-j:hover .dz-j-title {
+  color: var(--lake);
+}
+.dz-j-lead {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #3a434a;
+}
+.dz-j-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+  margin-top: 6px;
+  padding-top: 12px;
+  border-top: 1px solid rgb(20 29 36 / 0.1);
+  font-family: var(--sans);
+  font-size: 13px;
+  color: #3a434a;
+}
+.dz-j-facts b {
+  font-weight: 600;
+  color: var(--ink);
+}
+/* The arrow takes the homepage's round button, dark on paper. */
+.hc .dz-j .dz-j-go {
+  border-color: rgb(20 29 36 / 0.3);
+  color: var(--ink);
+}
+.hc .dz-j:hover .dz-j-go {
+  background: var(--color-brand-deep);
+  border-color: var(--color-brand-deep);
+  color: #fff;
+}
+
+/* -- 04 The name --------------------------------------------------------- */
+.dz-name {
+  background: var(--deep);
+  color: #fff;
+  padding: clamp(96px, 9.7vw, 140px) var(--gut) clamp(100px, 10vw, 150px);
+}
+.dz-name-head {
+  display: grid;
+  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+  gap: 64px;
+  align-items: end;
+  margin-bottom: clamp(44px, 5vw, 64px);
+}
+.dz-name-head .lab {
+  color: var(--ice);
+}
+.dz-name h2 em {
+  font-style: normal;
+  color: var(--sky);
+}
+.dz-name-head p {
+  color: #dce6ec;
+}
+.dz-frames {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+.dz-frame {
+  position: relative;
+  height: clamp(380px, 36vw, 560px);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--night);
+}
+/* Peaks and shores, the two ends of the name, sit lower than the two between. */
+.dz-frame:nth-child(even) {
+  margin-top: clamp(28px, 4vw, 64px);
+}
+.dz-frame img {
+  transition: transform 1.8s var(--ease);
+}
+.dz-frame:hover img {
+  transform: scale(1.05);
+}
+.dz-frame-cap {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+}
+.dz-frame-cap .lab {
+  color: var(--sky);
+}
+.dz-frame-name {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--serif);
+  font-size: 26px;
+  line-height: 1.12;
+}
+
+/* -- 05 Closing ---------------------------------------------------------- */
+.dz-close h2 {
+  max-width: 16ch;
+}
+.dz-close .ctarow {
+  margin-top: 8px;
+}
+
+/* -- Smaller screens ----------------------------------------------------- */
+@media (max-width: 900px) {
+  .dz-head,
+  .dz-name-head {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+  .dz-place,
+  .dz-place.flip {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+  .dz-place.flip .dz-tile {
+    order: 0;
+  }
+  .dz-tile {
+    height: clamp(360px, 92vw, 520px);
+  }
+  .dz-frames {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .dz-frame {
+    height: clamp(240px, 62vw, 420px);
+  }
+  .dz-frame:nth-child(even) {
+    margin-top: 32px;
+  }
+}
+@media (max-width: 600px) {
+  /* The phone hero runs to the foot of the frame; the countries follow just below. */
+  .dz-index {
+    display: none;
+  }
+  .dz-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .dz-facts li {
+    padding: 22px 0;
+  }
+  .dz-facts li + li {
+    border-left: 0;
+    border-top: 1px solid rgb(20 29 36 / 0.14);
+  }
+  .dz-j {
+    padding: 20px;
+    gap: 14px;
+  }
+  .hc .dz-j .dz-j-go {
+    width: 44px;
+    height: 44px;
+  }
+  .dz-frame-cap {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
+  .dz-frame-name {
+    font-size: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dz-settle {
+    animation: none;
+  }
+  .dz-tile img,
+  .dz-frame img,
+  .dz-j {
+    transition: none;
+  }
+}

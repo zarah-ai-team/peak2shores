@@ -27,6 +27,9 @@ const promises = [
   { title: 'Thoughtfully paced', line: 'Fewer moves, longer stays, and free time on purpose.' },
 ];
 
+/** How many cards lead two to a row so every row of three is full. */
+const leadCount = (n: number) => (n % 3 === 2 ? 2 : n % 3 === 1 ? Math.min(4, n) : 0);
+
 /**
  * 03 — Small Luxury Group Journeys, after A&K's small-group pages: the promise
  * in three lines, then every departure still to come as a card — dates, group
@@ -76,16 +79,29 @@ export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
           ))}
         </RevealGroup>
 
+        {/* Rows of three on a wide screen, with the soonest departures set two
+            to a row where a count would leave the last row short — five read
+            as two over three, never three over two and a gap. The list is
+            tall, so it starts to arrive as soon as its top is in view. */}
         <RevealGroup
           as="ul"
           stagger={0.08}
-          className="m-0 grid list-none gap-x-8 gap-y-16 p-0 sm:grid-cols-2 lg:grid-cols-3"
+          amount={0.02}
+          className="m-0 grid list-none gap-x-8 gap-y-16 p-0 sm:grid-cols-2 lg:grid-cols-6"
         >
-          {upcoming.map((journey) => (
-            <RevealItem as="li" key={journey.slug} distance={18}>
-              <JourneyCard journey={journey} media={homeFrames[journey.slug]} />
-            </RevealItem>
-          ))}
+          {upcoming.map((journey, i) => {
+            const wide = i < leadCount(upcoming.length);
+            return (
+              <RevealItem
+                as="li"
+                key={journey.slug}
+                distance={18}
+                className={wide ? 'lg:col-span-3' : 'lg:col-span-2'}
+              >
+                <JourneyCard journey={journey} media={homeFrames[journey.slug]} wide={wide} />
+              </RevealItem>
+            );
+          })}
         </RevealGroup>
       </div>
     </Section>

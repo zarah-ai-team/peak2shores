@@ -458,7 +458,8 @@
   font-size: 10px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  background: var(--brand);
+  /* The deeper blue: white caps this small need 4.5:1 (the brand blue is 3.6:1). */
+  background: var(--color-brand-deep);
   color: #fff;
   padding: 7px 12px;
   border-radius: 999px;
@@ -758,6 +759,17 @@
   inset: 0;
   background: rgb(8 20 28 / 0.22);
 }
+/* The label and line at the top sit over sky on both sides; a band of shade
+   above both photographs keeps them legible wherever the handle rests. */
+.hc-cmp::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 46%;
+  z-index: 4;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgb(8 20 28 / 0.58) 0%, rgb(8 20 28 / 0) 100%);
+}
 .hc-cmp .drift {
   animation: hc-drift 24s ease-in-out infinite alternate;
 }
@@ -1010,7 +1022,8 @@
   right: 28px;
   bottom: 28px;
 }
-.hc-hot h3 {
+.hc-hot h3,
+.hc-hot .hn {
   font-family: var(--serif);
   font-weight: 400;
   font-size: 26px;
@@ -1041,7 +1054,8 @@
 .hc-hot .back .lab {
   color: var(--lake);
 }
-.hc-hot .back h3 {
+.hc-hot .back .hn {
+  display: block;
   margin-top: 12px;
 }
 .hc-hot dl {
@@ -1173,6 +1187,20 @@
 .hc-circle .bg img {
   filter: brightness(0.62) saturate(1.05);
 }
+/* A soft pool of shade behind the copy and the field, so the small type
+   holds on the bright sky and sea at the centre of the frame. */
+.hc-circle::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 58% 62% at 50% 52%,
+    rgb(8 20 28 / 0.46) 0%,
+    rgb(8 20 28 / 0) 100%
+  );
+}
 .hc-circle .in {
   position: relative;
   z-index: 2;
@@ -1250,7 +1278,8 @@
   min-height: 54px;
   padding: 0 26px 0 20px;
   border-radius: 999px;
-  background: var(--brand);
+  /* White 12px caps on the deeper blue: 5:1, where the brand blue is 3.6:1. */
+  background: var(--color-brand-deep);
   color: #fff;
   border: 0;
   font-family: inherit;
@@ -1265,8 +1294,26 @@
     transform 0.6s var(--ease);
 }
 .hc-fab .fab-btn:hover {
-  background: var(--color-brand-deep);
+  background: var(--lake);
   transform: translateY(-2px);
+}
+/* Near the circle and the footer, which carry every way to reach us, the
+   button steps aside so it never sits over their fields and links. */
+.hc-fab {
+  transition:
+    opacity 0.4s var(--ease),
+    transform 0.4s var(--ease),
+    visibility 0s linear 0s;
+}
+.hc-fab.away {
+  opacity: 0;
+  transform: translateY(16px);
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.4s var(--ease),
+    transform 0.4s var(--ease),
+    visibility 0s linear 0.4s;
 }
 .hc-fab .panel {
   width: 330px;
