@@ -37,7 +37,7 @@ export function Itinerary({
         <div className="col-span-4 self-start md:col-span-8 lg:sticky lg:top-[calc(var(--nav-h-compact)+96px)] lg:col-span-4">
           <SectionLabel className="mb-stack">{kicker}</SectionLabel>
           <Reveal variant="mask">
-            <h2 id="itinerary-title" className="h3 mb-stack max-w-[16ch]">
+            <h2 id="itinerary-title" className="h2 mb-stack max-w-[16ch]">
               {headline}
             </h2>
           </Reveal>

@@ -131,14 +131,14 @@ export function JourneyListing({
         <p className="kicker-sm m-0 mb-3">
           {journey.country} · {journey.region} · {journey.days} days
         </p>
-        <h2 id={titleId} className="h3 m-0 mb-4">
+        <h3 id={titleId} className="h3 m-0 mb-4">
           <Link
             href={`/journeys/${journey.slug}`}
             className="transition-colors duration-300 after:absolute after:inset-0 after:content-[''] group-hover:text-acqua-text"
           >
             {journey.title}
           </Link>
-        </h2>
+        </h3>
 
         <dl className="m-0 grid gap-x-8 gap-y-5 border-t border-line pt-5 sm:grid-cols-2">
           <div className="sm:col-span-2">

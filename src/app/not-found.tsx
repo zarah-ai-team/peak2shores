@@ -17,7 +17,7 @@ export default function NotFound() {
           <SectionLabel as="p" className="enter m-0 mb-8" style={enterAt(0)}>
             404
           </SectionLabel>
-          <h1 className="h1 enter m-0 max-w-[14ch]" style={enterAt(0.1)}>
+          <h1 className="page-title enter m-0 max-w-[14ch]" style={enterAt(0.1)}>
             Something went off course.
           </h1>
           <div className="enter mt-block md:max-w-[480px]" style={enterAt(0.24)}>
@@ -35,7 +35,7 @@ export default function NotFound() {
             </div>
             <p className="kicker mt-10 flex items-center gap-3">
               <Tick />
-              Fewer, better journeys.
+              Iconic places. Extraordinary experiences. Lifelong connections.
             </p>
           </div>
         </div>

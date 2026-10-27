@@ -11,7 +11,7 @@ import { getPageContent, getSiteSettings, pageMetadata } from '@/lib/content';
 export const metadata = pageMetadata({
   title: 'Our story',
   description:
-    'From the peaks of Switzerland to the shores of Miami. Marc Haeni founded Peaks2Shores in 2022 as the natural extension of a life spent travelling and returning.',
+    'From the peaks of Switzerland to the shores of Miami. Marc Haeni founded Peaks2Shores in 2022 as the natural extension of a life spent traveling and returning.',
   path: '/our-story',
 });
 
@@ -34,7 +34,7 @@ export default async function OurStoryPage() {
       <PhotoHero
         layout="split"
         media="home-hero-2"
-        titleSize="h2"
+        titleSize="page-title"
         kicker={
           <span className="flex items-center gap-3.5">
             <Tick />
@@ -113,9 +113,9 @@ export default async function OurStoryPage() {
       </Section>
 
       <Section ground="panel" pad="section-sm" aria-labelledby="route-title">
-        <h2 id="route-title" className="kicker mb-block">
+        <SectionLabel as="h2" id="route-title" className="mb-block">
           {peaksToShores.headlineParts.join(' ')}
-        </h2>
+        </SectionLabel>
         <RevealGroup as="ol" className="m-0 grid list-none grid-cols-2 gap-y-10 p-0 lg:grid-cols-4">
           {peaksToShores.frames.map((frame, i) => (
             <RevealItem as="li" key={frame.label} distance={12} className="relative pr-4 pt-9">

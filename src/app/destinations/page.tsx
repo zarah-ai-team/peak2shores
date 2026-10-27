@@ -25,7 +25,7 @@ export const revalidate = 3600;
  * countries as a way in, the statement set large on paper, then each country
  * as a photograph tile with its journeys beside it as cards, the name on a
  * deep-lake band, and a closing invitation over a photograph. Every fact is
- * derived from the catalogue — nothing here is invented.
+ * derived from the catalog — nothing here is invented.
  */
 export default async function DestinationsPage() {
   const [places, { peaksToShores }] = await Promise.all([
@@ -114,7 +114,7 @@ export default async function DestinationsPage() {
             <div className="lab">Where we go</div>
             <Reveal variant="mask">
               <h2 id="dz-where-title">
-                {capitalise(countries)} countries, and the journeys that know them.
+                {capitalize(countries)} countries, and the journeys that know them.
               </h2>
             </Reveal>
           </div>
@@ -198,13 +198,13 @@ export default async function DestinationsPage() {
 
 const WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
 const numberWord = (n: number) => WORDS[n] ?? String(n);
-const capitalise = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 const pad = (n: number) => String(n).padStart(2, '0');
 
 /**
  * One country: its photograph as a tall tile with the name set over it, and
  * beside it the journeys that go there, each a card with its dates, length
- * and price. Rows alternate sides so no two neighbours share a skeleton.
+ * and price. Rows alternate sides so no two neighbors share a skeleton.
  */
 function Country({ place, index }: { place: Destination; index: number }) {
   const photo = getMedia(place.media);

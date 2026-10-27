@@ -4,7 +4,7 @@ import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 export type ButtonVariant =
   'ink' | 'navy' | 'light' | 'outline' | 'outline-dark' | 'rule' | 'rule-dark';
 
-/* `.btn` (globals.css) owns the transitions: colour, a 2px lift on hover with
+/* `.btn` (globals.css) owns the transitions: color, a 2px lift on hover with
    the lift's own faint shadow, a settle on press, and the disabled fade.
    Every filled/outline button is at least 44px tall. */
 const base =
@@ -17,13 +17,13 @@ const variants: Record<ButtonVariant, string> = {
   navy: 'bg-navy text-ivory px-7 py-[17px] hover:bg-brand',
   /* On a photograph or a dark ground. */
   light: 'bg-ivory text-ink px-7 py-[17px] hover:bg-brand hover:text-white',
-  /* On paper; fills with the brand blue. Inherits colour, so it also works in the header. */
+  /* On paper; fills with the brand blue. Inherits color, so it also works in the header. */
   outline:
     'btn--flat border border-current px-[26px] py-4 text-current hover:bg-brand hover:text-white hover:border-brand',
   /* On a dark ground; fills with the brand blue. */
   'outline-dark':
     'btn--flat border border-on-dark/70 px-[26px] py-4 text-on-dark hover:bg-brand hover:text-white hover:border-brand',
-  /* The blue hairline link. Picks dark colours automatically inside a
+  /* The blue hairline link. Picks dark colors automatically inside a
      dark ground ([data-tone="dark"], .bg-navy…, [data-hero]). */
   rule: 'link-rule',
   /* Forces the dark treatment where the ground can't be detected. */

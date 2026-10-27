@@ -59,7 +59,7 @@ const axisOf = (direction: RevealDirection) =>
  * is identical for every reader; `MotionConfig reducedMotion="user"` collapses
  * the movement, and the `[data-reveal]` rules in globals.css hand readers
  * with reduced motion — and readers without JavaScript — the finished state
- * over the top of whatever Motion serialised into the HTML.
+ * over the top of whatever Motion serialized into the HTML.
  */
 
 /** A block that lifts and fades in once, the first time it is scrolled to. */

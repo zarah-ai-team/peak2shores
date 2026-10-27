@@ -8,7 +8,7 @@ export type JourneyTab = { id: string; label: string };
 /**
  * The journey page's menu, after A&K: Overview │ Itinerary │ Stays │ Dates &
  * Rates, pinned under the header once the hero has passed, with the price and
- * the way to enquire always beside it. The tab whose section is under the bar
+ * the way to inquire always beside it. The tab whose section is under the bar
  * is marked current as the page scrolls. The tabs are plain anchor links, so
  * they work before hydration and every section keeps its own address.
  *

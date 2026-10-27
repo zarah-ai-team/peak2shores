@@ -23,7 +23,7 @@ const isDark = (g: SectionGround) => g === 'navy' || g === 'navy-deep' || g === 
 type Tag = 'section' | 'div' | 'aside' | 'article' | 'footer';
 
 /**
- * The text container: max 1680px, centred, with the responsive page gutter
+ * The text container: max 1680px, centered, with the responsive page gutter
  * (20 / 40 / 56 / 72px). Full-bleed photographs sit outside it.
  */
 export function Container({
@@ -58,7 +58,7 @@ export function Container({
  * - `contained` (default true): wraps children in `.container-site`. Pass
  *   false for full-bleed content and place a `<Container>` yourself.
  * - `screen`: from 1024px the section is exactly one viewport tall, its
- *   content a centred column (`.screen` in globals.css). Replaces `pad`.
+ *   content a centered column (`.screen` in globals.css). Replaces `pad`.
  */
 export function Section({
   children,

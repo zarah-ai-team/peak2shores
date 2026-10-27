@@ -53,7 +53,7 @@ export type {
 
 /**
  * A country we return to, described only by the journeys that go there.
- * Derived from the catalogue — nothing is invented. A CMS may later supply
+ * Derived from the catalog — nothing is invented. A CMS may later supply
  * destinations as their own documents; the shape stays the same.
  */
 export type Destination = {

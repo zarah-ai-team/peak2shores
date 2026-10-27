@@ -61,12 +61,12 @@ function Chapter({ experience, index }: { experience: Experience; index: number 
     <>
       <SectionLabel className="mb-stack">{kicker}</SectionLabel>
       <Reveal variant="mask">
-        <h2 id={titleId} className="h1 mb-stack">
+        <h2 id={titleId} className="h2 mb-stack">
           {experience.title}
         </h2>
       </Reveal>
       <Reveal delay={0.1}>
-        <p className="lead measure-lead m-0">{experience.body}</p>
+        <p className="prose-body measure m-0">{experience.body}</p>
       </Reveal>
     </>
   );
@@ -147,7 +147,7 @@ function Chapter({ experience, index }: { experience: Experience; index: number 
 /**
  * The ways to travel, after the experiences they are built from: six frames
  * in a 3 × 2 spread, the first row set taller so the grid reads as a page of
- * a magazine rather than a catalogue. Text only beneath each — no buttons.
+ * a magazine rather than a catalog. Text only beneath each — no buttons.
  */
 function WaysToTravel() {
   return (
@@ -157,7 +157,7 @@ function WaysToTravel() {
           <div className="col-span-4 md:col-span-8 lg:col-span-7">
             <SectionLabel className="mb-stack">Ways to travel</SectionLabel>
             <Reveal variant="mask">
-              <h2 id="ways-title" className="h1 max-w-[16ch]">
+              <h2 id="ways-title" className="h2 max-w-[16ch]">
                 From a small group to a yacht of your own.
               </h2>
             </Reveal>

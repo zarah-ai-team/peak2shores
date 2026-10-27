@@ -70,7 +70,10 @@ export default async function JournalPage() {
       </div>
 
       {lead && (
-        <section aria-label="In the journal" className="pb-section-sm pt-block">
+        <section aria-labelledby="journal-entries-title" className="pb-section-sm pt-block">
+          <h2 id="journal-entries-title" className="sr-only">
+            In the journal
+          </h2>
           <div className="container-site">
             <article className="grid-site items-end gap-y-8">
               <Frame
@@ -144,7 +147,7 @@ function Teaser({ entry, size = 'row' }: { entry: ForthcomingArticle; size?: 'le
         <span aria-hidden>·</span>
         <span>{entry.date}</span>
       </p>
-      <h2 className={`${size === 'lead' ? 'h3' : 'h4'} mb-4 max-w-[22ch]`}>{entry.title}</h2>
+      <h3 className={`${size === 'lead' ? 'h3' : 'h4'} mb-4 max-w-[22ch]`}>{entry.title}</h3>
       <p className={`${size === 'lead' ? 'prose-body' : 'prose-body-sm'} measure mb-6`}>
         {entry.standfirst}
       </p>

@@ -82,7 +82,7 @@ export const ways: (HomeVisual & { title: string; line: string; href: string; le
   [
     {
       title: 'Small Luxury Group Journeys',
-      line: 'Intimate journeys for no more than 18 guests, bringing together exceptional places, meaningful experiences and the joy of discovering the world together.',
+      line: 'Intimate journeys for never more than 18 guests, bringing together exceptional places, meaningful experiences and the joy of discovering the world together.',
       href: '/journeys',
       // Marc's Kenya frame is a still; the film goes once it lands.
       ...marcs('client-way-group', {
@@ -98,7 +98,7 @@ export const ways: (HomeVisual & { title: string; line: string; href: string; le
       href: '/plan#private',
       video: '/video/home/way-private.mp4',
       img: '/images/home/way-private.jpg',
-      alt: 'Two travellers raising glasses of red wine among the trees',
+      alt: 'Two travelers raising glasses of red wine among the trees',
     },
     {
       title: 'Safari',

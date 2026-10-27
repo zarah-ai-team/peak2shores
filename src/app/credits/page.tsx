@@ -5,7 +5,7 @@ import credits from '../../../public/images/credits.json';
 
 export const metadata = pageMetadata({
   title: 'Photography credits',
-  description: 'Sources and licences for the photographs on this site.',
+  description: 'Sources and licenses for the photographs on this site.',
   path: '/credits',
 });
 
@@ -32,8 +32,8 @@ export default function CreditsPage() {
   return (
     <>
       <PageTitle kicker="Credits" title="Photography." variant="stacked">
-        The photographs on this site are used under the licences listed below. Each links to its
-        source on Unsplash or Wikimedia Commons, where the licence text and the author’s full
+        The photographs on this site are used under the licenses listed below. Each links to its
+        source on Unsplash or Wikimedia Commons, where the license text and the author’s full
         attribution can be found.
       </PageTitle>
 
@@ -41,7 +41,7 @@ export default function CreditsPage() {
           never reached on a short viewport: start as soon as any of it shows. */}
       <Reveal as="section" amount={0} className="container-site pb-section-sm">
         <table className="block w-full border-collapse text-left sm:table">
-          <caption className="sr-only">Photograph, author and licence</caption>
+          <caption className="sr-only">Photograph, author and license</caption>
           <thead className="hidden sm:table-header-group">
             <tr className="border-b border-line">
               <th scope="col" className="kicker-sm py-4 pr-6 font-medium">
@@ -51,7 +51,7 @@ export default function CreditsPage() {
                 Author
               </th>
               <th scope="col" className="kicker-sm py-4 font-medium sm:text-right">
-                Licence
+                License
               </th>
             </tr>
           </thead>

@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Frame } from '@/components/ui/Frame';
 import { Arrow } from '@/components/ui/Button';
+import { SectionLabel } from '@/components/ui/Editorial';
 import { StatusTag } from '@/components/ui/StatusTag';
 import { journeyTagStatus } from '@/components/pages/journeyStatus';
 import {
@@ -17,7 +18,7 @@ export const revalidate = 3600;
  * The Instagram profile link, on our own site instead of Linktree — so the
  * visit, and where it came from, stays with us.
  *
- * Use this as the bio link, tagged so enquiries are credited to Instagram:
+ * Use this as the bio link, tagged so inquiries are credited to Instagram:
  *   https://peaks2shores.com/links?utm_source=instagram&utm_medium=social&utm_campaign=bio
  *
  * Kept out of search: it duplicates pages that rank on their own.
@@ -44,8 +45,8 @@ export default async function LinksPage() {
       meta: `${journey.country} · ${journey.days} days · ${journey.departure}`,
       tag: journeyTagStatus(journey),
     })),
-    { href: '/plan', title: 'Plan your journey', meta: 'Enquire, or design a private trip' },
-    { href: '/journeys', title: 'All journeys', meta: `Up to ${site.maxGuests} guests each` },
+    { href: '/plan', title: 'Plan your journey', meta: 'Inquire, or design a private trip' },
+    { href: '/journeys', title: 'All journeys', meta: `Max. ${site.maxGuests} guests each` },
     { href: '/journal', title: 'The journal', meta: 'Places, hotels and tables' },
     { href: '/our-story', title: 'Our story', meta: site.founder.name },
   ];
@@ -63,11 +64,15 @@ export default async function LinksPage() {
             className="h-auto w-24"
           />
         </Link>
-        <p className="kicker mb-4">From Instagram</p>
-        <h1 className="h3 mb-4">Fewer, better journeys.</h1>
+        <SectionLabel as="p" className="m-0 mb-4">
+          From Instagram
+        </SectionLabel>
+        <h1 className="page-title mb-4">
+          Iconic places. Extraordinary experiences. Lifelong connections.
+        </h1>
         <p className="prose-body mb-block">
-          Small luxury group journeys of no more than {site.maxGuests} guests, personally curated by{' '}
-          {site.founder.name}.
+          Small luxury group journeys of never more than {site.maxGuests} guests, personally curated
+          by {site.founder.name}.
         </p>
 
         {lead && (

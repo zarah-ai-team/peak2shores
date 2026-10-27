@@ -118,7 +118,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <MotionProvider>
           <Preloader />
           <Header primary={nav.primary} cta={nav.cta} />
-          {/* After the header: its colour follows the header's state through a
+          {/* After the header: its color follows the header's state through a
               sibling selector (.scroll-progress in globals.css). */}
           <ScrollProgress />
           {/* Focusable so the skip link lands reliably in every browser. */}

@@ -40,7 +40,7 @@ export const pillars: Pillar[] = [
   {
     n: '02',
     title: 'Curated',
-    lead: 'Fewer, better. Never more.',
+    lead: 'Hand-picked. Never ordinary.',
     body: 'Hand-picked destinations and exceptional hotels. Every stop has earned its place, and everything mediocre has already been filtered out.',
     media: 'pillar-2',
     imageFirst: false,
@@ -74,7 +74,7 @@ export const reasons = [
   {
     n: '02',
     title: 'Personally curated',
-    body: 'Journeys shaped by Marc’s own experience and recommendations — not a catalogue.',
+    body: 'Journeys shaped by Marc’s own experience and recommendations — not a catalog.',
   },
   {
     n: '03',
@@ -239,7 +239,7 @@ export const founder = {
     'Marc Haeni was born and raised in Switzerland and has called Miami home for more than 25 years. In between, decades of international travel — and the relationships that come from returning to the same places, tables and people again and again.',
     'Peaks2Shores began in 2022 as the natural extension of that life. It isn’t a personal brand. It’s a promise: there is a real person behind every journey, and he has already been where you’re going.',
   ],
-  quote: 'Fewer, better journeys. Personally curated.',
+  quote: 'Iconic places. Extraordinary experiences. Lifelong connections.',
 };
 
 /* -- The circle ---------------------------------------------------------- */

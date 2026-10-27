@@ -17,10 +17,10 @@ export async function GET() {
     '',
     `> ${site.description}`,
     '',
-    `${site.name} (${site.legalName}) designs small luxury group journeys of no more than ${site.maxGuests} guests, ` +
-      `each personally curated by founder ${site.founder.name}, plus private journeys on the traveller's own dates. ` +
+    `${site.name} (${site.legalName}) designs small luxury group journeys of never more than ${site.maxGuests} guests, ` +
+      `each personally curated by founder ${site.founder.name}, plus private journeys on the traveler's own dates. ` +
       `Based in ${site.locations.replace(' · ', ' and ')}. Founded ${site.founded}. ` +
-      'Prices are per person in US dollars. Enquiring commits the traveller to nothing.',
+      'Prices are per person in US dollars. Inquiring commits the traveler to nothing.',
     '',
     '## Journeys',
     '',
@@ -37,7 +37,7 @@ export async function GET() {
     `- [Destinations](${url('/destinations')}): the countries the journeys go to`,
     `- [Experiences](${url('/experiences')}): what a day on a journey can hold`,
     `- [Our story](${url('/our-story')}): ${site.founder.name} and the philosophy behind the journeys`,
-    `- [Plan your journey](${url('/plan')}): enquire about a journey or a private trip`,
+    `- [Plan your journey](${url('/plan')}): inquire about a journey or a private trip`,
     `- [Journal](${url('/journal')}): notes on places, hotels and tables`,
     '',
     '## Contact',

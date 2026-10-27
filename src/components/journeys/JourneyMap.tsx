@@ -57,7 +57,7 @@ export function JourneyMap({ journey }: { journey: Journey }) {
         <div className="col-span-4 md:col-span-8 lg:col-span-4">
           <SectionLabel className="mb-stack">On the map</SectionLabel>
           <Reveal variant="mask">
-            <h2 id="map-title" className="h3 mb-stack max-w-[16ch]">
+            <h2 id="map-title" className="h2 mb-stack max-w-[16ch]">
               {journey.region}, {journey.country}.
             </h2>
           </Reveal>

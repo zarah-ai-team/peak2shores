@@ -67,7 +67,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   };
 }
 
-/** What the enquiry block says, by booking state. Never hidden. */
+/** What the inquiry block says, by booking state. Never hidden. */
 function enquiryCopy(journey: Journey, founder: string) {
   const firstName = founder.split(' ')[0];
   switch (journey.status) {
@@ -75,19 +75,19 @@ function enquiryCopy(journey: Journey, founder: string) {
     case 'waitlist':
       return {
         kicker: 'Join the waitlist',
-        intro: `${journey.title} is ${journey.status === 'sold-out' ? 'full' : 'on a waitlist'}. An enquiry adds your name to the list — it holds nothing and commits you to nothing, and it starts a conversation with ${firstName}.`,
+        intro: `${journey.title} is ${journey.status === 'sold-out' ? 'full' : 'on a waitlist'}. An inquiry adds your name to the list — it holds nothing and commits you to nothing, and it starts a conversation with ${firstName}.`,
       };
     case 'past':
       return {
         kicker: 'This journey has departed',
-        intro: `${journey.title} has already run. If you would like something like it, tell us a little — enquiring holds nothing and commits you to nothing.`,
+        intro: `${journey.title} has already run. If you would like something like it, tell us a little — inquiring holds nothing and commits you to nothing.`,
       };
     default:
       return journey.detail
         ? { kicker: 'Plan your journey', intro: undefined }
         : {
             kicker: 'Register interest',
-            intro: `Tell us you are interested in ${journey.title} and who you would travel with. Enquiring holds nothing and commits you to nothing — it starts a conversation with ${firstName}.`,
+            intro: `Tell us you are interested in ${journey.title} and who you would travel with. Inquiring holds nothing and commits you to nothing — it starts a conversation with ${firstName}.`,
           };
   }
 }
@@ -168,7 +168,7 @@ export default async function JourneyPage({ params }: Params) {
   const cta =
     journey.status === 'sold-out' || journey.status === 'waitlist'
       ? 'Join the waitlist'
-      : 'Enquire';
+      : 'Inquire';
 
   /* The A&K menu: Overview │ Itinerary │ Stays │ Dates & Rates. A tab whose
      section has nothing to show yet is left out rather than linking nowhere. */

@@ -11,7 +11,7 @@
  * for a form is not set, nothing is sent and the result says so —
  * `delivered: false` — so the route can stay truthful about what happened.
  *
- *   ENQUIRY_WEBHOOK_URL    https endpoint that receives journey enquiries
+ *   ENQUIRY_WEBHOOK_URL    https endpoint that receives journey inquiries
  *   SUBSCRIBE_WEBHOOK_URL  https endpoint that receives circle sign-ups
  *   FORMS_WEBHOOK_SECRET   optional; when set, each request carries
  *                          `X-Peaks2Shores-Signature: sha256=<hex HMAC of the body>`

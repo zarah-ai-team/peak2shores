@@ -39,7 +39,7 @@ export default function BookingTermsPage() {
         {
           heading: 'If we cancel or change a journey',
           body: [
-            `Minimum group size, changes to hotels or itinerary, and refunds or alternatives if a journey cannot run. Groups are limited to ${site.maxGuests} guests.`,
+            `Minimum group size, changes to hotels or itinerary, and refunds or alternatives if a journey cannot run. Groups are never more than ${site.maxGuests} guests.`,
           ],
         },
         {
@@ -49,7 +49,7 @@ export default function BookingTermsPage() {
         {
           heading: 'Passports, visas and health',
           body: [
-            'The traveller’s responsibility for documents, entry requirements and health advice.',
+            'The traveler’s responsibility for documents, entry requirements and health advice.',
           ],
         },
         {

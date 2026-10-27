@@ -17,7 +17,7 @@ import { NextResponse } from 'next/server';
  * instances do not share counts — so "5 per minute" is per instance: a
  * best-effort brake on one bursty client, not a guarantee. For a hard limit
  * add a Netlify rate-limit rule on /api/* (Site configuration → Security), or
- * back `tooManyRequests` with a shared store. Behaviour here is unchanged.
+ * back `tooManyRequests` with a shared store. Behavior here is unchanged.
  */
 
 /** Largest body either form can legitimately produce, with room to spare. */

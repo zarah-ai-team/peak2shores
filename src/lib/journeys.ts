@@ -1,7 +1,7 @@
 import type { MediaKey } from './media';
 
 /**
- * The journey catalogue.
+ * The journey catalog.
  *
  * Every fact here comes from the approved design canvas. Nothing has been
  * invented. Only "Amalfi, Slowly" has a written itinerary so far — the other
@@ -127,7 +127,7 @@ export type Journey = {
   detail?: JourneyDetail;
   /**
    * The working day-by-day for a journey whose full write-up (hotels, pacing,
-   * inclusions) is still being confirmed. Rendered above the enquiry form on
+   * inclusions) is still being confirmed. Rendered above the inquiry form on
    * the in-preparation page.
    */
   itineraryHeadline?: string;
@@ -487,8 +487,8 @@ const allJourneys: Journey[] = [
     departure: '3 Oct 2027',
     departureWindow: '3 – 9 October 2027',
     departureISO: '2027-10-03',
-    group: 'Max. 16',
-    groupMax: 16,
+    group: 'Max. 18',
+    groupMax: 18,
     priceFrom: '$10,900',
     hostedByMarc: false,
     season: 'Autumn',
@@ -643,7 +643,7 @@ const allJourneys: Journey[] = [
         n: 6,
         where: 'The Winelands',
         title: 'A morning with nothing planned.',
-        body: 'Nothing before lunch. In the afternoon, a walk through the vines to a neighbour’s farm for the last tasting, and the last of the winelands sunsets.',
+        body: 'Nothing before lunch. In the afternoon, a walk through the vines to a neighbor’s farm for the last tasting, and the last of the winelands sunsets.',
         stay: 'The Winelands',
         free: 'Morning free',
         media: 'cp-6',
@@ -999,7 +999,7 @@ export const filterGroups: {
   },
   {
     key: 'who',
-    label: 'Travelling with',
+    label: 'Traveling with',
     options: ['Couples', 'Friends', 'Families', 'Solo'],
     match: (j, v) => j.who.some((w) => w === v),
   },
@@ -1022,21 +1022,21 @@ export const filterGroups: {
 /* -- Content source ------------------------------------------------------ */
 
 /**
- * The whole catalogue, unfiltered — scheduled journeys included.
+ * The whole catalog, unfiltered — scheduled journeys included.
  *
  * Read only by the local content source (`src/lib/content/sources/local.ts`),
  * which hands it to the provider, where the publishing rules are applied in
  * one place. Pages never import this: they call `getJourneys()` and friends
  * from `@/lib/content`.
  */
-export const journeyCatalogue: readonly Journey[] = allJourneys;
+export const journeyCatalog: readonly Journey[] = allJourneys;
 
 /* -- Related journeys ---------------------------------------------------- */
 
 /**
  * Up to `limit` journeys from `all` most like the one at `slug`: a shared
  * country counts most, then shared inspirations, then the same season. Ties
- * keep catalogue order. Departed journeys are left out. Pure — the caller
+ * keep catalog order. Departed journeys are left out. Pure — the caller
  * decides which journeys are visible.
  */
 export function rankRelated<T extends Journey>(all: readonly T[], slug: string, limit = 3): T[] {

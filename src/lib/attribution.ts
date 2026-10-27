@@ -2,9 +2,9 @@
  * Where a visitor first came from — Instagram, Google, an email, an ad.
  *
  * Captured once, on the first page of the first visit, and kept for 90 days in
- * a first-party cookie, so an enquiry sent a week later is still credited to
- * the post or ad that brought the traveller in (first touch). Sent with every
- * form, stored with the enquiry, and never shown to the visitor.
+ * a first-party cookie, so an inquiry sent a week later is still credited to
+ * the post or ad that brought the traveler in (first touch). Sent with every
+ * form, stored with the inquiry, and never shown to the visitor.
  */
 export type FirstTouch = {
   source?: string;

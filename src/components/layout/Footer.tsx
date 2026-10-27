@@ -23,7 +23,9 @@ export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
         <div aria-hidden className="border-t border-line-dark" />
         <div className="grid-site gap-y-12 pb-block pt-section">
           <Reveal variant="mask" className="col-span-full lg:col-span-7">
-            <p className="h2 m-0">Fewer, better journeys.</p>
+            <p className="h2 m-0">
+              Iconic places. Extraordinary experiences. Lifelong connections.
+            </p>
           </Reveal>
           <Reveal
             delay={0.1}
@@ -54,7 +56,7 @@ export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
               />
             </Link>
             <p className="prose-body-sm max-w-[300px]">
-              Curated travel experiences. Small luxury group journeys of no more than{' '}
+              Curated travel experiences. Small luxury group journeys of never more than{' '}
               {site.maxGuests} guests, personally curated by {site.founder.name}.
             </p>
           </RevealItem>
@@ -104,7 +106,7 @@ export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
                   rel="noopener noreferrer"
                   className={`py-1.5 ${link}`}
                 >
-                  Instagram
+                  @Peaks2Shores
                 </a>
               )}
             </p>

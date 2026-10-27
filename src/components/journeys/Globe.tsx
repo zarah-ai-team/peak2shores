@@ -44,7 +44,7 @@ type GlobeProps = {
 
 type Country = Feature<Geometry, { name: string }>;
 type Point = [number, number];
-type View = { centre: Point; zoom: number };
+type View = { center: Point; zoom: number };
 
 /** Pins closer than this share a region, and are framed together. */
 const REGION_DEG = 28;
@@ -53,7 +53,7 @@ const REGION_PAD_DEG = 4.5;
 const LONE_PAD_DEG = 22;
 /** Zoom limits: 1 shows the whole sphere; the top is a single coast. */
 const ZOOM: Point = [1, 4.6];
-/** Flights scale with distance: a neighbour is quick, a hemisphere unhurried. */
+/** Flights scale with distance: a neighbor is quick, a hemisphere unhurried. */
 const FLIGHT_MS: Point = [900, 2000];
 
 const graticule = geoGraticule10();
@@ -63,7 +63,7 @@ const clamp = (value: number, [min, max]: Point) => Math.max(min, Math.min(max, 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 /**
- * Groups pins into regions and frames each one: its centre is the pins'
+ * Groups pins into regions and frames each one: its center is the pins'
  * average, its zoom the tightest that still shows every pin with room around.
  * `fit` is the share of the canvas's short side a region may span.
  */
@@ -79,15 +79,15 @@ function regions(pins: GlobePin[], fit: number) {
   return groups
     .sort((a, b) => b.length - a.length)
     .map((group) => {
-      const centre: Point = [
+      const center: Point = [
         group.reduce((sum, p) => sum + p.coords[0], 0) / group.length,
         group.reduce((sum, p) => sum + p.coords[1], 0) / group.length,
       ];
-      const spread = Math.max(...group.map((p) => geoDistance(p.coords, centre)));
+      const spread = Math.max(...group.map((p) => geoDistance(p.coords, center)));
       // A lone pin gets more of its surroundings, so it reads as a place on a map.
       const pad = group.length > 1 ? REGION_PAD_DEG : LONE_PAD_DEG;
       const reach = Math.sin(spread + (pad * Math.PI) / 180);
-      return { slugs: group.map((p) => p.slug), view: { centre, zoom: clamp(fit / reach, ZOOM) } };
+      return { slugs: group.map((p) => p.slug), view: { center, zoom: clamp(fit / reach, ZOOM) } };
     });
 }
 
@@ -165,7 +165,7 @@ export function Globe({
   // Everything the frame loop reads lives here, so the loop is set up once and
   // never restarted by a render.
   const live = useRef({
-    view: { centre: [0, 0] as Point, zoom: 1 } as View,
+    view: { center: [0, 0] as Point, zoom: 1 } as View,
     velocity: 0,
     dragging: false,
     moved: 0,
@@ -215,7 +215,7 @@ export function Globe({
     if (region) return region.view;
     if (L.selected) {
       const shape = L.byName.get(L.selected);
-      if (shape) return { centre: geoCentroid(shape) as Point, zoom: 2.4 };
+      if (shape) return { center: geoCentroid(shape) as Point, zoom: 2.4 };
     }
     return null;
   };
@@ -225,15 +225,15 @@ export function Globe({
     const L = live.current;
     L.velocity = 0;
     const from = L.view;
-    const distance = geoDistance(from.centre, to.centre);
+    const distance = geoDistance(from.center, to.center);
     if (L.reduced || (distance < 1e-3 && Math.abs(from.zoom - to.zoom) < 0.01)) {
-      L.view = { centre: [...to.centre], zoom: to.zoom };
+      L.view = { center: [...to.center], zoom: to.zoom };
       L.flight = null;
       return;
     }
     const share = Math.min(1, distance / (Math.PI / 2));
     L.flight = {
-      path: geoInterpolate(from.centre, to.centre) as (t: number) => Point,
+      path: geoInterpolate(from.center, to.center) as (t: number) => Point,
       zoom: [from.zoom, to.zoom],
       // Long flights pull back to show where they are going.
       dip: share * 0.62,
@@ -287,8 +287,8 @@ export function Globe({
         // No outlines (or only the coarse ones): the sphere and its pins still work.
       });
 
-    /** Point under the canvas centre, as a projection rotation. */
-    const rotation = (): [number, number, number] => [-L.view.centre[0], -L.view.centre[1], 0];
+    /** Point under the canvas center, as a projection rotation. */
+    const rotation = (): [number, number, number] => [-L.view.center[0], -L.view.center[1], 0];
 
     /** The offscreen layer: sphere, graticule and countries — everything but the pins. */
     const layer = document.createElement('canvas');
@@ -404,8 +404,8 @@ export function Globe({
 
       const moving = !!L.flight || L.dragging || Math.abs(L.velocity) > 0.01;
       const key = [
-        L.view.centre[0],
-        L.view.centre[1],
+        L.view.center[0],
+        L.view.center[1],
         L.view.zoom,
         w,
         h,
@@ -438,9 +438,9 @@ export function Globe({
       ctx.drawImage(layer, 0, 0);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      // Pins, on the near side only. Lit pins draw last, over their neighbours.
+      // Pins, on the near side only. Lit pins draw last, over their neighbors.
       const visible = L.pins
-        .filter((pin) => geoDistance(pin.coords, L.view.centre) < Math.PI / 2 - 0.06)
+        .filter((pin) => geoDistance(pin.coords, L.view.center) < Math.PI / 2 - 0.06)
         .map((pin) => ({ pin, lit: pin.slug === L.highlight || pin.slug === L.hoveredPin }))
         .sort((a, b) => Number(a.lit) - Number(b.lit));
       for (const { pin, lit } of visible) {
@@ -480,7 +480,7 @@ export function Globe({
         const t = Math.min(1, (now - F.start) / F.ms);
         const e = easeInOut(t);
         L.view = {
-          centre: F.path(e),
+          center: F.path(e),
           zoom: lerp(F.zoom[0], F.zoom[1], e) * (1 - F.dip * Math.sin(Math.PI * e)),
         };
         if (t >= 1) L.flight = null;
@@ -489,7 +489,7 @@ export function Globe({
       if (L.dragging) return;
       if (Math.abs(L.velocity) > 0.01) {
         // A flick carries on and settles.
-        L.view.centre[0] -= L.velocity * (dt / 16);
+        L.view.center[0] -= L.velocity * (dt / 16);
         L.velocity *= 0.92;
         return;
       }
@@ -498,7 +498,7 @@ export function Globe({
     /** The journey pin under a point on the canvas, if any. */
     function pinAt(x: number, y: number): GlobePin | null {
       for (const pin of L.pins) {
-        if (geoDistance(pin.coords, L.view.centre) > Math.PI / 2 - 0.06) continue;
+        if (geoDistance(pin.coords, L.view.center) > Math.PI / 2 - 0.06) continue;
         const at = projection(pin.coords);
         if (at && Math.hypot(at[0] - x, at[1] - y) < 16) return pin;
       }
@@ -561,7 +561,7 @@ export function Globe({
       L.moved += Math.abs(dx) + Math.abs(dy);
       // Roughly one degree per degree under the pointer, so it feels held.
       const k = 57 / (baseRadius(L) * L.view.zoom);
-      L.view.centre = [L.view.centre[0] - dx * k, clamp(L.view.centre[1] + dy * k, [-70, 75])];
+      L.view.center = [L.view.center[0] - dx * k, clamp(L.view.center[1] + dy * k, [-70, 75])];
       L.velocity = dx * k;
       if (L.moved > 6 && L.hovered) showLabel(null);
     };
@@ -606,7 +606,7 @@ export function Globe({
       const view = target();
       if (view && (first || !L.flight)) {
         // The first frame is placed, not flown to; later resizes keep the frame.
-        L.view = { centre: [...view.centre], zoom: view.zoom };
+        L.view = { center: [...view.center], zoom: view.zoom };
       }
       draw(performance.now());
     };

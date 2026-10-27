@@ -68,7 +68,7 @@ export function JourneyHero({ journey }: { journey: Journey }) {
             as="h1"
             immediate
             delay={0.15}
-            className="display max-w-[12ch]"
+            className="page-title max-w-[12ch]"
             lines={
               rest.length
                 ? [{ text: `${first},` }, { text: `${rest.join(', ')}.`, italic: true }]
@@ -128,7 +128,7 @@ export function JourneyFacts({ journey }: { journey: Journey }) {
         {/* From a tablet up the tab bar carries the way to enquire. */}
         <div className="flex flex-wrap items-center gap-x-8 gap-y-4 py-7 md:hidden">
           <ButtonLink href="#enquire" variant="navy" arrow>
-            Enquire
+            Inquire
           </ButtonLink>
         </div>
       </div>
@@ -153,7 +153,7 @@ export function Overview({ detail }: { detail: JourneyDetail }) {
         </div>
         {first && (
           <Reveal className="col-span-4 md:col-span-6 lg:col-span-6 lg:col-start-2">
-            <p className="lead measure-lead m-0">{first}</p>
+            <p className="prose-body measure m-0">{first}</p>
           </Reveal>
         )}
         {more.length > 0 && (
@@ -191,7 +191,7 @@ export function WhyThisJourney({ detail }: { detail: JourneyDetail }) {
         <div className="col-span-4 md:col-span-8 lg:col-span-5 lg:col-start-8 lg:pt-block">
           <Reveal>
             <SectionLabel className="mb-stack">Why this journey</SectionLabel>
-            <h2 id="why-title" className="h3 mb-block max-w-[22ch]">
+            <h2 id="why-title" className="h2 mb-block max-w-[22ch]">
               {detail.why.headline}
             </h2>
           </Reveal>
@@ -355,13 +355,13 @@ function availability(journey: Journey) {
     default:
       return journey.detail?.spotsLeft
         ? `${journey.detail.spotsLeft} places left`
-        : 'Open for enquiries';
+        : 'Open for inquiries';
   }
 }
 
 /**
  * Dates & Rates, A&K-style: each departure as a row — dates, length, group,
- * the rate and where it stands — with the way to enquire on the row. Below
+ * the rate and where it stands — with the way to inquire on the row. Below
  * it, what the rate includes and what it does not.
  */
 export function DatesAndRates({ journey, cta }: { journey: Journey; cta: string }) {
@@ -387,7 +387,7 @@ export function DatesAndRates({ journey, cta }: { journey: Journey; cta: string 
                 </th>
               ))}
               <th scope="col" className="pb-3">
-                <span className="sr-only">Enquire</span>
+                <span className="sr-only">Inquire</span>
               </th>
             </tr>
           </thead>
@@ -478,10 +478,15 @@ export function FromMarc({ detail }: { detail: JourneyDetail }) {
     <section aria-labelledby="marc-title" className="bg-stone py-section-sm">
       <div data-tone="stone" className="container-site grid-site gap-y-block">
         <Reveal className="col-span-4 md:col-span-8 lg:col-span-8">
-          <h2 id="marc-title" className="kicker mb-block flex items-center gap-3.5">
+          <SectionLabel
+            as="h2"
+            id="marc-title"
+            tone="stone"
+            className="mb-block flex items-center gap-3.5"
+          >
             <Tick />
             From Marc
-          </h2>
+          </SectionLabel>
           <blockquote className="quote m-0 max-w-[30ch]">“{detail.marc.quote}”</blockquote>
         </Reveal>
         <Reveal
@@ -555,9 +560,13 @@ export function Guests({ detail }: { detail: JourneyDetail }) {
     <section aria-labelledby="guests-title" className="pb-section-sm">
       <div className="container-site">
         <div className="rule grid-site gap-y-block pt-section-sm">
-          <h2 id="guests-title" className="kicker col-span-4 md:col-span-8 lg:col-span-12">
+          <SectionLabel
+            as="h2"
+            id="guests-title"
+            className="col-span-4 md:col-span-8 lg:col-span-12"
+          >
             Guests
-          </h2>
+          </SectionLabel>
           {quotes.map((quote) => (
             <figure key={quote.who} className="col-span-4 m-0 md:col-span-4 lg:col-span-6">
               <blockquote className="quote m-0 mb-stack">“{quote.text}”</blockquote>
@@ -580,10 +589,10 @@ export function InPreparation({ journey }: { journey: Journey }) {
       <div className="container-site grid-site gap-y-block">
         <div className="col-span-4 md:col-span-8 lg:col-span-7">
           <Reveal>
-            <p className="kicker mb-stack flex items-center gap-3.5 !text-acqua-text">
+            <SectionLabel className="mb-stack flex items-center gap-3.5 !text-acqua-text">
               <Tick />
               In preparation
-            </p>
+            </SectionLabel>
           </Reveal>
           <Reveal variant="mask">
             <h2 id="prep-title" className="h2 mb-stack max-w-[20ch]">
@@ -591,7 +600,7 @@ export function InPreparation({ journey }: { journey: Journey }) {
             </h2>
           </Reveal>
           <Reveal delay={0.08}>
-            <p className="lead measure-lead m-0">{journey.blurb}</p>
+            <p className="prose-body measure m-0">{journey.blurb}</p>
           </Reveal>
         </div>
 
@@ -625,7 +634,7 @@ export function InPreparation({ journey }: { journey: Journey }) {
               <>
                 <p className="kicker mb-4">Day by day · in preparation</p>
                 <p className="prose-body measure mb-4">
-                  The written itinerary for this journey is still being finalised with our people on
+                  The written itinerary for this journey is still being finalized with our people on
                   the ground. We would rather publish it late than publish it wrong.
                 </p>
                 <p className="prose-body measure mb-stack">
@@ -652,7 +661,7 @@ export function RelatedJourneys({ journeys }: { journeys: JourneySummary[] }) {
     <section aria-labelledby="related-title" className="pb-section-sm">
       <div className="container-site">
         <div className="rule flex flex-wrap items-end justify-between gap-6 pt-section-sm">
-          <h2 id="related-title" className="h3">
+          <h2 id="related-title" className="h2">
             You may also like
           </h2>
           <ButtonLink href="/journeys" variant="rule" arrow>

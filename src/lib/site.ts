@@ -2,11 +2,11 @@ export const site = {
   name: 'Peaks2Shores',
   tagline: 'Luxury travel, personally curated.',
   description:
-    'Small luxury group journeys of no more than 18 guests, personally curated by Marc Haeni. Fewer, better journeys to the places one person actually knows.',
+    'Small luxury group journeys of never more than 18 guests, personally curated by Marc Haeni. Iconic places, extraordinary experiences and lifelong connections.',
   url: 'https://peaks2shores.com',
   founded: 2022,
   maxGuests: 18,
-  email: 'welcome@peak2shores.com',
+  email: 'welcome@peaks2shores.com',
   /**
    * Confirmed by Marc, October 2026. (The old site's "Call" button dialled
    * 250-5050 by mistake.) Shown as a one-tap link in the footer and in the
@@ -23,7 +23,7 @@ export const site = {
   /**
    * A scheduling link for "Book a call" (Calendly, Cal.com, Google
    * appointment page…). Unset until Marc chooses one; until then the button
-   * falls back to the enquiry form on /plan.
+   * falls back to the inquiry form on /plan.
    */
   bookingUrl: null as string | null,
   /**
@@ -33,7 +33,7 @@ export const site = {
    */
   sellerOfTravel: null as string | null,
   /** The Instagram profile, for structured data and the /links page. */
-  instagram: null as string | null,
+  instagram: 'https://www.instagram.com/peaks2shores/' as string | null,
   /**
    * Whether AI companies may use the site to train their models (GPTBot,
    * ClaudeBot, Google-Extended, Applebot-Extended, CCBot). Marc's decision.

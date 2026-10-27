@@ -76,7 +76,7 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
               videos.current[i] = el;
             }}
             className="fill"
-            // No poster: the still beneath is the optimised image already.
+            // No poster: the still beneath is the optimized image already.
             src={armed ? clip.video : undefined}
             muted
             playsInline

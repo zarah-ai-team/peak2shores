@@ -33,7 +33,7 @@ export default function Error({
             <SectionLabel as="p" tone="dark" className="enter m-0 mb-8" style={enterAt(0)}>
               Something went wrong
             </SectionLabel>
-            <h1 className="h2 enter m-0 max-w-[20ch]" style={enterAt(0.1)}>
+            <h1 className="page-title enter m-0 max-w-[20ch]" style={enterAt(0.1)}>
               We’ve lost the thread of this page.
             </h1>
           </div>

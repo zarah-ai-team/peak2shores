@@ -463,7 +463,7 @@
   }
 
   /* Tone-aware defaults. A dark ground sets data-tone="dark"; any utility
-     colour on the element itself still wins (utilities come later). */
+     color on the element itself still wins (utilities come later). */
   :where([data-tone='dark'], .bg-navy, .bg-navy-deep, .bg-charcoal) :is(.kicker, .kicker-sm) {
     color: var(--color-on-dark-muted);
   }
@@ -488,7 +488,7 @@
   /* The rule link: a 1px blue underline that sweeps out to the right on
      hover and redraws from the left — the same line, re-ruled. */
   .link-rule {
-    --rule-colour: var(--color-acqua-deep);
+    --rule-color: var(--color-acqua-deep);
     --rule-hover: var(--color-acqua-text);
     position: relative;
     display: inline-flex;
@@ -513,7 +513,7 @@
     right: 0;
     bottom: 6px;
     height: 1px;
-    background: var(--rule-colour);
+    background: var(--rule-color);
   }
   .link-rule::before {
     transform-origin: right center;
@@ -537,12 +537,12 @@
   .link-rule--dark,
   :where([data-tone='dark'], [data-hero], .bg-navy, .bg-navy-deep, .bg-charcoal, .bg-ink)
     .link-rule {
-    --rule-colour: var(--color-acqua);
+    --rule-color: var(--color-acqua);
     --rule-hover: var(--color-acqua);
     color: var(--color-on-dark);
   }
   :where([data-tone='light']) .link-rule:not(.link-rule--dark) {
-    --rule-colour: var(--color-acqua-deep);
+    --rule-color: var(--color-acqua-deep);
     --rule-hover: var(--color-acqua-text);
     color: var(--color-ink);
   }
@@ -611,7 +611,7 @@
     color: var(--color-acqua-text);
   }
 
-  /* Word-list toggles (journey filters, "travelling as"). Same hairline. */
+  /* Word-list toggles (journey filters, "traveling as"). Same hairline. */
   .toggle-link {
     position: relative;
     transition: color 0.3s var(--ease-editorial);
@@ -915,7 +915,7 @@
 
 /* The homepage over its film: the bar is part of the hero. It scrolls away with
    the film rather than following the page, and as the hero carries the logo,
-   the bar drops it and centres the links. As the next section reaches the top
+   the bar drops it and centers the links. As the next section reaches the top
    the usual solid bar drops in from above. */
 .site-header[data-home]:not([data-solid]):not([data-menu]) {
   position: absolute;
@@ -1122,7 +1122,7 @@ html[data-js] [data-ground][data-inview]::before {
 /* --------------------------------------------------------------------------
    Reveal safety net.
 
-   Motion serialises each block's hidden `initial` state (opacity 0, a small
+   Motion serializes each block's hidden `initial` state (opacity 0, a small
    transform, a clip-path) into the server HTML so the reveal starts from the
    right place. Two audiences must never see that state stick: readers with
    reduced motion, and anyone whose bundle fails to run. These rules beat the

@@ -57,7 +57,7 @@ export default async function PlanPage() {
             <h2 id="private-title" className="h2 mb-stack max-w-[18ch]">
               A journey with only your names on the list.
             </h2>
-            <p className="lead measure-lead mb-block">
+            <p className="prose-body measure mb-block">
               Families, friends, a milestone. The same hotels, the same people on the ground, on
               your dates. Most of our journeys began as a request like this.
             </p>
@@ -66,7 +66,7 @@ export default async function PlanPage() {
               tone="stone"
               className="max-w-[560px]"
               rows={[
-                { label: 'Group size', value: `Up to ${site.maxGuests} guests` },
+                { label: 'Group size', value: `Max. ${site.maxGuests} guests` },
                 { label: 'Where', value: destinations.map((d) => d.country).join(' · ') },
                 { label: 'Lead time', value: 'Six months is comfortable; less is often possible' },
               ]}
@@ -80,7 +80,7 @@ export default async function PlanPage() {
           <div>
             <SectionLabel className="mb-stack">Upcoming departures</SectionLabel>
             <Reveal variant="mask">
-              <h2 id="departures-title" className="h3 max-w-[24ch]">
+              <h2 id="departures-title" className="h2 max-w-[24ch]">
                 Or take a place on a journey that is already going.
               </h2>
             </Reveal>
@@ -92,7 +92,7 @@ export default async function PlanPage() {
       <EnquiryForm
         journeyOptions={titles}
         headline="Tell us a little. We’ll call you, not the other way round."
-        intro="Whether it’s a departure on the list or something we have not planned yet, this is where it starts. Enquiring holds nothing and commits you to nothing."
+        intro="Whether it’s a departure on the list or something we have not planned yet, this is where it starts. Inquiring holds nothing and commits you to nothing."
       />
     </>
   );

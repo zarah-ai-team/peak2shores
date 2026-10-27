@@ -4,7 +4,7 @@ import { site } from '@/lib/site';
 
 /**
  * AI assistants that search the web and quote the site with a link back. They
- * are how travellers asking ChatGPT, Claude, Perplexity or Gemini for trip
+ * are how travelers asking ChatGPT, Claude, Perplexity or Gemini for trip
  * ideas hear about Peaks2Shores, so they are always allowed.
  */
 const searchAgents = [

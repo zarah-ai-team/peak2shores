@@ -26,7 +26,7 @@ export type MediaSlot = {
   brief: string;
   /** Short caps label shown on the placeholder. */
   label: string;
-  /** The colour the frame holds before and behind the photograph. */
+  /** The color the frame holds before and behind the photograph. */
   tone: string;
   /** Set this once a real photograph exists. */
   src?: string;
@@ -620,7 +620,7 @@ export const media = {
     label: 'Hero · Amalfi from the water',
     brief: 'Amalfi coast from the water, a single boat, early light — no crowds, no landmarks.',
     tone: '#5d6a63',
-    alt: 'Amalfi from the water, the town stacked against terraced cliffs, boats in the harbour',
+    alt: 'Amalfi from the water, the town stacked against terraced cliffs, boats in the harbor',
   },
   'am-why': {
     label: 'Lemon terraces',
@@ -632,7 +632,7 @@ export const media = {
     label: 'Map · Sorrento peninsula',
     brief: 'Sorrento peninsula, hand-drawn or muted — Positano, Nerano, Ravello, Capri marked.',
     tone: '#dcd6c6',
-    alt: 'The Sorrento coast and harbour from above, the peninsula stretching into the bay',
+    alt: 'The Sorrento coast and harbor from above, the peninsula stretching into the bay',
   },
   'am-h1': {
     label: 'Above Positano',
@@ -704,7 +704,7 @@ export const media = {
     label: 'Wide',
     brief: 'The coast from the water at dusk.',
     tone: '#4d6f7a',
-    alt: 'The Amalfi Coast at dusk, a town on the cliffs above the harbour',
+    alt: 'The Amalfi Coast at dusk, a town on the cliffs above the harbor',
   },
   g2: {
     label: 'Detail',
@@ -888,9 +888,9 @@ export const media = {
   },
   'cp-11': {
     label: 'Day 11',
-    brief: 'Cape Town harbour, morning.',
+    brief: 'Cape Town harbor, morning.',
     tone: '#7f9aa3',
-    alt: 'The V&A Waterfront harbour with Table Mountain behind',
+    alt: 'The V&A Waterfront harbor with Table Mountain behind',
   },
 
   /* ---- Journey: Como & the Engadin — day by day ------------------------ */
@@ -952,7 +952,7 @@ export const media = {
     label: 'Day 10',
     brief: 'A train leaving the mountains.',
     tone: '#6b7a7c',
-    alt: 'A Rhaetian Railway train on the Albula line in autumn colour',
+    alt: 'A Rhaetian Railway train on the Albula line in autumn color',
   },
 
   /* ---- Marc ------------------------------------------------------------ */

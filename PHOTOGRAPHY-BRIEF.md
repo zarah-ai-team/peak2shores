@@ -195,7 +195,7 @@ photography of a partner hotel that we are licensed to use.
 | `cp-8` | Day 08 | Cape Point cliffs, or the penguins at Boulders. | stock · Unsplash · Unsplash License |
 | `cp-9` | Day 09 | A long empty Atlantic beach. | stock · Unsplash · Unsplash License |
 | `cp-10` | Day 10 | A fire on the beach, evening. | stock · Unsplash · Unsplash License |
-| `cp-11` | Day 11 | Cape Town harbour, morning. | stock · Unsplash · Unsplash License |
+| `cp-11` | Day 11 | Cape Town harbor, morning. | stock · Unsplash · Unsplash License |
 | `ce-1` | Day 01 | A villa garden meeting Lake Como. | stock · Unsplash · Unsplash License |
 | `ce-2` | Day 02 | A boat on Lake Como, villas along the shore. | stock · Unsplash · Unsplash License |
 | `ce-3` | Day 03 | Bellagio’s point and its gardens. | stock · Unsplash · Unsplash License |

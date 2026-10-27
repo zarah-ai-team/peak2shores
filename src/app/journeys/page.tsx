@@ -9,7 +9,7 @@ export const revalidate = 3600;
 export const metadata = pageMetadata({
   title: 'Small Luxury Group Journeys',
   description:
-    'Intimate journeys for no more than 18 guests — exceptional places, meaningful experiences and the joy of discovering the world together, each one somewhere Marc Haeni knows well.',
+    'Intimate journeys for never more than 18 guests — exceptional places, meaningful experiences and the joy of discovering the world together, each one somewhere Marc Haeni knows well.',
   path: '/journeys',
 });
 
@@ -20,7 +20,7 @@ export default async function JourneysPage() {
   return (
     <>
       <PageTitle kicker="Small Luxury Group Journeys" title="A short list, on purpose.">
-        Intimate journeys for no more than {site.maxGuests} guests, bringing together exceptional
+        Intimate journeys for never more than {site.maxGuests} guests, bringing together exceptional
         places, meaningful experiences and the joy of discovering the world together.{' '}
         {journeys.length} on the calendar, each one somewhere Marc knows well.
       </PageTitle>

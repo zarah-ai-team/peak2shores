@@ -9,7 +9,7 @@ type PhotoHeroProps = {
   kicker?: ReactNode;
   /** A string, or lines (each rises in its own band; `italic` sets 400 italic). */
   title: string | RevealLine[];
-  titleSize?: 'h1' | 'display' | 'h2';
+  titleSize?: 'page-title' | 'h1' | 'display' | 'h2';
   /** Standfirst, set as `.lead`. Bottom-right on `bleed`, under the title on `split`. */
   lead?: ReactNode;
   /** Buttons or anything else that follows the lead. */
@@ -51,7 +51,7 @@ export function PhotoHero({
   media,
   kicker,
   title,
-  titleSize = 'h1',
+  titleSize = 'page-title',
   lead,
   aside,
   layout = 'bleed',

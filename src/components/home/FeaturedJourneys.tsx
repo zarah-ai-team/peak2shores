@@ -19,7 +19,7 @@ const homeFrames: Record<string, MediaKey> = {
 
 /** What sets a Peaks2Shores group apart, said once above the journeys. */
 const promises = [
-  { title: 'No more than 18 guests', line: 'Small enough for every table, boat and doorway.' },
+  { title: 'Never more than 18 guests', line: 'Small enough for every table, boat and doorway.' },
   {
     title: 'Personally curated',
     line: 'Places Marc knows well, and people he has known for years.',

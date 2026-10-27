@@ -12,7 +12,7 @@ import { deliver, isDeliveryConfigured } from '@/lib/delivery';
  * The response is truthful about delivery:
  *   200 { ok: true, delivered: true }   — accepted and forwarded
  *   200 { ok: true, delivered: false }  — accepted, but NO delivery is
- *                                         configured: the enquiry exists only
+ *                                         configured: the inquiry exists only
  *                                         as an anonymous log line. Launch
  *                                         blocker until the env var is set.
  *   502 { error }                        — a configured provider failed; the
@@ -88,9 +88,9 @@ export async function POST(request: Request) {
     source,
   });
 
-  // Logs carry no personal data — only that an enquiry arrived, for what,
-  // which channel brought the traveller in, and whether it went anywhere.
-  console.info('[peaks2shores] enquiry received', {
+  // Logs carry no personal data — only that an inquiry arrived, for what,
+  // which channel brought the traveler in, and whether it went anywhere.
+  console.info('[peaks2shores] inquiry received', {
     journey: journey ?? 'private',
     party,
     guests,

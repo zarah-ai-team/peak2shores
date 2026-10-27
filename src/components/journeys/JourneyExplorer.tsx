@@ -147,9 +147,12 @@ export function JourneyExplorer({ journeys }: { journeys: JourneySummary[] }) {
       <section
         ref={listRef}
         tabIndex={-1}
-        aria-label="Journeys"
+        aria-labelledby="journeys-list-title"
         className="pb-section-sm outline-none"
       >
+        <h2 id="journeys-list-title" className="sr-only">
+          Journeys
+        </h2>
         <m.div
           key={signature}
           initial={touched ? { opacity: 0 } : false}
@@ -177,10 +180,10 @@ export function JourneyExplorer({ journeys }: { journeys: JourneySummary[] }) {
             <div className="editorial-grid--wide py-section-sm">
               <div aria-hidden />
               <div>
-                <h2 className="h4 mb-stack">Nothing on the list fits that combination — yet.</h2>
+                <h3 className="h4 mb-stack">Nothing on the list fits that combination — yet.</h3>
                 <p className="prose-body measure mb-7">
                   Most of our journeys began as a request like this. Tell us where you’d like to go
-                  and who you’re travelling with.
+                  and who you’re traveling with.
                 </p>
                 <div className="flex flex-wrap gap-x-10 gap-y-2">
                   <button

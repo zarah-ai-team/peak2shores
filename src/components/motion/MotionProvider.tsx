@@ -13,7 +13,7 @@ import type { ReactNode } from 'react';
  * component; `strict` throws in development if a bare `motion.*` sneaks in
  * and silently drags the full bundle back.
  *
- * `reducedMotion="user"` makes Motion honour `prefers-reduced-motion`
+ * `reducedMotion="user"` makes Motion honor `prefers-reduced-motion`
  * globally: transform animations become instant and only opacity may still
  * cross-fade. The stylesheet's `[data-reveal]` rules then hand those readers
  * the finished state outright. Markup never branches on the preference, so

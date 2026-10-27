@@ -90,7 +90,7 @@ function slugify(value: string) {
 
 /* -- Journeys ------------------------------------------------------------ */
 
-/** Every visible journey, in catalogue order. Full objects — server use only. */
+/** Every visible journey, in catalog order. Full objects — server use only. */
 export async function getJourneys(opts?: ContentQueryOptions): Promise<Journey[]> {
   return visibleJourneys(await source.journeys(), opts);
 }
@@ -121,7 +121,7 @@ export async function getFeaturedJourneys(opts?: ContentQueryOptions): Promise<J
 /**
  * Up to `limit` other visible journeys, most alike first: a shared country
  * counts most, then shared inspirations, then the same season. Ties keep
- * catalogue order. Departed journeys are left out.
+ * catalog order. Departed journeys are left out.
  */
 export async function getRelatedJourneys(
   slug: string,
@@ -132,7 +132,7 @@ export async function getRelatedJourneys(
 }
 
 /**
- * Journey titles the enquiry form may name — every visible journey, so a
+ * Journey titles the inquiry form may name — every visible journey, so a
  * sold-out one can still take a waitlist enquiry. `/api/enquiry` validates the
  * submitted title against this same list.
  */
@@ -144,7 +144,7 @@ export async function getEnquirableJourneyTitles(): Promise<string[]> {
 
 /**
  * One destination per country that a visible journey goes to, in the order
- * the catalogue first reaches it. A two-country journey ('Italy &
+ * the catalog first reaches it. A two-country journey ('Italy &
  * Switzerland') counts under both.
  */
 export async function getDestinations(opts?: ContentQueryOptions): Promise<Destination[]> {

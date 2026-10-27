@@ -44,7 +44,7 @@ export function LegalPage({
           Legal
         </SectionLabel>
         <div className="grid-site gap-y-6 lg:items-end">
-          <h1 className="h2 enter col-span-full m-0 lg:col-span-8" style={enterAt(0.1)}>
+          <h1 className="page-title enter col-span-full m-0 lg:col-span-8" style={enterAt(0.1)}>
             {title}
           </h1>
           <p

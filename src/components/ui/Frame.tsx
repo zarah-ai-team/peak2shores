@@ -23,7 +23,7 @@ type FrameProps = {
    * the grid with that) and `frameClassName` on the picture box.
    */
   caption?: ReactNode;
-  /** Caption colour: `dark` for navy / charcoal grounds. */
+  /** Caption color: `dark` for navy / charcoal grounds. */
   tone?: 'light' | 'dark';
   /** Classes for the picture box when a caption wraps it in a figure. */
   frameClassName?: string;
@@ -58,11 +58,11 @@ type FrameProps = {
    * The ground the frame sits on before (and around) the photograph.
    * `tone` (default) is the slot's photographic tone; `transparent` lets the
    * section's own ground show through — for the cut-out portrait on stone.
-   * A transparent frame has no curtain colour to lift, so it fades instead.
+   * A transparent frame has no curtain color to lift, so it fades instead.
    */
   ground?: 'tone' | 'transparent';
   /**
-   * The house colour grade (`--photo-grade`). On by default for every
+   * The house color grade (`--photo-grade`). On by default for every
    * photograph; off for the cut-out portrait and brand artwork.
    */
   grade?: boolean;
@@ -137,7 +137,7 @@ export function Frame({
 }: FrameProps) {
   const slot = getMedia(media);
   const graded = grade ?? (!UNGRADED.has(media) && fit !== 'contain');
-  const groundColour = ground === 'transparent' ? 'transparent' : slot.tone;
+  const groundColor = ground === 'transparent' ? 'transparent' : slot.tone;
   const ref = useRef<HTMLDivElement>(null);
   const animate = reveal && !priority && !warm;
 
@@ -176,7 +176,7 @@ export function Frame({
     <div
       ref={ref}
       className={`relative isolate overflow-hidden ${caption ? frameClassName : className}`}
-      style={{ backgroundColor: groundColour, aspectRatio: ratio?.replace('/', ' / ') }}
+      style={{ backgroundColor: groundColor, aspectRatio: ratio?.replace('/', ' / ') }}
     >
       {animate ? (
         <m.div

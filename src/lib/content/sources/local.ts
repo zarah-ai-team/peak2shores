@@ -4,7 +4,7 @@
  * applies the publishing rules.
  */
 import type { ContentSource } from '../source';
-import { journeyCatalogue } from '../../journeys';
+import { journeyCatalog } from '../../journeys';
 import {
   circle,
   experiences,
@@ -24,7 +24,7 @@ import { ctaNav, footerNav, primaryNav, site } from '../../site';
 
 export const localSource: ContentSource = {
   name: 'local',
-  journeys: async () => journeyCatalogue,
+  journeys: async () => journeyCatalog,
   journal: async () => journal,
   experiences: async () => experiences,
   siteSettings: async () => site,

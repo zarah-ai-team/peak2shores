@@ -20,6 +20,12 @@
   --sans: var(--font-ui);
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   --gut: clamp(20px, 4.4vw, 64px);
+  /* One type scale for every section: the hero's h1 is the only larger
+     heading; each section has a label, an h2 at --h2, an optional supporting
+     line at --sub, and card or item titles at --h3. */
+  --h2: clamp(34px, 3.6vw, 54px);
+  --h3: clamp(22px, 2vw, 30px);
+  --sub: 16px;
   -webkit-font-smoothing: antialiased;
 }
 .hc * {
@@ -35,6 +41,14 @@
   letter-spacing: 0.26em;
   text-transform: uppercase;
   line-height: 1.5;
+}
+/* Section headings set with the shared .h2 class follow the same scale. */
+.hc .h2 {
+  font-size: var(--h2);
+}
+/* Every section label sits the same distance above its heading. */
+.hc .lab + h2 {
+  margin-top: 16px;
 }
 .hc .fill {
   position: absolute;
@@ -199,7 +213,7 @@
 }
 .hc-hero .copy {
   position: absolute;
-  /* Equal top and bottom, so the copy sits at the true centre of the screen. */
+  /* Equal top and bottom, so the copy sits at the true center of the screen. */
   inset: clamp(84px, 11svh, 112px) var(--gut);
   z-index: 4;
   display: flex;
@@ -271,7 +285,7 @@
 .hc-hero .vctl {
   position: absolute;
   right: var(--gut);
-  /* Clear of the "Speak to an expert" button, which is fixed bottom right. */
+  /* Clear of the "Speak to a travel designer" button, which is fixed bottom right. */
   bottom: 104px;
   z-index: 5;
   display: flex;
@@ -364,7 +378,7 @@
 .hc-ways h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(42px, 4.4vw, 64px);
+  font-size: var(--h2);
   line-height: 1;
   letter-spacing: -0.03em;
   margin: 16px 0 0;
@@ -475,7 +489,7 @@
 .hc-ways h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 32px;
+  font-size: var(--h3);
   line-height: 1.08;
   margin: 0;
 }
@@ -547,7 +561,7 @@
   padding: clamp(110px, 13vw, 190px) var(--gut) clamp(100px, 12.5vw, 180px);
   text-align: center;
 }
-/* The film plays in its own colour, with no tint over it; the words carry
+/* The film plays in its own color, with no tint over it; the words carry
    their own shadow instead: a tight one for the edges, a soft one behind. */
 .hc-pause .bg {
   position: absolute;
@@ -623,7 +637,7 @@
 .hc-why h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(32px, 3.2vw, 46px);
+  font-size: var(--h2);
   line-height: 1.06;
   letter-spacing: -0.025em;
   margin: 0;
@@ -632,7 +646,7 @@
 .hc-why .sub {
   font-family: var(--sans);
   font-weight: 300;
-  font-size: 16px;
+  font-size: var(--sub);
   line-height: 1.6;
   color: var(--muted);
   margin: 12px 0 0;
@@ -723,7 +737,7 @@
 .hc-why h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(30px, 2.9vw, 42px);
+  font-size: var(--h3);
   line-height: 1.05;
   margin: 0;
 }
@@ -815,7 +829,7 @@
 }
 .hc-cmp .cap.r {
   text-align: right;
-  /* Clear of the fixed "Speak to an expert" button. */
+  /* Clear of the fixed "Speak to a travel designer" button. */
   bottom: 104px;
 }
 .hc-cmp .handle {
@@ -931,7 +945,7 @@
   margin: 26px 0;
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(40px, 4vw, 58px);
+  font-size: var(--h2);
   line-height: 1.04;
   letter-spacing: -0.03em;
   max-width: 15ch;
@@ -939,7 +953,7 @@
 .hc-fd p {
   font-family: var(--sans);
   font-weight: 300;
-  font-size: 16px;
+  font-size: var(--sub);
   line-height: 1.8;
   color: #3a434a;
   max-width: 46ch;
@@ -965,7 +979,7 @@
 .hc-hot h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(38px, 4.2vw, 60px);
+  font-size: var(--h2);
   line-height: 1.02;
   letter-spacing: -0.03em;
   margin: 18px 0 0;
@@ -973,7 +987,7 @@
 .hc-hot .head p {
   font-family: var(--sans);
   font-weight: 300;
-  font-size: 15px;
+  font-size: var(--sub);
   line-height: 1.75;
   color: #dce6ec;
   margin: 0;
@@ -1028,7 +1042,7 @@
 .hc-hot .hn {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 26px;
+  font-size: var(--h3);
   line-height: 1.12;
   margin: 10px 0 0;
 }
@@ -1190,7 +1204,7 @@
   filter: brightness(0.62) saturate(1.05);
 }
 /* A soft pool of shade behind the copy and the field, so the small type
-   holds on the bright sky and sea at the centre of the frame. */
+   holds on the bright sky and sea at the center of the frame. */
 .hc-circle::after {
   content: '';
   position: absolute;
@@ -1213,7 +1227,7 @@
 .hc-circle h2 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(44px, 5.5vw, 80px);
+  font-size: var(--h2);
   line-height: 0.98;
   letter-spacing: -0.035em;
   margin: 22px auto 26px;
@@ -1222,7 +1236,7 @@
 .hc-circle .in > p {
   font-family: var(--sans);
   font-weight: 300;
-  font-size: 15px;
+  font-size: var(--sub);
   line-height: 1.75;
   margin: 0 auto 40px;
   max-width: 46ch;
@@ -1261,7 +1275,7 @@
   color: var(--sky);
 }
 
-/* -- Speak to an expert (fixed, bottom right) ---------------------------- */
+/* -- Speak to a travel designer (fixed, bottom right) ---------------------------- */
 .hc-fab {
   position: fixed;
   right: 28px;
@@ -1535,5 +1549,235 @@
   }
   .hc-cmp .drift {
     animation: none;
+  }
+}
+
+/* -- How we travel: the four pillars as dark cards ----------------------- */
+.hc-how,
+.hc-wtu {
+  --gold: #d1a965;
+  padding: clamp(80px, 9vw, 130px) var(--gut);
+  color: var(--ink);
+}
+.hc-how {
+  background: var(--paper);
+  border-top: 1px solid rgb(20 29 36 / 0.12);
+}
+.hc-how .head,
+.hc-wtu .head {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+.hc-how .head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 48px;
+  margin-bottom: clamp(40px, 4.5vw, 64px);
+}
+.hc-how .lab,
+.hc-wtu .lab {
+  color: var(--lake);
+}
+.hc-how h2,
+.hc-wtu h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--h2);
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  margin: 16px 0 0;
+  max-width: 18ch;
+  text-wrap: balance;
+}
+.hc-how .sub {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: var(--sub);
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 36ch;
+  margin: 0;
+}
+.hc-how .cards {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 1440px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(14px, 1.6vw, 24px);
+  align-items: start;
+}
+.hc-how .card {
+  position: relative;
+  background: var(--night);
+  color: #eef2f4;
+  border-radius: 14px;
+  padding: clamp(18px, 1.6vw, 24px);
+  box-shadow: 0 18px 40px -22px rgb(8 20 28 / 0.55);
+  transition: transform 0.5s var(--ease);
+}
+.hc-how .card:nth-child(even) {
+  margin-top: clamp(24px, 3vw, 48px);
+}
+.hc-how .card:hover {
+  transform: translateY(-6px);
+}
+.hc-how .top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 18px;
+}
+.hc-how .n {
+  font-family: var(--serif);
+  font-size: 20px;
+}
+.hc-how .tag {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #9fb1bc;
+}
+.hc-how h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--h3);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  margin: 0 0 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgb(255 255 255 / 0.14);
+}
+.hc-how h3 em {
+  color: var(--gold);
+}
+.hc-how .card p {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #c8d3da;
+  margin: 0 0 18px;
+}
+.hc-how .ph {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.hc-how .cap {
+  display: block;
+  margin-top: 12px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+  color: #9fb1bc;
+}
+
+/* -- Why travel with us: six reasons as cards ---------------------------- */
+.hc-wtu {
+  background: var(--color-panel);
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: start;
+}
+.hc-wtu .head {
+  margin: 0;
+  position: sticky;
+  top: calc(var(--nav-h) + 40px);
+}
+.hc-wtu .grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.hc-wtu .tile {
+  background: #f8f6f1;
+  border: 1px solid rgb(20 29 36 / 0.08);
+  border-radius: 14px;
+  padding: clamp(18px, 1.6vw, 24px);
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+}
+.hc-wtu .tile.dark {
+  background: var(--night);
+  border-color: transparent;
+  color: #eef2f4;
+}
+.hc-wtu .ic {
+  color: var(--lake);
+  margin-bottom: 18px;
+}
+.hc-wtu .dark .ic {
+  color: var(--gold);
+}
+.hc-wtu .big {
+  font-family: var(--serif);
+  font-size: clamp(56px, 5vw, 76px);
+  line-height: 0.9;
+  color: var(--gold);
+  margin-bottom: 18px;
+}
+.hc-wtu h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(18px, 1.4vw, 21px);
+  line-height: 1.15;
+  margin: 0 0 8px;
+}
+.hc-wtu .tile p {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 0;
+}
+.hc-wtu .dark p {
+  color: #c8d3da;
+}
+
+@media (max-width: 1100px) {
+  .hc-how .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .hc-wtu {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hc-wtu .head {
+    position: static;
+  }
+}
+@media (max-width: 700px) {
+  .hc-how .head {
+    flex-direction: column;
+    align-items: start;
+    gap: 16px;
+  }
+  .hc-how .cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hc-how .card:nth-child(even) {
+    margin-top: 0;
+  }
+  .hc-wtu .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .hc-wtu .tile {
+    min-height: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hc-how .card {
+    transition: none;
   }
 }

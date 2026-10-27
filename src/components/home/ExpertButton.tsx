@@ -4,10 +4,10 @@ import { useEffect, useRef, useState } from 'react';
 import { site, whatsappHref } from '@/lib/site';
 
 /**
- * "Speak to an expert", fixed bottom right on the homepage: one tap opens the
+ * "Speak to a travel designer", fixed bottom right on the homepage: one tap opens the
  * ways to reach a travel designer. Escape or a click outside closes it. Call,
  * WhatsApp and the scheduling link appear only once they are set in site.ts;
- * until a scheduling link exists, "Book a call" opens the enquiry form.
+ * until a scheduling link exists, "Book a call" opens the inquiry form.
  */
 export function ExpertButton() {
   const [open, setOpen] = useState(false);
@@ -51,7 +51,7 @@ export function ExpertButton() {
   return (
     <div ref={box} className={`hc hc-fab ${open ? 'open' : ''} ${away ? 'away' : ''}`}>
       <div className="panel" id="expert-panel" aria-hidden={!open}>
-        <div className="lab">Speak to an expert</div>
+        <div className="lab">Speak to a travel designer</div>
         <p>
           Our travel designers will help you choose the right journey — or design one around you.
         </p>
@@ -97,7 +97,7 @@ export function ExpertButton() {
             <path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12Z" />
           )}
         </svg>
-        <span>Speak to an expert</span>
+        <span>Speak to a travel designer</span>
       </button>
     </div>
   );

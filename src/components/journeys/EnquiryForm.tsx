@@ -24,7 +24,7 @@ type Status = 'idle' | 'sending' | 'sent' | 'undelivered' | 'error';
 type Submitted = Record<string, string>;
 
 export type EnquiryFormProps = {
-  /** The journey being enquired about, if any. */
+  /** The journey being inquired about, if any. */
   journeyTitle?: string;
   /** e.g. "12 – 20 September 2027". */
   departure?: string;
@@ -56,7 +56,7 @@ const inputClass =
  *
  * The status line is a persistent live region so failures are announced; on
  * success focus moves to the confirmation heading. The confirmation never
- * claims more than the server confirmed: when the API reports the enquiry was
+ * claims more than the server confirmed: when the API reports the inquiry was
  * not delivered anywhere, the reader is told so and offered an email with
  * their details already written.
  */
@@ -84,8 +84,8 @@ export function EnquiryForm({
   const firstName = site.founder.name.split(' ')[0];
   const defaultIntro =
     journeyTitle && departure && typeof spotsLeft === 'number'
-      ? `${journeyTitle} departs ${departure} with ${spotsLeft} of ${groupMax} places remaining. Enquiring holds nothing and commits you to nothing — it starts a conversation with ${firstName}.`
-      : `Tell us where you’d like to go and who you’re travelling with. Enquiring holds nothing and commits you to nothing — it starts a conversation with ${firstName}.`;
+      ? `${journeyTitle} departs ${departure} with ${spotsLeft} of ${groupMax} places remaining. Inquiring holds nothing and commits you to nothing — it starts a conversation with ${firstName}.`
+      : `Tell us where you’d like to go and who you’re traveling with. Inquiring holds nothing and commits you to nothing — it starts a conversation with ${firstName}.`;
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -138,7 +138,7 @@ export function EnquiryForm({
             Email: field('email'),
             Phone: field('phone'),
             Journey: journey ?? 'A private journey, or not sure yet',
-            'Travelling as': party,
+            'Traveling as': party,
             Guests: field('guests'),
             When: field('travelWindow'),
             'Heard about us': field('heardFrom'),
@@ -212,7 +212,7 @@ export function EnquiryForm({
                 the button below opens a message with what you have written already filled in.
               </p>
               <ButtonLink href={mailto} variant="navy" arrow>
-                Email your enquiry
+                Email your inquiry
               </ButtonLink>
             </div>
           ) : (
@@ -256,7 +256,7 @@ export function EnquiryForm({
                   </Field>
 
                   <fieldset className="m-0 flex flex-col gap-2.5 border-0 border-t border-line p-0 py-[22px]">
-                    <legend className="kicker-sm float-left mb-2.5 p-0">Travelling as</legend>
+                    <legend className="kicker-sm float-left mb-2.5 p-0">Traveling as</legend>
                     <div className="clear-left flex flex-wrap gap-x-[18px]">
                       {PARTY_OPTIONS.map((option) => {
                         const on = party === option;
@@ -345,7 +345,7 @@ export function EnquiryForm({
                       name="notes"
                       rows={3}
                       maxLength={2000}
-                      placeholder="Dates, dietary notes, whether you’ve travelled with us before…"
+                      placeholder="Dates, dietary notes, whether you’ve traveled with us before…"
                       className={`${inputClass} resize-y`}
                     />
                   </Field>
@@ -368,7 +368,7 @@ export function EnquiryForm({
                     We reply personally. No newsletters unless you ask.
                   </span>
                   <Button type="submit" variant="navy" arrow aria-disabled={status === 'sending'}>
-                    {status === 'sending' ? 'Sending' : 'Send enquiry'}
+                    {status === 'sending' ? 'Sending' : 'Send inquiry'}
                   </Button>
                 </div>
 

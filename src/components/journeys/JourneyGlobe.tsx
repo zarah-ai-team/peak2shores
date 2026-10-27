@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { useMemo, useState } from 'react';
 import { filterGroups, type JourneySummary } from '@/lib/journeys';
 import { Reveal } from '@/components/motion/Reveal';
+import { SectionLabel } from '@/components/ui/Editorial';
 import type { GlobePin } from './Globe';
 
 /**
@@ -109,9 +110,9 @@ export function JourneyGlobe({
     >
       <div className="container-site grid-site items-center gap-y-8 py-section-sm lg:min-h-[min(100svh,860px)] lg:py-10">
         <Reveal className="order-2 col-span-4 md:col-span-8 lg:order-1 lg:col-span-4">
-          <h2 id="globe-title" className="kicker mb-stack">
+          <SectionLabel as="h2" id="globe-title" className="mb-stack">
             Where we go
-          </h2>
+          </SectionLabel>
           <ul className="m-0 list-none border-t border-line p-0">
             {journeys.map((journey) => {
               const on = lit === journey.slug;
