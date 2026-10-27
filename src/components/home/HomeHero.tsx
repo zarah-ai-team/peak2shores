@@ -91,7 +91,7 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
 
       <div className="copy">
         <h1>
-          Luxury travel,<em>personally curated.</em>
+          Luxury travel, <em>personally curated.</em>
         </h1>
         <p>
           Thoughtfully paced journeys designed to inspire, connect and experience the world

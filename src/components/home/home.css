@@ -199,7 +199,8 @@
 }
 .hc-hero .copy {
   position: absolute;
-  inset: var(--nav-h) var(--gut) clamp(84px, 11svh, 112px);
+  /* Equal top and bottom, so the copy sits at the true centre of the screen. */
+  inset: clamp(84px, 11svh, 112px) var(--gut);
   z-index: 4;
   display: flex;
   flex-direction: column;
@@ -238,13 +239,14 @@
 .hc-hero h1 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(50px, 5.7vw, 82px);
-  line-height: 0.98;
+  /* One line at every width: the size follows the viewport so it never wraps. */
+  font-size: min(6vw, 84px);
+  line-height: 1.05;
   letter-spacing: -0.035em;
+  white-space: nowrap;
   margin: 0 0 22px;
 }
 .hc-hero h1 em {
-  display: block;
   font-style: italic;
 }
 .hc-hero .copy p {
