@@ -20,7 +20,7 @@ export default function NotFound() {
           <h1 className="page-title enter m-0 max-w-[14ch]" style={enterAt(0.1)}>
             Something went off course.
           </h1>
-          <div className="enter mt-block md:max-w-[480px]" style={enterAt(0.24)}>
+          <div className="enter mt-block md:max-w-[30rem]" style={enterAt(0.24)}>
             <p className="prose-body mb-8">
               The page you were looking for isn’t here — it may have moved, or the link may have
               been mistyped. The journeys are all still where we left them.

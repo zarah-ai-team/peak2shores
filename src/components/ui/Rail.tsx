@@ -23,7 +23,7 @@ import { Arrow } from './Button';
 export function Rail({
   items,
   label,
-  itemClassName = 'w-[clamp(260px,28vw,420px)]',
+  itemClassName = 'w-[clamp(16.25rem,22.25vw,26.25rem)]',
   tone = 'light',
   bleed = 'none',
   className = '',
@@ -99,7 +99,7 @@ export function Rail({
         onClick={() => step(-1)}
         disabled={atStart}
         aria-label={`Previous — ${label}`}
-        className={`flex h-11 w-11 items-center justify-center border transition-colors duration-300 disabled:pointer-events-none disabled:opacity-30 ${button}`}
+        className={`flex size-(--btn-h) items-center justify-center border transition-colors duration-300 disabled:pointer-events-none disabled:opacity-30 ${button}`}
       >
         <Arrow className="btn-arrow--back rotate-180" />
       </button>
@@ -108,7 +108,7 @@ export function Rail({
         onClick={() => step(1)}
         disabled={atEnd}
         aria-label={`Next — ${label}`}
-        className={`flex h-11 w-11 items-center justify-center border transition-colors duration-300 disabled:pointer-events-none disabled:opacity-30 ${button}`}
+        className={`flex size-(--btn-h) items-center justify-center border transition-colors duration-300 disabled:pointer-events-none disabled:opacity-30 ${button}`}
       >
         <Arrow />
       </button>

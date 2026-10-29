@@ -33,7 +33,8 @@ const promises = [
  * as the lead story (a wide photograph, the story beside it), the rest as a
  * row of entries under one rule. Each entry reads country and length, the
  * title, its one line, then dates, group and price on a single quiet line.
- * The title is the link; its hit area covers the whole entry.
+ * The title is the link; its hit area covers the whole entry. All the
+ * journeys are a quiet link beneath the row.
  */
 export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
   const upcoming = journeys
@@ -45,13 +46,8 @@ export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
   return (
     <section className="hc-jr" id="journeys" aria-labelledby="journeys-title">
       <div className="head">
-        <div>
-          <h2 id="journeys-title">Small Luxury Group Journeys</h2>
-          <p className="sub-h">A few journeys a year. Each one we’d take ourselves.</p>
-        </div>
-        <Link className="btn btn-ink" href="/journeys">
-          View all journeys
-        </Link>
+        <h2 id="journeys-title">Small Luxury Group Journeys</h2>
+        <p className="sub-h">A few journeys a year. Each one we’d take ourselves.</p>
       </div>
 
       <ul className="promises">
@@ -74,6 +70,13 @@ export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
           ))}
         </ul>
       )}
+
+      {/* The way on, once every departure has been seen. */}
+      <div className="all">
+        <Link className="tlink" href="/journeys">
+          View all journeys <Arrow />
+        </Link>
+      </div>
     </section>
   );
 }
@@ -87,7 +90,7 @@ function JournalEntry({ journey, lead = false }: { journey: JourneySummary; lead
     <article aria-labelledby={titleId} className={`entry group ${lead ? 'first' : ''}`}>
       <div className="ph">
         <Frame
-          ratio={lead ? '16/10' : '4/5'}
+          ratio={lead ? '16/10' : '6/7'}
           media={homeFrames[journey.slug] ?? journey.listMedia}
           hover
           sizes={lead ? '(min-width: 1024px) 60vw, 100vw' : '(min-width: 1024px) 25vw, 50vw'}

@@ -56,7 +56,7 @@ export function JourneyTabs({
       aria-label="This journey"
       data-journey-tabs
       data-pin-header
-      className="sticky top-[var(--nav-h-compact)] z-20 border-b border-line bg-ivory/95 backdrop-blur-[14px]"
+      className="sticky top-[var(--nav-h-compact)] z-20 border-b border-line bg-ivory/95 backdrop-blur-[0.875rem]"
     >
       <div className="container-site flex items-center justify-between gap-6">
         <ul className="-mx-1 m-0 flex list-none gap-1 overflow-x-auto p-0 [scrollbar-width:none] md:gap-4">
@@ -67,7 +67,7 @@ export function JourneyTabs({
                 <a
                   href={`#${tab.id}`}
                   aria-current={on ? 'location' : undefined}
-                  className={`nav-label relative flex min-h-14 items-center px-1.5 transition-colors duration-300 max-md:!text-[10.5px] max-md:!tracking-[0.12em] after:absolute after:inset-x-2 after:bottom-0 after:h-0.5 after:transition-transform after:duration-300 md:px-3 ${
+                  className={`nav-label relative flex min-h-14 items-center px-1.5 transition-colors duration-300 max-md:!text-[0.65625rem] max-md:!tracking-[0.12em] after:absolute after:inset-x-2 after:bottom-0 after:h-0.5 after:transition-transform after:duration-300 md:px-3 ${
                     on
                       ? 'text-ink after:scale-x-100 after:bg-acqua-deep'
                       : 'text-muted after:scale-x-0 after:bg-acqua-deep hover:text-ink'

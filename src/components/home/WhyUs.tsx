@@ -29,7 +29,7 @@ export function WhyUs({
     >
       <div className="container-site grid-site gap-y-block">
         <div className="col-span-4 md:col-span-6 lg:col-span-5">
-          <div className="lg:sticky lg:top-[calc(var(--nav-h)+48px)]">
+          <div className="lg:sticky lg:top-[calc(var(--nav-h)+3rem)]">
             <SectionLabel className="mb-8 lg:mb-10">{label}</SectionLabel>
             <Reveal variant="mask">
               <h2 id="why-title" className="h2">

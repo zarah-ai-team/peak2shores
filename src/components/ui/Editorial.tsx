@@ -94,7 +94,11 @@ export function PageTitle({
   const split = variant === 'split';
   return (
     <section className={`container-site pb-block pt-section-sm ${className}`}>
-      <SectionLabel as="p" className="enter m-0 mb-6 md:mb-8" style={enterAt(0)}>
+      <SectionLabel
+        as="p"
+        className="enter m-0 mb-6 md:mb-8 lg:mb-[clamp(1.25rem,1.695vw,2rem)]"
+        style={enterAt(0)}
+      >
         {kicker}
       </SectionLabel>
       <div className="grid-site gap-y-8 lg:items-end">
@@ -142,9 +146,9 @@ export function FactList({
   tone?: Tone;
 }) {
   const cols = {
-    120: 'sm:grid-cols-[120px_minmax(0,1fr)]',
-    130: 'sm:grid-cols-[130px_minmax(0,1fr)]',
-    200: 'sm:grid-cols-[200px_minmax(0,1fr)]',
+    120: 'sm:grid-cols-[7.5rem_minmax(0,1fr)]',
+    130: 'sm:grid-cols-[8.125rem_minmax(0,1fr)]',
+    200: 'sm:grid-cols-[12.5rem_minmax(0,1fr)]',
   }[labelWidth];
   const rule = tone === 'dark' ? 'border-line-dark' : 'border-line';
   const value = tone === 'dark' ? 'text-on-dark-body' : 'text-body';

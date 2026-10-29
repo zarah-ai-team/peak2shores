@@ -147,7 +147,7 @@ export default async function OurStoryPage() {
                 i % 2 === 0 ? 'md:border-r md:pr-10 lg:pr-16' : 'md:pl-10 lg:pl-16'
               }`}
             >
-              <span aria-hidden className="numeral text-acqua-text">
+              <span aria-hidden className="numeral text-brand">
                 {pillar.n}
               </span>
               <div>

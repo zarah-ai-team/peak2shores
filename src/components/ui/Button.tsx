@@ -6,23 +6,27 @@ export type ButtonVariant =
 
 /* `.btn` (globals.css) owns the transitions: color, a 2px lift on hover with
    the lift's own faint shadow, a settle on press, and the disabled fade.
-   Every filled/outline button is at least 44px tall. */
+   Size comes from the `--btn-*` tokens: 11.5px label, 28 × 17px padding on a
+   phone and at 1888px, scaling down to a 10.5px label and no less than 40px
+   tall on a laptop. Any touch screen keeps the 44px minimum. */
 const base =
-  'btn inline-flex min-h-11 items-center justify-start gap-3 font-ui font-medium text-[11.5px] leading-none tracking-[0.16em] uppercase';
+  'btn inline-flex min-h-(--btn-h) items-center justify-start gap-3 font-ui font-medium text-(length:--type-button) leading-none tracking-[0.16em] uppercase';
+
+/* The padding of a filled button; an outline gives back its 1px border. */
+const fill = 'px-(--btn-px) py-(--btn-py)';
+const line = 'px-[calc(var(--btn-px)-2px)] py-[calc(var(--btn-py)-1px)]';
 
 const variants: Record<ButtonVariant, string> = {
   /* On paper. */
-  ink: 'bg-ink text-ivory px-7 py-[17px] hover:bg-brand',
+  ink: `bg-ink text-ivory ${fill} hover:bg-brand`,
   /* On paper — the primary CTA ("Plan your journey"). */
-  navy: 'bg-navy text-ivory px-7 py-[17px] hover:bg-brand',
+  navy: `bg-navy text-ivory ${fill} hover:bg-brand`,
   /* On a photograph or a dark ground. */
-  light: 'bg-ivory text-ink px-7 py-[17px] hover:bg-brand hover:text-white',
+  light: `bg-ivory text-ink ${fill} hover:bg-brand hover:text-white`,
   /* On paper; fills with the brand blue. Inherits color, so it also works in the header. */
-  outline:
-    'btn--flat border border-current px-[26px] py-4 text-current hover:bg-brand hover:text-white hover:border-brand',
+  outline: `btn--flat border border-current ${line} text-current hover:bg-brand hover:text-white hover:border-brand`,
   /* On a dark ground; fills with the brand blue. */
-  'outline-dark':
-    'btn--flat border border-on-dark/70 px-[26px] py-4 text-on-dark hover:bg-brand hover:text-white hover:border-brand',
+  'outline-dark': `btn--flat border border-on-dark/70 ${line} text-on-dark hover:bg-brand hover:text-white hover:border-brand`,
   /* The blue hairline link. Picks dark colors automatically inside a
      dark ground ([data-tone="dark"], .bg-navy…, [data-hero]). */
   rule: 'link-rule',

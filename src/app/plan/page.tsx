@@ -65,7 +65,7 @@ export default async function PlanPage() {
             <FactList
               labelWidth={130}
               tone="stone"
-              className="max-w-[560px]"
+              className="max-w-[35rem]"
               rows={[
                 { label: 'Group size', value: `Max. ${site.maxGuests} guests` },
                 { label: 'Where', value: destinations.map((d) => d.country).join(' · ') },
@@ -131,7 +131,7 @@ function Ledger({ journeys }: { journeys: JourneySummary[] }) {
               <th scope="row" className="py-6 pr-6 text-left font-normal">
                 <Link
                   href={`/journeys/${journey.slug}`}
-                  className="h5 transition-colors duration-300 hover:text-acqua-text"
+                  className="h5 transition-colors duration-300 hover:text-brand"
                 >
                   {journey.title}
                 </Link>

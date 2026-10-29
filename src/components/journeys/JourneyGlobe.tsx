@@ -108,7 +108,7 @@ export function JourneyGlobe({
       aria-labelledby="globe-title"
       className="overflow-hidden border-y border-line bg-panel"
     >
-      <div className="container-site grid-site items-center gap-y-8 py-section-sm lg:min-h-[min(100svh,860px)] lg:py-10">
+      <div className="container-site grid-site items-center gap-y-8 py-section-sm lg:min-h-[min(100svh,53.75rem)] lg:py-10">
         <Reveal className="order-2 col-span-4 md:col-span-8 lg:order-1 lg:col-span-4">
           <SectionLabel as="h2" id="globe-title" className="mb-stack">
             Where we go
