@@ -65,8 +65,8 @@ export function FounderStory() {
         />
       </div>
       <div className="c">
-        <div className="lab">The Peaks2Shores story</div>
-        <h2 id="founder-title">{founderStory.headline}</h2>
+        <h2 id="founder-title">The Peaks2Shores story</h2>
+        <p className="sub-h">{founderStory.headline}</p>
         <p>{founderStory.body}</p>
         <div className="ctarow left" style={{ marginTop: 0 }}>
           <Link className="btn btn-ink" href="/our-story">
@@ -87,8 +87,8 @@ export function CircleBand() {
         <Image src={circle.img} alt={circle.alt} fill sizes="100vw" className="fill" />
       </div>
       <div className="in">
-        <div className="lab">The circle</div>
-        <h2 id="circle-title">{circle.headline}</h2>
+        <h2 id="circle-title">The circle</h2>
+        <p className="sub-h">{circle.headline}</p>
         <p>{circle.body}</p>
         <div className="form">
           <NewsletterForm variant="dark" />

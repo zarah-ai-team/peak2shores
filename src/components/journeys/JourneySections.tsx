@@ -16,19 +16,45 @@ import { JourneyCard } from './JourneyCard';
 
 /* -- 1. Hero --------------------------------------------------------------- */
 
+/** The journey at a glance, as the hero's bottom strip shows it. */
+function journeyFacts(journey: Journey): { label: string; value: React.ReactNode }[] {
+  const tag = journeyTagStatus({ ...journey, isNew: isNew(journey) });
+  return [
+    { label: 'Days', value: `${journey.days} days · ${journey.days - 1} nights` },
+    { label: 'Departure', value: journey.departureWindow },
+    { label: 'Group', value: `Max. ${journey.groupMax} guests` },
+    { label: 'From', value: `${journey.priceFrom} per person` },
+    {
+      label: 'Hosted by',
+      value: journey.hostedByMarc ? site.founder.name : 'Our team on the ground',
+    },
+    {
+      label: 'Status',
+      value: (
+        <StatusTag status={tag} tone="dark" className="!text-[11.5px]">
+          {tag === 'open' ? 'Open' : undefined}
+        </StatusTag>
+      ),
+    },
+  ];
+}
+
 /**
- * The photograph, full-bleed at 92svh. Title bottom-left in display type —
- * "Amalfi, Slowly.", the qualifier dropping to a second line — and
- * the journey's one-line lead bottom-right.
+ * The photograph, full-bleed. Title bottom-left in display type — "Amalfi,
+ * Slowly.", the qualifier dropping to a second line — and the journey's
+ * one-line lead bottom-right. Along the bottom edge of the photograph, on a
+ * band of the hero's own shade, the facts: six columns on one line from a
+ * laptop up, label over value, hairlines between; three, then two, columns
+ * on smaller screens.
  */
 export function JourneyHero({ journey }: { journey: Journey }) {
   const [first, ...rest] = journey.title.split(', ');
-  const tag = journeyTagStatus({ ...journey, isNew: isNew(journey) });
+  const facts = journeyFacts(journey);
 
   return (
     <section
       data-hero
-      className="relative isolate flex h-[92svh] min-h-[620px] flex-col justify-end overflow-hidden"
+      className="relative isolate flex min-h-[680px] flex-col justify-end overflow-hidden md:h-[92svh] md:min-h-[720px]"
     >
       <div className="absolute inset-0 -z-10">
         <Frame
@@ -41,7 +67,7 @@ export function JourneyHero({ journey }: { journey: Journey }) {
           className="h-full"
         />
       </div>
-      <div className="container-site grid-site items-end gap-y-7 pb-[clamp(40px,7vh,88px)] pt-[calc(var(--nav-h)+48px)] text-on-dark">
+      <div className="container-site grid-site items-end gap-y-6 pb-[clamp(32px,5vh,56px)] pt-[calc(var(--nav-h)+48px)] text-on-dark">
         <div className="col-span-4 md:col-span-8 lg:col-span-8">
           <nav aria-label="Breadcrumb" className="enter mb-7" style={enterAt(0.05)}>
             <ol className="kicker m-0 flex list-none flex-wrap items-center gap-x-3.5 gap-y-2 p-0 !text-on-dark">
@@ -58,11 +84,6 @@ export function JourneyHero({ journey }: { journey: Journey }) {
               </li>
             </ol>
           </nav>
-          {tag !== 'open' && (
-            <p className="enter m-0 mb-5" style={enterAt(0.1)}>
-              <StatusTag status={tag} tone="dark" />
-            </p>
-          )}
           <TextReveal
             as="h1"
             immediate
@@ -81,61 +102,36 @@ export function JourneyHero({ journey }: { journey: Journey }) {
         >
           {journey.lead}
         </p>
-      </div>
-    </section>
-  );
-}
-
-/* -- 2. Facts -------------------------------------------------------------- */
-
-export function JourneyFacts({ journey }: { journey: Journey }) {
-  const tag = journeyTagStatus({ ...journey, isNew: isNew(journey) });
-  const facts: { label: string; value: React.ReactNode }[] = [
-    { label: 'Days', value: `${journey.days} days · ${journey.days - 1} nights` },
-    { label: 'Departure', value: journey.departureWindow },
-    { label: 'Group', value: `Max. ${journey.groupMax} guests` },
-    { label: 'From', value: `${journey.priceFrom} per person` },
-    {
-      label: 'Hosted by',
-      value: journey.hostedByMarc ? site.founder.name : 'Our team on the ground',
-    },
-    {
-      label: 'Status',
-      value: <StatusTag status={tag}>{tag === 'open' ? 'Open' : undefined}</StatusTag>,
-    },
-  ];
-
-  return (
-    <section aria-label="At a glance" className="border-b border-line">
-      <div className="container-site">
-        <RevealGroup as="div" stagger={0.06} amount={0.3}>
-          <dl className="m-0 grid grid-cols-2 border-line md:grid-cols-3 lg:grid-cols-6">
-            {facts.map((fact, i) => (
-              <RevealItem
-                key={fact.label}
-                distance={12}
-                className={`border-line py-7 pr-5 ${i % 2 === 1 ? 'pl-5 md:pl-0' : ''} border-b lg:border-b-0 ${
-                  i < 5 ? 'lg:border-r lg:pl-0' : ''
-                } lg:px-6 lg:first:pl-0`}
-              >
-                <dt className="kicker-sm mb-3">{fact.label}</dt>
-                <dd className="h5 m-0">{fact.value}</dd>
-              </RevealItem>
-            ))}
-          </dl>
-        </RevealGroup>
         {/* From a tablet up the tab bar carries the way to enquire. */}
-        <div className="flex flex-wrap items-center gap-x-8 gap-y-4 py-7 md:hidden">
-          <ButtonLink href="#enquire" variant="navy" arrow>
+        <p className="enter col-span-4 m-0 md:hidden" style={enterAt(0.5)}>
+          <ButtonLink href="#enquire" variant="light" arrow>
             Inquire
           </ButtonLink>
+        </p>
+      </div>
+
+      <div
+        aria-label="At a glance"
+        role="region"
+        className="enter border-t border-on-dark/25 bg-[rgb(10_34_50/0.5)] text-on-dark backdrop-blur-[2px]"
+        style={enterAt(0.6)}
+      >
+        <div className="container-site">
+          <dl className="journey-facts m-0 grid grid-cols-2 md:grid-cols-3">
+            {facts.map((fact) => (
+              <div key={fact.label} className="journey-fact">
+                <dt className="kicker-sm mb-2.5 !text-on-dark-body">{fact.label}</dt>
+                <dd className="h5 journey-fact-value m-0">{fact.value}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </div>
     </section>
   );
 }
 
-/* -- 3. Overview ---------------------------------------------------------- */
+/* -- 2. Overview ---------------------------------------------------------- */
 
 export function Overview({ detail }: { detail: JourneyDetail }) {
   const [first, ...more] = detail.overview;

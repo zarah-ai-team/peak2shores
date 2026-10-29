@@ -150,7 +150,7 @@ export function JourneyGlobe({
                     <span
                       aria-hidden
                       className={`status-mark shrink-0 transition-[background-color,transform] duration-300 ${
-                        on ? 'scale-150 bg-brand' : 'bg-acqua'
+                        on ? 'scale-150 bg-brand' : 'bg-[#ea4335]'
                       }`}
                     />
                   </Link>
@@ -230,8 +230,9 @@ function GlobeGround() {
         className="absolute left-1/2 top-1/2 aspect-square h-[86%] -translate-x-1/2 -translate-y-1/2 rounded-full"
         style={{
           background:
-            'radial-gradient(circle at 38% 34%, color-mix(in srgb, var(--color-acqua) 62%, var(--color-ivory)) 0%, color-mix(in srgb, var(--color-acqua-deep) 55%, var(--color-tone-sand)) 100%)',
-          boxShadow: 'inset 0 0 0 1px rgb(47 107 100 / 0.3)',
+            // The globe's road-map water (see Globe.tsx), so nothing jumps when it loads.
+            'radial-gradient(circle at 38% 34%, #bbe1ff 0%, #9acbf7 100%)',
+          boxShadow: 'inset 0 0 0 1px rgb(127 184 236 / 0.6)',
         }}
       />
     </div>

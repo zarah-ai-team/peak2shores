@@ -91,36 +91,44 @@ function regions(pins: GlobePin[], fit: number) {
     });
 }
 
-/** Brand tokens, read once from the stylesheet so the globe follows them. */
+/** Google Maps' road-map colors, which every reader already knows how to read. */
+const MAP = {
+  water: '#aadaff',
+  waterDeep: '#7fb8ec',
+  land: '#f5f3ec',
+  border: '#c9c9c9',
+  park: '#d4e9c6',
+  parkHover: '#c1e0ae',
+  parkSelected: '#a8d494',
+  parkEdge: '#93c08a',
+  red: '#ea4335',
+  white: '#ffffff',
+};
+
+/**
+ * The globe's palette: a road map rather than a print — light blue sea, pale
+ * cream land with soft gray borders, the journeys' countries in park green,
+ * pins in map red. A lit pin takes the brand blue, read from the stylesheet.
+ */
 function readPalette() {
   const css = getComputedStyle(document.documentElement);
-  const token = (name: string, fallback: string) => css.getPropertyValue(name).trim() || fallback;
-  const ink = token('--color-ink', '#1e1f1d');
-  const ivory = token('--color-ivory', '#f4f1ea');
-  const sand = token('--color-tone-sand', '#e5dfd1');
-  const acqua = token('--color-acqua', '#7accfd');
-  const acquaDeep = token('--color-acqua-deep', '#1190cb');
-  const acquaText = token('--color-acqua-text', '#0b5c85');
-  const navy = token('--color-navy', '#0e2f42');
-  const brand = token('--color-brand', '#1190cb');
-  // A printed atlas on the house paper: water-blue sea, ivory land, the
-  // journeys' countries in deep acqua, pins in navy with a brand-blue light.
+  const brand = css.getPropertyValue('--color-brand').trim() || '#1190cb';
   return {
-    oceanIn: mix(acqua, ivory, 0.62),
-    oceanOut: mix(acquaDeep, sand, 0.55),
-    glow: hexAlpha(acqua, 0.35),
-    graticule: hexAlpha(acquaText, 0.09),
-    land: ivory,
-    landStroke: hexAlpha(ink, 0.14),
-    dest: hexAlpha(acquaText, 0.55),
-    destHover: hexAlpha(acquaText, 0.78),
-    destSelected: navy,
-    destStroke: hexAlpha(ivory, 0.7),
-    limb: hexAlpha(navy, 0.16),
-    highlight: hexAlpha(ivory, 0.32),
-    edge: hexAlpha(acquaText, 0.35),
-    pinHalo: ivory,
-    pin: navy,
+    oceanIn: mix(MAP.water, MAP.white, 0.8),
+    oceanOut: mix(MAP.waterDeep, MAP.water, 0.6),
+    glow: hexAlpha(MAP.water, 0.45),
+    graticule: hexAlpha(MAP.white, 0.35),
+    land: MAP.land,
+    landStroke: MAP.border,
+    dest: MAP.park,
+    destHover: MAP.parkHover,
+    destSelected: MAP.parkSelected,
+    destStroke: MAP.parkEdge,
+    limb: hexAlpha('#2a5f8f', 0.14),
+    highlight: hexAlpha(MAP.white, 0.3),
+    edge: hexAlpha(MAP.waterDeep, 0.6),
+    pinHalo: MAP.white,
+    pin: MAP.red,
     pinActive: brand,
   };
 }
@@ -128,9 +136,9 @@ function readPalette() {
 /**
  * The destinations globe.
  *
- * An orthographic projection drawn to a canvas, set as a printed atlas on the
- * house paper: water-blue sea that deepens toward the limb, ivory land, the
- * journeys' countries in deep acqua, each journey a navy pin. It opens
+ * An orthographic projection drawn to a canvas, colored like a road map:
+ * light blue sea that deepens toward the limb, cream land with gray borders,
+ * the journeys' countries in park green, each journey a red pin. It opens
  * framed on the region with the most journeys, close enough that every pin
  * stands apart, and flies — rotate and zoom together, easing out a little in
  * the middle like a camera — to any other journey that is hovered or chosen.

@@ -76,7 +76,12 @@ export type NavItem = { label: string; href: string };
  * `data-hero` — sit in one place.
  */
 export function isHeroRoute(pathname: string) {
-  return pathname === '/' || pathname === '/destinations' || /^\/journeys\/[^/]+$/.test(pathname);
+  return (
+    pathname === '/' ||
+    pathname === '/destinations' ||
+    pathname === '/experiences' ||
+    /^\/journeys\/[^/]+$/.test(pathname)
+  );
 }
 
 export const primaryNav: NavItem[] = [

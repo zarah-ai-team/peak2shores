@@ -35,7 +35,7 @@ export const metadata: Metadata = {
    so the hero never names a file that is not there. */
 const inPublic = (path: string) => existsSync(join(process.cwd(), 'public', path));
 const heroReel: ReelClip[] = reel.map(({ fallback, ...clip }) =>
-  fallback && !(inPublic(clip.video) && inPublic(clip.img)) ? fallback : clip,
+  fallback && !(clip.video && inPublic(clip.video) && inPublic(clip.img)) ? fallback : clip,
 );
 
 /* Rebuilt hourly, so a newly released journey reaches the list. */

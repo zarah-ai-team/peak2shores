@@ -1,0 +1,635 @@
+/* ==========================================================================
+   Experiences — set in the homepage's language (home.css supplies the .hc
+   tokens, buttons and labels). A film opening on night, the five on paper as
+   a row of tall photographs, the ways to travel on night beside a framed
+   screen, and a deep-lake close. Photographs at the homepage radius; one
+   heading style throughout: Georgia, regular, never italic.
+   ========================================================================== */
+
+.xp {
+  --wrap: 1312px;
+  --round: 10px;
+  /* How long each item holds before the set moves on. */
+  --hold: 7s;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-x: clip;
+}
+.xp h1,
+.xp h2,
+.xp h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-style: normal;
+  margin: 0;
+}
+.xp .lab {
+  margin: 0;
+}
+.xp .xp-head h2,
+.xp-ask h2 {
+  font-size: var(--h2);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+.xp .lab + h2 {
+  margin-top: 16px;
+}
+.xp .sub {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: var(--sub);
+  line-height: 1.7;
+  margin: 0;
+  max-width: 40ch;
+}
+/* Shared by both moving sets: the time line under the current item. */
+.xp .bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  pointer-events: none;
+}
+.xp .bar i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: currentColor;
+}
+.xp .on > .bar i,
+.xp .on .txt .bar i {
+  animation: xp-hold var(--hold) linear forwards;
+  animation-play-state: paused;
+}
+.xp .run .on > .bar i,
+.xp .run .on .txt .bar i {
+  animation-play-state: running;
+}
+@keyframes xp-hold {
+  to {
+    width: 100%;
+  }
+}
+/* A name that is also a control: reads as a heading, acts as a button. */
+.xp h2 button,
+.xp h3 button {
+  all: unset;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+.xp h2 button:focus-visible,
+.xp h3 button:focus-visible {
+  outline: 2px solid var(--sky);
+  outline-offset: 4px;
+}
+
+/* -- 01 Opening ---------------------------------------------------------- */
+.xp-hero {
+  position: relative;
+  height: 100svh;
+  min-height: 620px;
+  max-height: 1000px;
+  overflow: hidden;
+  background: var(--night);
+  color: #fff;
+}
+.xp-hero .media {
+  position: absolute;
+  inset: 0;
+  animation: xp-settle 2.4s var(--ease) both;
+}
+@keyframes xp-settle {
+  from {
+    transform: scale(1.06);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+.xp-hero .shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      180deg,
+      rgb(8 20 28 / 0.5) 0%,
+      rgb(8 20 28 / 0) 26%,
+      rgb(8 20 28 / 0) 44%,
+      rgb(8 20 28 / 0.78) 100%
+    ),
+    linear-gradient(90deg, rgb(8 20 28 / 0.5) 0%, rgb(8 20 28 / 0) 60%);
+}
+.xp-hero .copy {
+  position: absolute;
+  z-index: 2;
+  left: var(--gut);
+  right: var(--gut);
+  bottom: clamp(150px, 22svh, 210px);
+  max-width: 900px;
+}
+.xp-hero .eb {
+  color: var(--ice);
+}
+.xp-hero h1 {
+  font-size: clamp(44px, 6.2vw, 92px);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  margin: 22px 0 20px;
+  max-width: 13ch;
+}
+.xp-hero .intro {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: clamp(16px, 1.3vw, 18px);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 40ch;
+  color: #eef2f4;
+}
+.xp-hero .copy > * {
+  animation: xp-rise 1.2s var(--ease) both;
+}
+.xp-hero .copy > :nth-child(2) {
+  animation-delay: 0.12s;
+}
+.xp-hero .copy > :nth-child(3) {
+  animation-delay: 0.24s;
+}
+@keyframes xp-rise {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* The five, as a way into the page, along the foot of the film. */
+.xp-index {
+  position: absolute;
+  z-index: 2;
+  left: var(--gut);
+  right: var(--gut);
+  bottom: clamp(26px, 5svh, 48px);
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 28px;
+}
+.xp-index a {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  min-height: 44px;
+  padding-top: 18px;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgb(255 255 255 / 0.78);
+  transition: color 0.5s var(--ease);
+}
+.xp-index a::before,
+.xp-index a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 1px;
+}
+.xp-index a::before {
+  right: 0;
+  background: rgb(255 255 255 / 0.32);
+}
+.xp-index a::after {
+  width: 0;
+  background: #fff;
+  transition: width 0.8s var(--ease);
+}
+.xp-index a span {
+  color: var(--sky);
+  letter-spacing: 0.1em;
+}
+.xp-index a:hover,
+.xp-index a:focus-visible {
+  color: #fff;
+}
+.xp-index a:hover::after,
+.xp-index a:focus-visible::after {
+  width: 100%;
+}
+
+/* -- Section heads ------------------------------------------------------- */
+.xp-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px 60px;
+  max-width: var(--wrap);
+  margin: 0 auto clamp(40px, 5vw, 72px);
+}
+.xp-head h2 {
+  max-width: 16ch;
+}
+
+/* -- 02 The five --------------------------------------------------------- */
+.xp-kinds {
+  padding: clamp(80px, 10vw, 150px) var(--gut);
+}
+.xp-kinds .xp-head {
+  align-items: baseline;
+  border-bottom: 1px solid rgb(20 29 36 / 0.14);
+  padding-bottom: 22px;
+}
+.xp-kinds .xp-head .lab {
+  color: var(--lake);
+}
+.xp-kinds .sub {
+  color: #3a434a;
+}
+.xp-panels {
+  display: flex;
+  gap: 12px;
+  max-width: var(--wrap);
+  height: clamp(540px, 46vw, 680px);
+  margin: 0 auto;
+}
+.xp-panel {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--round);
+  background: var(--night);
+  color: #fff;
+  transition: flex-grow 1s var(--ease);
+}
+.xp-panel.on {
+  flex-grow: 2.3;
+}
+.xp-panel .pic {
+  position: absolute;
+  inset: 0;
+}
+.xp-panel .pic img {
+  transform: scale(1.06);
+  transition:
+    transform 1.6s var(--ease),
+    filter 1s var(--ease);
+}
+.xp-panel.on .pic img {
+  transform: scale(1);
+}
+/* Shade from the foot, deeper on the closed panels so they read as a set. */
+.xp-panel .pic::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(0deg, rgb(8 20 28 / 0.82) 0%, rgb(8 20 28 / 0.1) 55%), rgb(8 20 28 / 0.22);
+  transition: background-color 1s var(--ease);
+}
+.xp-panel.on .pic::after {
+  background-color: rgb(8 20 28 / 0);
+}
+.xp-panel .txt {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 24px;
+  padding-bottom: 18px;
+  color: #fff;
+}
+.xp-panel .num {
+  display: block;
+  color: var(--sky);
+  margin-bottom: 12px;
+}
+.xp-panel h2 {
+  font-size: clamp(24px, 2.2vw, 34px);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+  white-space: nowrap;
+}
+.xp-panel p {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 28ch;
+  color: rgb(255 255 255 / 0.88);
+}
+.xp-panel .bar {
+  color: rgb(255 255 255 / 0.9);
+  background: rgb(255 255 255 / 0.24);
+}
+
+/* -- 03 Ways to travel --------------------------------------------------- */
+.xp-ways {
+  background: var(--night);
+  color: #fff;
+  padding: clamp(80px, 10vw, 150px) var(--gut) clamp(90px, 11vw, 170px);
+}
+.xp-ways .xp-head .lab {
+  color: var(--ice);
+}
+.xp-ways .sub {
+  color: rgb(255 255 255 / 0.75);
+}
+.xp-wg {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  gap: clamp(48px, 6vw, 96px);
+  max-width: var(--wrap);
+  margin: 0 auto;
+  align-items: start;
+}
+.xp-stage {
+  /* Stays in view while the list beside it, the taller of the two, scrolls. */
+  position: sticky;
+  top: clamp(100px, 12svh, 130px);
+  order: 2;
+  aspect-ratio: 4 / 5;
+  max-height: 780px;
+  margin: 16px;
+}
+/* A fine frame standing off the screen, the screen set inside it. */
+.xp-stage .fr {
+  position: absolute;
+  inset: -16px;
+  border: 1px solid rgb(122 204 253 / 0.38);
+  border-radius: calc(var(--round) + 8px);
+  pointer-events: none;
+}
+.xp-stage .scr {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: var(--round);
+  background: var(--deep);
+}
+.xp-stage .shot {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: scale(1.05);
+  transition:
+    opacity 1.1s var(--ease),
+    transform 2.4s var(--ease);
+}
+.xp-stage .shot.on {
+  opacity: 1;
+  transform: none;
+}
+.xp-stage .cap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+  padding: 90px 28px 26px;
+  background: linear-gradient(0deg, rgb(8 20 28 / 0.75), rgb(8 20 28 / 0));
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.xp-stage .cap b {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(40px, 4vw, 60px);
+  font-variant-numeric: lining-nums;
+  line-height: 0.8;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+.xp-stage .cap small {
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: rgb(255 255 255 / 0.7);
+}
+.xp-wl {
+  order: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid rgb(255 255 255 / 0.18);
+}
+.xp-wl li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  padding: 26px 0 24px;
+  border-bottom: 1px solid rgb(255 255 255 / 0.18);
+  color: rgb(255 255 255 / 0.62);
+  transition: color 0.5s var(--ease);
+}
+.xp-wl li:hover,
+.xp-wl li.on {
+  color: #fff;
+}
+/* The whole row answers the pointer, not only the title. */
+.xp-wl h3 button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+/* A way's own still: for the cards on narrower screens only. */
+.xp-wl .thumb {
+  display: none;
+}
+.xp-wl .n {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  padding-top: 0.75em;
+  color: var(--sky);
+}
+.xp-wl h3 {
+  font-size: var(--h3);
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.xp-wl p {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.65;
+  margin: 0;
+  max-width: 46ch;
+  color: rgb(255 255 255 / 0.6);
+  transition: color 0.5s var(--ease);
+}
+.xp-wl li.on p {
+  color: rgb(255 255 255 / 0.84);
+}
+.xp-wl .bar {
+  bottom: -1px;
+  color: var(--sky);
+}
+
+/* -- 04 The close -------------------------------------------------------- */
+.xp-ask {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 32px clamp(48px, 7vw, 120px);
+  align-items: end;
+  padding: clamp(80px, 9vw, 130px) max(var(--gut), calc((100% - var(--wrap)) / 2));
+  background: var(--paper);
+  color: var(--ink);
+}
+.xp-ask .lab {
+  color: var(--lake);
+}
+.xp-ask h2 {
+  max-width: 18ch;
+}
+.xp-ask p:not(.lab) {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: var(--sub);
+  line-height: 1.7;
+  margin: 0 0 30px;
+  max-width: 40ch;
+  color: #3a434a;
+}
+
+/* -- Narrower screens ---------------------------------------------------- */
+/* Below 1100px the five become cards: every photograph at full size, no
+   opening and closing, no time line. */
+@media (max-width: 1099px) {
+  .xp-panels {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    height: auto;
+  }
+  .xp-panel {
+    aspect-ratio: 4 / 5;
+  }
+  .xp-panel:last-child {
+    grid-column: 1 / -1;
+    aspect-ratio: 16 / 9;
+  }
+  .xp-panel .pic img,
+  .xp-panel.on .pic img {
+    transform: none;
+  }
+  .xp-panel .pic::after,
+  .xp-panel.on .pic::after {
+    background-color: rgb(8 20 28 / 0.08);
+  }
+  .xp-panel .bar {
+    display: none;
+  }
+  /* The ways become cards, each with its own still, in place of the screen. */
+  .xp-wg {
+    display: block;
+  }
+  .xp-stage {
+    display: none;
+  }
+  .xp-wl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 48px 28px;
+    border-top: 0;
+  }
+  .xp-wl li,
+  .xp-wl li.on {
+    grid-template-columns: 44px minmax(0, 1fr);
+    align-content: start;
+    padding: 0 0 26px;
+    color: #fff;
+  }
+  .xp-wl li p,
+  .xp-wl li.on p {
+    color: rgb(255 255 255 / 0.8);
+  }
+  .xp-wl .thumb {
+    display: block;
+    position: relative;
+    grid-column: 1 / -1;
+    aspect-ratio: 4 / 3;
+    margin-bottom: 22px;
+    overflow: hidden;
+    border-radius: var(--round);
+    background: var(--deep);
+  }
+  .xp-wl .bar {
+    display: none;
+  }
+}
+@media (max-width: 900px) {
+  .xp-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .xp-ask {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+}
+@media (max-width: 640px) {
+  .xp-index {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px 16px;
+  }
+  .xp-index a {
+    padding-top: 14px;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    gap: 8px;
+  }
+  .xp-hero .copy {
+    bottom: 170px;
+  }
+  .xp-panels {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .xp-panel,
+  .xp-panel:last-child {
+    aspect-ratio: 4 / 3;
+  }
+  .xp-wl {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+  .xp-wl li,
+  .xp-wl li.on {
+    grid-template-columns: 40px minmax(0, 1fr);
+    padding-bottom: 22px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .xp-hero .media,
+  .xp-hero .copy > * {
+    animation: none;
+  }
+  .xp-panel,
+  .xp-panel .pic img,
+  .xp-stage .shot {
+    transition: none;
+  }
+  .xp .on > .bar i,
+  .xp .on .txt .bar i {
+    animation: none;
+    width: 0;
+  }
+}

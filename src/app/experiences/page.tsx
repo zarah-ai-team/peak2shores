@@ -1,10 +1,12 @@
-import Image from 'next/image';
-import { Frame } from '@/components/ui/Frame';
-import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal';
-import { DarkCta } from '@/components/ui/DarkCta';
-import { PageTitle, SectionLabel } from '@/components/ui/Editorial';
-import { ways } from '@/lib/data/home';
-import { getPageContent, pageMetadata, type Experience } from '@/lib/content';
+import Link from 'next/link';
+import '@/components/home/home.css';
+import '@/components/experiences/experiences.css';
+import { ExperiencePanels } from '@/components/experiences/ExperiencePanels';
+import { Film } from '@/components/experiences/Film';
+import { WaysStage } from '@/components/experiences/WaysStage';
+import { experiences as homeExperiences, ways } from '@/lib/data/home';
+import { getPageContent, pageMetadata } from '@/lib/content';
+import { getMedia } from '@/lib/media';
 
 export const metadata = pageMetadata({
   title: 'Experiences',
@@ -13,187 +15,106 @@ export const metadata = pageMetadata({
   path: '/experiences',
 });
 
+const pad = (n: number) => String(n).padStart(2, '0');
+
+/* The opening film: the street piano by the Chapel Bridge in Lucerne. */
+const opening = homeExperiences.find((x) => x.word === 'Meet') ?? homeExperiences[0];
+
 /**
- * Five chapters, each composed differently so the page reads as a sequence
- * rather than a list (DESIGN-SPEC §5.4):
- *   0 portrait left, text right · 1 text left, portrait right, dropped 64px ·
- *   2 panorama across the page, text below · 3 = 0 mirrored · 4 = 1 mirrored.
- * Anchors (#taste, #meet…) are kept: the homepage index links to them.
- * Then the ways to travel — group journeys to cruises and villas — as an
- * editorial spread. One call to action on the page: plan your journey.
+ * Experiences, in the homepage's language (home.css supplies the .hc tokens,
+ * labels and buttons; experiences.css the rest):
+ *   01 a full-bleed film with the five experiences as a way in along its foot ·
+ *   02 the five as a row of tall photographs, one open at a time ·
+ *   03 the ways to travel as a list beside a framed film screen ·
+ *   04 one call to action: plan your journey.
+ * Everything is on the page from the first paint; the motion only changes
+ * which photograph has the room. Anchors (#taste, #meet…) are kept: the
+ * homepage index links to them.
  */
 export default async function ExperiencesPage() {
   const { experiences } = await getPageContent('experiences');
+  const panels = experiences.map((x) => {
+    const slot = getMedia(x.media);
+    return {
+      slug: x.slug,
+      title: x.title,
+      body: x.body,
+      img: slot.src,
+      alt: slot.alt ?? slot.label,
+      tone: slot.tone,
+    };
+  });
 
   return (
-    <>
-      <PageTitle kicker="Experiences" title="The things worth your time." variant="stacked">
-        Five kinds of experience shape every journey. Not a menu to choose from — the balance we
-        build each itinerary around.
-      </PageTitle>
-
-      <div className="pb-section-sm">
-        {experiences.map((experience, i) => (
-          <Chapter key={experience.slug} experience={experience} index={i} />
-        ))}
-      </div>
-
-      <WaysToTravel />
-
-      <DarkCta
-        ground="charcoal"
-        kicker="Ask for something else"
-        headline="If what you want isn’t on this page, say so."
-        body="The five above describe how we plan, not what we are limited to. Private journeys start with what you actually want to do."
-        href="/plan"
-        cta="Plan your journey"
-      />
-    </>
-  );
-}
-
-function Chapter({ experience, index }: { experience: Experience; index: number }) {
-  const titleId = `${experience.slug}-title`;
-  const kicker = `${String(index + 1).padStart(2, '0')} — Experience`;
-  const shape = index % 5;
-
-  const text = (
-    <>
-      <SectionLabel className="mb-stack">{kicker}</SectionLabel>
-      <Reveal variant="mask">
-        <h2 id={titleId} className="h2 mb-stack">
-          {experience.title}
-        </h2>
-      </Reveal>
-      <Reveal delay={0.1}>
-        <p className="prose-body measure m-0">{experience.body}</p>
-      </Reveal>
-    </>
-  );
-
-  // 2 — the panorama: the photograph across the page, text below.
-  if (shape === 2) {
-    return (
-      <section id={experience.slug} aria-labelledby={titleId} className="pt-section-sm">
-        <Frame
-          media={experience.media}
-          parallax={30}
-          sizes="100vw"
-          className="mb-block aspect-[4/3] w-full md:aspect-[21/9]"
-        />
-        <div className="container-site grid-site">
-          <div className="col-span-4 md:col-span-6 md:col-start-2 lg:col-span-7 lg:col-start-3">
-            {text}
-          </div>
+    <div className="hc xp">
+      {/* 01 — The opening. */}
+      <section data-hero aria-labelledby="xp-title" className="xp-hero">
+        <div className="media">
+          <Film visual={opening} sizes="100vw" priority />
         </div>
-      </section>
-    );
-  }
-
-  // 0 / 3 — a large portrait (7 cols) beside the text; 3 is mirrored.
-  if (shape === 0 || shape === 3) {
-    const mirror = shape === 3;
-    return (
-      <section id={experience.slug} aria-labelledby={titleId} className="pt-section-sm">
-        <div className="container-site grid-site items-center gap-y-block">
-          <Frame
-            media={experience.media}
-            ratio="4/5"
-            sizes="(min-width: 1024px) 55vw, 100vw"
-            className={`col-span-4 md:col-span-7 lg:col-span-7 ${
-              mirror ? 'md:col-start-2 lg:order-2 lg:col-start-6' : ''
-            }`}
-          />
-          <div
-            className={`col-span-4 md:col-span-7 lg:col-span-4 ${
-              mirror ? 'lg:order-1 lg:col-start-1' : 'lg:col-start-9'
-            }`}
-          >
-            {text}
-          </div>
+        <div className="shade" />
+        <div className="copy">
+          <p className="lab eb">
+            <i />
+            Experiences
+          </p>
+          <h1 id="xp-title">The things worth your time.</h1>
+          <p className="intro">Five kinds of experience shape every journey.</p>
         </div>
-      </section>
-    );
-  }
-
-  // 1 / 4 — text first, a smaller portrait (5 cols) dropped 64px; 4 is mirrored.
-  const mirror = shape === 4;
-  return (
-    <section id={experience.slug} aria-labelledby={titleId} className="pt-section-sm">
-      <div className="container-site grid-site items-start gap-y-block">
-        <div
-          className={`col-span-4 md:col-span-7 lg:col-span-5 lg:self-center ${
-            mirror ? 'lg:order-2 lg:col-start-8' : 'lg:col-start-2'
-          }`}
-        >
-          {text}
-        </div>
-        <Frame
-          media={experience.media}
-          ratio="3/4"
-          sizes="(min-width: 1024px) 40vw, 100vw"
-          className={`col-span-4 md:col-span-5 md:col-start-4 lg:col-span-5 lg:mt-16 ${
-            mirror ? 'lg:order-1 lg:col-start-2' : 'lg:col-start-8'
-          }`}
-        />
-      </div>
-    </section>
-  );
-}
-
-/**
- * The ways to travel, after the experiences they are built from: six frames
- * in a 3 × 2 spread, the first row set taller so the grid reads as a page of
- * a magazine rather than a catalog. Text only beneath each — no buttons.
- */
-function WaysToTravel() {
-  return (
-    <section aria-labelledby="ways-title" className="bg-panel py-section">
-      <div className="container-site">
-        <div className="grid-site mb-block gap-y-6">
-          <div className="col-span-4 md:col-span-8 lg:col-span-7">
-            <SectionLabel className="mb-stack">Ways to travel</SectionLabel>
-            <Reveal variant="mask">
-              <h2 id="ways-title" className="h2 max-w-[16ch]">
-                From a small group to a yacht of your own.
-              </h2>
-            </Reveal>
-          </div>
-          <Reveal
-            delay={0.1}
-            className="col-span-4 md:col-span-6 lg:col-span-4 lg:col-start-9 lg:self-end"
-          >
-            <p className="prose-body measure m-0">
-              Every experience above can be shaped into any of these — with the same people on the
-              ground and the same care behind each day.
-            </p>
-          </Reveal>
-        </div>
-        <RevealGroup
-          as="ul"
-          stagger={0.08}
-          className="m-0 grid list-none gap-x-8 gap-y-14 p-0 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          {ways.map((way, i) => (
-            <RevealItem as="li" key={way.title} distance={18}>
-              <div
-                className={`relative mb-6 overflow-hidden bg-stone ${i < 3 ? 'aspect-[4/5]' : 'aspect-[4/3]'}`}
-              >
-                <Image
-                  src={way.img}
-                  alt={way.alt}
-                  fill
-                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                  className="photo-grade object-cover"
-                />
-              </div>
-              <p className="kicker-sm mb-3">{String(i + 1).padStart(2, '0')}</p>
-              <h3 className="h4 mb-3">{way.title}</h3>
-              <p className="prose-body-sm measure m-0">{way.line}</p>
-            </RevealItem>
+        <nav className="xp-index" aria-label="Experiences on this page">
+          {experiences.map((x, i) => (
+            <a key={x.slug} href={`#${x.slug}`}>
+              <span>{pad(i + 1)}</span>
+              {x.title}
+            </a>
           ))}
-        </RevealGroup>
+        </nav>
+      </section>
+
+      {/* 02 — The five. */}
+      <div className="xp-kinds">
+        <div className="xp-head">
+          <p className="lab">Five kinds of experience</p>
+          <p className="sub">
+            Not a menu to choose from — the balance we build each itinerary around.
+          </p>
+        </div>
+        <ExperiencePanels items={panels} />
       </div>
-    </section>
+
+      {/* 03 — The ways to travel. */}
+      <section className="xp-ways" aria-labelledby="ways-title">
+        <div className="xp-head">
+          <div>
+            <p className="lab">Ways to travel</p>
+            <h2 id="ways-title">From a small group to a yacht of your own.</h2>
+          </div>
+          <p className="sub">
+            Every experience above can be shaped into any of these — with the same people on the
+            ground and the same care behind each day.
+          </p>
+        </div>
+        <WaysStage
+          ways={ways.map(({ title, line, img, alt, video }) => ({ title, line, img, alt, video }))}
+        />
+      </section>
+
+      {/* 04 — The one way on. */}
+      <section className="xp-ask" aria-labelledby="ask-title">
+        <div>
+          <p className="lab">Ask for something else</p>
+          <h2 id="ask-title">If what you want isn’t on this page, say so.</h2>
+        </div>
+        <div>
+          <p>
+            The five above describe how we plan, not what we are limited to. Private journeys start
+            with what you actually want to do.
+          </p>
+          <Link className="btn btn-ink" href="/plan">
+            Plan your journey
+          </Link>
+        </div>
+      </section>
+    </div>
   );
 }

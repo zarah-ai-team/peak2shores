@@ -33,10 +33,13 @@ export type ReelClip = {
   place: string;
   /** What the clip's still shows. */
   alt: string;
-  video: string;
+  /** No film: the still holds, easing slowly in, for `hold` seconds. */
+  video?: string;
   img: string;
   /** Where in the clip to begin, in seconds. */
   start?: number;
+  /** How long a still without a film stays on screen, in seconds. */
+  hold?: number;
 };
 
 /**
@@ -46,7 +49,9 @@ export type ReelClip = {
  * 4150349679 from 0:02), saved as reel-positano.mp4 / reel-hvar.mp4 with a
  * poster frame beside them in public/images/home. Until a file is there the
  * page resolves the clip to `fallback` (HomePage, on the server), so the reel
- * never points at a missing file.
+ * never points at a missing file. Positano's stand-in is a still, a sailing
+ * boat at anchor off the Amalfi Coast, easing slowly in: the Capri harbor
+ * flight was too busy for the opening.
  */
 export const reel: (ReelClip & { fallback?: ReelClip })[] = [
   {
@@ -68,10 +73,10 @@ export const reel: (ReelClip & { fallback?: ReelClip })[] = [
     img: '/images/home/reel-positano.jpg',
     start: 27,
     fallback: {
-      place: 'Capri · Italy',
-      alt: 'The harbor of Marina Grande on Capri, Italy, boats moored below white houses on the hillside',
-      video: '/video/home/reel-capri.mp4',
-      img: '/images/home/reel-capri.jpg',
+      place: 'Amalfi Coast · Italy',
+      alt: 'A sailing boat at anchor off the Amalfi Coast, a cliffside town and the coast fading into haze behind',
+      img: '/images/home-hero.jpg',
+      hold: 9,
     },
   },
   {

@@ -6,6 +6,8 @@ import { DarkCta } from '@/components/ui/DarkCta';
 import { WhyUs } from '@/components/home/WhyUs';
 import { FactList, Quote, SectionLabel, Tick } from '@/components/ui/Editorial';
 import { ButtonLink } from '@/components/ui/Button';
+import { StoryRoute } from '@/components/story/StoryRoute';
+import { getMedia } from '@/lib/media';
 import { getPageContent, getSiteSettings, jsonLd, pageMetadata } from '@/lib/content';
 
 export const metadata = pageMetadata({
@@ -18,7 +20,7 @@ export const metadata = pageMetadata({
 
 /**
  * Our story: the split photographic opening, Marc on stone, why it exists,
- * the signature — the Peaks → Shores route as a ruled timeline of its four
+ * the signature — the Peaks → Shores route as a working timeline of its four
  * stops (labels only, no new facts) — the four pillars as a typographic
  * grid, why travel with us, and the closing invitation.
  */
@@ -130,24 +132,12 @@ export default async function OurStoryPage() {
         <SectionLabel as="h2" id="route-title" className="mb-block">
           {peaksToShores.headlineParts.join(' ')}
         </SectionLabel>
-        <RevealGroup as="ol" className="m-0 grid list-none grid-cols-2 gap-y-10 p-0 lg:grid-cols-4">
-          {peaksToShores.frames.map((frame, i) => (
-            <RevealItem as="li" key={frame.label} distance={12} className="relative pr-4 pt-9">
-              {/* The route: one ruled line, a blue stop at each place. */}
-              <span aria-hidden className="absolute inset-x-0 top-[3px] h-px bg-line" />
-              <span
-                aria-hidden
-                className={`status-mark absolute left-0 top-0 ${
-                  i === 0 || i === peaksToShores.frames.length - 1 ? 'bg-brand' : 'bg-acqua'
-                }`}
-              />
-              <span className="kicker-sm mb-2 block">
-                {String(i + 1).padStart(2, '0')} · {frame.n}
-              </span>
-              <span className="h4 block">{frame.label}</span>
-            </RevealItem>
-          ))}
-        </RevealGroup>
+        <StoryRoute
+          stops={peaksToShores.frames.map((frame) => {
+            const photo = getMedia(frame.media);
+            return { n: frame.n, label: frame.label, src: photo.src, alt: photo.alt };
+          })}
+        />
         <p className="prose-body measure mt-block">{peaksToShores.body}</p>
       </Section>
 

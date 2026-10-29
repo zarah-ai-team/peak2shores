@@ -198,6 +198,29 @@
 .hc-hero .hv.on {
   opacity: 1;
 }
+/* A still in the reel eases slowly in while it is on screen. */
+.hc-hero .hv .drift {
+  transform-origin: 60% 60%;
+}
+.hc-hero .hv.on .drift {
+  animation: hero-drift-in linear forwards;
+}
+.hc-hero .hv.held .drift {
+  animation-play-state: paused;
+}
+@keyframes hero-drift-in {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hc-hero .hv.on .drift {
+    animation: none;
+  }
+}
 .hc-hero .shade {
   position: absolute;
   inset: 0;
@@ -542,11 +565,194 @@
 }
 
 /* -- 04 Small luxury group journeys -------------------------------------- */
-/* The journeys use the site's container; on the homepage they take the same
-   edge-to-edge gutter as every section around them. */
-.hc #journeys .container-site {
-  max-width: none;
-  padding-inline: var(--gut);
+.hc-jr {
+  background: var(--paper);
+  color: var(--ink);
+  padding: clamp(72px, 7vw, 110px) var(--gut);
+}
+.hc-jr .head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 28px 48px;
+  margin-bottom: 44px;
+}
+.hc-jr h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--h2);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+.hc-jr .promises {
+  list-style: none;
+  margin: 0 0 clamp(48px, 5vw, 72px);
+  padding: 22px 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px 40px;
+  border-block: 1px solid var(--rule-color, rgb(20 29 36 / 0.12));
+}
+.hc-jr .promises h3 {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0 0 4px;
+}
+.hc-jr .promises p {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* An entry: photograph, then the story. The lead sets them side by side. */
+.hc-jr .entry {
+  position: relative;
+  display: grid;
+  gap: 22px;
+}
+.hc-jr .entry.first {
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  align-items: center;
+  gap: clamp(28px, 4vw, 64px);
+  padding-bottom: clamp(48px, 5vw, 72px);
+  margin-bottom: clamp(48px, 5vw, 72px);
+  border-bottom: 1px solid rgb(20 29 36 / 0.12);
+}
+.hc-jr .entry .ph {
+  overflow: hidden;
+  border-radius: 4px;
+  transition:
+    box-shadow 0.6s var(--ease),
+    transform 0.6s var(--ease);
+}
+/* On hover the photograph lifts and eases in, the title turns blue and the
+   rule above the facts draws in blue. */
+.hc-jr .entry:hover .ph {
+  transform: translateY(-6px);
+  box-shadow: 0 26px 48px -26px rgb(8 20 28 / 0.55);
+}
+.hc-jr .facts {
+  background: linear-gradient(var(--lake), var(--lake)) top left / 0 1px no-repeat;
+  transition: background-size 0.7s var(--ease);
+}
+.hc-jr .entry:hover .facts {
+  background-size: 100% 1px;
+}
+.hc-jr .kick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 0 0 12px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--lake);
+}
+.hc-jr .entry h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--h3);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+}
+.hc-jr .entry.first h3 {
+  font-size: clamp(30px, 3vw, 44px);
+}
+.hc-jr .entry h3 a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.4s var(--ease);
+}
+/* The title's link covers the whole entry. */
+.hc-jr .entry h3 a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+.hc-jr .entry:hover h3 a {
+  color: var(--lake);
+}
+.hc-jr .line {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #3a434a;
+  margin: 0 0 18px;
+  max-width: 46ch;
+}
+.hc-jr .facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 0;
+  margin: 0;
+  padding-top: 14px;
+  border-top: 1px solid rgb(20 29 36 / 0.12);
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--muted);
+}
+.hc-jr .facts span:not(:last-child)::after {
+  content: '·';
+  margin: 0 10px;
+  color: rgb(20 29 36 / 0.3);
+}
+.hc-jr .facts b {
+  font-weight: 600;
+  color: var(--ink);
+}
+.hc-jr .foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 16px 0 0;
+}
+.hc-jr .more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.hc-jr .more svg {
+  transition: transform 0.4s var(--ease);
+}
+.hc-jr .entry:hover .more svg {
+  transform: translateX(4px);
+}
+.hc-jr .entries {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 48px clamp(20px, 2.4vw, 36px);
+}
+@media (max-width: 1100px) {
+  .hc-jr .entries {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .hc-jr .promises,
+  .hc-jr .entry.first,
+  .hc-jr .entries {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 /* -- 05 The founder's line ----------------------------------------------- */
@@ -996,7 +1202,7 @@
 }
 .hc-hot .flip {
   position: relative;
-  height: 640px;
+  height: clamp(420px, 36vw, 540px);
   perspective: 1600px;
   background: transparent;
   border: 0;
@@ -1606,6 +1812,9 @@
   gap: clamp(14px, 1.6vw, 24px);
   align-items: start;
 }
+.hc-how .cards {
+  perspective: 1400px;
+}
 .hc-how .card {
   position: relative;
   background: var(--night);
@@ -1613,13 +1822,32 @@
   border-radius: 14px;
   padding: clamp(18px, 1.6vw, 24px);
   box-shadow: 0 18px 40px -22px rgb(8 20 28 / 0.55);
-  transition: transform 0.5s var(--ease);
+  transform-style: preserve-3d;
+  transition:
+    transform 0.6s var(--ease),
+    box-shadow 0.6s var(--ease);
 }
 .hc-how .card:nth-child(even) {
   margin-top: clamp(24px, 3vw, 48px);
 }
+/* Tilted toward the reader, the photograph and the title lifted off the card. */
 .hc-how .card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-10px) rotateX(6deg) rotateY(-6deg);
+  box-shadow: 18px 34px 60px -24px rgb(8 20 28 / 0.7);
+}
+.hc-how .card:nth-child(even):hover {
+  transform: translateY(-10px) rotateX(6deg) rotateY(6deg);
+  box-shadow: -18px 34px 60px -24px rgb(8 20 28 / 0.7);
+}
+.hc-how h3,
+.hc-how .ph {
+  transition: transform 0.6s var(--ease);
+}
+.hc-how .card:hover h3 {
+  transform: translateZ(30px);
+}
+.hc-how .card:hover .ph {
+  transform: translateZ(50px);
 }
 .hc-how .top {
   display: flex;
@@ -1694,24 +1922,34 @@
   gap: 12px;
 }
 .hc-wtu .tile {
-  background: #f8f6f1;
+  background: #fff;
   border: 1px solid rgb(20 29 36 / 0.08);
   border-radius: 14px;
   padding: clamp(18px, 1.6vw, 24px);
   min-height: 190px;
   display: flex;
   flex-direction: column;
+  transition:
+    background-color 0.45s var(--ease),
+    color 0.45s var(--ease),
+    border-color 0.45s var(--ease),
+    transform 0.45s var(--ease);
 }
-.hc-wtu .tile.dark {
+.hc-wtu .tile:hover {
   background: var(--night);
   border-color: transparent;
   color: #eef2f4;
+  transform: translateY(-4px);
+}
+.hc-wtu .ic,
+.hc-wtu .tile p {
+  transition: color 0.45s var(--ease);
 }
 .hc-wtu .ic {
   color: var(--lake);
   margin-bottom: 18px;
 }
-.hc-wtu .dark .ic {
+.hc-wtu .tile:hover .ic {
   color: var(--gold);
 }
 .hc-wtu .big {
@@ -1736,7 +1974,7 @@
   color: var(--muted);
   margin: 0;
 }
-.hc-wtu .dark p {
+.hc-wtu .tile:hover p {
   color: #c8d3da;
 }
 
@@ -1771,7 +2009,47 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hc-how .card {
+  .hc-how .card,
+  .hc-how .card:hover,
+  .hc-how .card:nth-child(even):hover,
+  .hc-how .card:hover h3,
+  .hc-how .card:hover .ph {
     transition: none;
+    transform: none;
+  }
+}
+
+/* -- Section headings ------------------------------------------------------
+   One pattern for every section: its name as the heading, large, and the
+   line that says what it holds beneath it, smaller. */
+.hc p.sub-h {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(19px, 1.6vw, 24px);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  max-width: 40ch;
+  margin: 14px 0 0;
+  color: inherit;
+  opacity: 0.72;
+}
+
+/* Section headings: the section's name, in blue, with its line beneath. */
+.hc h2:has(+ p.sub-h) {
+  color: var(--lake);
+  margin-top: 0;
+}
+.hc-hot h2:has(+ p.sub-h),
+.hc-circle h2:has(+ p.sub-h) {
+  color: var(--sky);
+}
+.hc .hc-hot .fill,
+.hc-hot .fill {
+  object-position: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hc-jr .entry:hover .ph,
+  .hc-wtu .tile:hover {
+    transform: none;
   }
 }

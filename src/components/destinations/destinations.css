@@ -129,8 +129,7 @@
 .dz-head .lab {
   color: var(--lake);
 }
-.dz-head h2,
-.dz-name h2 {
+.dz-head h2 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(38px, 4.2vw, 60px);
@@ -139,8 +138,7 @@
   margin: 16px 0 0;
   max-width: 20ch;
 }
-.dz-head p,
-.dz-name-head p {
+.dz-head p {
   font-family: var(--sans);
   font-weight: 300;
   font-size: 15px;
@@ -180,8 +178,7 @@
 .dz-place:hover .dz-tile img {
   transform: scale(1.04);
 }
-.dz-tile .ws,
-.dz-frame .ws {
+.dz-tile .ws {
   position: absolute;
   inset: 0;
   background:
@@ -314,68 +311,7 @@
   color: #fff;
 }
 
-/* -- 04 The name --------------------------------------------------------- */
-.dz-name {
-  background: var(--deep);
-  color: #fff;
-  padding: clamp(96px, 9.7vw, 140px) var(--gut) clamp(100px, 10vw, 150px);
-}
-.dz-name-head {
-  display: grid;
-  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
-  gap: 64px;
-  align-items: end;
-  margin-bottom: clamp(44px, 5vw, 64px);
-}
-.dz-name-head .lab {
-  color: var(--ice);
-}
-.dz-name-head p {
-  color: #dce6ec;
-}
-.dz-frames {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
-}
-.dz-frame {
-  position: relative;
-  height: clamp(380px, 36vw, 560px);
-  border-radius: 10px;
-  overflow: hidden;
-  background: var(--night);
-}
-/* Peaks and shores, the two ends of the name, sit lower than the two between. */
-.dz-frame:nth-child(even) {
-  margin-top: clamp(28px, 4vw, 64px);
-}
-.dz-frame img {
-  transition: transform 1.8s var(--ease);
-}
-.dz-frame:hover img {
-  transform: scale(1.05);
-}
-.dz-frame-cap {
-  position: absolute;
-  left: 24px;
-  right: 24px;
-  bottom: 24px;
-}
-.dz-frame-cap .lab {
-  color: var(--sky);
-}
-.dz-frame-name {
-  display: block;
-  margin-top: 8px;
-  font-family: var(--serif);
-  font-size: 26px;
-  line-height: 1.12;
-}
-
-/* -- 05 Closing ---------------------------------------------------------- */
+/* -- 04 Closing ---------------------------------------------------------- */
 .dz-close h2 {
   max-width: 16ch;
 }
@@ -385,8 +321,7 @@
 
 /* -- Smaller screens ----------------------------------------------------- */
 @media (max-width: 900px) {
-  .dz-head,
-  .dz-name-head {
+  .dz-head {
     grid-template-columns: minmax(0, 1fr);
     gap: 20px;
   }
@@ -400,16 +335,6 @@
   }
   .dz-tile {
     height: clamp(360px, 92vw, 520px);
-  }
-  .dz-frames {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-  }
-  .dz-frame {
-    height: clamp(240px, 62vw, 420px);
-  }
-  .dz-frame:nth-child(even) {
-    margin-top: 32px;
   }
 }
 @media (max-width: 600px) {
@@ -435,14 +360,6 @@
     width: 44px;
     height: 44px;
   }
-  .dz-frame-cap {
-    left: 16px;
-    right: 16px;
-    bottom: 16px;
-  }
-  .dz-frame-name {
-    font-size: 20px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -450,7 +367,6 @@
     animation: none;
   }
   .dz-tile img,
-  .dz-frame img,
   .dz-j {
     transition: none;
   }

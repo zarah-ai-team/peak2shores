@@ -1,0 +1,333 @@
+/* ==========================================================================
+   Journey page — the hero's facts strip and the route map. Imported by
+   src/app/journeys/[slug]/page.tsx only.
+   ========================================================================== */
+
+/* -- Hero facts ------------------------------------------------------------ */
+/* Label over value, every column starting on the same line, hairlines
+   between: two columns on a phone, three on a tablet, one row of six from
+   1280px. The rules are drawn per grid so no cell ever carries a stray one. */
+.journey-facts {
+  --fact-rule: rgb(244 241 234 / 0.22);
+}
+.journey-fact {
+  min-width: 0;
+  padding: 16px 14px 18px;
+  border-top: 1px solid var(--fact-rule);
+  border-left: 1px solid var(--fact-rule);
+}
+.journey-fact:nth-child(2n + 1) {
+  padding-left: 0;
+  border-left: 0;
+}
+.journey-fact:nth-child(-n + 2) {
+  border-top: 0;
+}
+.journey-fact-value {
+  font-size: clamp(16px, 1.25vw, 19px);
+  line-height: 1.25;
+  color: var(--color-on-dark);
+}
+
+@media (min-width: 768px) {
+  .journey-fact,
+  .journey-fact:nth-child(2n + 1) {
+    padding: 20px 20px 22px;
+    border-top: 1px solid var(--fact-rule);
+    border-left: 1px solid var(--fact-rule);
+  }
+  .journey-fact:nth-child(3n + 1) {
+    padding-left: 0;
+    border-left: 0;
+  }
+  .journey-fact:nth-child(-n + 3) {
+    border-top: 0;
+  }
+}
+
+@media (min-width: 1280px) {
+  /* The dates and the price are the long values; they get the room. */
+  .journey-facts {
+    grid-template-columns: 1fr 1.45fr 1fr 1.2fr 1fr 0.8fr;
+  }
+  .journey-fact,
+  .journey-fact:nth-child(2n + 1),
+  .journey-fact:nth-child(3n + 1) {
+    padding: 24px 22px 28px;
+    border-top: 0;
+    border-left: 1px solid var(--fact-rule);
+  }
+  .journey-fact:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+/* -- Route map ------------------------------------------------------------- */
+/* After the sample journey page: pale sea, cream land, the route in lake
+   blue over a faint trace of itself, numbered white pills for the places.
+   The finished map is the default; RouteDraw adds data-route="armed" (route
+   faint, places muted but named) and then "drawing" (each leg draws in turn,
+   each place lights as the line reaches it). */
+.route-map {
+  --route: var(--color-acqua-text);
+  --route-faint: rgb(11 92 133 / 0.2);
+  --route-muted: #9db0b8;
+  overflow: hidden;
+  background: #d6e7ee;
+}
+.route-sea {
+  fill: #d6e7ee;
+}
+.route-land {
+  fill: #efeae0;
+  stroke: #d8cbb0;
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+.route-land.is-ours {
+  fill: #f7f2e8;
+}
+
+.route-leg path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 5;
+}
+.route-leg-base {
+  stroke: var(--route-faint);
+}
+.route-leg-on {
+  stroke: var(--route);
+}
+.route-leg.is-rail path {
+  stroke-dasharray: 22 10;
+  stroke-linecap: butt;
+}
+.route-leg.is-boat path {
+  stroke-dasharray: 2 13;
+  stroke-width: 6;
+}
+.route-reveal {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 40;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+/* The places, positioned in % over the SVG and sized in px. */
+.route-places {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+.route-place {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+.route-dot {
+  position: absolute;
+  left: -7px;
+  top: -7px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--route);
+  border: 3px solid #fff;
+  box-shadow: 0 2px 6px rgb(20 29 36 / 0.25);
+}
+.route-dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 2px solid var(--route);
+  opacity: 0;
+}
+.route-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 11px 4px 4px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.94);
+  box-shadow: 0 6px 14px rgb(20 29 36 / 0.12);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--color-ink);
+}
+.route-num {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--route);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 600;
+}
+.route-label:not(:has(.route-num)) {
+  padding-left: 11px;
+}
+.route-place[data-side='right'] .route-label {
+  transform: translate(14px, -50%);
+}
+.route-place[data-side='left'] .route-label {
+  transform: translate(calc(-100% - 14px), -50%);
+}
+.route-place[data-side='above'] .route-label {
+  transform: translate(-50%, calc(-100% - 14px));
+}
+.route-place[data-side='below'] .route-label {
+  transform: translate(-50%, 14px);
+}
+.route-place[data-side='ne'] .route-label {
+  transform: translate(8px, calc(-100% - 8px));
+}
+.route-place[data-side='se'] .route-label {
+  transform: translate(8px, 8px);
+}
+.route-place[data-side='nw'] .route-label {
+  transform: translate(calc(-100% - 8px), calc(-100% - 8px));
+}
+.route-place[data-side='sw'] .route-label {
+  transform: translate(calc(-100% - 8px), 8px);
+}
+@media (min-width: 1024px) {
+  .route-label {
+    font-size: 13px;
+  }
+}
+
+.route-legend {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  color: var(--color-muted);
+}
+.route-legend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.route-key {
+  fill: none;
+  stroke: var(--color-acqua-text);
+  stroke-width: 2.5;
+}
+.route-key.is-rail {
+  stroke-dasharray: 7 3;
+}
+.route-key.is-boat {
+  stroke-dasharray: 1 4;
+  stroke-linecap: round;
+  stroke-width: 3;
+}
+
+/* Armed: waiting below the fold. The route is a faint trace, the places
+   muted — every name still readable. */
+.route[data-route='armed'] .route-reveal {
+  stroke-dashoffset: 1;
+}
+.route[data-route='armed'] .route-dot {
+  background: #fff;
+  border-color: var(--route-muted);
+}
+.route[data-route='armed'] .route-num {
+  background: #e7eef1;
+  color: var(--color-muted);
+}
+.route[data-route='armed'] .route-label {
+  color: #5c6870;
+}
+
+/* Drawing: in view. Each leg after the last, each place on the line's arrival. */
+.route[data-route='drawing'] .route-reveal {
+  animation: route-draw var(--t, 1s) var(--ease-editorial) var(--d, 0s) both;
+}
+.route[data-route='drawing'] .route-dot {
+  animation: route-dot 0.6s var(--ease-editorial) var(--d, 0s) both;
+}
+.route[data-route='drawing'] .route-dot::after {
+  animation: route-ping 1.3s ease-out var(--d, 0s);
+}
+.route[data-route='drawing'] .route-num {
+  animation: route-num 0.5s var(--ease-editorial) var(--d, 0s) both;
+}
+.route[data-route='drawing'] .route-label {
+  animation: route-name 0.5s var(--ease-editorial) var(--d, 0s) both;
+}
+@keyframes route-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes route-dot {
+  from {
+    background: #fff;
+    border-color: var(--route-muted);
+    scale: 0.7;
+  }
+  to {
+    background: var(--route);
+    border-color: #fff;
+    scale: 1;
+  }
+}
+@keyframes route-ping {
+  from {
+    opacity: 0.9;
+    scale: 1;
+  }
+  to {
+    opacity: 0;
+    scale: 2.8;
+  }
+}
+@keyframes route-num {
+  from {
+    background: #e7eef1;
+    color: var(--color-muted);
+  }
+  to {
+    background: var(--route);
+    color: #fff;
+  }
+}
+@keyframes route-name {
+  from {
+    color: #5c6870;
+  }
+  to {
+    color: var(--color-ink);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route[data-route] .route-reveal,
+  .route[data-route] .route-dot,
+  .route[data-route] .route-dot::after,
+  .route[data-route] .route-num,
+  .route[data-route] .route-label {
+    animation: none;
+  }
+}

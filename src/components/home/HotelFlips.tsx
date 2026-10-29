@@ -20,10 +20,10 @@ export function HotelFlips() {
     <section className="hc-hot" aria-labelledby="hotels-title">
       <div className="head">
         <div>
-          <div className="lab">Hotels, lodges &amp; camps</div>
-          <h2 id="hotels-title">
+          <h2 id="hotels-title">Hotels, lodges &amp; camps</h2>
+          <p className="sub-h">
             Chosen for what they contribute to the journey, far beyond their star rating.
-          </h2>
+          </p>
         </div>
         <p>Each place we stay earns its place for a reason we can name.</p>
       </div>

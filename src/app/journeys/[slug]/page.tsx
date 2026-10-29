@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import '@/components/journeys/journey.css';
 import { Faq } from '@/components/ui/Faq';
 import { journeyFaq } from '@/lib/data/faq';
 import { notFound } from 'next/navigation';
@@ -12,7 +13,6 @@ import {
   Gallery,
   Guests,
   InPreparation,
-  JourneyFacts,
   JourneyHero,
   OnPacing,
   Overview,
@@ -194,7 +194,6 @@ export default async function JourneyPage({ params }: Params) {
       <JourneyTabs tabs={tabs} priceFrom={journey.priceFrom} cta={cta} />
 
       <div id="overview">
-        <JourneyFacts journey={journey} />
         {detail ? (
           <>
             <Overview detail={detail} />

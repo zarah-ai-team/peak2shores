@@ -67,33 +67,48 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
 
   const next = () => setCurrent((c) => (c + 1) % reel.length);
 
+  // A still without a film holds for its `hold`, then the reel moves on.
+  const hold = reel[current].video ? 0 : (reel[current].hold ?? 8);
+  useEffect(() => {
+    if (!armed || !playing || !hold) return;
+    const timer = window.setTimeout(() => setCurrent((c) => (c + 1) % reel.length), hold * 1000);
+    return () => window.clearTimeout(timer);
+  }, [armed, playing, hold, current, reel.length]);
+
   return (
     <section ref={section} data-hero aria-label="Introduction" className="hc-hero">
       {reel.map((clip, i) => (
-        <div key={clip.video} className={`hv fill ${i === current ? 'on' : ''}`} aria-hidden>
+        <div
+          key={clip.video ?? clip.img}
+          className={`hv fill ${i === current ? 'on' : ''} ${playing ? '' : 'held'}`}
+          aria-hidden
+        >
           <Image
             src={clip.img}
             alt={clip.alt}
             fill
             sizes="100vw"
             priority={i === 0}
-            className="fill"
+            className={clip.video ? 'fill' : 'fill drift'}
+            style={clip.video ? undefined : { animationDuration: `${clip.hold ?? 8}s` }}
           />
-          <video
-            ref={(el) => {
-              videos.current[i] = el;
-            }}
-            className="fill"
-            poster={posterOf(clip.img)}
-            src={armed ? clip.video : undefined}
-            muted
-            playsInline
-            // Only the clip on screen loads; each of the others waits for its
-            // turn, its poster holding the frame until then.
-            preload={i === current ? 'auto' : 'none'}
-            onEnded={() => i === current && next()}
-            tabIndex={-1}
-          />
+          {clip.video && (
+            <video
+              ref={(el) => {
+                videos.current[i] = el;
+              }}
+              className="fill"
+              poster={posterOf(clip.img)}
+              src={armed ? clip.video : undefined}
+              muted
+              playsInline
+              // Only the clip on screen loads; each of the others waits for its
+              // turn, its poster holding the frame until then.
+              preload={i === current ? 'auto' : 'none'}
+              onEnded={() => i === current && next()}
+              tabIndex={-1}
+            />
+          )}
         </div>
       ))}
       <div className="shade" />

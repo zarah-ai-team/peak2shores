@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useReducedMotion } from 'motion/react';
 import { ways } from '@/lib/data/home';
+import { Arrow } from '@/components/ui/Button';
 import { Chevron, posterOf } from './HomeMedia';
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -108,8 +109,8 @@ export function WaysToTravel() {
     <section ref={section} className="hc-ways" id="ways" aria-labelledby="ways-title">
       <div className="head dk">
         <div>
-          <div className="lab">Experiences</div>
-          <h2 id="ways-title">Experience the world your way.</h2>
+          <h2 id="ways-title">Experiences</h2>
+          <p className="sub-h">Experience the world your way.</p>
         </div>
         <div className="wnav">
           <span className="count">
@@ -212,8 +213,8 @@ export function WaysToTravel() {
       </div>
       <div className="ctarow left">
         <span className="hint">Not sure which suits you?</span>
-        <Link className="tlink" href="/plan#contact">
-          Speak to a travel designer →
+        <Link className="btn btn-ink" href="/plan#contact">
+          Speak to a travel designer <Arrow />
         </Link>
       </div>
     </section>

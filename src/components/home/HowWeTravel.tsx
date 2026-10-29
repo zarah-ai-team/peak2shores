@@ -13,8 +13,8 @@ export function HowWeTravel() {
     <section className="hc-how" aria-labelledby="how-title">
       <div className="head">
         <div>
-          <div className="lab">How we travel</div>
-          <h2 id="how-title">Four things every journey is held to.</h2>
+          <h2 id="how-title">How we travel</h2>
+          <p className="sub-h">Four things every journey is held to.</p>
         </div>
         <p className="sub">
           Peaks2Shores isn’t a personal brand. It’s a promise — and these are the four parts of it.
@@ -67,20 +67,20 @@ const icons: Record<string, React.ReactNode> = {
  * Why travel with us — the headline on the left and the six reasons as a
  * three-by-two set of cards on the right. The first leads with the number
  * that defines the journeys (18 guests); the others carry a small line icon.
- * Two cards are dark, so the set reads as a pattern rather than a table.
+ * Every card is white; the one under the pointer turns night blue.
  */
 export function WhyTravel() {
   return (
     <section className="hc-wtu" aria-labelledby="wtu-title">
       <div className="head">
-        <div className="lab">Why travel with us</div>
-        <h2 id="wtu-title">
+        <h2 id="wtu-title">Why travel with us</h2>
+        <p className="sub-h">
           Someone who really knows travel has already done the filtering for you.
-        </h2>
+        </p>
       </div>
       <ul className="grid">
         {reasons.map((r, i) => (
-          <li key={r.n} className={`tile ${i === 0 || i === 4 ? 'dark' : ''}`}>
+          <li key={r.n} className="tile">
             {i === 0 ? (
               <span className="big" aria-hidden>
                 {site.maxGuests}

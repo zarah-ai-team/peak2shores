@@ -6,7 +6,7 @@ import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal';
 import { StatusTag } from '@/components/ui/StatusTag';
 import { ExpertButton } from '@/components/home/ExpertButton';
 import { journeyTagStatus } from '@/components/pages/journeyStatus';
-import { getDestinations, getPageContent, pageMetadata, type Destination } from '@/lib/content';
+import { getDestinations, pageMetadata, type Destination } from '@/lib/content';
 import { getMedia } from '@/lib/media';
 import { site } from '@/lib/site';
 
@@ -24,15 +24,11 @@ export const revalidate = 3600;
 /**
  * Destinations, in the homepage's language: a full-bleed opening with the
  * countries as a way in, the statement set large on paper, then each country
- * as a photograph tile with its journeys beside it as cards, the name on a
- * deep-lake band, and a closing invitation over a photograph. Every fact is
+ * as a photograph tile with its journeys beside it as cards, and a closing invitation over a photograph. Every fact is
  * derived from the catalog — nothing here is invented.
  */
 export default async function DestinationsPage() {
-  const [places, { peaksToShores }] = await Promise.all([
-    getDestinations(),
-    getPageContent('destinations'),
-  ]);
+  const places = await getDestinations();
   const hero = getMedia('destinations-hero');
   const closing = getMedia('dest-private');
   // A journey that crosses a border (Como & the Engadin) is counted once.
@@ -128,43 +124,7 @@ export default async function DestinationsPage() {
         ))}
       </section>
 
-      {/* 04 — The name, on the deep lake ground. */}
-      <section className="dz-name" aria-labelledby="dz-name-title">
-        <div className="dz-name-head">
-          <div>
-            <div className="lab">The name</div>
-            <Reveal variant="mask">
-              <h2 id="dz-name-title">{peaksToShores.headlineParts.join(' ')}</h2>
-            </Reveal>
-          </div>
-          <p>{peaksToShores.body}</p>
-        </div>
-        <RevealGroup as="ul" className="dz-frames" stagger={0.08}>
-          {peaksToShores.frames.map((frame) => {
-            const photo = getMedia(frame.media);
-            return (
-              <RevealItem as="li" key={frame.media} distance={18} className="dz-frame">
-                {photo.src && (
-                  <Image
-                    src={photo.src}
-                    alt={photo.alt ?? ''}
-                    fill
-                    sizes="(max-width: 900px) 50vw, 25vw"
-                    className="fill"
-                  />
-                )}
-                <span className="ws" aria-hidden />
-                <span className="dz-frame-cap">
-                  <span className="lab">{frame.n}</span>
-                  <span className="dz-frame-name">{frame.label}</span>
-                </span>
-              </RevealItem>
-            );
-          })}
-        </RevealGroup>
-      </section>
-
-      {/* 05 — The closing invitation, over a photograph. */}
+      {/* 04 — The closing invitation, over a photograph. */}
       <section className="hc-circle dz-close" aria-labelledby="dz-close-title" data-fab-away>
         <div className="bg" aria-hidden>
           {closing.src && (

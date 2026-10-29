@@ -40,6 +40,28 @@ export type Hotel = {
   media: MediaKey;
 };
 
+/** How a leg of the route is traveled, which sets how its line is drawn. */
+export type RouteMode = 'road' | 'rail' | 'boat';
+
+/**
+ * One place on a journey's route map, in the order the journey reaches it.
+ * A stop that repeats an earlier name (the return to the arrival city) draws
+ * its leg but adds no second marker.
+ */
+export type RouteStop = {
+  name: string;
+  /** [longitude, latitude]. */
+  coords: [number, number];
+  /** How the leg into this stop is traveled. Defaults to road. */
+  by?: RouteMode;
+  /**
+   * Text that finds this stop's days in the itinerary's `where` lines, when
+   * the name alone does not (e.g. 'Peninsula' for Cape Point). Defaults to
+   * the name.
+   */
+  match?: string;
+};
+
 export type JourneyDetail = {
   heroMedia: MediaKey;
   overviewHeadline: string;
@@ -99,6 +121,11 @@ export type Journey = {
   region: string;
   /** Where the journey sits on the globe: [longitude, latitude]. */
   coords: [number, number];
+  /**
+   * The places the journey visits, in order, for the route map on its page.
+   * Without one the map shows a single pin at `coords`.
+   */
+  route?: RouteStop[];
   days: number;
   /** Short form used in list metadata. */
   departure: string;
@@ -353,6 +380,14 @@ const allJourneys: Journey[] = [
     country: 'Italy',
     region: 'Amalfi Coast',
     coords: [14.48, 40.63],
+    route: [
+      { name: 'Naples', coords: [14.268, 40.852] },
+      { name: 'Positano', coords: [14.485, 40.628] },
+      { name: 'Ravello', coords: [14.612, 40.649] },
+      { name: 'Capri', coords: [14.243, 40.551], by: 'boat' },
+      { name: 'Sorrento', coords: [14.376, 40.626], by: 'boat' },
+      { name: 'Naples', coords: [14.268, 40.852] },
+    ],
     days: 9,
     departure: '12 Sept 2027',
     departureWindow: '12 – 20 September 2027',
@@ -381,6 +416,12 @@ const allJourneys: Journey[] = [
     country: 'Switzerland',
     region: 'Lucerne to the Engadin',
     coords: [8.31, 47.05],
+    route: [
+      { name: 'Zürich', coords: [8.542, 47.377] },
+      { name: 'Lucerne', coords: [8.309, 47.05], by: 'rail' },
+      { name: 'Sils', coords: [9.76, 46.429], by: 'rail' },
+      { name: 'Zürich', coords: [8.542, 47.377], by: 'rail' },
+    ],
     days: 8,
     departure: '19 June 2027',
     departureWindow: '19 – 26 June 2027',
@@ -483,6 +524,13 @@ const allJourneys: Journey[] = [
     country: 'Spain',
     region: 'Mallorca',
     coords: [2.95, 39.62],
+    route: [
+      { name: 'Palma', coords: [2.65, 39.57] },
+      { name: 'Valldemossa', coords: [2.622, 39.711] },
+      { name: 'Deià', coords: [2.648, 39.748] },
+      { name: 'Sóller', coords: [2.715, 39.767] },
+      { name: 'Palma', coords: [2.65, 39.57] },
+    ],
     days: 7,
     departure: '3 Oct 2027',
     departureWindow: '3 – 9 October 2027',
@@ -576,6 +624,13 @@ const allJourneys: Journey[] = [
     country: 'South Africa',
     region: 'Cape & Winelands',
     coords: [18.9, -33.9],
+    route: [
+      { name: 'Cape Town', coords: [18.424, -33.925] },
+      { name: 'Franschhoek', coords: [19.117, -33.913] },
+      { name: 'The Atlantic', coords: [18.352, -34.045] },
+      { name: 'Cape Point', coords: [18.497, -34.357], match: 'Peninsula' },
+      { name: 'Cape Town', coords: [18.424, -33.925] },
+    ],
     days: 11,
     departure: '14 Feb 2028',
     departureWindow: '14 – 24 February 2028',
@@ -705,6 +760,15 @@ const allJourneys: Journey[] = [
     country: 'Italy & Switzerland',
     region: 'Como to the Engadin',
     coords: [9.26, 45.99],
+    route: [
+      { name: 'Milan', coords: [9.19, 45.464] },
+      { name: 'Como', coords: [9.085, 45.808] },
+      { name: 'Bellagio', coords: [9.262, 45.987], by: 'boat' },
+      { name: 'Tirano', coords: [10.168, 46.216] },
+      { name: 'St. Moritz', coords: [9.839, 46.491], by: 'rail' },
+      { name: 'Bregaglia', coords: [9.538, 46.342] },
+      { name: 'Zürich', coords: [8.542, 47.377] },
+    ],
     days: 10,
     departure: '26 Sept 2027',
     departureWindow: '26 September – 5 October 2027',

@@ -18,10 +18,10 @@ export function WhyPeaks() {
   return (
     <section className="hc-why" aria-labelledby="why-title">
       <div className="head dk">
-        {/* Label, then the heading: the same pattern as every home section. */}
+        {/* The section's name, then its line: the same pattern as every home section. */}
         <div>
-          <div className="lab">Why Peaks2Shores</div>
-          <h2 id="why-title">The moments that bring a journey to life.</h2>
+          <h2 id="why-title">Why Peaks2Shores</h2>
+          <p className="sub-h">The moments that bring a journey to life.</p>
         </div>
         <div className="nav" style={{ display: 'flex', gap: 10 }}>
           <button
