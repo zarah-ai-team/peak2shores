@@ -8,7 +8,8 @@ import { getMedia, type MediaKey } from '@/lib/media';
 import { ease, duration } from '@/lib/motion';
 import { useMotionScale } from '@/components/motion/useMotionScale';
 
-export type FrameRatio = '21/9' | '16/9' | '16/10' | '3/2' | '4/3' | '1/1' | '4/5' | '3/4' | '2/3';
+export type FrameRatio =
+  '21/9' | '16/9' | '16/10' | '3/2' | '4/3' | '1/1' | '6/7' | '4/5' | '3/4' | '2/3';
 
 type FrameProps = {
   media: MediaKey;
@@ -314,10 +315,10 @@ function Placeholder({
         className={`absolute inset-x-[8%] text-center text-white/90 ${position}`}
         style={{ fontFamily: 'ui-monospace, Menlo, monospace' }}
       >
-        <div className="mb-2 text-[clamp(10px,1.05vw,16px)] uppercase leading-tight tracking-[0.18em]">
+        <div className="mb-2 text-[clamp(0.625rem,1.05vw,1rem)] uppercase leading-tight tracking-[0.18em]">
           {label}
         </div>
-        <div className="text-[clamp(8px,0.8vw,12px)] uppercase tracking-[0.16em] text-white/60">
+        <div className="text-[clamp(0.5rem,0.8vw,0.75rem)] uppercase tracking-[0.16em] text-white/60">
           {brief}
         </div>
       </div>

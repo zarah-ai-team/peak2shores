@@ -69,8 +69,9 @@ export default async function OurStoryPage() {
           <Frame
             media="marc-portrait"
             fit="contain"
+            ground="transparent"
             sizes="(min-width: 1024px) 45vw, 100vw"
-            className="col-span-4 min-h-[480px] md:col-span-6 md:col-start-2 lg:col-span-6 lg:col-start-1 lg:min-h-[720px]"
+            className="col-span-4 min-h-[30rem] md:col-span-6 md:col-start-2 lg:col-span-6 lg:col-start-1 lg:min-h-[clamp(32.5rem,38.1vw,45rem)]"
           />
           <div className="col-span-4 py-section-sm md:col-span-8 lg:col-span-5 lg:col-start-8 lg:self-center">
             <SectionLabel as="h2" id="founder-title" tone="stone" className="mb-stack">
@@ -160,7 +161,7 @@ export default async function OurStoryPage() {
                 i % 2 === 0 ? 'md:border-r md:pr-10 lg:pr-16' : 'md:pl-10 lg:pl-16'
               }`}
             >
-              <span aria-hidden className="numeral text-acqua-text">
+              <span aria-hidden className="numeral text-brand">
                 {pillar.n}
               </span>
               <div>

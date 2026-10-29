@@ -25,7 +25,7 @@ export default function Error({
   return (
     <section
       data-tone="dark"
-      className="flex min-h-[78svh] items-center bg-charcoal pb-section-sm pt-[calc(var(--nav-h)+64px)] text-on-dark"
+      className="flex min-h-[78svh] items-center bg-charcoal pb-section-sm pt-[calc(var(--nav-h)+4rem)] text-on-dark"
     >
       <div className="container-site">
         <div className="grid-site gap-y-10">

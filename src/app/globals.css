@@ -16,17 +16,21 @@
   /* Paper */
   --color-brand: #1190cb; /* Peaks2Shores blue — the primary; every button's hover */
   --color-brand-deep: #0d77a9; /* a blue fill's own hover */
-  --color-ivory: #f4f1ea;
-  --color-panel: #ede9df;
-  --color-stone: #d9d0bf; /* Founder blocks, image grounds */
-  --color-stone-text: #5e594f; /* Caps labels on stone only — 4.55:1 */
+  /* A near-white with a breath of the brand blue in it, so the blue accents
+     sit on the page as its own; the panel is the same blue a step deeper. */
+  --color-ivory: #fafcfe;
+  --color-panel: #ecf2f7;
+  /* A soft lake blue (it was a warm stone; the name stays so every use follows):
+     founder blocks, image grounds, the private-travel and inquiry bands. */
+  --color-stone: #dfecf5;
+  --color-stone-text: #3d5a6c; /* Caps labels on stone — 6.1:1 */
 
   /* Ink on paper */
   --color-ink: #1e1f1d;
   --color-body: #3a3b38;
-  /* 4.98:1 on ivory, 4.64:1 on panel (was #6f6a60, 4.43 on panel). Never on
-     stone (use stone-text). */
-  --color-muted: #6c675d;
+  /* A cool slate, like the homepage's: 5.6:1 on ivory, 5.1:1 on panel, 4.75:1
+     on stone. Caps labels on stone use stone-text. */
+  --color-muted: #5d6870;
 
   /* Dark grounds — deep lake blues */
   --color-navy: #0e2f42; /* Primary dark ground */
@@ -60,12 +64,14 @@
   --font-display: Georgia, 'Times New Roman', serif;
   --font-ui: var(--font-poppins), system-ui, -apple-system, 'Segoe UI', sans-serif;
 
-  /* Rhythm — usable as py-section, pt-section-sm, mb-block, gap-stack, px-gutter */
+  /* Rhythm — usable as py-section, pt-section-sm, mb-block, gap-stack, px-gutter.
+     Each reaches its full size at the 1888px canvas (see :root below);
+     --spacing-stack tightens from 1024px with the rest of the desktop scale. */
   --spacing-gutter: var(--site-gutter);
-  --spacing-section: clamp(72px, 8vw, 136px);
-  --spacing-section-sm: clamp(56px, 6vw, 96px);
-  --spacing-block: clamp(32px, 3.5vw, 56px);
-  --spacing-stack: 24px;
+  --spacing-section: clamp(4.5rem, 7.2vw, 8.5rem);
+  --spacing-section-sm: clamp(3.5rem, 5.08vw, 6rem);
+  --spacing-block: clamp(2rem, 2.97vw, 3.5rem);
+  --spacing-stack: 1.5rem;
   --spacing-grid-gap: var(--grid-gap);
 
   /* Motion */
@@ -79,6 +85,13 @@
    -------------------------------------------------------------------------- */
 
 @layer base {
+  /* The desktop scale. The design is drawn for a 1888px canvas; from 1024px
+     every display size, component dimension and section space scales with
+     the viewport from there — V px becomes clamp(floor, V × 0.053vw, V) — so
+     a 1280px laptop sees the composition a 1888px screen does instead of the
+     same pixels crowded together. 1888px and wider is unchanged. The floors
+     keep it legible: body 14–15px, meta 13px, caps labels 10.5px, nav 11px,
+     buttons 40px (44px on any touch screen). Phones keep their own values. */
   :root {
     /* The house grade: pulls the stock comps toward one palette so pages read
        as shot rather than assembled. Applied by Frame to every photograph
@@ -87,37 +100,50 @@
     /* The fixed header's height. Every offset that has to clear it — the
        spacer on solid-header routes, anchor scroll padding, the sticky
        itinerary rail, the mobile menu's top inset — reads this one value. */
-    --nav-h: 68px;
+    --nav-h: 4.25rem;
     /* Its height once the page moves (`data-compact`). A bar pinned beneath
        the header sits at this offset, so no gap opens between the two. */
-    --nav-h-compact: 60px;
+    --nav-h-compact: 3.75rem;
     /* Outer margin and column gap of the site grid (§2.4). */
-    --site-gutter: 20px;
-    --grid-gap: 16px;
-    --site-max: 1480px;
+    --site-gutter: 1.25rem;
+    --grid-gap: 1rem;
+    --site-max: 92.5rem;
+    /* The small caps sizes, and the button every CTA shares (ui/Button,
+       the header CTA, the newsletter submit, `.link-rule`). */
+    --type-kicker: 0.71875rem;
+    --type-nav: 0.75rem;
+    --type-meta: 0.84375rem;
+    --type-button: 0.71875rem;
+    --btn-h: 2.75rem;
+    --btn-px: 1.75rem;
+    --btn-py: 1.0625rem;
   }
   @media (min-width: 768px) {
     :root {
-      --site-gutter: 40px;
-      --grid-gap: 24px;
+      /* 40px / 24px on a tablet, opening to 72px / 40px at 1888px. */
+      --site-gutter: clamp(2.5rem, 3.81vw, 4.5rem);
+      --grid-gap: clamp(1.5rem, 2.12vw, 2.5rem);
     }
   }
   @media (min-width: 1024px) {
     :root {
-      --nav-h: 84px;
-      --nav-h-compact: 68px;
+      /* 4.75rem on a laptop (68px at its 90% root size), 84px at 1888px. */
+      --nav-h: clamp(4.75rem, 4.45vw, 5.25rem);
+      --nav-h-compact: clamp(4rem, 3.6vw, 4.25rem);
+      --spacing-stack: clamp(1.125rem, 1.27vw, 1.5rem);
+      --type-kicker: clamp(0.65625rem, 0.609vw, 0.71875rem);
+      --type-nav: clamp(0.71875rem, 0.636vw, 0.75rem);
+      --type-meta: clamp(0.8125rem, 0.715vw, 0.84375rem);
+      --type-button: clamp(0.65625rem, 0.609vw, 0.71875rem);
+      --btn-h: clamp(2.5rem, 2.33vw, 2.75rem);
+      --btn-px: clamp(1.25rem, 1.48vw, 1.75rem);
+      --btn-py: clamp(0.8125rem, 0.9vw, 1.0625rem);
     }
   }
-  @media (min-width: 1120px) {
+  /* A finger needs the full target whatever the screen's width. */
+  @media (pointer: coarse) {
     :root {
-      --site-gutter: 56px;
-      --grid-gap: 32px;
-    }
-  }
-  @media (min-width: 1440px) {
-    :root {
-      --site-gutter: 72px;
-      --grid-gap: 40px;
+      --btn-h: 44px;
     }
   }
 
@@ -125,12 +151,30 @@
     scroll-behavior: smooth;
     /* Anchor targets land clear of the fixed header. This is the ONLY place
        that offset is set; targets must not add scroll-margin on top of it. */
-    scroll-padding-top: calc(var(--nav-h) + 24px);
+    scroll-padding-top: calc(var(--nav-h) + 1.5rem);
     -webkit-text-size-adjust: 100%;
+    /* No scrollbar down the side: the page still scrolls by wheel, trackpad,
+       touch and keyboard, and the progress rule at the top shows how far. */
+    scrollbar-width: none;
+  }
+  html::-webkit-scrollbar {
+    display: none;
+  }
+  /* Laptop density. On a desktop screen with a mouse or trackpad the root size
+     steps down to 90% — the look the client chose at 90% browser zoom — so
+     everything set in rem (type, buttons, spacing, Tailwind's scale) reads a
+     step denser on a laptop, easing back to 100% by the 1888px reference.
+     Sizes set in vw follow the width and are untouched, as they are under
+     zoom. Phones, tablets and touch screens keep 100% (and their 44px
+     targets). */
+  @media (min-width: 1024px) and (pointer: fine) {
+    html {
+      font-size: clamp(90%, calc(90% + (100vw - 1440px) * 0.003572), 100%);
+    }
   }
   /* A journey page pins its tab bar under the header; anchors clear both. */
   html:has([data-journey-tabs]) {
-    scroll-padding-top: calc(var(--nav-h-compact) + 88px);
+    scroll-padding-top: calc(var(--nav-h-compact) + 5.5rem);
   }
 
   body {
@@ -149,7 +193,7 @@
   }
 
   ::selection {
-    background: rgb(140 194 184 / 0.35);
+    background: rgb(17 144 203 / 0.2);
   }
 
   /* Focus is a 2px ink ring on paper and a 2px water-blue ring on a dark ground
@@ -157,7 +201,7 @@
      data-tone="dark"); a light island inside one resets with data-tone="light". */
   :focus-visible {
     outline: 2px solid var(--color-ink);
-    outline-offset: 3px;
+    outline-offset: 0.1875rem;
   }
   :where(
       .bg-ink,
@@ -235,7 +279,8 @@
    -------------------------------------------------------------------------- */
 
 @layer components {
-  /* The page's outer margin: 20 / 40 / 56 / 72px (§2.4). */
+  /* The page's outer margin: 20px on a phone, 40px from 768px, opening to
+     72px at 1888px (§2.4). */
   .gutter {
     padding-inline: var(--site-gutter);
   }
@@ -244,16 +289,17 @@
      viewport tall (capped on very tall displays) and stacks its content as a
      column, so a section that has to fill the screen gives a child `flex-1`.
      The padding is inside the height, sized in svh so a short laptop screen
-     loses margin before it loses content. Utilities still win (e.g. lg:py-0
-     for a full-bleed picture). Phones stack and scroll as normal. */
+     loses margin before it loses content (and capped by width, so a narrow
+     one does too). Utilities still win (e.g. lg:py-0 for a full-bleed
+     picture). Phones stack and scroll as normal. */
   @media (min-width: 1024px) {
     .screen {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      height: min(100svh, 1120px);
-      min-height: 560px;
-      padding-block: clamp(56px, 10svh, 112px) clamp(32px, 6svh, 72px);
+      height: min(100svh, 70rem);
+      min-height: 35rem;
+      padding-block: clamp(3.5rem, min(10svh, 5.93vw), 7rem) clamp(2rem, min(6svh, 3.81vw), 4.5rem);
       overflow: hidden;
     }
   }
@@ -297,35 +343,37 @@
   .editorial-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: 28px;
+    gap: 1.75rem;
   }
   @media (min-width: 1024px) {
     .editorial-grid {
-      grid-template-columns: 140px minmax(0, 1fr) minmax(0, 1fr);
-      gap: 56px;
+      grid-template-columns: clamp(6.25rem, 7.42vw, 8.75rem) minmax(0, 1fr) minmax(0, 1fr);
+      gap: clamp(2rem, 2.97vw, 3.5rem);
     }
   }
 
   .editorial-grid--wide {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: 28px;
+    gap: 1.75rem;
   }
   @media (min-width: 1024px) {
     .editorial-grid--wide {
-      grid-template-columns: 140px minmax(0, 1fr);
-      gap: 56px;
+      grid-template-columns: clamp(6.25rem, 7.42vw, 8.75rem) minmax(0, 1fr);
+      gap: clamp(2rem, 2.97vw, 3.5rem);
     }
   }
 
   /* ------------------------------------------------------------------------
      Type (§2.3). Georgia carries the emotion; Poppins the interface.
+     Every size reaches its maximum at the 1888px canvas; the minimum is the
+     phone size, so a phone is unchanged.
      ------------------------------------------------------------------------ */
 
   .kicker {
     font-family: var(--font-ui);
     font-weight: 500;
-    font-size: 11.5px;
+    font-size: var(--type-kicker);
     line-height: 1.2;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -335,7 +383,7 @@
   .kicker-sm {
     font-family: var(--font-ui);
     font-weight: 500;
-    font-size: 10.5px;
+    font-size: 0.65625rem;
     line-height: 1.2;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -345,7 +393,7 @@
   .nav-label {
     font-family: var(--font-ui);
     font-weight: 500;
-    font-size: 12px;
+    font-size: var(--type-nav);
     line-height: 1;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -354,7 +402,7 @@
   .meta {
     font-family: var(--font-ui);
     font-weight: 400;
-    font-size: 13.5px;
+    font-size: var(--type-meta);
     line-height: 1.55;
     letter-spacing: 0.01em;
   }
@@ -376,50 +424,50 @@
   }
 
   .display {
-    font-size: clamp(40px, 5.6vw, 92px);
+    font-size: clamp(2.5rem, 4.87vw, 5.75rem);
     line-height: 0.94;
     letter-spacing: -0.025em;
   }
 
   .h1 {
-    font-size: clamp(36px, 4.8vw, 80px);
+    font-size: clamp(2.25rem, 4.24vw, 5rem);
     line-height: 0.96;
     letter-spacing: -0.022em;
   }
 
   .page-title {
-    font-size: clamp(34px, 4.2vw, 68px);
+    font-size: clamp(2.125rem, 3.6vw, 4.25rem);
     line-height: 0.98;
     letter-spacing: -0.02em;
   }
 
   .h2 {
-    font-size: clamp(28px, 3.2vw, 50px);
+    font-size: clamp(1.75rem, 2.65vw, 3.125rem);
     line-height: 1.02;
     letter-spacing: -0.018em;
   }
 
   .h3 {
-    font-size: clamp(24px, 2.5vw, 38px);
+    font-size: clamp(1.5rem, 2.01vw, 2.375rem);
     line-height: 1.05;
     letter-spacing: -0.015em;
   }
 
   .h4 {
-    font-size: clamp(21px, 1.8vw, 28px);
+    font-size: clamp(1.3125rem, 1.48vw, 1.75rem);
     line-height: 1.1;
     letter-spacing: -0.01em;
   }
 
   .h5 {
     font-weight: 400;
-    font-size: clamp(18px, 1.3vw, 21px);
+    font-size: clamp(1.125rem, 1.11vw, 1.3125rem);
     line-height: 1.18;
     letter-spacing: -0.005em;
   }
 
   .numeral {
-    font-size: clamp(40px, 4.4vw, 68px);
+    font-size: clamp(2.5rem, 3.6vw, 4.25rem);
     line-height: 0.9;
     letter-spacing: -0.03em;
     font-variant-numeric: lining-nums;
@@ -431,7 +479,7 @@
     font-style: italic;
     font-weight: 400;
     line-height: 1.36;
-    font-size: clamp(18px, 1.35vw, 21px);
+    font-size: clamp(1.125rem, 1.11vw, 1.3125rem);
     font-feature-settings: 'onum' 1;
     text-wrap: pretty;
   }
@@ -442,14 +490,14 @@
     font-weight: 400;
     line-height: 1.18;
     letter-spacing: -0.01em;
-    font-size: clamp(22px, 2.2vw, 34px);
+    font-size: clamp(1.375rem, 1.8vw, 2.125rem);
     text-wrap: balance;
   }
 
   .prose-body {
     font-family: var(--font-ui);
     font-weight: 400;
-    font-size: clamp(15px, 0.2vw + 14.2px, 16px);
+    font-size: clamp(0.9375rem, 0.847vw, 1rem);
     line-height: 1.7;
     color: var(--color-body);
   }
@@ -457,7 +505,7 @@
   .prose-body-sm {
     font-family: var(--font-ui);
     font-weight: 400;
-    font-size: 14px;
+    font-size: 0.875rem;
     line-height: 1.65;
     color: var(--color-body);
   }
@@ -489,20 +537,20 @@
      hover and redraws from the left — the same line, re-ruled. */
   .link-rule {
     --rule-color: var(--color-acqua-deep);
-    --rule-hover: var(--color-acqua-text);
+    --rule-hover: var(--color-brand);
     position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    min-height: 44px;
+    gap: 0.625rem;
+    min-height: var(--btn-h);
     font-family: var(--font-ui);
     font-weight: 500;
-    font-size: 11.5px;
+    font-size: var(--type-button);
     line-height: 1;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--color-ink);
-    padding-block: 14px 8px;
+    padding-block: 0.875rem 0.5rem;
     transition: color 0.3s var(--ease-editorial);
   }
   .link-rule::before,
@@ -511,7 +559,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 6px;
+    bottom: 0.375rem;
     height: 1px;
     background: var(--rule-color);
   }
@@ -543,7 +591,7 @@
   }
   :where([data-tone='light']) .link-rule:not(.link-rule--dark) {
     --rule-color: var(--color-acqua-deep);
-    --rule-hover: var(--color-acqua-text);
+    --rule-hover: var(--color-brand);
     color: var(--color-ink);
   }
 
@@ -558,7 +606,7 @@
       text-decoration-color 0.3s var(--ease-editorial);
   }
   .prose-link:hover {
-    color: var(--color-acqua-text);
+    color: var(--color-brand);
     text-decoration-color: currentColor;
   }
   :where([data-tone='dark'], .bg-navy, .bg-navy-deep, .bg-charcoal) .prose-link {
@@ -579,7 +627,7 @@
      stays for the current page. */
   .nav-link {
     position: relative;
-    padding-block: 6px 5px;
+    padding-block: 0.375rem 0.3125rem;
     transition: color 0.3s var(--ease-editorial);
   }
   .nav-link::after {
@@ -603,12 +651,12 @@
   .nav-link:hover {
     color: var(--color-acqua);
   }
-  /* On the paper bar the line drops to the hairline step, the text to the text step. */
+  /* On the paper bar the line and the hovered text both take the Peaks2Shores blue. */
   .site-header[data-solid]:not([data-menu]) .nav-link::after {
     background: var(--color-acqua-deep);
   }
   .site-header[data-solid]:not([data-menu]) .nav-link:hover {
-    color: var(--color-acqua-text);
+    color: var(--color-brand);
   }
 
   /* Word-list toggles (journey filters, "traveling as"). Same hairline. */
@@ -664,12 +712,12 @@
   @media (hover: hover) and (pointer: fine) {
     .btn:not(:disabled):not([aria-disabled='true']):hover {
       transform: translateY(-2px);
-      box-shadow: 0 14px 24px -16px rgb(10 34 50 / 0.55);
+      box-shadow: 0 0.875rem 1.5rem -1rem rgb(10 34 50 / 0.55);
     }
   }
   .btn:not(:disabled):not([aria-disabled='true']):active {
     transform: translateY(0) scale(0.985);
-    box-shadow: 0 2px 6px -5px rgb(10 34 50 / 0.4);
+    box-shadow: 0 2px 0.375rem -0.3125rem rgb(10 34 50 / 0.4);
     transition-duration: 0.12s;
   }
   .btn:disabled,
@@ -690,10 +738,10 @@
   }
   :is(a, button):hover > .btn-arrow,
   .group:hover .btn-arrow {
-    transform: translateX(4px);
+    transform: translateX(0.25rem);
   }
   :is(a, button):hover > .btn-arrow--back {
-    transform: translateX(-4px);
+    transform: translateX(-0.25rem);
   }
 
   /* ------------------------------------------------------------------------
@@ -748,7 +796,7 @@
   .frame-caption-rule {
     display: block;
     height: 1px;
-    width: 36px;
+    width: 2.25rem;
     background: var(--color-acqua-deep);
     transform: scaleX(0);
     transform-origin: left center;
@@ -784,7 +832,7 @@
   }
   .rail-list {
     display: flex;
-    gap: 24px;
+    gap: 1.5rem;
     width: max-content;
   }
   .rail-list > li {
@@ -803,8 +851,8 @@
   /* The status tag's 6px square. */
   .status-mark {
     display: inline-block;
-    width: 6px;
-    height: 6px;
+    width: 0.375rem;
+    height: 0.375rem;
     flex-shrink: 0;
   }
 }
@@ -834,10 +882,10 @@
 }
 .site-header[data-solid] {
   color: var(--color-ink);
-  background-color: rgb(244 241 234 / 0.9);
+  background-color: rgb(250 252 254 / 0.9);
   border-bottom-color: var(--color-line);
-  -webkit-backdrop-filter: blur(14px) saturate(1.2);
-  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(0.875rem) saturate(1.2);
+  backdrop-filter: blur(0.875rem) saturate(1.2);
 }
 .site-header[data-menu] {
   color: var(--color-on-dark);
@@ -881,7 +929,7 @@
 }
 .journey-day > summary:focus-visible {
   outline: 2px solid var(--color-ink);
-  outline-offset: 4px;
+  outline-offset: 0.25rem;
 }
 
 /* The header runs edge to edge, not in the 1680px container, so the logo sits
@@ -889,19 +937,19 @@
    (`.hc --gut`). */
 .site-header-row {
   width: 100%;
-  padding-inline: clamp(20px, 4.4vw, 64px);
+  padding-inline: clamp(1.25rem, 3.39vw, 4rem);
 }
 
 .site-logo {
   position: relative;
   display: block;
-  height: 36px;
+  height: 2.25rem;
   transform-origin: left center;
   transition: transform 0.45s var(--ease-editorial);
 }
 @media (min-width: 1024px) {
   .site-logo {
-    height: 48px;
+    height: clamp(2.75rem, 2.54vw, 3rem); /* 44px on a laptop, 48px at 1888px */
   }
 }
 .site-header[data-compact] .site-logo {
@@ -909,7 +957,7 @@
 }
 @media (min-width: 1024px) {
   .site-header[data-compact] .site-logo {
-    transform: scale(0.85); /* 48 → 41px */
+    transform: scale(0.85); /* 48 → 41px; 44 → 37px on a laptop */
   }
 }
 
@@ -1012,7 +1060,7 @@
 @keyframes enter-up {
   from {
     opacity: 0;
-    transform: translate3d(0, 16px, 0);
+    transform: translate3d(0, 1rem, 0);
   }
   to {
     opacity: 1;
@@ -1023,7 +1071,7 @@
 @keyframes enter-down {
   from {
     opacity: 0;
-    transform: translate3d(0, -10px, 0);
+    transform: translate3d(0, -0.625rem, 0);
   }
   to {
     opacity: 1;

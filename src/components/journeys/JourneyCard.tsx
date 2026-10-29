@@ -57,7 +57,7 @@ export function JourneyCard({
         <Heading id={titleId} className="h4 m-0 mb-3">
           <Link
             href={`/journeys/${journey.slug}`}
-            className="transition-colors duration-300 after:absolute after:inset-0 after:content-[''] group-hover:text-acqua-text"
+            className="transition-colors duration-300 after:absolute after:inset-0 after:content-[''] group-hover:text-brand"
           >
             {journey.title}
           </Link>
@@ -132,7 +132,7 @@ export function JourneyListing({
         <h3 id={titleId} className="h3 m-0 mb-4">
           <Link
             href={`/journeys/${journey.slug}`}
-            className="transition-colors duration-300 after:absolute after:inset-0 after:content-[''] group-hover:text-acqua-text"
+            className="transition-colors duration-300 after:absolute after:inset-0 after:content-[''] group-hover:text-brand"
           >
             {journey.title}
           </Link>

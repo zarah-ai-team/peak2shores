@@ -36,7 +36,7 @@ export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
         </div>
 
         <RevealGroup
-          className="grid-site gap-y-12 border-t border-line-dark pt-12"
+          className="grid-site gap-y-12 border-t border-line-dark pt-12 lg:pt-[clamp(2rem,2.54vw,3rem)]"
           stagger={0.08}
           amount={0.1}
         >
@@ -52,10 +52,10 @@ export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
                 unoptimized
                 width={2454}
                 height={1017}
-                className="h-11 w-auto"
+                className="h-11 w-auto lg:h-[clamp(2.125rem,2.33vw,2.75rem)]"
               />
             </Link>
-            <p className="prose-body-sm max-w-[300px]">
+            <p className="prose-body-sm max-w-[18.75rem]">
               Curated travel experiences. Small luxury group journeys of never more than{' '}
               {site.maxGuests} guests, personally curated by {site.founder.name}.
             </p>
@@ -113,7 +113,7 @@ export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
           </RevealItem>
         </RevealGroup>
 
-        <div className="kicker-sm mt-14 flex flex-col gap-4 border-t border-line-dark pt-6 text-on-dark-muted lg:flex-row lg:justify-between">
+        <div className="kicker-sm mt-14 flex flex-col gap-4 border-t border-line-dark pt-6 text-on-dark-muted lg:mt-[clamp(2.25rem,2.97vw,3.5rem)] lg:flex-row lg:justify-between">
           <span className="flex flex-wrap gap-x-6 gap-y-2">
             <span>
               © {new Date().getFullYear()} {site.legalName}

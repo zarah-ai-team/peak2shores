@@ -61,7 +61,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#f4f1ea',
+  themeColor: '#fafcfe',
   colorScheme: 'light',
 };
 
@@ -111,7 +111,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-6 focus:top-6 focus:z-[120] focus:bg-navy-deep focus:px-5 focus:py-3 focus:font-ui focus:text-[11.5px] focus:font-medium focus:uppercase focus:tracking-[0.16em] focus:text-on-dark"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-6 focus:top-6 focus:z-[120] focus:bg-navy-deep focus:px-5 focus:py-3 focus:font-ui focus:text-[0.71875rem] focus:font-medium focus:uppercase focus:tracking-[0.16em] focus:text-on-dark"
         >
           Skip to content
         </a>

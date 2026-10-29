@@ -19,13 +19,20 @@
   --serif: var(--font-display);
   --sans: var(--font-ui);
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
-  --gut: clamp(20px, 4.4vw, 64px);
+  /* Density. The page is drawn for a 1888px-wide screen — the width at which
+     the client approved it — and on a smaller desktop every display size,
+     card and section space scales down with the viewport (V px becomes
+     V × 0.053vw, capped at V), never below a floor that keeps text legible
+     and buttons easy to hit. Phones keep their own sizes, set by the floors. */
+  --gut: clamp(1.25rem, 3.39vw, 4rem);
   /* One type scale for every section: the hero's h1 is the only larger
      heading; each section has a label, an h2 at --h2, an optional supporting
      line at --sub, and card or item titles at --h3. */
-  --h2: clamp(34px, 3.6vw, 54px);
-  --h3: clamp(22px, 2vw, 30px);
-  --sub: 16px;
+  --h2: clamp(2.125rem, 2.86vw, 3.375rem);
+  --h3: clamp(1.375rem, 1.59vw, 1.875rem);
+  --sub: 1rem;
+  /* Section titles on paper: the ink of the page. */
+  --title: var(--ink);
   -webkit-font-smoothing: antialiased;
 }
 .hc * {
@@ -36,7 +43,7 @@
 }
 .hc .lab {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.26em;
   text-transform: uppercase;
@@ -48,7 +55,7 @@
 }
 /* Every section label sits the same distance above its heading. */
 .hc .lab + h2 {
-  margin-top: 16px;
+  margin-top: 1rem;
 }
 .hc .fill {
   position: absolute;
@@ -63,11 +70,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  min-height: 52px;
-  padding: 0 30px;
+  gap: 0.75rem;
+  min-height: 3.25rem;
+  padding: 0 1.875rem;
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -106,8 +113,8 @@
   border-color: var(--brand);
 }
 .hc .circ {
-  width: 54px;
-  height: 54px;
+  width: 3.375rem;
+  height: 3.375rem;
   border-radius: 50%;
   border: 1px solid rgb(255 255 255 / 0.55);
   background: transparent;
@@ -125,8 +132,8 @@
   color: #fff;
 }
 .hc .circ svg {
-  width: 18px;
-  height: 18px;
+  width: 1rem;
+  height: 1rem;
 }
 .hc .dk .circ {
   border-color: rgb(20 29 36 / 0.45);
@@ -142,26 +149,26 @@
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 16px 30px;
-  margin-top: 44px;
+  gap: 1rem 1.875rem;
+  margin-top: 2.75rem;
 }
 .hc .ctarow.left {
   justify-content: flex-start;
 }
 .hc .tlink {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   text-decoration: none;
   color: var(--ink);
   border-bottom: 1px solid currentColor;
-  padding: 12px 0 4px;
+  padding: 0.75rem 0 0.25rem;
   transition: color 0.4s var(--ease);
 }
 .hc .tlink:hover {
-  color: var(--lake);
+  color: var(--brand);
 }
 .hc .tlink.light {
   color: #fff;
@@ -172,12 +179,12 @@
 .hc .hint {
   font-family: var(--sans);
   font-weight: 300;
-  font-size: 15px;
+  font-size: 0.9375rem;
   color: #3a434a;
 }
 .hc .tbtns {
   display: flex;
-  gap: 12px;
+  gap: 0.75rem;
   flex-wrap: wrap;
 }
 
@@ -185,8 +192,8 @@
 .hc-hero {
   position: relative;
   height: 100svh;
-  min-height: 640px;
-  max-height: 1100px;
+  min-height: 40rem;
+  max-height: 68.75rem;
   overflow: hidden;
   background: var(--night);
   color: #fff;
@@ -237,7 +244,7 @@
 .hc-hero .copy {
   position: absolute;
   /* Equal top and bottom, so the copy sits at the true center of the screen. */
-  inset: clamp(84px, 11svh, 112px) var(--gut);
+  inset: clamp(5.25rem, 11svh, 7rem) var(--gut);
   z-index: 4;
   display: flex;
   flex-direction: column;
@@ -247,90 +254,95 @@
 }
 .hc-hero .hlogo {
   display: block;
-  margin-bottom: clamp(20px, 3.5svh, 36px);
+  margin-bottom: clamp(1.25rem, 3.5svh, 2.25rem);
 }
 .hc-hero .hlogo img {
   display: block;
   width: auto;
-  height: clamp(64px, 9svh, 104px);
+  height: clamp(4rem, 9svh, 6.5rem);
 }
 .hc-hero .copy .eb {
   justify-content: center;
 }
 .hc-hero .copy .eb::after {
   content: '';
-  width: 34px;
+  width: 2.125rem;
   height: 1.5px;
   background: var(--brand);
 }
 .hc .eb {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 0.875rem;
 }
 .hc .eb i {
-  width: 34px;
+  width: 2.125rem;
   height: 1.5px;
   background: var(--brand);
 }
 .hc-hero h1 {
   font-family: var(--serif);
   font-weight: 400;
-  /* One line at every width: the size follows the viewport so it never wraps. */
-  font-size: min(6vw, 84px);
+  /* One line at every width: the size follows the viewport so it never wraps
+     (6vw on a phone), and on a desktop it keeps to the page's density. */
+  font-size: min(6vw, max(2.75rem, 4.45vw), 5.25rem);
   line-height: 1.05;
   letter-spacing: -0.035em;
   white-space: nowrap;
-  margin: 0 0 22px;
+  margin: 0 0 1.375rem;
 }
 .hc-hero .copy p {
   font-family: var(--sans);
   font-weight: 300;
-  font-size: 16px;
+  font-size: var(--sub);
   line-height: 1.6;
   max-width: 44ch;
-  margin: 0 auto 30px;
+  margin: 0 auto 1.875rem;
   color: #eef2f4;
 }
 .hc-hero .ctas {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 12px;
+  gap: 0.625rem;
 }
-/* The two buttons share one width, so they sit as a balanced pair. */
+/* The two buttons share one width, so they sit as a balanced pair — compact,
+   so the film stays the subject. */
 .hc-hero .ctas .btn {
-  min-width: 264px;
+  min-width: clamp(11rem, 11vw, 13rem);
+  min-height: clamp(2.5rem, 2.33vw, 2.75rem);
+  padding: 0 1.375rem;
+  font-size: 0.6875rem;
 }
 .hc-hero .vctl {
   position: absolute;
   right: var(--gut);
   /* Clear of the "Speak to a travel designer" button, which is fixed bottom right. */
-  bottom: 104px;
+  bottom: 5.5rem;
   z-index: 5;
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 0.875rem;
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: 0.6875rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
 }
 .hc-hero .vctl .circ {
-  width: 36px;
-  height: 36px;
+  width: 2.25rem;
+  height: 2.25rem;
 }
 .hc-hero .vctl .circ svg {
-  width: 13px;
-  height: 13px;
+  width: 0.8125rem;
+  height: 0.8125rem;
 }
 .hc-hero .vdots {
   display: flex;
   gap: 2px;
 }
 .hc-hero .vdot {
-  width: 40px;
-  height: 44px;
+  width: 2.5rem;
+  height: 2.75rem;
   background: transparent;
   border: 0;
   cursor: pointer;
@@ -341,7 +353,7 @@
 }
 .hc-hero .vdot i {
   display: block;
-  width: 24px;
+  width: 1.5rem;
   height: 2px;
   background: rgb(255 255 255 / 0.4);
   transition: background 0.6s var(--ease);
@@ -354,24 +366,26 @@
 .hc-intro {
   background: var(--paper);
   color: var(--ink);
-  /* Left-aligned on the same gutter as the sections below it. */
-  padding: clamp(64px, 6.5vw, 100px) var(--gut) clamp(60px, 6vw, 92px);
+  /* Centred: the brand statement is a pause between the film and the
+     sections below, not the start of one of them. */
+  text-align: center;
+  padding: clamp(4rem, 5.3vw, 6.25rem) var(--gut) clamp(3.75rem, 4.87vw, 5.75rem);
 }
 .hc-intro .lab {
   color: var(--lake);
 }
 .hc-intro p {
   font-family: var(--serif);
-  font-size: clamp(28px, 2.8vw, 40px);
+  font-size: clamp(1.75rem, 2.12vw, 2.5rem);
   line-height: 1.32;
   letter-spacing: -0.015em;
   /* Three balanced lines on a desktop (30ch set it in five). */
   max-width: 50ch;
-  margin: 22px 0 0;
+  margin: 1.375rem auto 0;
   text-wrap: balance;
 }
 .hc-intro .ctarow {
-  margin-top: 34px;
+  margin-top: 2.125rem;
 }
 .hc-intro p em {
   font-style: italic;
@@ -382,15 +396,15 @@
 .hc-ways {
   background: var(--paper);
   color: var(--ink);
-  padding: 10px 0 clamp(48px, 4.5vw, 65px);
+  padding: 0.625rem 0 clamp(3rem, 3.44vw, 4.0625rem);
 }
 .hc-ways .head {
   display: flex;
   justify-content: space-between;
   align-items: end;
-  gap: 48px;
+  gap: 3rem;
   padding: 0 var(--gut);
-  margin-bottom: 44px;
+  margin-bottom: 2.75rem;
 }
 .hc-ways .head .lab {
   color: var(--lake);
@@ -401,37 +415,39 @@
   font-size: var(--h2);
   line-height: 1;
   letter-spacing: -0.03em;
-  margin: 16px 0 0;
+  margin: 1rem 0 0;
 }
 .hc-ways .wnav {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.75rem;
 }
 .hc-ways .count {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: 0.75rem;
   letter-spacing: 0.16em;
-  margin-right: 8px;
+  margin-right: 0.5rem;
 }
 .hc-ways .rail {
   display: flex;
-  gap: 18px;
+  gap: 1.125rem;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  padding: 0 var(--gut) 6px;
+  padding: 0 var(--gut) 0.375rem;
   scrollbar-width: none;
   scroll-padding-left: var(--gut);
 }
 .hc-ways .rail::-webkit-scrollbar {
   display: none;
 }
+/* 380 × 540 on the reference screen; on a short laptop screen the tile also
+   keeps to the height, so the heading, the row and the way on fit together. */
 .hc-ways .wt {
   position: relative;
-  flex: 0 0 380px;
-  height: 540px;
-  border-radius: 10px;
+  flex: 0 0 clamp(16.25rem, 20.1vw, 23.75rem);
+  height: min(clamp(22.5rem, 28.6vw, 33.75rem), 62svh);
+  border-radius: 0.625rem;
   overflow: hidden;
   scroll-snap-align: start;
   color: #fff;
@@ -443,6 +459,16 @@
    every tile is the same shape. */
 .hc-ways .wt.lead h3 {
   color: var(--sky);
+}
+/* Its pale-blue name needs a deeper shade under it than the white names do. */
+.hc-ways .wt.lead .ws {
+  background: linear-gradient(
+    180deg,
+    rgb(8 20 28 / 0.3) 0%,
+    rgb(8 20 28 / 0.12) 28%,
+    rgb(8 20 28 / 0.62) 58%,
+    rgb(8 20 28 / 0.9) 100%
+  );
 }
 .hc-ways .wt video,
 .hc-ways .wt img {
@@ -464,18 +490,18 @@
 }
 .hc-ways .wn {
   position: absolute;
-  top: 22px;
-  left: 24px;
+  top: 1.375rem;
+  left: 1.5rem;
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: 0.75rem;
   letter-spacing: 0.2em;
 }
 .hc-ways .wplay {
   position: absolute;
-  top: 18px;
-  right: 20px;
-  width: 34px;
-  height: 34px;
+  top: 1.125rem;
+  right: 1.25rem;
+  width: 2.125rem;
+  height: 2.125rem;
   border-radius: 50%;
   border: 1px solid rgb(255 255 255 / 0.6);
   display: flex;
@@ -488,23 +514,23 @@
 }
 .hc-ways .badge {
   position: absolute;
-  top: 18px;
-  right: 20px;
+  top: 1.125rem;
+  right: 1.25rem;
   font-family: var(--sans);
-  font-size: 10px;
+  font-size: 0.625rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   /* The deeper blue: white caps this small need 4.5:1 (the brand blue is 3.6:1). */
   background: var(--color-brand-deep);
   color: #fff;
-  padding: 7px 12px;
+  padding: 0.4375rem 0.75rem;
   border-radius: 999px;
 }
 .hc-ways .wb {
   position: absolute;
-  left: 26px;
-  right: 26px;
-  bottom: 26px;
+  left: 1.625rem;
+  right: 1.625rem;
+  bottom: 1.625rem;
 }
 .hc-ways h3 {
   font-family: var(--serif);
@@ -512,12 +538,14 @@
   font-size: var(--h3);
   line-height: 1.08;
   margin: 0;
+  /* Holds the name (the signature tile's is pale blue) on a bright frame. */
+  text-shadow: 0 1px 0.875rem rgb(8 20 28 / 0.45);
 }
 .hc-ways .wl {
   display: block;
   font-family: var(--sans);
   font-weight: 300;
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.65;
   color: #e6edf1;
   max-height: 0;
@@ -531,22 +559,22 @@
 .hc-ways .wt:hover .wl,
 .hc-ways .wt:focus-visible .wl,
 .hc-ways .wt.playing .wl {
-  max-height: 140px;
+  max-height: 8.75rem;
   opacity: 1;
-  margin-top: 12px;
+  margin-top: 0.75rem;
 }
 .hc-ways .more {
   display: inline-block;
-  margin-top: 14px;
+  margin-top: 0.75rem;
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: 0.6875rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   border-bottom: 1px solid rgb(255 255 255 / 0.6);
-  padding-bottom: 3px;
+  padding-bottom: 0.1875rem;
 }
 .hc-ways .prog {
-  margin: 30px var(--gut) 0;
+  margin: 1.875rem var(--gut) 0;
   height: 1px;
   background: rgb(20 29 36 / 0.2);
   position: relative;
@@ -555,28 +583,28 @@
   position: absolute;
   left: 0;
   top: -1px;
-  height: 3px;
+  height: 0.1875rem;
   background: var(--ink);
   transition: width 0.9s var(--ease);
 }
 .hc-ways .ctarow {
   padding: 0 var(--gut);
-  margin-top: 30px;
+  margin-top: 1.875rem;
 }
 
 /* -- 04 Small luxury group journeys -------------------------------------- */
 .hc-jr {
   background: var(--paper);
   color: var(--ink);
-  padding: clamp(72px, 7vw, 110px) var(--gut);
+  padding: clamp(4.5rem, 5.83vw, 6.875rem) var(--gut);
 }
+/* The section's name and line, centred over the departures. */
 .hc-jr .head {
-  display: flex;
-  justify-content: space-between;
-  align-items: end;
-  flex-wrap: wrap;
-  gap: 28px 48px;
-  margin-bottom: 44px;
+  margin-bottom: 2.75rem;
+  text-align: center;
+}
+.hc-jr .head p.sub-h {
+  margin-inline: auto;
 }
 .hc-jr h2 {
   font-family: var(--serif);
@@ -588,23 +616,23 @@
 }
 .hc-jr .promises {
   list-style: none;
-  margin: 0 0 clamp(48px, 5vw, 72px);
-  padding: 22px 0;
+  margin: 0 0 clamp(3rem, 3.81vw, 4.5rem);
+  padding: 1.375rem 0;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px 40px;
+  gap: 1.125rem 2.5rem;
   border-block: 1px solid var(--rule-color, rgb(20 29 36 / 0.12));
 }
 .hc-jr .promises h3 {
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
-  margin: 0 0 4px;
+  margin: 0 0 0.25rem;
 }
 .hc-jr .promises p {
   font-family: var(--sans);
   font-weight: 300;
-  font-size: 14px;
+  font-size: 0.875rem;
   line-height: 1.55;
   color: var(--muted);
   margin: 0;
@@ -614,19 +642,19 @@
 .hc-jr .entry {
   position: relative;
   display: grid;
-  gap: 22px;
+  gap: 1.375rem;
 }
 .hc-jr .entry.first {
   grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
   align-items: center;
-  gap: clamp(28px, 4vw, 64px);
-  padding-bottom: clamp(48px, 5vw, 72px);
-  margin-bottom: clamp(48px, 5vw, 72px);
+  gap: clamp(1.75rem, 3.39vw, 4rem);
+  padding-bottom: clamp(3rem, 3.81vw, 4.5rem);
+  margin-bottom: clamp(3rem, 3.81vw, 4.5rem);
   border-bottom: 1px solid rgb(20 29 36 / 0.12);
 }
 .hc-jr .entry .ph {
   overflow: hidden;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   transition:
     box-shadow 0.6s var(--ease),
     transform 0.6s var(--ease);
@@ -634,11 +662,11 @@
 /* On hover the photograph lifts and eases in, the title turns blue and the
    rule above the facts draws in blue. */
 .hc-jr .entry:hover .ph {
-  transform: translateY(-6px);
-  box-shadow: 0 26px 48px -26px rgb(8 20 28 / 0.55);
+  transform: translateY(-0.375rem);
+  box-shadow: 0 1.625rem 3rem -1.625rem rgb(8 20 28 / 0.55);
 }
 .hc-jr .facts {
-  background: linear-gradient(var(--lake), var(--lake)) top left / 0 1px no-repeat;
+  background: linear-gradient(var(--brand), var(--brand)) top left / 0 1px no-repeat;
   transition: background-size 0.7s var(--ease);
 }
 .hc-jr .entry:hover .facts {
@@ -647,10 +675,10 @@
 .hc-jr .kick {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 10px;
-  margin: 0 0 12px;
+  gap: 0.25rem 0.625rem;
+  margin: 0 0 0.75rem;
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -662,10 +690,10 @@
   font-size: var(--h3);
   line-height: 1.12;
   letter-spacing: -0.02em;
-  margin: 0 0 12px;
+  margin: 0 0 0.75rem;
 }
 .hc-jr .entry.first h3 {
-  font-size: clamp(30px, 3vw, 44px);
+  font-size: clamp(1.875rem, 2.33vw, 2.75rem);
 }
 .hc-jr .entry h3 a {
   color: inherit;
@@ -679,51 +707,53 @@
   inset: 0;
 }
 .hc-jr .entry:hover h3 a {
-  color: var(--lake);
+  color: var(--brand);
 }
 .hc-jr .line {
   font-family: var(--sans);
   font-weight: 300;
-  font-size: 15px;
+  font-size: 0.9375rem;
   line-height: 1.6;
   color: #3a434a;
-  margin: 0 0 18px;
+  margin: 0 0 1.125rem;
   max-width: 46ch;
 }
 .hc-jr .facts {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 0;
+  gap: 0.25rem 0;
   margin: 0;
-  padding-top: 14px;
+  padding-top: 0.875rem;
   border-top: 1px solid rgb(20 29 36 / 0.12);
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: 0.8125rem;
   color: var(--muted);
 }
 .hc-jr .facts span:not(:last-child)::after {
   content: '·';
-  margin: 0 10px;
+  margin: 0 0.625rem;
   color: rgb(20 29 36 / 0.3);
 }
 .hc-jr .facts b {
   font-weight: 600;
   color: var(--ink);
 }
+/* The way on starts where an entry's lines do, under them; a status, when
+   there is one, follows it. */
 .hc-jr .foot {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin: 16px 0 0;
+  justify-content: flex-start;
+  gap: 1.5rem;
+  margin: 1rem 0 0;
 }
 .hc-jr .more {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  margin-left: auto;
+  gap: 0.5rem;
+  order: -1;
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -732,7 +762,7 @@
   transition: transform 0.4s var(--ease);
 }
 .hc-jr .entry:hover .more svg {
-  transform: translateX(4px);
+  transform: translateX(0.25rem);
 }
 .hc-jr .entries {
   list-style: none;
@@ -740,7 +770,87 @@
   padding: 0;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 48px clamp(20px, 2.4vw, 36px);
+  gap: 3rem clamp(1.25rem, 1.91vw, 2.25rem);
+}
+/* Each entry shares its row's lines (photograph, kicker, title, line, facts,
+   way on), so a title that runs to two lines, or a kicker that wraps, moves
+   the whole row together and every "Read the journey" sits on one line. The parts keep their own spacing: the row gaps are zeroed. */
+.hc-jr .entries > li,
+.hc-jr .entries .entry {
+  display: grid;
+  grid-row: span 6;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+}
+.hc-jr .entries .entry .ph {
+  margin-bottom: 1.375rem;
+}
+.hc-jr .entries .entry .txt {
+  grid-row: 2 / span 5;
+  display: grid;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+}
+/* A kicker that wraps makes its row taller; the others sit at the foot of
+   it, so every kicker stays close above its title. */
+.hc-jr .entries .kick {
+  align-self: end;
+}
+.hc-jr .entries .foot {
+  align-self: end;
+}
+/* All the journeys: a quiet line under the row, not a second headline button. */
+.hc-jr .all {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(2.5rem, 3.39vw, 4rem);
+  padding-top: clamp(1.75rem, 2.12vw, 2.5rem);
+  border-top: 1px solid rgb(20 29 36 / 0.12);
+}
+.hc-jr .all .tlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+/* Four across, an entry is narrow (about 280px on a laptop). Its small type
+   steps down with the viewport like everything else (as set at 1888px), so
+   the card keeps the proportions it has on the reference screen instead of
+   wrapping into a taller, busier one; and the facts are set as two lines on
+   purpose — the dates, then group and price — rather than breaking wherever
+   the width runs out. */
+@media (min-width: 1101px) {
+  .hc-jr .entries .entry .ph {
+    margin-bottom: clamp(1rem, 1.17vw, 1.375rem);
+  }
+  .hc-jr .entries .kick {
+    margin-bottom: clamp(0.5rem, 0.636vw, 0.75rem);
+    font-size: clamp(0.625rem, 0.583vw, 0.6875rem);
+    letter-spacing: 0.16em;
+  }
+  .hc-jr .entries .entry h3 {
+    margin-bottom: clamp(0.5rem, 0.636vw, 0.75rem);
+  }
+  .hc-jr .entries .line {
+    margin-bottom: clamp(0.875rem, 0.953vw, 1.125rem);
+    font-size: clamp(0.8125rem, 0.795vw, 0.9375rem);
+  }
+  .hc-jr .entries .facts {
+    padding-top: 0.75rem;
+    font-size: clamp(0.75rem, 0.689vw, 0.8125rem);
+    line-height: 1.6;
+  }
+  .hc-jr .entries .facts span:first-child {
+    flex-basis: 100%;
+  }
+  .hc-jr .entries .facts span:first-child::after {
+    content: none;
+  }
+  .hc-jr .entries .foot {
+    margin-top: clamp(0.875rem, 0.847vw, 1rem);
+  }
+  .hc-jr .entries .more {
+    font-size: clamp(0.65625rem, 0.583vw, 0.6875rem);
+  }
 }
 @media (max-width: 1100px) {
   .hc-jr .entries {
@@ -761,7 +871,7 @@
   overflow: hidden;
   background: var(--night);
   color: #fff;
-  padding: clamp(110px, 13vw, 190px) var(--gut) clamp(100px, 12.5vw, 180px);
+  padding: clamp(6.875rem, 10.06vw, 11.875rem) var(--gut) clamp(6.25rem, 9.5vw, 11.25rem);
   text-align: center;
 }
 /* The film plays in its own color, with no tint over it; the words carry
@@ -778,61 +888,61 @@
   margin: 0 auto;
   max-width: 21ch;
   font-family: var(--serif);
-  font-size: clamp(36px, 4.7vw, 68px);
+  font-size: clamp(2.25rem, 3.6vw, 4.25rem);
   line-height: 1.12;
   letter-spacing: -0.025em;
   text-shadow:
     0 1px 2px rgb(8 20 28 / 0.22),
-    0 2px 24px rgb(8 20 28 / 0.28);
+    0 2px 1.5rem rgb(8 20 28 / 0.28);
 }
 .hc-pause blockquote em {
   font-style: italic;
   color: var(--brand);
   text-shadow:
     0 1px 2px rgb(8 20 28 / 0.25),
-    0 2px 24px rgb(8 20 28 / 0.3);
+    0 2px 1.5rem rgb(8 20 28 / 0.3);
 }
 .hc-pause .mark {
   display: block;
   font-family: var(--serif);
-  font-size: 120px;
+  font-size: 7.5rem;
   line-height: 0.5;
   color: var(--brand);
-  margin-bottom: 26px;
-  text-shadow: 0 2px 14px rgb(8 20 28 / 0.22);
+  margin-bottom: 1.625rem;
+  text-shadow: 0 2px 0.875rem rgb(8 20 28 / 0.22);
 }
 .hc-pause cite {
   display: block;
-  margin-top: 46px;
+  margin-top: 2.875rem;
   font-style: normal;
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: 0.75rem;
   letter-spacing: 0.26em;
   text-transform: uppercase;
   color: #fff;
   text-shadow:
     0 1px 2px rgb(8 20 28 / 0.38),
-    0 1px 12px rgb(8 20 28 / 0.35);
+    0 1px 0.75rem rgb(8 20 28 / 0.35);
 }
 .hc-pause .tlink {
   text-shadow:
     0 1px 2px rgb(8 20 28 / 0.38),
-    0 1px 12px rgb(8 20 28 / 0.35);
+    0 1px 0.75rem rgb(8 20 28 / 0.35);
 }
 
 /* -- 06 Why Peaks2Shores ------------------------------------------------- */
 .hc-why {
   background: var(--paper);
   color: var(--ink);
-  padding: 40px var(--gut) clamp(100px, 10vw, 150px);
+  padding: 2.5rem var(--gut) clamp(6.25rem, 7.94vw, 9.375rem);
   border-top: 1px solid rgb(20 29 36 / 0.12);
 }
 .hc-why .head {
   display: flex;
   justify-content: space-between;
   align-items: end;
-  gap: 48px;
-  margin: clamp(56px, 6vw, 90px) 0 52px;
+  gap: 3rem;
+  margin: clamp(3.5rem, 4.77vw, 5.625rem) 0 3.25rem;
 }
 .hc-why .head .lab {
   color: var(--lake);
@@ -852,18 +962,18 @@
   font-size: var(--sub);
   line-height: 1.6;
   color: var(--muted);
-  margin: 12px 0 0;
+  margin: 0.75rem 0 0;
 }
 .hc-why .row {
   display: flex;
-  gap: 14px;
-  height: 600px;
+  gap: 0.875rem;
+  height: min(clamp(25rem, 31.8vw, 37.5rem), 66svh);
 }
 .hc-why .pc {
   position: relative;
   flex: 1 1 0;
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: 0.625rem;
   cursor: pointer;
   transition: flex-grow 1.2s var(--ease);
   background: #15262f;
@@ -898,21 +1008,21 @@
 }
 .hc-why .pn {
   position: absolute;
-  top: 24px;
-  left: 26px;
+  top: 1.5rem;
+  left: 1.625rem;
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: 0.75rem;
   letter-spacing: 0.2em;
 }
 .hc-why .pv {
   position: absolute;
-  left: 24px;
-  bottom: 28px;
+  left: 1.5rem;
+  bottom: 1.75rem;
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   white-space: nowrap;
   font-family: var(--serif);
-  font-size: 32px;
+  font-size: clamp(1.5rem, 1.7vw, 2rem);
   line-height: 1;
   transition: opacity 0.5s var(--ease);
 }
@@ -921,11 +1031,11 @@
 }
 .hc-why .pb {
   position: absolute;
-  left: 30px;
-  bottom: 30px;
-  width: min(500px, calc(100% - 60px));
+  left: 1.875rem;
+  bottom: 1.875rem;
+  width: min(31.25rem, calc(100% - 3.75rem));
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(1rem);
   transition:
     opacity 0.5s var(--ease),
     transform 0.7s var(--ease);
@@ -948,9 +1058,9 @@
   display: block;
   font-family: var(--sans);
   font-weight: 300;
-  font-size: 15px;
+  font-size: 0.9375rem;
   line-height: 1.7;
-  margin-top: 14px;
+  margin-top: 0.875rem;
   max-width: 40ch;
   color: #e6edf1;
 }
@@ -958,8 +1068,8 @@
 /* -- 07 Peaks / Shores --------------------------------------------------- */
 .hc-cmp {
   position: relative;
-  height: min(860px, 100svh);
-  min-height: 560px;
+  height: min(53.75rem, 100svh);
+  min-height: 35rem;
   overflow: hidden;
   user-select: none;
   color: #fff;
@@ -1005,11 +1115,11 @@
   top: 50%;
   transform: translateY(-50%);
   font-family: var(--serif);
-  font-size: clamp(64px, 11.8vw, 170px);
+  font-size: clamp(4rem, 9vw, 10.625rem);
   letter-spacing: -0.05em;
   line-height: 1;
   pointer-events: none;
-  text-shadow: 0 4px 40px rgb(8 20 28 / 0.35);
+  text-shadow: 0 0.25rem 2.5rem rgb(8 20 28 / 0.35);
   transition: opacity 0.25s linear;
 }
 .hc-cmp .l {
@@ -1020,20 +1130,20 @@
 }
 .hc-cmp .cap {
   position: absolute;
-  bottom: 56px;
+  bottom: 3.5rem;
   margin: 0;
   max-width: 36ch;
   font-family: var(--sans);
   font-weight: 300;
-  font-size: 15px;
+  font-size: 0.9375rem;
   line-height: 1.7;
-  text-shadow: 0 1px 14px rgb(8 20 28 / 0.6);
+  text-shadow: 0 1px 0.875rem rgb(8 20 28 / 0.6);
   transition: opacity 0.25s linear;
 }
 .hc-cmp .cap.r {
   text-align: right;
   /* Clear of the fixed "Speak to a travel designer" button. */
-  bottom: 104px;
+  bottom: 5.5rem;
 }
 .hc-cmp .handle {
   position: absolute;
@@ -1053,12 +1163,13 @@
   background: #fff;
 }
 .hc-cmp .handle b {
+  --hb: clamp(5rem, 5.93vw, 7rem);
   position: absolute;
   top: 50%;
-  left: -56px;
-  width: 112px;
-  height: 112px;
-  margin-top: -56px;
+  left: calc(var(--hb) / -2);
+  width: var(--hb);
+  height: var(--hb);
+  margin-top: calc(var(--hb) / -2);
   border-radius: 50%;
   background: var(--paper);
   color: var(--brand);
@@ -1067,23 +1178,23 @@
   justify-content: center;
   font-family: var(--serif);
   font-weight: 400;
-  font-size: 64px;
-  box-shadow: 0 10px 40px rgb(0 0 0 / 0.3);
+  font-size: calc(var(--hb) * 0.57);
+  box-shadow: 0 0.625rem 2.5rem rgb(0 0 0 / 0.3);
 }
 .hc-cmp .handle b::before,
 .hc-cmp .handle b::after {
   content: '';
   position: absolute;
   top: 50%;
-  margin-top: -6px;
-  border: 6px solid transparent;
+  margin-top: -0.375rem;
+  border: 0.375rem solid transparent;
 }
 .hc-cmp .handle b::before {
-  left: -22px;
+  left: -1.375rem;
   border-right-color: #fff;
 }
 .hc-cmp .handle b::after {
-  right: -22px;
+  right: -1.375rem;
   border-left-color: #fff;
 }
 .hc-cmp input {
@@ -1098,11 +1209,11 @@
 }
 .hc-cmp input:focus-visible + .handle b {
   outline: 2px solid var(--sky);
-  outline-offset: 4px;
+  outline-offset: 0.25rem;
 }
 .hc-cmp .top {
   position: absolute;
-  top: clamp(88px, 10svh, 110px);
+  top: clamp(5.5rem, 10svh, 6.875rem);
   left: var(--gut);
   right: var(--gut);
   z-index: 5;
@@ -1110,12 +1221,12 @@
   pointer-events: none;
 }
 .hc-cmp .top p {
-  margin: 14px auto 0;
+  margin: 0.875rem auto 0;
   max-width: 44ch;
   font-family: var(--serif);
-  font-size: clamp(20px, 1.8vw, 26px);
+  font-size: clamp(1.25rem, 1.38vw, 1.625rem);
   line-height: 1.3;
-  text-shadow: 0 2px 24px rgb(8 20 28 / 0.5);
+  text-shadow: 0 2px 1.5rem rgb(8 20 28 / 0.5);
 }
 
 /* -- 07b The founder ----------------------------------------------------- */
@@ -1124,7 +1235,7 @@
   grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   background: var(--paper);
   color: var(--ink);
-  min-height: 760px;
+  min-height: 47.5rem;
 }
 .hc-fd .img {
   position: relative;
@@ -1136,7 +1247,7 @@
   object-position: 50% 100%;
 }
 .hc-fd .c {
-  padding: clamp(64px, 8vw, 120px) clamp(20px, 7.6vw, 110px);
+  padding: clamp(4rem, 6.36vw, 7.5rem) clamp(1.25rem, 5.83vw, 6.875rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -1145,7 +1256,7 @@
   color: var(--lake);
 }
 .hc-fd h2 {
-  margin: 26px 0;
+  margin: 1.625rem 0;
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--h2);
@@ -1160,21 +1271,21 @@
   line-height: 1.8;
   color: #3a434a;
   max-width: 46ch;
-  margin: 0 0 36px;
+  margin: 0 0 2.25rem;
 }
 
 /* -- 08 Hotels, lodges & camps ------------------------------------------- */
 .hc-hot {
   background: var(--deep);
   color: #fff;
-  padding: clamp(96px, 9.7vw, 140px) var(--gut) clamp(100px, 10vw, 150px);
+  padding: clamp(6rem, 7.42vw, 8.75rem) var(--gut) clamp(6.25rem, 7.94vw, 9.375rem);
 }
 .hc-hot .head {
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
-  gap: 64px;
+  gap: clamp(2rem, 3.39vw, 4rem);
   align-items: end;
-  margin-bottom: 64px;
+  margin-bottom: 4rem;
 }
 .hc-hot .head .lab {
   color: var(--ice);
@@ -1185,7 +1296,7 @@
   font-size: var(--h2);
   line-height: 1.02;
   letter-spacing: -0.03em;
-  margin: 18px 0 0;
+  margin: 1.125rem 0 0;
 }
 .hc-hot .head p {
   font-family: var(--sans);
@@ -1198,12 +1309,12 @@
 .hc-hot .flips {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 18px;
+  gap: 1.125rem;
 }
 .hc-hot .flip {
   position: relative;
-  height: clamp(420px, 36vw, 540px);
-  perspective: 1600px;
+  height: clamp(28.75rem, 28.6vw, 33.75rem);
+  perspective: 112.5rem;
   background: transparent;
   border: 0;
   padding: 0;
@@ -1212,23 +1323,36 @@
   text-align: left;
   font: inherit;
 }
+/* The turn: eased in and out, as a card is turned by hand, rather than
+   thrown and slowed. Both faces sit on their own layer from the start, so
+   nothing is repainted (or flashes) halfway round. */
 .hc-hot .fin {
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
-  transition: transform 1.2s var(--ease);
+  transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+  will-change: transform;
 }
-.hc-hot .flip:hover .fin,
+/* A pointer turns the card it rests on — after a beat, so one crossing the
+   row on its way elsewhere does not turn every card it passes. Touch and the
+   keyboard turn a card with a tap or Enter instead (`.on`). */
+@media (hover: hover) and (pointer: fine) {
+  .hc-hot .flip:hover .fin {
+    transform: rotateY(180deg);
+    transition-delay: 0.12s;
+  }
+}
 .hc-hot .flip.on .fin {
   transform: rotateY(180deg);
 }
 .hc-hot .face {
   position: absolute;
   inset: 0;
-  border-radius: 10px;
+  border-radius: 0.625rem;
   overflow: hidden;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  transform: rotateY(0deg);
 }
 .hc-hot .fs {
   position: absolute;
@@ -1237,9 +1361,9 @@
 }
 .hc-hot .fb {
   position: absolute;
-  left: 28px;
-  right: 28px;
-  bottom: 28px;
+  left: 1.75rem;
+  right: 1.75rem;
+  bottom: 1.75rem;
 }
 .hc-hot h3,
 .hc-hot .hn {
@@ -1247,77 +1371,95 @@
   font-weight: 400;
   font-size: var(--h3);
   line-height: 1.12;
-  margin: 10px 0 0;
+  margin: 0.625rem 0 0;
 }
 .hc-hot .back {
   transform: rotateY(180deg);
   background: var(--paper);
   color: var(--ink);
-  padding: 0 26px 28px;
+  padding: 0 clamp(1.25rem, 1.38vw, 1.625rem) clamp(1.25rem, 1.27vw, 1.5rem);
   display: flex;
   flex-direction: column;
 }
-/* The turned side opens on a band of a second photograph of the place. */
+/* The turned side opens on a band of a second photograph of the place. The
+   words take the room they need and the band takes what is left (up to
+   170px), so a longer note never runs off the foot of the card. */
 .hc-hot .back .bimg {
   position: relative;
   display: block;
-  flex: 0 0 150px;
-  margin: 0 -26px 22px;
+  flex: 1 1 0;
+  min-height: 4rem;
+  max-height: 10.625rem;
+  margin: 0 calc(clamp(1.25rem, 1.38vw, 1.625rem) * -1) 1.125rem;
   overflow: hidden;
 }
 .hc-hot .back dl {
-  margin-top: auto;
-  padding-top: 20px;
-  gap: 18px;
+  padding-top: 0.875rem;
+  gap: 0.75rem;
 }
 .hc-hot .back .lab {
   color: var(--lake);
 }
 .hc-hot .back .hn {
   display: block;
-  margin-top: 12px;
+  margin-top: 0.5rem;
 }
 .hc-hot dl {
   margin: 0;
   display: grid;
-  gap: 26px;
+  gap: 1.625rem;
 }
 .hc-hot dt {
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: 0.65625rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 8px;
+  margin-bottom: 0.375rem;
 }
 .hc-hot dd {
   margin: 0;
   font-family: var(--serif);
-  font-size: 15.5px;
-  line-height: 1.45;
+  font-size: clamp(0.875rem, 0.795vw, 0.9375rem);
+  line-height: 1.42;
 }
 .hc-hot dd.ph {
   color: #8a4f2e;
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: 0.9375rem;
 }
 .hc-hot .flip-hint {
-  margin-top: 26px;
+  margin-top: 1.625rem;
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: 0.75rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: #c9d6de;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.75rem;
+}
+/* The hint, and beside it the arrows that move the rail on a desktop. */
+.hc-hot .flip-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.625rem;
+}
+.hc-hot .flip-foot .flip-hint {
+  margin-top: 0;
+}
+.hc-hot .fnav {
+  display: none;
+  gap: 0.625rem;
 }
 
 /* -- 08b Experiences & connections --------------------------------------- */
 .hc-xp {
   position: relative;
-  height: min(860px, 100svh);
-  min-height: 620px;
+  height: min(53.75rem, 100svh);
+  min-height: 38.75rem;
   overflow: hidden;
   background: var(--night);
   color: #fff;
@@ -1344,7 +1486,7 @@
 .hc-xp .xin {
   position: absolute;
   left: var(--gut);
-  top: clamp(80px, 12svh, 110px);
+  top: clamp(5rem, 12svh, 6.875rem);
   z-index: 3;
 }
 .hc-xp .xin .lab {
@@ -1352,16 +1494,16 @@
 }
 .hc-xp ul {
   list-style: none;
-  margin: 30px 0 0;
+  margin: 1.875rem 0 0;
   padding: 0;
 }
 .hc-xp .xw {
   background: transparent;
   border: 0;
-  padding: 4px 0;
+  padding: 0.25rem 0;
   cursor: pointer;
   font-family: var(--serif);
-  font-size: clamp(48px, 7.6vw, 110px);
+  font-size: clamp(3rem, 5.83vw, 6.875rem);
   line-height: 1.02;
   letter-spacing: -0.04em;
   color: rgb(255 255 255 / 0.32);
@@ -1374,21 +1516,21 @@
   color: #fff;
 }
 .hc-xp .xw.on {
-  padding-left: 28px;
+  padding-left: 1.75rem;
   font-style: italic;
 }
 .hc-xp .xside {
   position: absolute;
   right: var(--gut);
-  bottom: 72px;
+  bottom: clamp(3.5rem, 3.81vw, 4.5rem);
   z-index: 3;
-  width: 330px;
+  width: clamp(17.5rem, 17.5vw, 20.625rem);
 }
 .hc-xp .xside p {
-  margin: 0 0 24px;
+  margin: 0 0 1.5rem;
   font-family: var(--sans);
   font-weight: 300;
-  font-size: 16px;
+  font-size: var(--sub);
   line-height: 1.7;
   color: #eef2f4;
   min-height: 3.4em;
@@ -1398,7 +1540,7 @@
 .hc-circle {
   position: relative;
   overflow: hidden;
-  padding: clamp(110px, 9.7vw, 140px) var(--gut) clamp(96px, 8.3vw, 120px);
+  padding: clamp(6.875rem, 7.42vw, 8.75rem) var(--gut) clamp(6rem, 6.36vw, 7.5rem);
   text-align: center;
   color: #fff;
   background: var(--night);
@@ -1433,7 +1575,7 @@
   font-size: var(--h2);
   line-height: 0.98;
   letter-spacing: -0.035em;
-  margin: 22px auto 26px;
+  margin: 1.375rem auto 1.625rem;
   max-width: 14ch;
 }
 .hc-circle .in > p {
@@ -1441,13 +1583,14 @@
   font-weight: 300;
   font-size: var(--sub);
   line-height: 1.75;
-  margin: 0 auto 40px;
+  margin: 0 auto 2.5rem;
   max-width: 46ch;
   color: #eef2f4;
-  text-shadow: 0 1px 14px rgb(8 20 28 / 0.5);
+  text-shadow: 0 1px 0.875rem rgb(8 20 28 / 0.5);
 }
 .hc-circle .form {
-  max-width: 560px;
+  /* The width of the form inside, so it centres under the copy. */
+  max-width: 32.5rem;
   margin: 0 auto;
   text-align: left;
 }
@@ -1455,19 +1598,19 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 12px 36px;
-  margin-top: 44px;
+  gap: 0.75rem 2.25rem;
+  margin-top: 2.75rem;
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 0.875rem;
   color: #eef2f4;
 }
 .hc-circle .talk b {
   font-weight: 500;
-  font-size: 11px;
+  font-size: 0.6875rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--ice);
-  margin-right: 10px;
+  margin-right: 0.625rem;
 }
 .hc-circle .talk a {
   text-decoration: none;
@@ -1481,36 +1624,47 @@
 /* -- Speak to a travel designer (fixed, bottom right) ---------------------------- */
 .hc-fab {
   position: fixed;
-  right: 28px;
-  bottom: 28px;
+  right: 1.5rem;
+  bottom: 1.5rem;
   z-index: 60;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 12px;
+  gap: 0.625rem;
   font-family: var(--sans);
+  /* The closed panel still takes its room in this box, so the box lets the
+     pointer through to the page; only the button (and the panel, once open)
+     answer it. Otherwise a 310px square of the page under it, the right-hand
+     cards included, would not respond to hover or click. */
+  pointer-events: none;
 }
+/* A compact pill: always in reach, never the loudest thing on the screen. */
 .hc-fab .fab-btn {
+  pointer-events: auto;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  min-height: 54px;
-  padding: 0 26px 0 20px;
+  gap: 0.5rem;
+  min-height: clamp(2.5rem, 2.33vw, 2.75rem);
+  padding: 0 1.125rem 0 0.875rem;
   border-radius: 999px;
-  /* White 12px caps on the deeper blue: 5:1, where the brand blue is 3.6:1. */
+  /* White 11px caps on the deeper blue: 5:1, where the brand blue is 3.6:1. */
   background: var(--color-brand-deep);
   color: #fff;
   border: 0;
   font-family: inherit;
-  font-size: 12px;
+  font-size: 0.6875rem;
   font-weight: 500;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   cursor: pointer;
-  box-shadow: 0 14px 34px rgb(0 0 0 / 0.32);
+  box-shadow: 0 0.625rem 1.5rem -0.5rem rgb(8 20 28 / 0.45);
   transition:
     background 0.6s var(--ease),
     transform 0.6s var(--ease);
+}
+.hc-fab .fab-btn svg {
+  width: 1rem;
+  height: 1rem;
 }
 .hc-fab .fab-btn:hover {
   background: var(--lake);
@@ -1526,7 +1680,7 @@
 }
 .hc-fab.away {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(1rem);
   visibility: hidden;
   pointer-events: none;
   transition:
@@ -1535,14 +1689,14 @@
     visibility 0s linear 0.4s;
 }
 .hc-fab .panel {
-  width: 330px;
+  width: 19.375rem;
   background: var(--paper);
   color: var(--ink);
-  border-radius: 16px;
-  padding: 24px 24px 10px;
-  box-shadow: 0 24px 60px rgb(0 0 0 / 0.35);
+  border-radius: 0.875rem;
+  padding: 1.25rem 1.25rem 0.5rem;
+  box-shadow: 0 1.5rem 3.75rem rgb(0 0 0 / 0.35);
   opacity: 0;
-  transform: translateY(12px) scale(0.98);
+  transform: translateY(0.75rem) scale(0.98);
   transform-origin: bottom right;
   pointer-events: none;
   visibility: hidden;
@@ -1561,44 +1715,46 @@
     transform 0.6s var(--ease);
 }
 .hc-fab .panel .lab {
-  font-size: 11px;
+  font-size: 0.6875rem;
   letter-spacing: 0.24em;
   color: var(--lake);
 }
 .hc-fab .panel p {
-  margin: 10px 0 14px;
+  margin: 0.625rem 0 0.75rem;
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: 1rem;
   line-height: 1.4;
 }
 .hc-fab .panel a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
-  min-height: 52px;
+  gap: 1rem;
+  min-height: 2.875rem;
   border-top: 1px solid rgb(20 29 36 / 0.14);
   text-decoration: none;
   color: var(--ink);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 .hc-fab .panel a span {
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 300;
   letter-spacing: 0;
   text-transform: none;
   color: var(--muted);
 }
 .hc-fab .panel a:hover span {
-  color: var(--lake);
+  color: var(--brand);
 }
 
 /* -- Tablet and phone ---------------------------------------------------- */
-/* Below five across, the cards become a rail that is swiped or scrolled. */
-@media (max-width: 1400px) {
+/* Below five across at a width that leaves the turned side room for its
+   words (about 300px a card), the cards become a rail that is swiped or
+   scrolled. */
+@media (max-width: 1699px) {
   .hc-hot .flips {
     display: flex;
     overflow-x: auto;
@@ -1611,14 +1767,25 @@
   .hc-hot .flips::-webkit-scrollbar {
     display: none;
   }
+  .hc-hot .fnav {
+    display: flex;
+  }
   .hc-hot .flip {
-    flex: 0 0 min(360px, 82vw);
+    flex: 0 0 clamp(18.75rem, 23vw, 22.5rem);
     scroll-snap-align: start;
   }
 }
 @media (max-width: 600px) {
   .hc-hot .flip {
-    height: 540px;
+    flex-basis: min(22.5rem, 82vw);
+    height: 33.75rem;
+  }
+}
+/* On a touch screen every button keeps a full 44px target. */
+@media (pointer: coarse) {
+  .hc-hero .ctas .btn,
+  .hc-fab .fab-btn {
+    min-height: 44px;
   }
 }
 @media (max-width: 900px) {
@@ -1626,17 +1793,18 @@
     flex-direction: column;
     align-items: flex-start;
   }
-  .hc-ways .wnav {
+  .hc-ways .wnav,
+  .hc-hot .fnav {
     display: none;
   }
   .hc-ways .wt {
     flex-basis: 80vw;
-    height: 460px;
+    height: 28.75rem;
   }
   .hc-ways .wl {
-    max-height: 140px;
+    max-height: 8.75rem;
     opacity: 1;
-    margin-top: 10px;
+    margin-top: 0.625rem;
   }
   .hc-why .head {
     flex-direction: column;
@@ -1650,60 +1818,60 @@
     height: auto;
   }
   .hc-why .pc {
-    flex: 0 0 110px;
+    flex: 0 0 6.875rem;
     transition: flex-basis 1s var(--ease);
   }
   .hc-why .pc.on {
-    flex: 0 0 440px;
+    flex: 0 0 27.5rem;
   }
   .hc-why .pv {
     writing-mode: horizontal-tb;
     transform: none;
-    left: 70px;
+    left: 4.375rem;
     bottom: auto;
-    top: 20px;
-    font-size: 21px;
-    right: 20px;
+    top: 1.25rem;
+    font-size: 1.3125rem;
+    right: 1.25rem;
   }
   .hc-why .pb {
     width: auto;
-    right: 24px;
-    left: 24px;
+    right: 1.5rem;
+    left: 1.5rem;
   }
   .hc-cmp .cap {
     max-width: 16ch;
-    bottom: 32px;
+    bottom: 2rem;
   }
   .hc-cmp .handle b {
-    width: 80px;
-    height: 80px;
-    left: -40px;
-    margin-top: -40px;
-    font-size: 44px;
+    width: 5rem;
+    height: 5rem;
+    left: -2.5rem;
+    margin-top: -2.5rem;
+    font-size: 2.75rem;
   }
   .hc-fd,
   .hc-hot .head {
     grid-template-columns: minmax(0, 1fr);
   }
   .hc-hot .head {
-    gap: 24px;
+    gap: 1.5rem;
   }
   .hc-fd .img {
-    height: 480px;
+    height: 30rem;
   }
   .hc-xp .xside {
     left: var(--gut);
     right: var(--gut);
     width: auto;
-    bottom: 32px;
+    bottom: 2rem;
   }
 }
 /* A touch screen has no hover: every tile's line shows. */
 @media (hover: none) {
   .hc-ways .wl {
-    max-height: 140px;
+    max-height: 8.75rem;
     opacity: 1;
-    margin-top: 10px;
+    margin-top: 0.625rem;
   }
 }
 @media (max-width: 600px) {
@@ -1714,29 +1882,28 @@
      top right, under the header, clear of the buttons and the expert button. */
   .hc-hero .vctl {
     bottom: auto;
-    top: calc(var(--nav-h) + 12px);
+    top: calc(var(--nav-h) + 0.75rem);
   }
   .hc-hero .copy {
-    bottom: 96px;
+    bottom: 6rem;
   }
   .hc-hero .ctas .btn {
     min-width: 0;
     flex: 1 1 100%;
   }
   .hc-fab {
-    right: 14px;
-    bottom: 14px;
+    right: 0.875rem;
+    bottom: 0.875rem;
   }
   .hc-fab .panel {
-    width: calc(100vw - 28px);
+    width: calc(100vw - 1.75rem);
   }
   .hc-fab .fab-btn {
-    min-height: 48px;
-    padding: 0 18px 0 16px;
+    padding: 0 1rem 0 0.875rem;
   }
   /* The hero's eyebrow on one line, without the dashes either side. */
   .hc-hero .copy .eb {
-    font-size: 11px;
+    font-size: 0.6875rem;
     letter-spacing: 0.2em;
   }
   .hc-hero .copy .eb i,
@@ -1755,11 +1922,11 @@
   }
 }
 
-/* -- How we travel: the four pillars as dark cards ----------------------- */
+/* -- How we travel: the four pillars as journal cards -------------------- */
 .hc-how,
 .hc-wtu {
   --gold: #d1a965;
-  padding: clamp(80px, 9vw, 130px) var(--gut);
+  padding: clamp(5rem, 6.89vw, 8.125rem) var(--gut);
   color: var(--ink);
 }
 .hc-how {
@@ -1768,15 +1935,15 @@
 }
 .hc-how .head,
 .hc-wtu .head {
-  max-width: 1440px;
+  max-width: 90rem;
   margin: 0 auto;
 }
 .hc-how .head {
   display: flex;
   justify-content: space-between;
   align-items: end;
-  gap: 48px;
-  margin-bottom: clamp(40px, 4.5vw, 64px);
+  gap: 3rem;
+  margin-bottom: clamp(2.5rem, 3.39vw, 4rem);
 }
 .hc-how .lab,
 .hc-wtu .lab {
@@ -1789,7 +1956,7 @@
   font-size: var(--h2);
   line-height: 1.04;
   letter-spacing: -0.025em;
-  margin: 16px 0 0;
+  margin: 1rem 0 0;
   max-width: 18ch;
   text-wrap: balance;
 }
@@ -1803,101 +1970,166 @@
   margin: 0;
 }
 .hc-how .cards {
+  /* How far the second and fourth cards sit below the first and third. */
+  --drop: clamp(1.5rem, 2.54vw, 3rem);
   list-style: none;
   margin: 0 auto;
-  padding: 0;
-  max-width: 1440px;
+  padding: 0 0 var(--drop);
+  max-width: 90rem;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(14px, 1.6vw, 24px);
-  align-items: start;
+  gap: clamp(1rem, 1.27vw, 1.5rem);
+  perspective: 87.5rem;
 }
-.hc-how .cards {
-  perspective: 1400px;
-}
+/* Set like the departures' cards: white on the paper with a hairline edge;
+   the pillar's number and name, its line, the photograph beneath it, its
+   note and the way on. The cards share their rows, so every title, photograph
+   and note starts level across the four however their lines fall. */
 .hc-how .card {
   position: relative;
-  background: var(--night);
-  color: #eef2f4;
-  border-radius: 14px;
-  padding: clamp(18px, 1.6vw, 24px);
-  box-shadow: 0 18px 40px -22px rgb(8 20 28 / 0.55);
+  display: grid;
+  grid-row: span 5;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+  background: #fff;
+  border: 1px solid rgb(20 29 36 / 0.1);
+  border-radius: 0.25rem;
+  padding: clamp(1.125rem, 1.27vw, 1.5rem);
   transform-style: preserve-3d;
+  /* Let go, a card settles back with a little give, like something set down. */
   transition:
-    transform 0.6s var(--ease),
-    box-shadow 0.6s var(--ease);
+    transform 0.9s cubic-bezier(0.34, 1.32, 0.64, 1),
+    box-shadow 0.9s var(--ease);
 }
+/* The second and fourth sit lower, so the row reads as a sequence rather than
+   a grid, each pair leaning toward the other. A translate, not a margin: the
+   cards share their rows, and a margin would move every card's first row. */
 .hc-how .card:nth-child(even) {
-  margin-top: clamp(24px, 3vw, 48px);
+  translate: 0 var(--drop);
 }
-/* Tilted toward the reader, the photograph and the title lifted off the card. */
-.hc-how .card:hover {
-  transform: translateY(-10px) rotateX(6deg) rotateY(-6deg);
-  box-shadow: 18px 34px 60px -24px rgb(8 20 28 / 0.7);
+/* Holds the hover for a pointer at the card's foot while the card lifts. */
+.hc-how .card::before {
+  content: '';
+  position: absolute;
+  inset: auto 0 -0.875rem;
+  height: 0.875rem;
 }
-.hc-how .card:nth-child(even):hover {
-  transform: translateY(-10px) rotateX(6deg) rotateY(6deg);
-  box-shadow: -18px 34px 60px -24px rgb(8 20 28 / 0.7);
+/* Tilted toward the reader, the photograph and the title lifted off the card.
+   Under a mouse the tilt follows the pointer (TiltCards.tsx sets --rx and
+   --ry: the part of the card under the pointer comes forward); otherwise, and
+   for the keyboard, each pair leans toward the other. */
+.hc-how .card:hover,
+.hc-how .card:focus-within {
+  transform: translateY(-0.625rem) rotateX(var(--rx, 6deg)) rotateY(var(--ry, -6deg));
+  box-shadow: var(--sx, 1.125rem) 2.125rem 3.75rem -1.5rem rgb(8 20 28 / 0.7);
+  transition-duration: 0.5s;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
+.hc-how .card:nth-child(even):hover,
+.hc-how .card:nth-child(even):focus-within {
+  transform: translateY(-0.625rem) rotateX(var(--rx, 6deg)) rotateY(var(--ry, 6deg));
+  box-shadow: var(--sx, -1.125rem) 2.125rem 3.75rem -1.5rem rgb(8 20 28 / 0.7);
+}
+/* Each part stands at its own depth, so the card reads as built, not printed. */
+.hc-how .kick,
 .hc-how h3,
+.hc-how .ph,
+.hc-how .note,
+.hc-how .foot {
+  transition: transform 0.7s var(--ease);
+}
+.hc-how .card:is(:hover, :focus-within) .kick {
+  transform: translateZ(1.125rem);
+}
+.hc-how .card:is(:hover, :focus-within) h3 {
+  transform: translateZ(1.875rem);
+}
+.hc-how .card:is(:hover, :focus-within) .ph {
+  transform: translateZ(3.125rem);
+}
+.hc-how .card:is(:hover, :focus-within) .note {
+  transform: translateZ(0.875rem);
+}
+.hc-how .card:is(:hover, :focus-within) .foot {
+  transform: translateZ(1.5rem);
+}
 .hc-how .ph {
-  transition: transform 0.6s var(--ease);
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  margin-bottom: clamp(1rem, 1.17vw, 1.375rem);
 }
-.hc-how .card:hover h3 {
-  transform: translateZ(30px);
+/* A soft light that crosses the photograph with the pointer. */
+.hc-how .ph::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--gx, 30%) var(--gy, 20%),
+    rgb(255 255 255 / 0.3),
+    rgb(255 255 255 / 0) 60%
+  );
+  opacity: 0;
+  transition: opacity 0.6s var(--ease);
 }
-.hc-how .card:hover .ph {
-  transform: translateZ(50px);
+.hc-how .card:is(:hover, :focus-within) .ph::after {
+  opacity: 1;
 }
-.hc-how .top {
+.hc-how .kick {
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 18px;
-}
-.hc-how .n {
-  font-family: var(--serif);
-  font-size: 20px;
-}
-.hc-how .tag {
+  flex-wrap: wrap;
+  gap: 0 0.5rem;
+  margin: 0 0 0.625rem;
   font-family: var(--sans);
-  font-size: 10px;
+  font-size: clamp(0.65625rem, 0.583vw, 0.6875rem);
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #9fb1bc;
+  color: var(--muted);
 }
 .hc-how h3 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--h3);
-  line-height: 1.12;
+  line-height: 1.15;
   letter-spacing: -0.015em;
-  margin: 0 0 14px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid rgb(255 255 255 / 0.14);
+  margin: 0 0 clamp(0.875rem, 1.06vw, 1.25rem);
 }
-.hc-how .card p {
+.hc-how .note {
   font-family: var(--sans);
   font-weight: 300;
-  font-size: 13.5px;
+  font-size: clamp(0.875rem, 0.795vw, 0.9375rem);
   line-height: 1.6;
-  color: #c8d3da;
-  margin: 0 0 18px;
+  color: #3a434a;
+  margin: 0 0 clamp(1.125rem, 1.27vw, 1.5rem);
 }
-.hc-how .ph {
-  position: relative;
-  aspect-ratio: 4 / 3;
-  border-radius: 8px;
-  overflow: hidden;
+.hc-how .foot {
+  align-self: end;
+  margin: 0;
 }
-.hc-how .cap {
-  display: block;
-  margin-top: 12px;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 13px;
-  color: #9fb1bc;
+.hc-how .foot a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0 0.3125rem;
+  border-bottom: 1px solid currentColor;
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  transition: color 0.4s var(--ease);
+}
+.hc-how .foot a:hover {
+  color: var(--brand);
+}
+.hc-how .foot svg {
+  transition: transform 0.4s var(--ease);
+}
+.hc-how .foot a:hover svg {
+  transform: translate(2px, -2px);
 }
 
 /* -- Why travel with us: six reasons as cards ---------------------------- */
@@ -1905,13 +2137,13 @@
   background: var(--color-panel);
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  gap: clamp(32px, 5vw, 80px);
+  gap: clamp(2rem, 5vw, 5rem);
   align-items: start;
 }
 .hc-wtu .head {
   margin: 0;
   position: sticky;
-  top: calc(var(--nav-h) + 40px);
+  top: calc(var(--nav-h) + 2.5rem);
 }
 .hc-wtu .grid {
   list-style: none;
@@ -1919,14 +2151,14 @@
   padding: 0;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: 0.75rem;
 }
 .hc-wtu .tile {
   background: #fff;
   border: 1px solid rgb(20 29 36 / 0.08);
-  border-radius: 14px;
-  padding: clamp(18px, 1.6vw, 24px);
-  min-height: 190px;
+  border-radius: 0.875rem;
+  padding: clamp(1.125rem, 1.6vw, 1.5rem);
+  min-height: 11.875rem;
   display: flex;
   flex-direction: column;
   transition:
@@ -1939,7 +2171,7 @@
   background: var(--night);
   border-color: transparent;
   color: #eef2f4;
-  transform: translateY(-4px);
+  transform: translateY(-0.25rem);
 }
 .hc-wtu .ic,
 .hc-wtu .tile p {
@@ -1947,29 +2179,29 @@
 }
 .hc-wtu .ic {
   color: var(--lake);
-  margin-bottom: 18px;
+  margin-bottom: 1.125rem;
 }
 .hc-wtu .tile:hover .ic {
   color: var(--gold);
 }
 .hc-wtu .big {
   font-family: var(--serif);
-  font-size: clamp(56px, 5vw, 76px);
+  font-size: clamp(3.5rem, 5vw, 4.75rem);
   line-height: 0.9;
   color: var(--gold);
-  margin-bottom: 18px;
+  margin-bottom: 1.125rem;
 }
 .hc-wtu h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(18px, 1.4vw, 21px);
+  font-size: clamp(1.125rem, 1.4vw, 1.3125rem);
   line-height: 1.15;
-  margin: 0 0 8px;
+  margin: 0 0 0.5rem;
 }
 .hc-wtu .tile p {
   font-family: var(--sans);
   font-weight: 300;
-  font-size: 13px;
+  font-size: 0.8125rem;
   line-height: 1.6;
   color: var(--muted);
   margin: 0;
@@ -1993,13 +2225,14 @@
   .hc-how .head {
     flex-direction: column;
     align-items: start;
-    gap: 16px;
+    gap: 1rem;
   }
   .hc-how .cards {
     grid-template-columns: minmax(0, 1fr);
+    padding-bottom: 0;
   }
   .hc-how .card:nth-child(even) {
-    margin-top: 0;
+    translate: none;
   }
   .hc-wtu .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2010,12 +2243,14 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .hc-how .card,
-  .hc-how .card:hover,
-  .hc-how .card:nth-child(even):hover,
-  .hc-how .card:hover h3,
-  .hc-how .card:hover .ph {
+  .hc-how .card:is(:hover, :focus-within),
+  .hc-how .card:nth-child(even):is(:hover, :focus-within),
+  .hc-how .card:is(:hover, :focus-within) :is(.kick, h3, .ph, .note, .foot) {
     transition: none;
     transform: none;
+  }
+  .hc-how .ph::after {
+    display: none;
   }
 }
 
@@ -2025,23 +2260,33 @@
 .hc p.sub-h {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(19px, 1.6vw, 24px);
+  font-size: clamp(1.1875rem, 1.27vw, 1.5rem);
   line-height: 1.35;
   letter-spacing: -0.01em;
   max-width: 40ch;
-  margin: 14px 0 0;
+  margin: 0.875rem 0 0;
   color: inherit;
   opacity: 0.72;
 }
 
 /* Section headings: the section's name, in blue, with its line beneath. */
 .hc h2:has(+ p.sub-h) {
-  color: var(--lake);
+  color: var(--title);
   margin-top: 0;
 }
-.hc-hot h2:has(+ p.sub-h),
-.hc-circle h2:has(+ p.sub-h) {
+.hc-hot h2:has(+ p.sub-h) {
   color: var(--sky);
+}
+/* The circle is centred over its photograph: its name in white, and its line
+   centred beneath it like everything else in the band. */
+.hc-circle h2:has(+ p.sub-h) {
+  color: #fff;
+  margin-bottom: 0;
+}
+.hc-circle .in > p.sub-h {
+  margin: 0.875rem auto clamp(1rem, 1.27vw, 1.5rem);
+  opacity: 0.9;
+  text-shadow: 0 1px 0.875rem rgb(8 20 28 / 0.5);
 }
 .hc .hc-hot .fill,
 .hc-hot .fill {
@@ -2051,5 +2296,134 @@
   .hc-jr .entry:hover .ph,
   .hc-wtu .tile:hover {
     transform: none;
+  }
+}
+
+/* -- Desktop density -------------------------------------------------------
+   From 1024px the sizes that are fixed on a phone or tablet follow the
+   viewport too (see the note on --gut), so a laptop screen shows the page at
+   the density of the 1888px reference. Below 1024px they keep the values
+   set above. */
+@media (min-width: 1024px) {
+  .hc {
+    --h3: clamp(1.25rem, 1.59vw, 1.875rem);
+    --sub: clamp(0.9375rem, 0.847vw, 1rem);
+  }
+  .hc .lab,
+  .hc .tlink,
+  .hc-pause cite,
+  .hc-hot .flip-hint {
+    font-size: clamp(0.6875rem, 0.636vw, 0.75rem);
+  }
+  .hc .btn {
+    gap: 0.625rem;
+    min-height: clamp(2.625rem, 2.54vw, 3rem);
+    padding: 0 clamp(1.375rem, 1.48vw, 1.75rem);
+    font-size: clamp(0.6875rem, 0.636vw, 0.75rem);
+    letter-spacing: 0.16em;
+  }
+  .hc .circ {
+    width: clamp(2.5rem, 2.86vw, 3.375rem);
+    height: clamp(2.5rem, 2.86vw, 3.375rem);
+  }
+  .hc .ctarow,
+  .hc-circle .talk {
+    margin-top: clamp(1.75rem, 2.33vw, 2.75rem);
+  }
+  .hc .hint,
+  .hc-jr .line,
+  .hc-why .d,
+  .hc-cmp .cap {
+    font-size: clamp(0.875rem, 0.795vw, 0.9375rem);
+  }
+  .hc-hero h1 {
+    margin-bottom: clamp(0.875rem, 1.17vw, 1.375rem);
+  }
+  .hc-hero .copy p {
+    margin-bottom: clamp(1.375rem, 1.6vw, 1.875rem);
+  }
+  .hc-intro p {
+    margin-top: clamp(1rem, 1.17vw, 1.375rem);
+  }
+  .hc-ways .head {
+    margin-bottom: clamp(1.5rem, 2.33vw, 2.75rem);
+  }
+  .hc-ways .rail {
+    gap: clamp(0.75rem, 0.95vw, 1.125rem);
+  }
+  .hc-ways .wb {
+    left: clamp(1.25rem, 1.38vw, 1.625rem);
+    right: clamp(1.25rem, 1.38vw, 1.625rem);
+    bottom: clamp(1.25rem, 1.38vw, 1.625rem);
+  }
+  .hc-ways .wl,
+  .hc-jr .promises p {
+    font-size: clamp(0.8125rem, 0.742vw, 0.875rem);
+  }
+  .hc-ways .prog,
+  .hc-ways .ctarow {
+    margin-top: clamp(1.25rem, 1.6vw, 1.875rem);
+  }
+  .hc-jr .head {
+    margin-bottom: clamp(1.75rem, 2.33vw, 2.75rem);
+  }
+  .hc-jr .promises {
+    padding-block: clamp(1rem, 1.17vw, 1.375rem);
+  }
+  .hc-jr .entries {
+    row-gap: clamp(2rem, 2.54vw, 3rem);
+  }
+  .hc-pause .mark {
+    font-size: clamp(5rem, 6.36vw, 7.5rem);
+    margin-bottom: clamp(1rem, 1.38vw, 1.625rem);
+  }
+  .hc-pause cite {
+    margin-top: clamp(1.75rem, 2.44vw, 2.875rem);
+  }
+  .hc-why .head {
+    margin-bottom: clamp(1.75rem, 2.75vw, 3.25rem);
+  }
+  .hc-why .row {
+    gap: clamp(0.625rem, 0.742vw, 0.875rem);
+  }
+  .hc-fd {
+    min-height: clamp(32.5rem, 40.3vw, 47.5rem);
+  }
+  .hc-fd h2 {
+    margin-block: clamp(1.125rem, 1.38vw, 1.625rem);
+  }
+  .hc-fd p {
+    margin-bottom: clamp(1.5rem, 1.91vw, 2.25rem);
+  }
+  .hc-hot .head {
+    margin-bottom: clamp(2rem, 3.39vw, 4rem);
+  }
+  .hc-hot .flips {
+    gap: clamp(0.75rem, 0.95vw, 1.125rem);
+  }
+  .hc-hot .flip-foot {
+    margin-top: clamp(1.125rem, 1.38vw, 1.625rem);
+  }
+  .hc-xp ul {
+    margin-top: clamp(1.25rem, 1.6vw, 1.875rem);
+  }
+  .hc-xp .xside p {
+    margin-bottom: clamp(1.125rem, 1.27vw, 1.5rem);
+  }
+  .hc-circle .in > p {
+    margin-bottom: clamp(1.75rem, 2.12vw, 2.5rem);
+  }
+  .hc p.sub-h {
+    font-size: clamp(1.0625rem, 1.27vw, 1.5rem);
+  }
+}
+/* A desktop-sized touch screen (a tablet held sideways) keeps 44px targets. */
+@media (min-width: 1024px) and (pointer: coarse) {
+  .hc .btn {
+    min-height: 44px;
+  }
+  .hc .circ {
+    width: 44px;
+    height: 44px;
   }
 }

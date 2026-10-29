@@ -69,7 +69,7 @@ export function LegalPage({
         <div className="grid-site gap-y-10">
           <nav
             aria-label="On this page"
-            className="col-span-full lg:col-span-3 lg:self-start lg:sticky lg:top-[calc(var(--nav-h)+32px)]"
+            className="col-span-full lg:col-span-3 lg:self-start lg:sticky lg:top-[calc(var(--nav-h)+2rem)]"
           >
             <p className="kicker-sm m-0 mb-4">Last updated {updated}</p>
             <ol className="m-0 hidden list-none border-t border-line p-0 lg:block">
@@ -77,7 +77,7 @@ export function LegalPage({
                 <li key={s.id} className="border-b border-line">
                   <a
                     href={`#${s.id}`}
-                    className="kicker-sm flex min-h-11 items-center gap-3 py-2 text-body transition-colors duration-300 hover:text-acqua-text"
+                    className="kicker-sm flex min-h-11 items-center gap-3 py-2 text-body transition-colors duration-300 hover:text-brand"
                   >
                     <span className="w-5 shrink-0 text-muted">
                       {String(i + 1).padStart(2, '0')}

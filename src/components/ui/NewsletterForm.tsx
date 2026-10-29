@@ -111,20 +111,20 @@ export function NewsletterForm({
 
   const fieldText =
     variant === 'large'
-      ? 'font-display text-[clamp(22px,1.8vw,28px)] font-normal leading-[1.2] py-3 placeholder:text-muted'
+      ? 'font-display text-[clamp(1.375rem,1.48vw,1.75rem)] font-normal leading-[1.2] py-3 placeholder:text-muted'
       : variant === 'dark'
         ? 'prose-body py-3 text-on-dark placeholder:text-on-dark-muted'
         : 'prose-body-sm py-3 text-ink placeholder:text-muted';
 
   const submit =
     variant === 'large'
-      ? 'btn ml-5 shrink-0 bg-ink px-6 py-[15px] text-ivory hover:bg-brand'
+      ? 'btn ml-5 shrink-0 bg-ink px-[calc(var(--btn-px)-0.25rem)] py-[calc(var(--btn-py)-2px)] text-ivory hover:bg-brand'
       : `shrink-0 py-3 pl-5 transition-colors duration-300 ${
-          dark ? 'text-on-dark hover:text-acqua' : 'hover:text-acqua-text'
+          dark ? 'text-on-dark hover:text-acqua' : 'hover:text-brand'
         }`;
 
   return (
-    <div className={`w-full ${variant === 'compact' ? '' : 'max-w-[520px]'} ${className}`}>
+    <div className={`w-full ${variant === 'compact' ? '' : 'max-w-[32.5rem]'} ${className}`}>
       {/* `.field-rule` re-rules the line in water-blue while the field has focus. */}
       <form
         onSubmit={onSubmit}
@@ -168,7 +168,7 @@ export function NewsletterForm({
         <button
           type="submit"
           aria-disabled={status === 'sending'}
-          className={`min-h-11 font-ui text-[11.5px] font-medium uppercase leading-none tracking-[0.16em] aria-disabled:opacity-40 ${submit}`}
+          className={`min-h-(--btn-h) font-ui text-(length:--type-button) font-medium uppercase leading-none tracking-[0.16em] aria-disabled:opacity-40 ${submit}`}
         >
           {status === 'sending' ? 'Sending' : 'Join the circle'}
         </button>

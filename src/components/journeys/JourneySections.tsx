@@ -31,7 +31,7 @@ function journeyFacts(journey: Journey): { label: string; value: React.ReactNode
     {
       label: 'Status',
       value: (
-        <StatusTag status={tag} tone="dark" className="!text-[11.5px]">
+        <StatusTag status={tag} tone="dark" className="!text-[0.71875rem]">
           {tag === 'open' ? 'Open' : undefined}
         </StatusTag>
       ),
@@ -54,7 +54,7 @@ export function JourneyHero({ journey }: { journey: Journey }) {
   return (
     <section
       data-hero
-      className="relative isolate flex min-h-[680px] flex-col justify-end overflow-hidden md:h-[92svh] md:min-h-[720px]"
+      className="relative isolate flex min-h-[42.5rem] flex-col justify-end overflow-hidden md:h-[92svh] md:min-h-[clamp(35rem,38.1vw,45rem)]"
     >
       <div className="absolute inset-0 -z-10">
         <Frame
@@ -67,7 +67,7 @@ export function JourneyHero({ journey }: { journey: Journey }) {
           className="h-full"
         />
       </div>
-      <div className="container-site grid-site items-end gap-y-6 pb-[clamp(32px,5vh,56px)] pt-[calc(var(--nav-h)+48px)] text-on-dark">
+      <div className="container-site grid-site items-end gap-y-6 pb-[clamp(2rem,5vh,3.5rem)] pt-[calc(var(--nav-h)+3rem)] text-on-dark">
         <div className="col-span-4 md:col-span-8 lg:col-span-8">
           <nav aria-label="Breadcrumb" className="enter mb-7" style={enterAt(0.05)}>
             <ol className="kicker m-0 flex list-none flex-wrap items-center gap-x-3.5 gap-y-2 p-0 !text-on-dark">
@@ -195,7 +195,7 @@ export function WhyThisJourney({ detail }: { detail: JourneyDetail }) {
                 as="li"
                 key={highlight.n}
                 distance={14}
-                className="grid grid-cols-[56px_minmax(0,1fr)] gap-4 border-t border-line py-6"
+                className="grid grid-cols-[3.5rem_minmax(0,1fr)] gap-4 border-t border-line py-6"
               >
                 <span aria-hidden className="h5 text-acqua-text">
                   {highlight.n}
@@ -482,14 +482,14 @@ export function FromMarc({ detail }: { detail: JourneyDetail }) {
           className="col-span-4 md:col-span-6 lg:col-span-4 lg:col-start-9 lg:self-end"
         >
           <div className="mb-stack flex items-center gap-4">
-            <div className="flex size-16 shrink-0 items-end justify-center overflow-hidden rounded-full bg-tone-sand">
+            <div className="flex size-16 shrink-0 items-end justify-center overflow-hidden rounded-full bg-white">
               <Image
                 src="/brand/marc.webp"
                 alt={`${site.founder.name}, founder of ${site.name}`}
                 width={1150}
                 height={1400}
                 sizes="56px"
-                className="mb-[-8px] h-auto w-14"
+                className="mb-[-0.5rem] h-auto w-14"
               />
             </div>
             <p className="m-0">

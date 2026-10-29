@@ -7,8 +7,8 @@
    ========================================================================== */
 
 .xp {
-  --wrap: 1312px;
-  --round: 10px;
+  --wrap: 82rem;
+  --round: 0.625rem;
   /* How long each item holds before the set moves on. */
   --hold: 7s;
   background: var(--paper);
@@ -33,7 +33,7 @@
   letter-spacing: -0.02em;
 }
 .xp .lab + h2 {
-  margin-top: 16px;
+  margin-top: 1rem;
 }
 .xp .sub {
   font-family: var(--sans);
@@ -83,15 +83,15 @@
 .xp h2 button:focus-visible,
 .xp h3 button:focus-visible {
   outline: 2px solid var(--sky);
-  outline-offset: 4px;
+  outline-offset: 0.25rem;
 }
 
 /* -- 01 Opening ---------------------------------------------------------- */
 .xp-hero {
   position: relative;
   height: 100svh;
-  min-height: 620px;
-  max-height: 1000px;
+  min-height: 38.75rem;
+  max-height: 62.5rem;
   overflow: hidden;
   background: var(--night);
   color: #fff;
@@ -128,23 +128,23 @@
   z-index: 2;
   left: var(--gut);
   right: var(--gut);
-  bottom: clamp(150px, 22svh, 210px);
-  max-width: 900px;
+  bottom: clamp(9.375rem, 22svh, 13.125rem);
+  max-width: 56.25rem;
 }
 .xp-hero .eb {
   color: var(--ice);
 }
 .xp-hero h1 {
-  font-size: clamp(44px, 6.2vw, 92px);
+  font-size: clamp(2.75rem, 4.87vw, 5.75rem);
   line-height: 1.02;
   letter-spacing: -0.035em;
-  margin: 22px 0 20px;
+  margin: clamp(0.875rem, 1.17vw, 1.375rem) 0 clamp(0.875rem, 1.06vw, 1.25rem);
   max-width: 13ch;
 }
 .xp-hero .intro {
   font-family: var(--sans);
   font-weight: 300;
-  font-size: clamp(16px, 1.3vw, 18px);
+  font-size: clamp(0.9375rem, 0.953vw, 1.125rem);
   line-height: 1.6;
   margin: 0;
   max-width: 40ch;
@@ -162,7 +162,7 @@
 @keyframes xp-rise {
   from {
     opacity: 0;
-    transform: translateY(26px);
+    transform: translateY(1.625rem);
   }
   to {
     opacity: 1;
@@ -175,20 +175,20 @@
   z-index: 2;
   left: var(--gut);
   right: var(--gut);
-  bottom: clamp(26px, 5svh, 48px);
+  bottom: clamp(1.625rem, 5svh, 3rem);
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 28px;
+  gap: clamp(1rem, 1.48vw, 1.75rem);
 }
 .xp-index a {
   position: relative;
   display: flex;
   align-items: baseline;
-  gap: 12px;
-  min-height: 44px;
-  padding-top: 18px;
+  gap: 0.75rem;
+  min-height: 2.75rem;
+  padding-top: clamp(0.875rem, 0.95vw, 1.125rem);
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: clamp(0.6875rem, 0.636vw, 0.75rem);
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -231,9 +231,9 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  gap: 24px 60px;
+  gap: 1.5rem 3.75rem;
   max-width: var(--wrap);
-  margin: 0 auto clamp(40px, 5vw, 72px);
+  margin: 0 auto clamp(2.5rem, 3.81vw, 4.5rem);
 }
 .xp-head h2 {
   max-width: 16ch;
@@ -241,12 +241,12 @@
 
 /* -- 02 The five --------------------------------------------------------- */
 .xp-kinds {
-  padding: clamp(80px, 10vw, 150px) var(--gut);
+  padding: clamp(5rem, 7.94vw, 9.375rem) var(--gut);
 }
 .xp-kinds .xp-head {
   align-items: baseline;
   border-bottom: 1px solid rgb(20 29 36 / 0.14);
-  padding-bottom: 22px;
+  padding-bottom: 1.375rem;
 }
 .xp-kinds .xp-head .lab {
   color: var(--lake);
@@ -256,9 +256,11 @@
 }
 .xp-panels {
   display: flex;
-  gap: 12px;
+  gap: 0.75rem;
   max-width: var(--wrap);
-  height: clamp(540px, 46vw, 680px);
+  /* 680px tall on the reference screen, and never taller than a short laptop
+     screen leaves room for under its heading. */
+  height: min(clamp(26.25rem, 36vw, 42.5rem), 72svh);
   margin: 0 auto;
 }
 .xp-panel {
@@ -301,28 +303,28 @@
 }
 .xp-panel .txt {
   position: absolute;
-  left: 22px;
-  right: 22px;
-  bottom: 24px;
-  padding-bottom: 18px;
+  left: 1.375rem;
+  right: 1.375rem;
+  bottom: 1.5rem;
+  padding-bottom: 1.125rem;
   color: #fff;
 }
 .xp-panel .num {
   display: block;
   color: var(--sky);
-  margin-bottom: 12px;
+  margin-bottom: 0.75rem;
 }
 .xp-panel h2 {
-  font-size: clamp(24px, 2.2vw, 34px);
+  font-size: clamp(1.375rem, 1.8vw, 2.125rem);
   line-height: 1.1;
   letter-spacing: -0.01em;
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem;
   white-space: nowrap;
 }
 .xp-panel p {
   font-family: var(--sans);
   font-weight: 300;
-  font-size: 15px;
+  font-size: clamp(0.875rem, 0.795vw, 0.9375rem);
   line-height: 1.6;
   margin: 0;
   max-width: 28ch;
@@ -337,7 +339,7 @@
 .xp-ways {
   background: var(--night);
   color: #fff;
-  padding: clamp(80px, 10vw, 150px) var(--gut) clamp(90px, 11vw, 170px);
+  padding: clamp(5rem, 7.94vw, 9.375rem) var(--gut) clamp(5.625rem, 9vw, 10.625rem);
 }
 .xp-ways .xp-head .lab {
   color: var(--ice);
@@ -348,7 +350,7 @@
 .xp-wg {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-  gap: clamp(48px, 6vw, 96px);
+  gap: clamp(2.5rem, 5.08vw, 6rem);
   max-width: var(--wrap);
   margin: 0 auto;
   align-items: start;
@@ -356,18 +358,19 @@
 .xp-stage {
   /* Stays in view while the list beside it, the taller of the two, scrolls. */
   position: sticky;
-  top: clamp(100px, 12svh, 130px);
+  top: clamp(6.25rem, 12svh, 8.125rem);
   order: 2;
   aspect-ratio: 4 / 5;
-  max-height: 780px;
-  margin: 16px;
+  /* Wholly in view while it is pinned, on a short screen too. */
+  max-height: min(48.75rem, calc(100svh - 10rem));
+  margin: 1rem;
 }
 /* A fine frame standing off the screen, the screen set inside it. */
 .xp-stage .fr {
   position: absolute;
-  inset: -16px;
+  inset: -1rem;
   border: 1px solid rgb(122 204 253 / 0.38);
-  border-radius: calc(var(--round) + 8px);
+  border-radius: calc(var(--round) + 0.5rem);
   pointer-events: none;
 }
 .xp-stage .scr {
@@ -399,11 +402,12 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  gap: 20px;
-  padding: 90px 28px 26px;
+  gap: 1.25rem;
+  padding: clamp(4rem, 4.77vw, 5.625rem) clamp(1.25rem, 1.48vw, 1.75rem)
+    clamp(1.25rem, 1.38vw, 1.625rem);
   background: linear-gradient(0deg, rgb(8 20 28 / 0.75), rgb(8 20 28 / 0));
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: clamp(0.6875rem, 0.636vw, 0.75rem);
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -411,7 +415,7 @@
 .xp-stage .cap b {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(40px, 4vw, 60px);
+  font-size: clamp(2.25rem, 3.18vw, 3.75rem);
   font-variant-numeric: lining-nums;
   line-height: 0.8;
   letter-spacing: 0;
@@ -419,7 +423,7 @@
 }
 .xp-stage .cap small {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: 0.75rem;
   letter-spacing: 0.2em;
   color: rgb(255 255 255 / 0.7);
 }
@@ -433,8 +437,8 @@
 .xp-wl li {
   position: relative;
   display: grid;
-  grid-template-columns: 56px minmax(0, 1fr);
-  padding: 26px 0 24px;
+  grid-template-columns: clamp(2.75rem, 2.97vw, 3.5rem) minmax(0, 1fr);
+  padding: clamp(1.125rem, 1.38vw, 1.625rem) 0 clamp(1rem, 1.27vw, 1.5rem);
   border-bottom: 1px solid rgb(255 255 255 / 0.18);
   color: rgb(255 255 255 / 0.62);
   transition: color 0.5s var(--ease);
@@ -455,7 +459,7 @@
 }
 .xp-wl .n {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.2em;
   padding-top: 0.75em;
@@ -464,12 +468,12 @@
 .xp-wl h3 {
   font-size: var(--h3);
   line-height: 1.2;
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
 }
 .xp-wl p {
   font-family: var(--sans);
   font-weight: 300;
-  font-size: 15px;
+  font-size: clamp(0.875rem, 0.795vw, 0.9375rem);
   line-height: 1.65;
   margin: 0;
   max-width: 46ch;
@@ -488,9 +492,9 @@
 .xp-ask {
   display: grid;
   grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  gap: 32px clamp(48px, 7vw, 120px);
+  gap: 2rem clamp(2.5rem, 6.36vw, 7.5rem);
   align-items: end;
-  padding: clamp(80px, 9vw, 130px) max(var(--gut), calc((100% - var(--wrap)) / 2));
+  padding: clamp(5rem, 6.89vw, 8.125rem) max(var(--gut), calc((100% - var(--wrap)) / 2));
   background: var(--paper);
   color: var(--ink);
 }
@@ -505,7 +509,7 @@
   font-weight: 300;
   font-size: var(--sub);
   line-height: 1.7;
-  margin: 0 0 30px;
+  margin: 0 0 clamp(1.25rem, 1.6vw, 1.875rem);
   max-width: 40ch;
   color: #3a434a;
 }
@@ -517,7 +521,7 @@
   .xp-panels {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
+    gap: 0.875rem;
     height: auto;
   }
   .xp-panel {
@@ -548,14 +552,14 @@
   .xp-wl {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 48px 28px;
+    gap: 3rem 1.75rem;
     border-top: 0;
   }
   .xp-wl li,
   .xp-wl li.on {
-    grid-template-columns: 44px minmax(0, 1fr);
+    grid-template-columns: 2.75rem minmax(0, 1fr);
     align-content: start;
-    padding: 0 0 26px;
+    padding: 0 0 1.625rem;
     color: #fff;
   }
   .xp-wl li p,
@@ -567,7 +571,7 @@
     position: relative;
     grid-column: 1 / -1;
     aspect-ratio: 4 / 3;
-    margin-bottom: 22px;
+    margin-bottom: 1.375rem;
     overflow: hidden;
     border-radius: var(--round);
     background: var(--deep);
@@ -589,16 +593,16 @@
 @media (max-width: 640px) {
   .xp-index {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 4px 16px;
+    gap: 0.25rem 1rem;
   }
   .xp-index a {
-    padding-top: 14px;
-    font-size: 11px;
+    padding-top: 0.875rem;
+    font-size: 0.6875rem;
     letter-spacing: 0.14em;
-    gap: 8px;
+    gap: 0.5rem;
   }
   .xp-hero .copy {
-    bottom: 170px;
+    bottom: 10.625rem;
   }
   .xp-panels {
     grid-template-columns: minmax(0, 1fr);
@@ -609,12 +613,12 @@
   }
   .xp-wl {
     grid-template-columns: minmax(0, 1fr);
-    gap: 40px;
+    gap: 2.5rem;
   }
   .xp-wl li,
   .xp-wl li.on {
-    grid-template-columns: 40px minmax(0, 1fr);
-    padding-bottom: 22px;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    padding-bottom: 1.375rem;
   }
 }
 @media (prefers-reduced-motion: reduce) {

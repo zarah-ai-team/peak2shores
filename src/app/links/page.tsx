@@ -53,7 +53,7 @@ export default async function LinksPage() {
 
   return (
     <section className="container-site pb-section-sm pt-block">
-      <div className="mx-auto w-full max-w-[520px]">
+      <div className="mx-auto w-full max-w-[32.5rem]">
         <Link href="/" aria-label={`${site.name} — home`} className="mb-block block w-fit">
           <Image
             src="/brand/p2s-logo.svg"
@@ -88,7 +88,7 @@ export default async function LinksPage() {
             <span className="kicker-sm mb-2 block">
               {lead.country} · {lead.days} days · {lead.departure}
             </span>
-            <span className="h4 block transition-colors duration-300 group-hover:text-acqua-text">
+            <span className="h4 block transition-colors duration-300 group-hover:text-brand">
               {lead.title}
             </span>
             <span className="lead mt-1 block">{lead.lead}</span>
@@ -103,7 +103,7 @@ export default async function LinksPage() {
                 className="group flex min-h-16 items-center justify-between gap-6 py-4"
               >
                 <span className="min-w-0">
-                  <span className="h5 block transition-colors duration-300 group-hover:text-acqua-text">
+                  <span className="h5 block transition-colors duration-300 group-hover:text-brand">
                     {link.title}
                   </span>
                   <span className="kicker-sm mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">

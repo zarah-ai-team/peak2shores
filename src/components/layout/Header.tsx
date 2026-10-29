@@ -136,9 +136,9 @@ export function Header({ primary, cta }: { primary: NavItem[]; cta: NavItem }) {
             </span>
           </Link>
 
-          {/* Five links and the button only just fit a 1024px iPad in landscape;
-              the gaps open up again from 1280px. */}
-          <nav aria-label="Primary" className="hidden lg:flex lg:gap-6 xl:gap-8">
+          {/* The gaps, the CTA's spacing and the labels (`--type-nav`) scale
+              with the viewport: 20px apart on a 1024px iPad, 32px at 1888px. */}
+          <nav aria-label="Primary" className="hidden lg:flex lg:gap-[clamp(1.25rem,1.695vw,2rem)]">
             {primary.map((item) => {
               const active = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
               return (
@@ -157,7 +157,7 @@ export function Header({ primary, cta }: { primary: NavItem[]; cta: NavItem }) {
           <Link
             href={cta.href}
             aria-current={pathname.startsWith(cta.href) ? 'page' : undefined}
-            className="header-cta ml-8 hidden min-h-11 items-center border border-current px-[22px] font-ui text-[11.5px] font-medium uppercase leading-none tracking-[0.16em] transition-colors duration-300 lg:inline-flex xl:ml-12"
+            className="header-cta ml-[clamp(1.5rem,2.54vw,3rem)] hidden min-h-(--btn-h) items-center border border-current px-[clamp(1rem,1.17vw,1.375rem)] font-ui text-(length:--type-button) font-medium uppercase leading-none tracking-[0.16em] transition-colors duration-300 lg:inline-flex"
           >
             {cta.label}
           </Link>
@@ -165,7 +165,7 @@ export function Header({ primary, cta }: { primary: NavItem[]; cta: NavItem }) {
           <button
             ref={toggleRef}
             type="button"
-            className="relative z-50 -mr-2.5 ml-auto flex h-11 w-11 flex-col items-center justify-center gap-[7px] lg:hidden"
+            className="relative z-50 -mr-2.5 ml-auto flex h-11 w-11 flex-col items-center justify-center gap-[0.4375rem] lg:hidden"
             aria-expanded={menuOpen}
             aria-controls={menuOpen ? 'mobile-menu' : undefined}
             onClick={() => setMenuOpen((v) => !v)}

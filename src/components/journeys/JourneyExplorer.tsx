@@ -87,7 +87,7 @@ export function JourneyExplorer({ journeys }: { journeys: JourneySummary[] }) {
       <section
         aria-label="Filter journeys"
         data-pin-header
-        className="sticky top-[var(--nav-h-compact)] z-20 border-b border-line bg-panel/95 backdrop-blur-[14px]"
+        className="sticky top-[var(--nav-h-compact)] z-20 border-b border-line bg-panel/95 backdrop-blur-[0.875rem]"
       >
         <div className="container-site flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-2.5 lg:flex-nowrap">
           {/* One compact row of dropdowns — a single line on a desktop, two

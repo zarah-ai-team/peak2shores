@@ -128,7 +128,7 @@ export function Preloader() {
               ].map((line) => (
                 <span key={line.label} className="block overflow-hidden pb-[0.04em]">
                   <m.span
-                    className="block text-[clamp(44px,9vw,128px)]"
+                    className="block text-[clamp(2.75rem,9vw,8rem)]"
                     variants={word}
                     initial="hidden"
                     animate="visible"
@@ -142,7 +142,7 @@ export function Preloader() {
             </div>
 
             <m.div
-              className="mt-8 h-px w-full max-w-[420px] origin-left bg-brand"
+              className="mt-8 h-px w-full max-w-[26.25rem] origin-left bg-brand"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
               transition={{ duration: 0.8, ease: ease.editorial, delay: 0.15 }}

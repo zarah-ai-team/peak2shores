@@ -23,8 +23,9 @@ const isDark = (g: SectionGround) => g === 'navy' || g === 'navy-deep' || g === 
 type Tag = 'section' | 'div' | 'aside' | 'article' | 'footer';
 
 /**
- * The text container: max 1680px, centered, with the responsive page gutter
- * (20 / 40 / 56 / 72px). Full-bleed photographs sit outside it.
+ * The text container: max 1480px, centered, with the responsive page gutter
+ * (20px on a phone, 40px from 768px, opening to 72px at 1888px). Full-bleed
+ * photographs sit outside it.
  */
 export function Container({
   children,
@@ -52,7 +53,7 @@ export function Container({
  *   and set `data-tone="dark"` so kickers, body copy, rule links, fields and
  *   focus rings switch to their dark treatment through CSS. Stone sets
  *   `data-tone="stone"` (kickers in stone-text).
- * - `pad`: `section` (major, clamp 96–192px), `section-sm` (64–128px) or `none`.
+ * - `pad`: `section` (major, clamp 72–136px), `section-sm` (56–96px) or `none`.
  * - `rule`: a 1px line rule at the top, inside the container — use it between
  *   two consecutive light sections; never between light and dark.
  * - `contained` (default true): wraps children in `.container-site`. Pass

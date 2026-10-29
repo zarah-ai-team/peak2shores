@@ -5,7 +5,7 @@ import { circle, founderStory, statement } from '@/lib/data/home';
 import { site, whatsappHref } from '@/lib/site';
 import { HomeMedia } from './HomeMedia';
 
-/** 02 — The short introduction, set large after the film, on the page’s left edge. */
+/** 02 — The short introduction, set large and centred after the film. */
 export function Intro() {
   return (
     <section className="hc-intro" aria-label="About Peaks2Shores">
