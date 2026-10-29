@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useReducedMotion } from 'motion/react';
 import type { ReelClip } from '@/lib/data/home';
+import { posterOf } from './HomeMedia';
 
 /**
  * 01 — The opening: a reel of four clips in Marc's order (safari, Switzerland,
@@ -70,18 +71,26 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
     <section ref={section} data-hero aria-label="Introduction" className="hc-hero">
       {reel.map((clip, i) => (
         <div key={clip.video} className={`hv fill ${i === current ? 'on' : ''}`} aria-hidden>
-          <Image src={clip.img} alt="" fill sizes="100vw" priority={i === 0} className="fill" />
+          <Image
+            src={clip.img}
+            alt={clip.alt}
+            fill
+            sizes="100vw"
+            priority={i === 0}
+            className="fill"
+          />
           <video
             ref={(el) => {
               videos.current[i] = el;
             }}
             className="fill"
-            // No poster: the still beneath is the optimized image already.
+            poster={posterOf(clip.img)}
             src={armed ? clip.video : undefined}
             muted
             playsInline
-            // The clip on screen and the one after it load; the rest wait.
-            preload={i === current || i === (current + 1) % reel.length ? 'auto' : 'none'}
+            // Only the clip on screen loads; each of the others waits for its
+            // turn, its poster holding the frame until then.
+            preload={i === current ? 'auto' : 'none'}
             onEnded={() => i === current && next()}
             tabIndex={-1}
           />
@@ -90,9 +99,7 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
       <div className="shade" />
 
       <div className="copy">
-        <h1>
-          Luxury travel, <em>personally curated.</em>
-        </h1>
+        <h1>Luxury travel, personally curated.</h1>
         <p>
           Thoughtfully paced journeys designed to inspire, connect and experience the world
           differently.

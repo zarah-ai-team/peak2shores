@@ -84,7 +84,7 @@ export function CircleBand() {
   return (
     <section className="hc-circle" id="circle" aria-labelledby="circle-title" data-fab-away>
       <div className="bg" aria-hidden>
-        <Image src={circle.img} alt="" fill sizes="100vw" className="fill" />
+        <Image src={circle.img} alt={circle.alt} fill sizes="100vw" className="fill" />
       </div>
       <div className="in">
         <div className="lab">The circle</div>

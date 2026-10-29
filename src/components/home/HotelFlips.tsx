@@ -60,7 +60,7 @@ export function HotelFlips() {
                   <span className="bimg" aria-hidden>
                     <Image
                       src={h.back ?? h.img}
-                      alt=""
+                      alt={(h.back && h.backAlt) || h.alt}
                       fill
                       sizes="(max-width: 1400px) 360px, 20vw"
                       className="fill"

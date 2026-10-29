@@ -15,6 +15,7 @@ export const metadata = pageMetadata({
   description:
     'Where mountains meet water: the Alps, alpine lakes, the Mediterranean and the Atlantic. The places Peaks2Shores returns to, and the journeys that go there.',
   path: '/destinations',
+  image: 'destinations-hero',
 });
 
 /* Lists journeys, so it is rebuilt hourly with them. */
@@ -60,9 +61,7 @@ export default async function DestinationsPage() {
             <i />
             Where mountains meet water
           </div>
-          <h1 id="dz-title">
-            A few places,<em>known properly.</em>
-          </h1>
+          <h1 id="dz-title">A few places, known properly.</h1>
           <p>The places Peaks2Shores returns to, and the journeys that go there.</p>
           <div className="ctas">
             <a className="btn btn-light" href="#where">
@@ -135,10 +134,7 @@ export default async function DestinationsPage() {
           <div>
             <div className="lab">The name</div>
             <Reveal variant="mask">
-              <h2 id="dz-name-title">
-                {peaksToShores.headlineParts[0]} <em>{peaksToShores.headlineParts[1]}</em>{' '}
-                {peaksToShores.headlineParts[2]}
-              </h2>
+              <h2 id="dz-name-title">{peaksToShores.headlineParts.join(' ')}</h2>
             </Reveal>
           </div>
           <p>{peaksToShores.body}</p>
@@ -171,7 +167,9 @@ export default async function DestinationsPage() {
       {/* 05 — The closing invitation, over a photograph. */}
       <section className="hc-circle dz-close" aria-labelledby="dz-close-title" data-fab-away>
         <div className="bg" aria-hidden>
-          {closing.src && <Image src={closing.src} alt="" fill sizes="100vw" className="fill" />}
+          {closing.src && (
+            <Image src={closing.src} alt={closing.alt ?? ''} fill sizes="100vw" className="fill" />
+          )}
         </div>
         <div className="in">
           <div className="lab">Private travel</div>

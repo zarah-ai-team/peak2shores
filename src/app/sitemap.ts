@@ -1,13 +1,14 @@
 import type { MetadataRoute } from 'next';
-import { getJourneys, getSiteSettings } from '@/lib/content';
+import { getJourneys, getPublishedArticles, getSiteSettings } from '@/lib/content';
 
 /* Rebuilt hourly, so a journey is listed within the hour of its release. */
 export const revalidate = 3600;
 
 /**
- * Only what a visitor can reach: live journeys (never scheduled ones) and the
- * legal pages only once their wording is final. Utility pages (/links,
- * /credits) and the API are left out.
+ * Only what a visitor can reach and search should list: live journeys (never
+ * scheduled ones), the journal once it has a published piece, and the final
+ * legal pages. Pages kept out of search (/links, /credits, /cookies,
+ * /booking-terms) and the API are left out.
  *
  * Journal pieces have no address yet (every entry is a draft and there is no
  * /journal/[slug] route). When that route ships, add
@@ -18,7 +19,11 @@ export const revalidate = 3600;
  * teaches them to ignore the field.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [site, journeys] = await Promise.all([getSiteSettings(), getJourneys()]);
+  const [site, journeys, articles] = await Promise.all([
+    getSiteSettings(),
+    getJourneys(),
+    getPublishedArticles(),
+  ]);
   const url = (path: string) => `${site.url}${path}`;
 
   const staticRoutes = [
@@ -28,11 +33,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/destinations', priority: 0.8 },
     { path: '/experiences', priority: 0.8 },
     { path: '/our-story', priority: 0.7 },
-    { path: '/journal', priority: 0.6 },
-    /* The privacy policy and terms are final; the other two await Marc. */
-    ...['/privacy', '/terms', ...(site.legalDraft ? [] : ['/cookies', '/booking-terms'])].map(
-      (path) => ({ path, priority: 0.3 }),
-    ),
+    ...(articles.length ? [{ path: '/journal', priority: 0.6 }] : []),
+    { path: '/privacy', priority: 0.3 },
+    { path: '/terms', priority: 0.3 },
   ];
 
   return [

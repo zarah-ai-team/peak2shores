@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useReducedMotion } from 'motion/react';
 import { ways } from '@/lib/data/home';
-import { Chevron } from './HomeMedia';
+import { Chevron, posterOf } from './HomeMedia';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -175,7 +175,7 @@ export function WaysToTravel() {
                   films.current[i] = el;
                 }}
                 className="fill"
-                // No poster: the optimized still beneath shows until it plays.
+                poster={posterOf(way.img)}
                 src={way.video}
                 muted
                 loop

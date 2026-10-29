@@ -47,11 +47,11 @@ export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
               className="mb-6 inline-flex min-h-11 items-center"
             >
               <Image
-                src="/brand/p2s-logo-white.png"
-                alt=""
+                src="/brand/p2s-logo-white.svg"
+                alt={site.name}
+                unoptimized
                 width={2454}
                 height={1017}
-                sizes="100px"
                 className="h-11 w-auto"
               />
             </Link>

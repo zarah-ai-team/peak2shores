@@ -311,8 +311,8 @@ export const media = {
     label: 'Speak to a travel designer',
     brief: 'A calm, wide view at dusk — room for type over it.',
     tone: '#2f3a3e',
+    alt: 'Lake Lucerne and Mount Pilatus from a hotel balcony above the lakeside promenade, Switzerland',
     src: '/images/drive/switzerland-lake-lucerne-balcony-view.jpg',
-    alt: '',
   },
 
   /* ---- Home, Sample C (bright stills where the sample repeated a frame) - */
@@ -344,7 +344,7 @@ export const media = {
     label: 'The circle',
     brief: 'A bright, wide Mediterranean coastline — room for type over it.',
     tone: '#3f7f93',
-    alt: '',
+    alt: 'Positano on the Amalfi Coast, Italy, houses stacked on the cliffs above boats on the sea',
   },
 
   /* ---- Home, Marc's update of 23 October 2026 ----------------------------
@@ -523,8 +523,8 @@ export const media = {
     label: 'Destinations · private travel',
     brief: 'A wide, quiet view with room for type over it — mountains, meadow, sky.',
     tone: '#4d5c5e',
+    alt: 'The Eiger above Grindelwald, Switzerland, a gondola crossing green meadows and chalets',
     src: '/images/drive/switzerland-grindelwald-eiger.jpg',
-    alt: '',
   },
   'sl-hero': {
     label: 'Hero · The Swiss Lakes',

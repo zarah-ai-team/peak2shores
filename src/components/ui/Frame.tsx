@@ -50,11 +50,6 @@ type FrameProps = {
   /** The hero's slow push-in. One frame at a time, never in a grid. */
   drift?: boolean;
   /**
-   * The photograph repeats what the text beside it already says, or sits
-   * inside a link whose name should be the title — so it gets an empty alt.
-   */
-  decorative?: boolean;
-  /**
    * The ground the frame sits on before (and around) the photograph.
    * `tone` (default) is the slot's photographic tone; `transparent` lets the
    * section's own ground show through — for the cut-out portrait on stone.
@@ -127,7 +122,6 @@ export function Frame({
   hover = false,
   parallax = 0,
   drift = false,
-  decorative = false,
   ratio,
   caption,
   tone = 'light',
@@ -144,7 +138,7 @@ export function Frame({
   const picture = slot.src ? (
     <Image
       src={slot.src}
-      alt={decorative ? '' : (slot.alt ?? slot.label)}
+      alt={slot.alt ?? slot.label}
       fill
       sizes={sizes}
       quality={85}

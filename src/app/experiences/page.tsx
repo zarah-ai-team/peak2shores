@@ -78,7 +78,6 @@ function Chapter({ experience, index }: { experience: Experience; index: number 
         <Frame
           media={experience.media}
           parallax={30}
-          decorative
           sizes="100vw"
           className="mb-block aspect-[4/3] w-full md:aspect-[21/9]"
         />
@@ -100,7 +99,6 @@ function Chapter({ experience, index }: { experience: Experience; index: number 
           <Frame
             media={experience.media}
             ratio="4/5"
-            decorative
             sizes="(min-width: 1024px) 55vw, 100vw"
             className={`col-span-4 md:col-span-7 lg:col-span-7 ${
               mirror ? 'md:col-start-2 lg:order-2 lg:col-start-6' : ''
@@ -133,7 +131,6 @@ function Chapter({ experience, index }: { experience: Experience; index: number 
         <Frame
           media={experience.media}
           ratio="3/4"
-          decorative
           sizes="(min-width: 1024px) 40vw, 100vw"
           className={`col-span-4 md:col-span-5 md:col-start-4 lg:col-span-5 lg:mt-16 ${
             mirror ? 'lg:order-1 lg:col-start-2' : 'lg:col-start-8'

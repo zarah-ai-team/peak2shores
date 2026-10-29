@@ -1,9 +1,10 @@
 'use client';
 
+import { Fragment } from 'react';
 import * as m from 'motion/react-m';
 import { ease, stagger as staggerDefaults } from '@/lib/motion';
 
-export type RevealLine = { text: string; italic?: boolean };
+export type RevealLine = { text: string };
 
 type TextRevealProps = {
   lines: RevealLine[];
@@ -25,6 +26,10 @@ type TextRevealProps = {
  * page's largest contentful paint, and it must not wait on a bundle. Headlines
  * further down the page wait for the viewport, which does need JavaScript.
  *
+ * Headlines are one style: no italic words inside them. The lines are joined
+ * by real spaces, so copied text, search engines and screen readers get
+ * "From the peaks of Switzerland", never "peaksof".
+ *
  * The tree is the same for every reader. Reduced motion is handled by the
  * stylesheet (`.line-rise` is switched off; `[data-reveal]` is pinned to its
  * finished state), never by rendering different markup.
@@ -39,32 +44,30 @@ export function TextReveal({
   return (
     <Tag className={className}>
       {lines.map((line, i) => {
-        const content = line.italic ? (
-          <em className="italic font-normal">{line.text}</em>
-        ) : (
-          line.text
-        );
         const stagger = delay + i * staggerDefaults.lines;
 
         return (
-          <span key={i} className="block overflow-hidden pb-[0.06em]">
-            {immediate ? (
-              <span className="line-rise block" style={{ animationDelay: `${stagger}s` }}>
-                {content}
-              </span>
-            ) : (
-              <m.span
-                data-reveal
-                className="block"
-                initial={{ y: '110%' }}
-                whileInView={{ y: '0%' }}
-                viewport={{ once: true, amount: 0.4 }}
-                transition={{ duration: 1.0, ease: ease.reveal, delay: stagger }}
-              >
-                {content}
-              </m.span>
-            )}
-          </span>
+          <Fragment key={i}>
+            {i > 0 && ' '}
+            <span className="block overflow-hidden pb-[0.06em]">
+              {immediate ? (
+                <span className="line-rise block" style={{ animationDelay: `${stagger}s` }}>
+                  {line.text}
+                </span>
+              ) : (
+                <m.span
+                  data-reveal
+                  className="block"
+                  initial={{ y: '110%' }}
+                  whileInView={{ y: '0%' }}
+                  viewport={{ once: true, amount: 0.4 }}
+                  transition={{ duration: 1.0, ease: ease.reveal, delay: stagger }}
+                >
+                  {line.text}
+                </m.span>
+              )}
+            </span>
+          </Fragment>
         );
       })}
     </Tag>

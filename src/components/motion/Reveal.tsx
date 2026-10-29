@@ -48,18 +48,17 @@ const maskBand = 'overflow-hidden pb-[0.12em] -mb-[0.12em]';
 /**
  * The value of `data-reveal`. A block that arrives from the side starts a few
  * pixels outside its box; on a narrow screen, where that block spans the
- * viewport, those pixels would widen the page. The stylesheet pins `x`
- * reveals below the side-by-side breakpoint so they fade instead.
+ * viewport, those pixels would widen the page. The stylesheet now pins every
+ * reveal in place, so neither axis moves.
  */
 const axisOf = (direction: RevealDirection) =>
   direction === 'left' || direction === 'right' ? 'x' : 'y';
 
 /*
- * None of these components look at the reduced-motion preference. The tree
- * is identical for every reader; `MotionConfig reducedMotion="user"` collapses
- * the movement, and the `[data-reveal]` rules in globals.css hand readers
- * with reduced motion — and readers without JavaScript — the finished state
- * over the top of whatever Motion serialized into the HTML.
+ * Content never waits on these: the `[data-reveal]` and `[data-curtain]`
+ * rules in globals.css pin every block to its finished state for every
+ * reader, over whatever Motion serialized into the HTML, so a page capture or
+ * crawler that never scrolls still sees it all (launch brief, 28 Oct).
  */
 
 /** A block that lifts and fades in once, the first time it is scrolled to. */

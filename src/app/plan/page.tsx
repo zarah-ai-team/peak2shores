@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { Faq } from '@/components/ui/Faq';
+import { planFaq } from '@/lib/data/faq';
 import { Frame } from '@/components/ui/Frame';
 import { Reveal } from '@/components/motion/Reveal';
 import { FactList, PageTitle, SectionLabel, Tick } from '@/components/ui/Editorial';
@@ -45,7 +47,6 @@ export default async function PlanPage() {
           <Frame
             media="plan-private"
             ratio="4/5"
-            decorative
             sizes="(min-width: 1024px) 45vw, 100vw"
             className="col-span-4 md:col-span-5 lg:col-span-5"
           />
@@ -94,6 +95,8 @@ export default async function PlanPage() {
         headline="Tell us a little. We’ll call you, not the other way round."
         intro="Whether it’s a departure on the list or something we have not planned yet, this is where it starts. Inquiring holds nothing and commits you to nothing."
       />
+
+      <Faq items={planFaq} />
     </>
   );
 }

@@ -40,7 +40,6 @@ export function JourneyCard({
           ratio={wide ? '16/10' : '4/3'}
           media={media ?? journey.listMedia}
           hover
-          decorative
           priority={priority}
           sizes={
             wide
@@ -120,7 +119,6 @@ export function JourneyListing({
           ratio="4/3"
           media={journey.listMedia}
           hover
-          decorative
           priority={priority}
           sizes="(min-width: 768px) 42vw, 100vw"
         />

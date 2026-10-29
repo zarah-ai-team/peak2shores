@@ -6,13 +6,14 @@ import { DarkCta } from '@/components/ui/DarkCta';
 import { WhyUs } from '@/components/home/WhyUs';
 import { FactList, Quote, SectionLabel, Tick } from '@/components/ui/Editorial';
 import { ButtonLink } from '@/components/ui/Button';
-import { getPageContent, getSiteSettings, pageMetadata } from '@/lib/content';
+import { getPageContent, getSiteSettings, jsonLd, pageMetadata } from '@/lib/content';
 
 export const metadata = pageMetadata({
   title: 'Our story',
   description:
     'From the peaks of Switzerland to the shores of Miami. Marc Haeni founded Peaks2Shores in 2022 as the natural extension of a life spent traveling and returning.',
   path: '/our-story',
+  image: 'home-hero-2',
 });
 
 /**
@@ -29,8 +30,21 @@ export default async function OurStoryPage() {
   ]);
   const [firstParagraph, ...otherParagraphs] = founder.body;
 
+  /* Marc, as the person behind the company (the Organization is in the layout). */
+  const person = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': `${site.url}/our-story#marc`,
+    name: site.founder.name,
+    jobTitle: site.founder.role,
+    worksFor: { '@id': `${site.url}/#organization` },
+    url: `${site.url}/our-story`,
+    image: `${site.url}/brand/marc.webp`,
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(person) }} />
       <PhotoHero
         layout="split"
         media="home-hero-2"
@@ -44,7 +58,7 @@ export default async function OurStoryPage() {
         title={[
           { text: 'From the peaks' },
           { text: 'of Switzerland to' },
-          { text: 'the shores of Miami.', italic: true },
+          { text: 'the shores of Miami.' },
         ]}
       />
 

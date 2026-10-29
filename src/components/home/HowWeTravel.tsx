@@ -4,23 +4,6 @@ import { getMedia } from '@/lib/media';
 import { site } from '@/lib/site';
 
 /**
- * A pillar's lead with its closing phrase set in italic: what follows the
- * first full stop ("Hand-picked. Never ordinary."), else the last comma
- * ("…from people, not passes."), else the last word.
- */
-function Lead({ text }: { text: string }) {
-  const stop = text.indexOf('. ');
-  const comma = text.lastIndexOf(', ');
-  const at = stop > 0 ? stop + 2 : comma > 0 ? comma + 2 : text.lastIndexOf(' ') + 1 || text.length;
-  return (
-    <>
-      {text.slice(0, at)}
-      <em>{text.slice(at)}</em>
-    </>
-  );
-}
-
-/**
  * How we travel — the four pillars as dark cards, the second and fourth set
  * lower, so the row reads as a sequence rather than a grid. Each card: its
  * number and name, the lead, the line, and its photograph.
@@ -46,9 +29,7 @@ export function HowWeTravel() {
                 <span className="n">{p.n}</span>
                 <span className="tag">{p.title} +</span>
               </div>
-              <h3>
-                <Lead text={p.lead} />
-              </h3>
+              <h3>{p.lead}</h3>
               <p>{p.body}</p>
               {photo.src && (
                 <div className="ph">

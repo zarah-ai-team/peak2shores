@@ -37,7 +37,7 @@ export function NameSlider() {
         </p>
       </div>
       <div className="side peaks" style={{ clipPath: `inset(0 ${100 - split}% 0 0)` }}>
-        <HomeMedia visual={{ ...peaksShores.peaks, alt: '' }} sizes="100vw" />
+        <HomeMedia visual={peaksShores.peaks} sizes="100vw" />
         <span className="shade" />
         <span className="word l" style={{ opacity: peaksFade }} aria-hidden>
           Peaks

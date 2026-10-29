@@ -37,7 +37,7 @@ export default function TermsPage() {
         {
           heading: 'Using the site',
           body: [
-            'You may use the site for your own personal, non-commercial purposes. You agree not to misuse it: for example, by attempting to gain unauthorized access, interfering with its operation, introducing malicious code, collecting data from it by automated means, or submitting false or misleading enquiries.',
+            'You may use the site for your own personal, non-commercial purposes. You agree not to misuse it: for example, by attempting to gain unauthorized access, interfering with its operation, introducing malicious code, collecting data from it by automated means, or submitting false or misleading inquiries.',
             'Information you send through our forms must be accurate, and you should have permission to share any details you give us about other travelers.',
           ],
         },
@@ -45,7 +45,7 @@ export default function TermsPage() {
           heading: 'Photographs and content',
           body: [
             `The text, design, logo and original photography on this site belong to ${site.legalName} or are used under license from their owners; the photography credits page lists licensed images. You may view, print or share a link to a page for personal use, but you may not copy, reproduce, adapt or republish any content without our written permission.`,
-            `${site.name} and the ${site.name} logo are our trade marks and may not be used without our permission.`,
+            `${site.name} and the ${site.name} logo are our trademarks and may not be used without our permission.`,
           ],
         },
         {

@@ -7,6 +7,7 @@ export const metadata = pageMetadata({
   title: 'Photography credits',
   description: 'Sources and licenses for the photographs on this site.',
   path: '/credits',
+  noindex: true,
 });
 
 type Credit = {

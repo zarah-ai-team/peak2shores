@@ -42,7 +42,6 @@ export default function NotFound() {
         <Frame
           media="not-found"
           ratio="3/4"
-          decorative
           sizes="(min-width: 1024px) 22vw, 0px"
           className="hidden lg:col-span-3 lg:col-start-10 lg:block"
         />

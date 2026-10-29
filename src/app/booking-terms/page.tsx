@@ -1,4 +1,4 @@
-import { LegalPage, legalRobots } from '@/components/ui/LegalPage';
+import { LegalPage } from '@/components/ui/LegalPage';
 import { pageMetadata } from '@/lib/seo';
 import { site } from '@/lib/site';
 
@@ -7,8 +7,8 @@ export const metadata = {
     title: 'Booking terms',
     description: `Booking terms and conditions for ${site.name} small luxury group journeys: deposit, payment schedule, cancellation and travel insurance.`,
     path: '/booking-terms',
+    noindex: true,
   }),
-  robots: legalRobots,
 };
 
 export default function BookingTermsPage() {

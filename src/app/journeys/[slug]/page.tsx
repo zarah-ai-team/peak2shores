@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { Faq } from '@/components/ui/Faq';
+import { journeyFaq } from '@/lib/data/faq';
 import { notFound } from 'next/navigation';
 import { Itinerary } from '@/components/journeys/Itinerary';
 import { EnquiryForm } from '@/components/journeys/EnquiryForm';
@@ -225,6 +227,7 @@ export default async function JourneyPage({ params }: Params) {
       )}
       <Stays journey={journey} />
       <DatesAndRates journey={journey} cta={cta} />
+      <Faq items={journeyFaq} />
       {detail && detail.quotes.length > 0 && <Guests detail={detail} />}
 
       <RelatedJourneys journeys={related} />

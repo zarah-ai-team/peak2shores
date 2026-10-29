@@ -1,9 +1,17 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import Image from 'next/image';
+import Image, { getImageProps } from 'next/image';
 import { useReducedMotion } from 'motion/react';
 import type { HomeVisual } from '@/lib/data/home';
+
+/**
+ * A film's poster: its still, through the image optimizer (WebP, about 1920px
+ * wide), so the poster costs what the <Image> beneath it costs rather than the
+ * original JPEG. The video shows it until the first frame is ready.
+ */
+export const posterOf = (src: string) =>
+  getImageProps({ src, alt: '', width: 960, height: 540 }).props.src;
 
 /**
  * A full-bleed still, with Marc's film over it when there is one. The film is
@@ -47,7 +55,7 @@ export function HomeMedia({
     <>
       <Image
         src={visual.img}
-        alt={visual.video ? '' : visual.alt}
+        alt={visual.alt}
         fill
         sizes={sizes}
         priority={priority}
@@ -57,8 +65,7 @@ export function HomeMedia({
         <video
           ref={video}
           className={className}
-          // No poster: the <Image> beneath already shows the optimized still,
-          // and a poster would download the original file beside it.
+          poster={posterOf(visual.img)}
           src={visual.video}
           muted
           loop

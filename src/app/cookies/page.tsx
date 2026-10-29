@@ -1,4 +1,4 @@
-import { LegalPage, legalRobots } from '@/components/ui/LegalPage';
+import { LegalPage } from '@/components/ui/LegalPage';
 import { pageMetadata } from '@/lib/seo';
 import { site } from '@/lib/site';
 
@@ -7,8 +7,8 @@ export const metadata = {
     title: 'Cookie notice',
     description: `The cookies and similar technologies ${site.name} uses, and how to control them.`,
     path: '/cookies',
+    noindex: true,
   }),
-  robots: legalRobots,
 };
 
 export default function CookiesPage() {

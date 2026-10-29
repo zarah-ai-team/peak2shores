@@ -151,8 +151,9 @@ export function NewsletterForm({
           aria-invalid={status === 'error' ? true : undefined}
           className={`min-w-0 flex-1 border-0 bg-transparent outline-none ${fieldText}`}
         />
-        {/* Honeypot: invisible to people, irresistible to bots. */}
-        <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+        {/* Honeypot: hidden from people, screen readers and page captures;
+            bots reading the markup still fill it. */}
+        <div hidden aria-hidden>
           <label htmlFor={`${id}-website`}>Website</label>
           <input
             id={`${id}-website`}

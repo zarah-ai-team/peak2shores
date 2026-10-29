@@ -1120,36 +1120,29 @@ html[data-js] [data-ground][data-inview]::before {
 }
 
 /* --------------------------------------------------------------------------
-   Reveal safety net.
+   Content never waits on a scroll animation.
 
    Motion serializes each block's hidden `initial` state (opacity 0, a small
-   transform, a clip-path) into the server HTML so the reveal starts from the
-   right place. Two audiences must never see that state stick: readers with
-   reduced motion, and anyone whose bundle fails to run. These rules beat the
-   inline styles and hand both the finished layout.
+   transform, a clip-path) into the server HTML, and only a scroll into view
+   would lift it. Anything that does not scroll — a page capture, a crawler's
+   render, a print, a failed bundle — would see those blocks blank (the
+   Destinations cards and Our Story sections did). So the finished state is
+   pinned for every reader: these rules beat the inline styles, and scroll
+   reveals no longer hide anything. Hero headlines still rise on load (CSS,
+   `.line-rise`), which needs no scroll.
    -------------------------------------------------------------------------- */
 
-html:not([data-js]) [data-reveal],
-html:not([data-js]) [data-reveal] > * {
+[data-reveal],
+[data-reveal] > * {
   opacity: 1 !important;
   transform: none !important;
   clip-path: none !important;
 }
 
 /* The cover a photograph reveals from under. Pinning transforms would leave
-   it closed, so it is removed outright wherever the reveal is switched off. */
-html:not([data-js]) [data-curtain] {
+   it closed, so it is removed outright. */
+[data-curtain] {
   display: none !important;
-}
-
-/* A block that unfolds from the photograph beside it starts a few pixels to
-   the side. Below the side-by-side breakpoint it fades in place instead, so
-   the page never widens. This is the containment rule; nothing hides
-   overflow globally. */
-@media (max-width: 1023px) {
-  [data-reveal='x'] {
-    transform: none !important;
-  }
 }
 
 /* --------------------------------------------------------------------------
@@ -1160,17 +1153,6 @@ html:not([data-js]) [data-curtain] {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-
-  [data-reveal],
-  [data-reveal] > * {
-    opacity: 1 !important;
-    transform: none !important;
-    clip-path: none !important;
-  }
-
-  [data-curtain] {
-    display: none !important;
   }
 
   /* Scroll-tied layers are driven by motion values, not animations, so the

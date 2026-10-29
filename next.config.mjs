@@ -1,4 +1,4 @@
-/** @type {import('next').NextConfig} */
+import { PHASE_DEVELOPMENT_SERVER } from 'next/constants.js';
 
 /*
  * Security headers appropriate to a static marketing site.
@@ -42,6 +42,7 @@ const isProduction = process.env.VERCEL_ENV
   ? process.env.VERCEL_ENV === 'production'
   : !process.env.CONTEXT || process.env.CONTEXT === 'production';
 
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
@@ -64,11 +65,29 @@ const nextConfig = {
     const headers = isProduction
       ? securityHeaders
       : [...securityHeaders, { key: 'X-Robots-Tag', value: 'noindex, nofollow' }];
-    return [{ source: '/(.*)', headers }];
+    return [
+      { source: '/(.*)', headers },
+      // The *.vercel.app address (peak2shores-theta.vercel.app) is the preview
+      // the client reviews before launch. Vercel counts it as production, so
+      // it is kept out of search by host instead.
+      {
+        source: '/(.*)',
+        has: [{ type: 'host', value: '(?<host>.*)\\.vercel\\.app' }],
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+      },
+    ];
   },
   async redirects() {
     return legacyRedirects.map((r) => ({ ...r, statusCode: 301 }));
   },
 };
 
-export default nextConfig;
+/*
+ * `next dev` writes to .next-dev, `next build` / `next start` to .next. Sharing
+ * one folder, a build run while the dev server was up overwrote the dev
+ * server's files and the dev server overwrote the build's: pages then failed
+ * with missing stylesheets, 404s and crashed workers on the local build.
+ */
+export default function config(phase) {
+  return phase === PHASE_DEVELOPMENT_SERVER ? { ...nextConfig, distDir: '.next-dev' } : nextConfig;
+}

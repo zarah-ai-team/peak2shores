@@ -90,21 +90,20 @@ export function LegalPage({
           </nav>
 
           <div className="col-span-full lg:col-span-7 lg:col-start-5">
-            <ol className="measure m-0 list-none p-0">
+            <div className="measure">
               {items.map((section, i) => (
-                <li key={section.id} id={section.id} className="border-t border-line py-9">
+                <section key={section.id} id={section.id} className="border-t border-line py-9">
                   <h2 className="h5 mb-4">
-                    <span className="mr-3 text-muted">{i + 1}.</span>
-                    {section.heading}
+                    <span className="mr-2 text-muted">{i + 1}.</span> {section.heading}
                   </h2>
                   {section.body.map((paragraph) => (
                     <p key={paragraph} className="prose-body mb-4 last:mb-0">
                       {paragraph}
                     </p>
                   ))}
-                </li>
+                </section>
               ))}
-            </ol>
+            </div>
 
             <p className="prose-body-sm measure border-t border-line pt-9">
               Questions about this page:{' '}
@@ -123,5 +122,3 @@ export function LegalPage({
 /** Legal pages stay out of search while their wording is a draft. */
 export const legalRobotsFor = (draft: boolean) =>
   draft ? { index: false, follow: true } : undefined;
-
-export const legalRobots = legalRobotsFor(site.legalDraft);

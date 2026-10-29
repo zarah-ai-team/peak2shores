@@ -56,11 +56,11 @@ export default async function LinksPage() {
       <div className="mx-auto w-full max-w-[520px]">
         <Link href="/" aria-label={`${site.name} — home`} className="mb-block block w-fit">
           <Image
-            src="/brand/p2s-logo.png"
-            alt=""
+            src="/brand/p2s-logo.svg"
+            alt={site.name}
+            unoptimized
             width={2454}
             height={1017}
-            sizes="96px"
             className="h-auto w-24"
           />
         </Link>
@@ -82,7 +82,6 @@ export default async function LinksPage() {
               ratio="4/5"
               hover
               priority
-              decorative
               sizes="(min-width: 560px) 520px, 100vw"
               className="mb-5"
             />

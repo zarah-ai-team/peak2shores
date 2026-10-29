@@ -31,6 +31,8 @@ const marcs = (key: MediaKey, today: HomeVisual): HomeVisual =>
 
 export type ReelClip = {
   place: string;
+  /** What the clip's still shows. */
+  alt: string;
   video: string;
   img: string;
   /** Where in the clip to begin, in seconds. */
@@ -47,30 +49,40 @@ export type ReelClip = {
  * never points at a missing file.
  */
 export const reel: (ReelClip & { fallback?: ReelClip })[] = [
-  { place: 'On safari', video: '/video/home/reel-safari.mp4', img: '/images/home/reel-safari.jpg' },
+  {
+    place: 'On safari',
+    alt: 'A giraffe in open grassland on safari, seen through the bush, hills and mountains behind',
+    video: '/video/home/reel-safari.mp4',
+    img: '/images/home/reel-safari.jpg',
+  },
   {
     place: 'Switzerland, by rail',
+    alt: 'A red train curving along an alpine lake beneath low cloud in the Swiss Alps',
     video: '/video/home/reel-rail.mp4',
     img: '/images/home/reel-rail.jpg',
   },
   {
     place: 'Positano · Italy',
+    alt: 'Positano on the Amalfi Coast, Italy, from the sea',
     video: '/video/home/reel-positano.mp4',
     img: '/images/home/reel-positano.jpg',
     start: 27,
     fallback: {
       place: 'Capri · Italy',
+      alt: 'The harbor of Marina Grande on Capri, Italy, boats moored below white houses on the hillside',
       video: '/video/home/reel-capri.mp4',
       img: '/images/home/reel-capri.jpg',
     },
   },
   {
     place: 'Hvar · Croatia',
+    alt: 'Hvar on the Dalmatian Coast, Croatia, from the sea',
     video: '/video/home/reel-hvar.mp4',
     img: '/images/home/reel-hvar.jpg',
     start: 2,
     fallback: {
       place: 'The Adriatic',
+      alt: 'Sveti Stefan, a walled island village on the Adriatic coast of Montenegro, a catamaran at anchor',
       video: '/video/home/reel-adriatic.mp4',
       img: '/images/home/reel-adriatic.jpg',
     },
@@ -196,7 +208,7 @@ export const peaksShores = {
     ...marcs('client-peaks', {
       video: '/video/home/peaks.mp4',
       img: '/images/home/peaks.jpg',
-      alt: '',
+      alt: 'Snow-covered Alpine peaks rising above a line of fir trees in winter light',
     }),
   },
   shores: {
@@ -220,6 +232,7 @@ export const hotels: (HomeVisual & {
   nearby: string;
   /** A second view of the place, on the turned-over side. Falls back to the front. */
   back?: string;
+  backAlt?: string;
 })[] = [
   {
     place: 'Lucerne | Switzerland',
@@ -230,6 +243,7 @@ export const hotels: (HomeVisual & {
       'Explore Lucerne’s charming Old Town, discover the “Queen of the Mountains,” or cruise across the lake into the heart of the Swiss Alps.',
     ...still('client-hotel-lucerne'),
     back: '/images/drive/switzerland-lake-lucerne-balcony-view.jpg',
+    backAlt: 'Lake Lucerne and Mount Pilatus from a balcony above the lakeside promenade, Lucerne',
   },
   {
     place: 'Stresa | Italy',
@@ -240,6 +254,8 @@ export const hotels: (HomeVisual & {
       'Explore the enchanting Borromean Islands, stroll through Stresa’s charming lakeside streets, or venture into the surrounding mountains for spectacular panoramic views.',
     ...still('client-hotel-stresa'),
     back: '/images/drive/italy-stresa-sky-bar.jpg',
+    backAlt:
+      'The rooftop terrace at Hotel La Palma, Stresa, looking across Lake Maggiore to the mountains',
   },
   {
     place: 'Victoria Falls | Zimbabwe',
@@ -250,6 +266,7 @@ export const hotels: (HomeVisual & {
       'Marvel at the thundering Victoria Falls, enjoy a sunset cruise along the Zambezi, or discover the wildlife of nearby Zambezi National Park.',
     ...still('client-hotel-victoria-falls'),
     back: '/images/drive/zimbabwe-zambezi-sunset-cruise.jpg',
+    backAlt: 'Boats on the Zambezi River at sunset near Victoria Falls, Zimbabwe',
   },
   {
     place: 'Rovinj | Croatia',
@@ -260,6 +277,8 @@ export const hotels: (HomeVisual & {
       'Wander Rovinj’s charming cobblestone streets, explore the beautiful Istrian countryside with its vineyards and truffle treasures, or sail along the Adriatic coast.',
     ...still('client-hotel-rovinj'),
     back: '/images/drive/croatia-rovinj-grand-park-room.jpg',
+    backAlt:
+      'A guest room at Grand Park Hotel Rovinj, Croatia, with a view of the Old Town and its bell tower',
   },
   {
     place: 'Vipingo | Kenya',
@@ -278,27 +297,27 @@ export const experiences: (HomeVisual & { word: string; line: string })[] = [
     word: 'Taste',
     line: 'Food, wine, markets and chefs — and tables worth booking.',
     img: '/images/home/xp-taste.jpg',
-    alt: '',
+    alt: 'Friends dining by candlelight on a lakeside terrace at dusk, the lights of a village across the water',
   },
   {
     word: 'Meet',
     line: 'Local people, artisans and historians — the people who make a place.',
     video: '/video/home/xp-meet.mp4',
     img: '/images/home/xp-meet.jpg',
-    alt: '',
+    alt: 'A musician playing a street piano beside the Chapel Bridge in Lucerne, Switzerland',
   },
   {
     word: 'Discover',
     line: 'Culture, architecture, history and the places between the sights.',
     img: '/images/home/xp-discover.jpg',
-    alt: '',
+    alt: 'A fisherman rowing a wooden boat off Positano, Italy, at sunset',
   },
   {
     word: 'Explore',
     line: 'Hiking, sailing, cycling and skiing — the outdoors, at your own pace.',
     video: '/video/home/xp-move.mp4',
     img: '/images/home/xp-move.jpg',
-    alt: '',
+    alt: 'Skiers on a sunny slope above a snow-covered Alpine village',
   },
 ];
 

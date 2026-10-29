@@ -350,12 +350,10 @@ export function EnquiryForm({
                     />
                   </Field>
 
-                  {/* Honeypot. Out of the accessibility tree and off screen; real
-                      browsers never fill it, and autofill ignores the name. */}
-                  <div
-                    aria-hidden
-                    className="absolute -left-[9999px] top-0 h-0 w-0 overflow-hidden"
-                  >
+                  {/* Honeypot. `hidden` takes it off the page, out of the
+                      accessibility tree and out of page captures; bots reading
+                      the markup still fill it, and autofill ignores the name. */}
+                  <div hidden aria-hidden>
                     <label>
                       Leave this empty
                       <input name="website" type="text" tabIndex={-1} autoComplete="off" />

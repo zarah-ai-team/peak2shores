@@ -18,7 +18,7 @@ import { JourneyCard } from './JourneyCard';
 
 /**
  * The photograph, full-bleed at 92svh. Title bottom-left in display type —
- * "Amalfi, *Slowly.*", the qualifier dropping to an italic second line — and
+ * "Amalfi, Slowly.", the qualifier dropping to a second line — and
  * the journey's one-line lead bottom-right.
  */
 export function JourneyHero({ journey }: { journey: Journey }) {
@@ -36,7 +36,6 @@ export function JourneyHero({ journey }: { journey: Journey }) {
           priority
           reveal={false}
           drift
-          decorative
           sizes="100vw"
           overlay="hero"
           className="h-full"
@@ -71,7 +70,7 @@ export function JourneyHero({ journey }: { journey: Journey }) {
             className="page-title max-w-[12ch]"
             lines={
               rest.length
-                ? [{ text: `${first},` }, { text: `${rest.join(', ')}.`, italic: true }]
+                ? [{ text: `${first},` }, { text: `${rest.join(', ')}.` }]
                 : [{ text: journey.title }]
             }
           />
@@ -184,7 +183,6 @@ export function WhyThisJourney({ detail }: { detail: JourneyDetail }) {
           ratio="4/5"
           media={detail.why.media}
           parallax={30}
-          decorative
           sizes="(min-width: 1024px) 45vw, 100vw"
           className="col-span-4  md:col-span-6 lg:col-span-6"
         />
@@ -250,7 +248,6 @@ export function Stays({ journey }: { journey: Journey }) {
                   <Frame
                     ratio="3/2"
                     media={hotel.media}
-                    decorative
                     sizes="(min-width: 768px) 45vw, 100vw"
                     className="mb-7"
                   />
@@ -300,12 +297,7 @@ export function OnPacing({ detail }: { detail: JourneyDetail }) {
   const { pacing } = detail;
   return (
     <Ground aria-label="On pacing" className="bg-charcoal pb-section-sm text-on-dark">
-      <Frame
-        media={pacing.media}
-        decorative
-        sizes="100vw"
-        className="aspect-[4/3] w-full md:aspect-[16/9]"
-      />
+      <Frame media={pacing.media} sizes="100vw" className="aspect-[4/3] w-full md:aspect-[16/9]" />
       <div data-tone="dark" className="container-site grid-site gap-y-block pt-section-sm">
         <div className="col-span-4 md:col-span-8 lg:col-span-6">
           <SectionLabel tone="dark" className="mb-stack">
@@ -497,7 +489,7 @@ export function FromMarc({ detail }: { detail: JourneyDetail }) {
             <div className="flex size-16 shrink-0 items-end justify-center overflow-hidden rounded-full bg-tone-sand">
               <Image
                 src="/brand/marc.webp"
-                alt=""
+                alt={`${site.founder.name}, founder of ${site.name}`}
                 width={1150}
                 height={1400}
                 sizes="56px"

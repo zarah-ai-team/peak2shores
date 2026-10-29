@@ -64,10 +64,10 @@ export function PeaksShoresSlider({ content }: { content: Content }) {
       onPointerCancel={() => (dragging.current = false)}
     >
       <div className="absolute inset-0">
-        <Frame media="home-peaks" decorative reveal={false} sizes="100vw" className="h-full" />
+        <Frame media="home-peaks" reveal={false} sizes="100vw" className="h-full" />
       </div>
       <div className="absolute inset-0" style={{ clipPath: `inset(0 0 0 ${split}%)` }}>
-        <Frame media="home-shores" decorative reveal={false} sizes="100vw" className="h-full" />
+        <Frame media="home-shores" reveal={false} sizes="100vw" className="h-full" />
       </div>
       <div
         aria-hidden

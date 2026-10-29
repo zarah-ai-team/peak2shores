@@ -13,12 +13,17 @@ import {
   type ForthcomingArticle,
 } from '@/lib/content';
 
-export const metadata = pageMetadata({
-  title: 'Journal',
-  description:
-    'Places we love, hotels worth staying in, and notes from the road — the Peaks2Shores travel journal.',
-  path: '/journal',
-});
+/* Kept out of search until the first piece is published. */
+export async function generateMetadata() {
+  const published = await getPublishedArticles();
+  return pageMetadata({
+    title: 'Journal',
+    description:
+      'Places we love, hotels worth staying in, and notes from the road — the Peaks2Shores travel journal.',
+    path: '/journal',
+    noindex: published.length === 0,
+  });
+}
 
 /* A piece can be scheduled with publishAt, so the index rebuilds hourly. */
 export const revalidate = 3600;
@@ -79,7 +84,6 @@ export default async function JournalPage() {
               <Frame
                 media={lead.media}
                 ratio="16/10"
-                decorative
                 sizes="(min-width: 1024px) 66vw, 100vw"
                 className="col-span-4 opacity-85 grayscale-[.25] md:col-span-8 lg:col-span-8"
               />
@@ -99,7 +103,6 @@ export default async function JournalPage() {
                       <Frame
                         media={entry.media}
                         ratio={i === 1 ? '1/1' : '4/5'}
-                        decorative
                         sizes="(min-width: 768px) 33vw, 100vw"
                         className="mb-7 opacity-85 grayscale-[.25]"
                       />
