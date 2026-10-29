@@ -113,11 +113,8 @@ export function WaysToTravel() {
       <div className="head dk">
         <div>
           {/* "Ways to experience", so it no longer clashes with the Experiences page. */}
-          <p className="eyebrow">
-            <i aria-hidden />
-            Ways to experience
-          </p>
-          <h2 id="ways-title">Experience the world your way.</h2>
+          <h2 id="ways-title">Ways to experience</h2>
+          <p className="sub-h">Experience the world your way.</p>
         </div>
         <div className="wnav">
           <span className="count">
