@@ -1,131 +1,181 @@
+'use client';
+
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { pillars, reasons } from '@/lib/data/copy';
-import { getMedia } from '@/lib/media';
-import { site } from '@/lib/site';
+import { beliefs } from '@/lib/data/copy';
+import { Chevron } from './HomeMedia';
 import { TiltCards } from './TiltCards';
+import './why-home.css';
 
 /**
- * How we travel — the four pillars as journal cards, set like the departures'
- * cards: the number and name, the lead, the photograph, the line, and the way
- * on to the pillars on Our Story. The second and fourth sit lower. Under the
- * pointer a card tilts toward it, each part lifted off the card at its own
- * depth (TiltCards).
+ * How we travel — the why: six tall night-blue cards in a rail, the second,
+ * fourth and sixth set lower. Four show at a time on a desktop; the arrows
+ * (top right) slide the rest in and the blue line beneath follows. It is a
+ * plain scroller underneath, so it swipes on a phone and scrolls without
+ * script. Under a mouse a card tilts toward the pointer (TiltCards). The last
+ * card closes the row with the way on, and a bridge leads to what is included
+ * on every journey (#experience).
  */
 export function HowWeTravel() {
+  const rail = useRef<HTMLDivElement>(null);
+  const [edge, setEdge] = useState({ start: true, end: false });
+  const [bar, setBar] = useState(0.7);
+
+  const measure = useCallback(() => {
+    const el = rail.current;
+    if (!el) return;
+    const room = el.scrollWidth - el.clientWidth;
+    const at = room > 0 ? el.scrollLeft / room : 1;
+    const seen = el.clientWidth / el.scrollWidth;
+    setEdge({ start: el.scrollLeft < 4, end: el.scrollLeft > room - 4 });
+    setBar(seen + (1 - seen) * at);
+  }, []);
+
+  useEffect(() => {
+    const el = rail.current;
+    if (!el) return;
+    measure();
+    el.addEventListener('scroll', measure, { passive: true });
+    window.addEventListener('resize', measure);
+    return () => {
+      el.removeEventListener('scroll', measure);
+      window.removeEventListener('resize', measure);
+    };
+  }, [measure]);
+
+  /* One card along per press. */
+  const slide = (dir: 1 | -1) => {
+    const el = rail.current;
+    const card = el?.querySelector<HTMLElement>('.card');
+    if (!el || !card) return;
+    const gap = parseFloat(getComputedStyle(card.parentElement!).columnGap) || 0;
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    el.scrollBy({ left: dir * (card.offsetWidth + gap), behavior: still ? 'auto' : 'smooth' });
+  };
+
   return (
-    <section className="hc-how" aria-labelledby="how-title">
-      <div className="head">
+    <section className="hc-hw" aria-labelledby="how-title">
+      <div className="hw-head dk">
         <div>
+          <p className="hw-lab lab">The why</p>
           <h2 id="how-title">How we travel</h2>
-          <p className="sub-h">Four principles behind every journey.</p>
+          <p className="hw-sub">The beliefs behind every journey.</p>
         </div>
-        <p className="sub">
-          Peaks2Shores isn’t a personal brand. It’s a promise — and these are the four parts of it.
-        </p>
+        <div className="hw-nav">
+          <button
+            type="button"
+            className="circ"
+            aria-label="Previous cards"
+            aria-controls="how-rail"
+            disabled={edge.start}
+            onClick={() => slide(-1)}
+          >
+            <Chevron dir="left" />
+          </button>
+          <button
+            type="button"
+            className="circ"
+            aria-label="Next cards"
+            aria-controls="how-rail"
+            disabled={edge.end}
+            onClick={() => slide(1)}
+          >
+            <Chevron dir="right" />
+          </button>
+        </div>
       </div>
-      <TiltCards className="cards">
-        {pillars.map((p) => {
-          const photo = getMedia(p.media);
-          return (
-            <li key={p.n} className="card">
-              <p className="kick">
-                <span>{p.n}</span>
-                <span aria-hidden>·</span>
-                <span>{p.title}</span>
-              </p>
-              <h3>{p.lead}</h3>
-              {photo.src && (
-                <div className="ph">
-                  <Image
-                    src={photo.src}
-                    alt={photo.alt ?? ''}
-                    fill
-                    sizes="(max-width: 700px) 90vw, (max-width: 1100px) 45vw, 22vw"
-                    className="fill"
-                  />
-                </div>
-              )}
-              <p className="note">{p.body}</p>
-              <p className="foot">
-                <Link href="/our-story#pillars-title">
-                  Read more<span className="sr-only">: {p.title}</span>
-                  <svg
-                    width="10"
-                    height="10"
-                    viewBox="0 0 10 10"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.2"
-                    aria-hidden
-                  >
-                    <path d="M2 8 8 2M3.5 2H8v4.5" />
+
+      <div
+        className="hw-rail"
+        ref={rail}
+        id="how-rail"
+        role="region"
+        tabIndex={0}
+        aria-label="Six beliefs, scroll sideways for more"
+      >
+        <TiltCards className="hw-cards">
+          {beliefs.map((b, i) => {
+            const n = String(i + 1).padStart(2, '0');
+            const last = !b.img;
+            return (
+              <li key={b.label} className={`card ${last ? 'cta' : ''}`}>
+                {last && (
+                  <svg className="hw-lines" viewBox="0 0 360 170" fill="none" aria-hidden>
+                    <path
+                      d="M0 120 L70 70 L100 92 L160 22 L210 86 L240 64 L300 112 L360 84"
+                      stroke="#d8b27a"
+                      strokeWidth="1.4"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M0 140 C30 130 60 130 90 140 S150 150 180 140 S240 130 270 140 S330 150 360 140"
+                      stroke="#7accfd"
+                      strokeWidth="1.2"
+                    />
+                    <path
+                      d="M0 158 C30 148 60 148 90 158 S150 168 180 158 S240 148 270 158 S330 168 360 158"
+                      stroke="#7accfd"
+                      strokeWidth="1.2"
+                      opacity="0.6"
+                    />
                   </svg>
-                </Link>
-              </p>
-            </li>
-          );
-        })}
-      </TiltCards>
-    </section>
-  );
-}
-
-const icons: Record<string, React.ReactNode> = {
-  'Personally curated': <path d="M4 20l4-1L19 8l-3-3L5 16l-1 4ZM14 7l3 3" />,
-  'Local relationships': (
-    <path d="M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm7 0a2.5 2.5 0 1 0 0-5M3 20c0-3.3 2.7-5 6-5s6 1.7 6 5m2-5c2.4.3 4 1.8 4 5" />
-  ),
-  'Time to enjoy': <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-13v4l3 2" />,
-  'Exceptional stays': <path d="M3 19V6m0 7h18v6M3 10h7a3 3 0 0 1 3 3M21 13a3 3 0 0 0-3-3h-5" />,
-  'Seamless by nature': (
-    <path d="M5 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM19 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM6.5 15.5l11-9" />
-  ),
-};
-
-/**
- * Why travel with us — the headline on the left and the six reasons as a
- * three-by-two set of cards on the right. The first leads with the number
- * that defines the journeys (18 guests); the others carry a small line icon.
- * Every card is white; the one under the pointer turns night blue.
- */
-export function WhyTravel() {
-  return (
-    <section className="hc-wtu" aria-labelledby="wtu-title">
-      <div className="head">
-        <h2 id="wtu-title">Why travel with us</h2>
-        <p className="sub-h">
-          Someone who really knows travel has already done the filtering for you.
-        </p>
+                )}
+                <p className="kick">
+                  <span className="n">{n}</span>
+                  <span className="k">
+                    {b.label}
+                    {!last && (
+                      <span className="plus" aria-hidden>
+                        +
+                      </span>
+                    )}
+                  </span>
+                </p>
+                <div className="body">
+                  <h3>{b.title}</h3>
+                  {!last && <span className="rule" aria-hidden />}
+                  <p className="note">{b.body}</p>
+                  {last && (
+                    <Link className="hw-gold" href="/plan">
+                      Plan Your Journey
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden>
+                        <path d="M5 12h14M13 6l6 6-6 6" />
+                      </svg>
+                    </Link>
+                  )}
+                </div>
+                {b.img && (
+                  <div className="ph">
+                    <Image
+                      src={b.img}
+                      alt={b.alt ?? ''}
+                      fill
+                      sizes="(max-width: 700px) 80vw, (max-width: 1100px) 40vw, 20vw"
+                      className="fill"
+                      style={{ objectPosition: b.pos }}
+                    />
+                  </div>
+                )}
+              </li>
+            );
+          })}
+        </TiltCards>
       </div>
-      <ul className="grid">
-        {reasons.map((r, i) => (
-          <li key={r.n} className="tile">
-            {i === 0 ? (
-              <span className="big" aria-hidden>
-                {site.maxGuests}
-              </span>
-            ) : (
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden
-                className="ic"
-              >
-                {icons[r.title]}
-              </svg>
-            )}
-            <h3>{r.title}</h3>
-            <p>{r.body}</p>
-          </li>
-        ))}
-      </ul>
+
+      <div className="hw-foot">
+        <div className="hw-prog" aria-hidden>
+          <span style={{ width: `${Math.round(bar * 100)}%` }} />
+        </div>
+        <a className="hw-next" href="#experience">
+          And what that means on every journey
+          <span aria-hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M12 5v14M6 13l6 6 6-6" />
+            </svg>
+          </span>
+        </a>
+      </div>
     </section>
   );
 }

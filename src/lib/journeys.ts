@@ -3,11 +3,17 @@ import type { MediaKey } from './media';
 /**
  * The journey catalog.
  *
- * Every fact here comes from the approved design canvas. Nothing has been
- * invented. Only "Amalfi, Slowly" has a written itinerary so far — the other
- * four carry their summary data and render a clearly-marked in-preparation
- * state on their detail page rather than filler.
+ * The launch journeys, as Marc's flyers describe them (`flyer`). Nothing has
+ * been invented: dates and rates Marc has not set yet read as "to be
+ * announced". The older shapes (`detail`, a day-by-day write-up, and
+ * `itinerary`, a working plan) still render for any journey that uses them.
  */
+
+/** What a journey shows until Marc sets its departure dates. */
+export const DATES_TBA = 'Dates to be announced';
+
+/** What a journey shows until Marc sets its rate. */
+export const RATES_TBA = 'Rates to be announced';
 
 export type Season = 'Summer' | 'Autumn' | 'Winter';
 export type Party = 'Couples' | 'Friends' | 'Families' | 'Solo';
@@ -94,6 +100,43 @@ export type JourneyDetail = {
   spotsLeft: number;
 };
 
+/** One stay on a flyer itinerary, or a stop along the way (no nights). */
+export type FlyerStay = {
+  place: string;
+  nights?: number;
+  tagline: string;
+  /** "What you'll do": three lines from the flyer. */
+  doing: string[];
+  /** "A Peaks2Shores moment", where the flyer has one. */
+  moment?: string;
+  media?: MediaKey;
+};
+
+/**
+ * A journey as Marc's flyer describes it: the stays grouped into parts, the
+ * hotels, and what every journey includes. Copy is Marc's own wording.
+ */
+export type JourneyFlyer = {
+  included: string[];
+  /** Shown only once Marc has approved the wording. */
+  marcNote?: { quote: string; approved: boolean };
+  parts: { title?: string; subtitle?: string; stays: FlyerStay[] }[];
+  hotels: { place: string; name: string; url?: string; credit?: string }[];
+  /** A box pointing to the journey this one continues into, or follows. */
+  link?: {
+    kicker: string;
+    slug: string;
+    title: string;
+    places: string;
+    text: string;
+    cta: string;
+  };
+  /** A line under the rate, e.g. the price with the extension. */
+  ratesNote?: string;
+  /** Questions for this journey only, after the shared FAQ. */
+  faq?: { question: string; answer: string }[];
+};
+
 /**
  * Where a journey stands for booking. A journey is never deleted: once it is
  * full or has departed it keeps its page, marked, so links and search rankings
@@ -115,6 +158,8 @@ export type Journey = {
   status?: JourneyStatus;
   n: string;
   title: string;
+  /** The line above the title on the journey page. Falls back to region · country. */
+  eyebrow?: string;
   lead: string;
   blurb: string;
   country: string;
@@ -131,12 +176,14 @@ export type Journey = {
   departure: string;
   /** Long form used on the detail page and in structured data. */
   departureWindow: string;
-  departureISO: string;
+  /** First departure date. Absent until Marc sets the dates. */
+  departureISO?: string;
   group: string;
   groupMax: number;
-  priceFrom: string;
+  /** e.g. '$12,400'. Absent until Marc sets the rate. */
+  priceFrom?: string;
   hostedByMarc: boolean;
-  season: Season;
+  season?: Season;
   who: Party[];
   inspire: Inspiration[];
   tags: string[];
@@ -151,6 +198,9 @@ export type Journey = {
   /** The photograph on one-off promotions (the Instagram links page). Falls back to `cardMedia`. */
   promoMedia?: MediaKey;
   featured: boolean;
+  /** Search title and description, when the page should not derive its own. */
+  seo?: { title: string; description: string };
+  flyer?: JourneyFlyer;
   detail?: JourneyDetail;
   /**
    * The working day-by-day for a journey whose full write-up (hotels, pacing,
@@ -161,723 +211,404 @@ export type Journey = {
   itinerary?: ItineraryDay[];
 };
 
-const amalfiDetail: JourneyDetail = {
-  heroMedia: 'am-hero',
-  overviewHeadline: 'One coast. Two hotels. Nine days that never feel scheduled.',
-  overview: [
-    'The Amalfi coast is famous for the wrong reasons — the traffic, the queues, the day-trippers. We go in September, when the light softens and the sea is still warm, and we stay put: three nights above Positano, five in a quieter village on the other side of the cape.',
-    'Most days have one thing in them. A boat. A lunch. A walk. The rest is yours — a terrace, a swim, a book you have been meaning to finish.',
-  ],
-  why: {
-    headline: 'Because the coast is best experienced from one chair, not twelve.',
-    media: 'am-why',
-    highlights: [
-      {
-        n: '01',
-        title: 'A private boat day to Nerano',
-        body: 'Swim off Li Galli, lunch at a family restaurant on the water.',
-      },
-      {
-        n: '02',
-        title: 'Ravello before the coaches',
-        body: 'Then the old mule path down through lemon terraces.',
-      },
-      {
-        n: '03',
-        title: 'Lunch under the lemon trees',
-        body: 'With a grower Marc has known for fifteen years.',
-      },
-      {
-        n: '04',
-        title: 'Capri from the water',
-        body: 'The island the long way round — and the queue skipped entirely.',
-      },
-      {
-        n: '05',
-        title: 'Four free afternoons',
-        body: 'Because the terrace is part of the itinerary.',
-      },
-    ],
-  },
-  itineraryHeadline: 'Nine days, one idea a day.',
-  days: [
-    {
-      n: 1,
-      where: 'Naples → Positano',
-      title: 'Arrive, and stop moving.',
-      body: 'Met at Naples, driven along the coast as the day cools. Check in above Positano and do not leave: a swim, a drink on the terrace, dinner at the hotel with the group — the only fixed dinner of the week.',
-      stay: 'Above Positano',
-      free: 'Afternoon free',
-      media: 'd1',
-    },
-    {
-      n: 2,
-      where: 'Positano',
-      title: 'The town before the day-trippers.',
-      body: 'A walk down through Positano with a friend who grew up here — the church, the bakery, the ceramics workshop that does not have a sign. Back up by the hotel boat in time for a late lunch.',
-      stay: 'Above Positano',
-      free: 'Afternoon free',
-      media: 'd2',
-    },
-    {
-      n: 3,
-      where: 'The bay',
-      title: 'A boat, and lunch at Nerano.',
-      body: 'Our own boat for the day. Swim off Li Galli, then a long lunch at a family restaurant on the water in Nerano — the spaghetti alla Nerano you will talk about for years. Back when we feel like it.',
-      stay: 'Above Positano',
-      free: 'Evening free',
-      media: 'd3',
-    },
-    {
-      n: 4,
-      where: 'Ravello → Minori',
-      title: 'Up to Ravello, down to the sea.',
-      body: 'Morning in Ravello’s gardens before the coaches arrive, then the old mule path down through lemon terraces to Minori, where a lemon grower we have known for years has set a table under the trees. Transfer to the second hotel.',
-      stay: 'The quiet side',
-      free: 'Evening free',
-      media: 'd4',
-    },
-    {
-      n: 5,
-      where: 'The quiet side',
-      title: 'Nothing planned.',
-      body: 'A whole day with nothing in it. The hotel has a beach club, a kitchen garden and a pool nobody uses before eleven. Marc will be around with recommendations — or not, if you would rather he was not.',
-      stay: 'The quiet side',
-      free: 'Entire day free',
-      media: 'd5',
-    },
-    {
-      n: 6,
-      where: 'Capri',
-      title: 'Capri, the long way round.',
-      body: 'The island by boat, circling before landing — the grottoes and the faraglioni without the queue. Ashore, a walk to a villa garden and a lunch above the sea. Home by the evening ferry.',
-      stay: 'The quiet side',
-      free: 'Evening free',
-      media: 'd6',
-    },
-    {
-      n: 7,
-      where: 'Sorrento hills',
-      title: 'At the table with a family.',
-      body: 'Inland to a farmhouse in the hills for a cooking morning — mozzarella pulled that hour, pasta made by hand — and the lunch that follows it. Slow, loud and long.',
-      stay: 'The quiet side',
-      free: 'Afternoon free',
-      media: 'd7',
-    },
-    {
-      n: 8,
-      where: 'The path of the gods',
-      title: 'Walk, swim, last dinner.',
-      body: 'For those who want it, the Sentiero degli Dei in the early light, ending with a swim. For those who do not, the terrace. Everyone reconvenes for a final dinner on a friend’s rooftop.',
-      stay: 'The quiet side',
-      free: 'Afternoon free',
-      media: 'd8',
-    },
-    {
-      n: 9,
-      where: '→ Naples',
-      title: 'Depart, slowly.',
-      body: 'No early departure. Breakfast until noon, then transfers to Naples timed to your flights. Most guests leave asking where we are going next.',
-      stay: '—',
-      free: 'Morning free',
-      media: 'd9',
-    },
-  ],
-  hotelsHeadline: 'Two hotels. Both chosen because you will want to stay in.',
-  hotels: [
-    {
-      name: 'A clifftop hotel above Positano',
-      place: 'Positano',
-      nights: '3 nights',
-      why: 'The terrace faces west, the kitchen garden feeds the restaurant, and the boat leaves from the hotel’s own jetty — so you never touch the coast road.',
-      detail: 'Breakfast until noon, on your own terrace.',
-      media: 'am-h1',
-    },
-    {
-      name: 'A converted monastery on the quiet side',
-      place: 'The other side of the cape',
-      nights: '5 nights',
-      why: 'Twenty rooms in a former monastery, a beach club at the bottom of the steps, and a village that empties at six. We stay five nights because leaving is hard.',
-      detail: 'The cloister garden at dusk, and a swim before breakfast.',
-      media: 'am-h2',
-    },
-  ],
-  pacing: {
-    media: 'am-map',
-    headline: 'We plan around one thing a day. Everything else is yours.',
-    body: 'Nothing before ten. Nothing that cannot be skipped. Dinners are booked, but you are welcome to disappear with a bottle to your terrace instead. Four of nine afternoons are entirely unplanned, on purpose.',
-    stats: [
-      { value: '2', label: 'hotels, no repacking' },
-      { value: '4', label: 'free afternoons' },
-      { value: '0', label: 'early departures' },
-    ],
-  },
-  included: [
-    {
-      label: 'Accommodation',
-      value: '8 nights in two hand-picked hotels, sea-view rooms throughout.',
-    },
-    {
-      label: 'Meals',
-      value:
-        'Breakfast daily, 5 lunches and 4 dinners with wine — including the boat lunch and the farmhouse table.',
-    },
-    {
-      label: 'Experiences',
-      value:
-        'Private boat day, Capri by boat, Ravello and the lemon path, cooking morning, all guided walks.',
-    },
-    {
-      label: 'People',
-      value: 'Marc as host throughout, plus our local friends and guides in each place.',
-    },
-    {
-      label: 'Transfers',
-      value: 'Naples arrival and departure, all transfers between hotels and experiences.',
-    },
-    {
-      label: 'Details',
-      value:
-        'Restaurant bookings for your free evenings, luggage handling, gratuities for guides and drivers.',
-    },
-  ],
-  notIncluded:
-    'Not included: international flights, travel insurance, meals marked as free, gratuities at your discretion.',
-  marc: {
-    role: 'Founder · hosting this departure',
-    quote:
-      'I first came to this coast twenty years ago and made every mistake — too many towns, too many transfers, too little time. This is the journey I wish someone had planned for me. Stay put. Take the boat. Order the lemon pasta twice.',
-    note: 'The people we will eat with, sail with and walk with are friends of many years. That is what makes the difference between visiting a place and being welcomed into it.',
-  },
-  gallery: [
-    { media: 'g1', span: 'wide', height: 'tall' },
-    { media: 'g2', span: 'single', height: 'tall' },
-    { media: 'g3', span: 'single', height: 'short' },
-    { media: 'g4', span: 'single', height: 'short' },
-    { media: 'g5', span: 'single', height: 'short' },
-  ],
-  quotes: [
-    {
-      text: 'We have done the big-name tours. This was the first trip where I finished a book, learned a recipe and never once looked at my watch.',
-      who: 'Returning guest · Coral Gables',
-    },
-    {
-      text: 'Marc knows everyone. Not in a name-dropping way — in a “the fisherman waved at him” way.',
-      who: 'First-time guest · Zürich',
-    },
-  ],
-  spotsLeft: 6,
+/** The Peaks2Shores Experience: what every journey includes (launch brief). */
+const experience = [
+  'Intimate groups (max. 18 guests)',
+  'Private transfers',
+  'Private guiding',
+  'Exceptional hotels',
+  'Authentic food & wine',
+  'Curated experiences',
+];
+
+const combineFaq = {
+  question: 'Can I combine Swiss Elegance with The Italian Experience?',
+  answer:
+    'Yes. The Italian Experience continues from Milan for 8 nights, or can be booked as a journey of its own.',
 };
 
+/*
+ * The launch journeys, worded as in Marc's flyers (Oct 28) via the launch
+ * brief. Departure dates and prices come from Marc and are not set yet: until
+ * they are, the pages say "Dates to be announced" and "Rates to be announced"
+ * rather than guess. No departure is marked "Hosted by Marc" until he confirms
+ * which ones he hosts.
+ */
 const allJourneys: Journey[] = [
   {
-    slug: 'amalfi-slowly',
+    slug: 'swiss-elegance',
     n: 'No. 01',
-    title: 'Amalfi, Slowly',
-    lead: 'One coast, two hotels, no rush.',
+    title: 'Swiss Elegance, Italian Lakes & Milanese Flair',
+    eyebrow: 'Switzerland & the Italian Lakes',
+    lead: 'From Lucerne to Milan',
     blurb:
-      'Lemon groves and a private boat day. Dinners that start when the light goes soft. Long enough in each hotel to actually live there.',
-    country: 'Italy',
-    region: 'Amalfi Coast',
-    coords: [14.48, 40.63],
-    route: [
-      { name: 'Naples', coords: [14.268, 40.852] },
-      { name: 'Positano', coords: [14.485, 40.628] },
-      { name: 'Ravello', coords: [14.612, 40.649] },
-      { name: 'Capri', coords: [14.243, 40.551], by: 'boat' },
-      { name: 'Sorrento', coords: [14.376, 40.626], by: 'boat' },
-      { name: 'Naples', coords: [14.268, 40.852] },
-    ],
-    days: 9,
-    departure: '12 Sept 2027',
-    departureWindow: '12 – 20 September 2027',
-    departureISO: '2027-09-12',
-    group: 'Max. 18 · hosted by Marc',
-    groupMax: 18,
-    priceFrom: '$13,800',
-    hostedByMarc: true,
-    season: 'Autumn',
-    who: ['Couples', 'Friends'],
-    inspire: ['Food & Wine', 'Coast & Islands', 'Culture'],
-    tags: ['Coast & Islands', 'Food & Wine', 'Hosted by Marc'],
-    listMedia: 'jl-1',
-    cardMedia: 'feat-1',
-    promoMedia: 'links-amalfi',
-    featured: true,
-    detail: amalfiDetail,
-  },
-  {
-    slug: 'the-swiss-lakes',
-    n: 'No. 02',
-    title: 'The Swiss Lakes',
-    lead: 'Marc’s home country, shown to a friend.',
-    blurb:
-      'By train and boat from Lucerne to the Engadin. A grand hotel where the steamers still stop, a cold swim before breakfast, and a village Marc has known since he was a boy.',
-    country: 'Switzerland',
-    region: 'Lucerne to the Engadin',
+      'From storybook Swiss villages and the high Alps to the shimmering Italian Lakes, ending in stylish Milan. Fewer places, more time to truly be there.',
+    country: 'Switzerland & Italy',
+    region: 'Lucerne to Milan',
     coords: [8.31, 47.05],
     route: [
-      { name: 'Zürich', coords: [8.542, 47.377] },
-      { name: 'Lucerne', coords: [8.309, 47.05], by: 'rail' },
-      { name: 'Sils', coords: [9.76, 46.429], by: 'rail' },
-      { name: 'Zürich', coords: [8.542, 47.377], by: 'rail' },
+      { name: 'Lucerne', coords: [8.309, 47.05] },
+      { name: 'Grindelwald', coords: [8.041, 46.624] },
+      { name: 'Montreux', coords: [6.911, 46.431] },
+      { name: 'Zermatt', coords: [7.749, 46.02] },
+      { name: 'Stresa', coords: [8.538, 45.884] },
+      { name: 'Milan', coords: [9.19, 45.464] },
     ],
-    days: 8,
-    departure: '19 June 2027',
-    departureWindow: '19 – 26 June 2027',
-    departureISO: '2027-06-19',
-    group: 'Max. 18 · hosted by Marc',
+    days: 13,
+    departure: DATES_TBA,
+    departureWindow: DATES_TBA,
+    group: 'Max. 18 guests',
     groupMax: 18,
-    priceFrom: '$12,400',
-    hostedByMarc: true,
-    season: 'Summer',
-    who: ['Couples', 'Solo', 'Friends'],
-    inspire: ['Mountains & Lakes', 'Nature', 'Wellness'],
-    tags: ['Mountains & Lakes', 'Nature', 'Hosted by Marc'],
-    listMedia: 'sl-list',
-    cardMedia: 'feat-2',
-    heroMedia: 'sl-hero',
-    featured: true,
-    itineraryHeadline: 'Eight days, by train and boat.',
-    itinerary: [
-      {
-        n: 1,
-        where: 'Zürich → Lucerne',
-        title: 'Arrive by the lake.',
-        body: 'Met at Zürich and on the train within the hour, along the water to Lucerne. Check in at a grand hotel where the steamers still tie up at the jetty, and do nothing more ambitious than a drink on the terrace.',
-        stay: 'Lucerne, lakeside',
-        free: 'Afternoon free',
-        media: 'sl-1',
-      },
-      {
-        n: 2,
-        where: 'Lake Lucerne',
-        title: 'The lake by paddle steamer.',
-        body: 'The morning boat to a village on the far shore, lunch at a table on the water, and the slow way back along the lake path for anyone who would rather walk than sail.',
-        stay: 'Lucerne, lakeside',
-        free: 'Evening free',
-        media: 'sl-2',
-      },
-      {
-        n: 3,
-        where: 'Pilatus',
-        title: 'A cold swim before breakfast.',
-        body: 'Off the hotel jetty for those who dare; coffee on the terrace for those who do not. Then the cogwheel railway up Pilatus for lunch above the cloud and the easy way down by cable car.',
-        stay: 'Lucerne, lakeside',
-        free: 'Afternoon free',
-        media: 'sl-3',
-      },
-      {
-        n: 4,
-        where: 'Lucerne → the Engadin',
-        title: 'The slow train over the Albula.',
-        body: 'A day given entirely to the journey: Chur, then the Albula line’s spirals and viaducts up into the high valley. Arrive in the Engadin in time for the last light on the lakes.',
-        stay: 'The Engadin',
-        free: 'Evening free',
-        media: 'sl-4',
-      },
-      {
-        n: 5,
-        where: 'Sils',
-        title: 'The lakes, on foot.',
-        body: 'The path along Lake Sils to the peninsula and back through the larches, with a picnic where Marc always stops. Nothing steep, nothing timed.',
-        stay: 'The Engadin',
-        free: 'Afternoon free',
-        media: 'sl-5',
-      },
-      {
-        n: 6,
-        where: 'Marc’s village',
-        title: 'The village he has known since he was a boy.',
-        body: 'A morning in the village Marc grew up returning to — the bakery, the sgraffito houses, the family who will cook lunch for us and not let us leave before four.',
-        stay: 'The Engadin',
-        free: 'Afternoon free',
-        media: 'sl-6',
-      },
-      {
-        n: 7,
-        where: 'The Engadin',
-        title: 'Nothing planned.',
-        body: 'A whole day with nothing in it. The spa, a rowing boat, a book on the balcony, or one of the walks Marc will happily draw on a napkin.',
-        stay: 'The Engadin',
-        free: 'Entire day free',
-        media: 'sl-7',
-      },
-      {
-        n: 8,
-        where: '→ Zürich',
-        title: 'Depart, late.',
-        body: 'A long breakfast, then the train down to Zürich timed to your flights. Nobody leaves before eleven.',
-        stay: '—',
-        free: 'Morning free',
-        media: 'sl-8',
-      },
-    ],
-  },
-  {
-    slug: 'mallorca-beyond-the-coast',
-    n: 'No. 03',
-    title: 'Mallorca, Beyond the Coast',
-    lead: 'The island after the season leaves.',
-    blurb:
-      'Tramuntana villages, a finca lunch cooked by the owner, and a sea you will have to yourself in October.',
-    country: 'Spain',
-    region: 'Mallorca',
-    coords: [2.95, 39.62],
-    route: [
-      { name: 'Palma', coords: [2.65, 39.57] },
-      { name: 'Valldemossa', coords: [2.622, 39.711] },
-      { name: 'Deià', coords: [2.648, 39.748] },
-      { name: 'Sóller', coords: [2.715, 39.767] },
-      { name: 'Palma', coords: [2.65, 39.57] },
-    ],
-    days: 7,
-    departure: '3 Oct 2027',
-    departureWindow: '3 – 9 October 2027',
-    departureISO: '2027-10-03',
-    group: 'Max. 18',
-    groupMax: 18,
-    priceFrom: '$10,900',
     hostedByMarc: false,
-    season: 'Autumn',
-    who: ['Couples', 'Friends'],
-    inspire: ['Coast & Islands', 'Food & Wine', 'Nature'],
-    tags: ['Coast & Islands', 'Food & Wine'],
-    listMedia: 'ma-list',
-    cardMedia: 'feat-3',
-    heroMedia: 'jl-3',
+    who: [],
+    inspire: ['Mountains & Lakes', 'Culture', 'Food & Wine'],
+    tags: ['Mountains & Lakes', 'Culture'],
+    listMedia: 'se-list',
+    cardMedia: 'se-card',
+    heroMedia: 'se-hero',
     featured: true,
-    itineraryHeadline: 'Seven days, after the season leaves.',
-    itinerary: [
-      {
-        n: 1,
-        where: 'Palma → the Tramuntana',
-        title: 'Into the mountains.',
-        body: 'Met at Palma and driven up into the Serra de Tramuntana as the afternoon cools. A stone finca among the olives, a swim, and the first dinner on the terrace.',
-        stay: 'A finca in the Tramuntana',
-        free: 'Afternoon free',
-        media: 'ma-1',
+    seo: {
+      title: 'Swiss Elegance, Italian Lakes & Milanese Flair',
+      description:
+        '13 days from Lucerne to Milan for no more than 18 guests: Swiss lakes and Alps, Lake Maggiore and Milan, with an optional 8-night Italian extension.',
+    },
+    flyer: {
+      included: experience,
+      marcNote: {
+        quote:
+          'Switzerland is where my own journey began. Sharing its lakes and mountains, and then the effortless charm of the Italian Lakes and Milan, is one of my greatest joys.',
+        approved: false,
       },
-      {
-        n: 2,
-        where: 'Valldemossa → Deià',
-        title: 'Two villages, one lunch.',
-        body: 'Valldemossa early, before the coaches, then the coast road to Deià for a long lunch above the sea and an afternoon in the village that never quite closes for the season.',
-        stay: 'A finca in the Tramuntana',
-        free: 'Evening free',
-        media: 'ma-2',
+      parts: [
+        {
+          title: 'The magic of Switzerland',
+          subtitle: 'Enchanting Lakes, Majestic Alpine Peaks',
+          stays: [
+            {
+              place: 'Lucerne',
+              nights: 3,
+              tagline: 'Where lakeside elegance meets Alpine beauty.',
+              doing: [
+                'Wander Lucerne’s charming Old Town and cross its iconic Chapel Bridge.',
+                'Cruise across Lake Lucerne, surrounded by sweeping mountain scenery.',
+                'Discover the “Queen of the Mountains,” Mount Rigi, and experience Switzerland’s spectacular Alpine panoramas.',
+              ],
+              media: 'se-lucerne',
+            },
+            {
+              place: 'Grindelwald',
+              nights: 2,
+              tagline: 'An Alpine retreat beneath the legendary Eiger.',
+              doing: [
+                'Discover Grindelwald’s picturesque mountain village and spectacular Alpine setting.',
+                'Ascend into the Swiss Alps aboard legendary mountain railways and cable cars.',
+                'Experience dramatic mountain scenery, scenic walks and unforgettable Alpine adventures.',
+              ],
+              media: 'se-grindelwald',
+            },
+            {
+              place: 'Montreux',
+              nights: 1,
+              tagline: 'Timeless elegance along the Swiss Riviera.',
+              doing: [
+                'Stroll Montreux’s beautiful flower-lined promenade overlooking Lake Geneva.',
+                'Discover the UNESCO-listed Lavaux vineyards and savor exceptional Swiss wines.',
+                'Enjoy the relaxed charm and spectacular scenery of the Swiss Riviera.',
+              ],
+              media: 'se-montreux',
+            },
+            {
+              place: 'Zermatt',
+              nights: 2,
+              tagline: 'Alpine luxury in the shadow of the Matterhorn.',
+              doing: [
+                'Discover Zermatt’s charming car-free village beneath Switzerland’s most iconic mountain.',
+                'Journey into the high Alps for spectacular Matterhorn views and unforgettable panoramas.',
+                'Savor exceptional Alpine dining and the timeless atmosphere of this legendary mountain resort.',
+              ],
+              media: 'se-zermatt',
+            },
+          ],
+        },
+        {
+          title: 'The Italian Lakes & Milan',
+          subtitle: 'La Dolce Vita & Stylish Milan Finale',
+          stays: [
+            {
+              place: 'Stresa & Lake Maggiore',
+              nights: 2,
+              tagline: 'La dolce vita on the shores of Lake Maggiore.',
+              doing: [
+                'Cruise across Lake Maggiore to discover the magnificent Borromean Islands and their palace gardens.',
+                'Explore charming lakeside villages, elegant villas and spectacular Alpine scenery.',
+                'Embrace the Italian lakeside lifestyle, with leisurely lunches and time to unwind.',
+              ],
+              media: 'se-stresa',
+            },
+            {
+              place: 'Milan',
+              nights: 2,
+              tagline: 'Where Italian elegance meets cosmopolitan flair.',
+              doing: [
+                'Discover Milan’s magnificent Duomo and the historic treasures of Italy’s fashion capital.',
+                'Explore elegant boutiques, stylish neighborhoods and the city’s vibrant cultural scene.',
+                'Celebrate the journey with a memorable farewell evening in the heart of Milan.',
+              ],
+              media: 'se-milan',
+            },
+          ],
+        },
+      ],
+      // Zermatt: Marc to confirm the hotel.
+      hotels: [
+        { place: 'Lucerne', name: 'Mandarin Oriental Palace, Luzern' },
+        { place: 'Grindelwald', name: 'Hotel Bergwelt Grindelwald' },
+        { place: 'Montreux', name: 'Fairmont Le Montreux Palace' },
+        { place: 'Zermatt', name: 'Grand Hotel Zermatterhof' },
+        { place: 'Stresa', name: 'Hotel La Palma' },
+        { place: 'Milan', name: 'Palazzo Cordusio Gran Meliá' },
+      ],
+      link: {
+        kicker: 'Optional 8-Night Italian Extension',
+        slug: 'the-italian-experience',
+        title: 'The Italian Experience',
+        places: 'Bologna · Motor Valley · Lake Garda · Venice',
+        text: 'Continue from Milan into Bologna’s culinary traditions, Italy’s supercar heritage, Lake Garda and a Venetian finale. Also available as a journey on its own.',
+        cta: 'Explore The Italian Experience',
       },
-      {
-        n: 3,
-        where: 'The west coast',
-        title: 'A sea you will have to yourself.',
-        body: 'Our own boat along the cliffs, a swim in a cove no road reaches, and lunch on board. In October the water is still warm and the anchorages are empty.',
-        stay: 'A finca in the Tramuntana',
-        free: 'Evening free',
-        media: 'ma-3',
-      },
-      {
-        n: 4,
-        where: 'The finca',
-        title: 'Lunch cooked by the owner.',
-        body: 'A morning among the olives as the harvest begins, then the meal the owner has been planning all week — everything from the land you can see from the table.',
-        stay: 'A finca in the Tramuntana',
-        free: 'Afternoon free',
-        media: 'ma-4',
-      },
-      {
-        n: 5,
-        where: 'Sóller',
-        title: 'The orange valley by the old train.',
-        body: 'The wooden train through the mountains to Sóller, the tram down to the port, and a walk back through the orange groves with someone who grows them.',
-        stay: 'A finca in the Tramuntana',
-        free: 'Afternoon free',
-        media: 'ma-5',
-      },
-      {
-        n: 6,
-        where: 'The Tramuntana',
-        title: 'Nothing planned.',
-        body: 'A whole day with nothing in it. The pool, a walk to the next village, a table booked in case you want it.',
-        stay: 'A finca in the Tramuntana',
-        free: 'Entire day free',
-        media: 'ma-6',
-      },
-      {
-        n: 7,
-        where: '→ Palma',
-        title: 'Depart, slowly.',
-        body: 'Breakfast until you are ready, then the drive down to Palma timed to your flights — with an hour in the old town for anyone who wants it.',
-        stay: '—',
-        free: 'Morning free',
-        media: 'ma-7',
-      },
-    ],
+      ratesNote: 'Swiss Elegance + The Italian Experience: rates to be announced.',
+      faq: [combineFaq],
+    },
   },
   {
-    slug: 'the-cape-unhurried',
-    n: 'No. 04',
-    title: 'The Cape, Unhurried',
-    lead: 'Wine, sea and long tables.',
+    slug: 'the-italian-experience',
+    n: 'No. 02',
+    title: 'The Italian Experience',
+    eyebrow: 'Optional 8-Night Italian Extension · or a journey on its own',
+    lead: 'Bologna · Motor Valley · Lake Garda · Venice',
     blurb:
-      'Four nights in the winelands and four on the Atlantic. Winemakers we have known for years, a private table at a chef’s home, and mornings with nothing planned.',
-    country: 'South Africa',
-    region: 'Cape & Winelands',
-    coords: [18.9, -33.9],
+      'Bologna’s culinary traditions, Italy’s supercar heritage, the villages of Lake Garda and a Venetian finale. Join it after Swiss Elegance, or travel it as a journey of its own.',
+    country: 'Italy',
+    region: 'Bologna to Venice',
+    coords: [11.34, 44.49],
     route: [
-      { name: 'Cape Town', coords: [18.424, -33.925] },
-      { name: 'Franschhoek', coords: [19.117, -33.913] },
-      { name: 'The Atlantic', coords: [18.352, -34.045] },
-      { name: 'Cape Point', coords: [18.497, -34.357], match: 'Peninsula' },
-      { name: 'Cape Town', coords: [18.424, -33.925] },
+      { name: 'Bologna', coords: [11.343, 44.494] },
+      { name: 'Motor Valley', coords: [10.866, 44.525] },
+      { name: 'Lake Garda', coords: [10.735, 45.505] },
+      { name: 'Verona', coords: [10.992, 45.438] },
+      { name: 'Venice', coords: [12.316, 45.44] },
+    ],
+    days: 9,
+    departure: DATES_TBA,
+    departureWindow: DATES_TBA,
+    group: 'Max. 18 guests',
+    groupMax: 18,
+    hostedByMarc: false,
+    who: [],
+    inspire: ['Food & Wine', 'Culture', 'Art & Design'],
+    tags: ['Food & Wine', 'Culture'],
+    listMedia: 'ie-list',
+    cardMedia: 'ie-card',
+    heroMedia: 'ie-hero',
+    featured: true,
+    seo: {
+      title: 'The Italian Experience: Bologna to Venice',
+      description:
+        '9 days through Bologna, Motor Valley, Lake Garda and Venice for no more than 18 guests, on its own or after Swiss Elegance.',
+    },
+    flyer: {
+      included: experience,
+      parts: [
+        {
+          stays: [
+            {
+              place: 'Bologna & Emilia-Romagna',
+              nights: 3,
+              tagline: 'Where Italian craftsmanship meets extraordinary culinary traditions.',
+              doing: [
+                'Explore Bologna’s medieval streets and a private leather workshop.',
+                'Savor Parmigiano Reggiano, Parma ham and Modena’s balsamic vinegar.',
+                'Enjoy Ferrari driving thrills or exclusive Pagani discoveries.',
+              ],
+              media: 'ie-bologna',
+            },
+            {
+              place: 'Lake Garda',
+              nights: 2,
+              tagline: 'Lakeside romance, timeless villages and la dolce vita.',
+              doing: [
+                'Discover romantic Sirmione on a guided walk and lake cruise.',
+                'Explore Lake Garda’s picturesque villages and waterfronts.',
+                'Unwind amid sweeping lake views and luxurious wellness.',
+              ],
+              media: 'ie-garda',
+            },
+            {
+              place: 'Venice',
+              nights: 3,
+              tagline: 'Venetian romance, timeless traditions and unforgettable moments.',
+              doing: [
+                'Arrive by private water taxi at your island retreat.',
+                'Meet master gondola makers and enjoy an iconic gondola ride.',
+                'Savor local wines and cicchetti on a traditional bacari tour.',
+              ],
+              media: 'ie-venice',
+            },
+          ],
+        },
+        {
+          title: 'Along the way',
+          stays: [
+            {
+              place: 'Motor Valley',
+              tagline: 'Italy’s legendary automotive heritage, from Ferrari to Pagani.',
+              doing: [
+                'Discover the birthplace of Italy’s iconic supercars and the craftsmanship behind them.',
+                'Explore Ferrari’s legendary heritage and racing excellence at its museum.',
+                'Discover the artistry of Pagani, where innovation meets extraordinary design.',
+              ],
+            },
+            {
+              place: 'Valpolicella & Verona',
+              tagline: 'Fine wines, timeless romance and Italian charm.',
+              doing: [
+                'Taste celebrated Amarone wines at historic Valpolicella estates.',
+                'Savor an exceptional wine-paired lunch overlooking the vineyards.',
+                'Explore romantic Verona, from its Roman Arena to Juliet’s home.',
+              ],
+            },
+          ],
+        },
+      ],
+      hotels: [
+        { place: 'Bologna', name: 'Grand Hotel Majestic già Baglioni' },
+        { place: 'Lake Garda', name: 'Quellenhof Luxury Resort Lazise' },
+        { place: 'Venice', name: 'JW Marriott Venice Resort & Spa' },
+      ],
+      link: {
+        kicker: 'Before this journey',
+        slug: 'swiss-elegance',
+        title: 'Swiss Elegance, Italian Lakes & Milanese Flair',
+        places: 'Lucerne · Grindelwald · Montreux · Zermatt · Stresa · Milan',
+        text: 'From storybook Swiss villages and the high Alps to the shimmering Italian Lakes, ending in stylish Milan.',
+        cta: 'Begin with Swiss Elegance, Italian Lakes & Milanese Flair',
+      },
+      ratesNote: 'On its own, or added to Swiss Elegance: rates for both to be announced.',
+      faq: [combineFaq],
+    },
+  },
+  {
+    slug: 'adriatic-collection',
+    n: 'No. 03',
+    title: 'The Adriatic Collection',
+    eyebrow: 'Italy · Istria · The Dalmatian Coast',
+    lead: 'Venice to Dubrovnik',
+    blurb:
+      'From Venice’s enchanting canals through Istria’s coastal charm and the sun-kissed Dalmatian Coast to the timeless beauty of Dubrovnik.',
+    country: 'Italy & Croatia',
+    region: 'Venice to Dubrovnik',
+    coords: [15.97, 43.51],
+    route: [
+      { name: 'Venice', coords: [12.316, 45.44] },
+      { name: 'Rovinj', coords: [13.638, 45.081] },
+      { name: 'Split', coords: [16.44, 43.508] },
+      { name: 'Hvar', coords: [16.441, 43.172], by: 'boat' },
+      { name: 'Split', coords: [16.44, 43.508], by: 'boat' },
+      { name: 'Dubrovnik', coords: [18.094, 42.65] },
     ],
     days: 11,
-    departure: '14 Feb 2028',
-    departureWindow: '14 – 24 February 2028',
-    departureISO: '2028-02-14',
-    group: 'Max. 18 · hosted by Marc',
+    departure: DATES_TBA,
+    departureWindow: DATES_TBA,
+    group: 'Max. 18 guests',
     groupMax: 18,
-    priceFrom: '$15,600',
-    hostedByMarc: true,
-    season: 'Winter',
-    who: ['Couples', 'Friends', 'Families'],
-    inspire: ['Food & Wine', 'Nature', 'Culture'],
-    tags: ['Food & Wine', 'Nature', 'Hosted by Marc'],
-    listMedia: 'cp-list',
-    cardMedia: 'jl-4',
-    heroMedia: 'jl-4',
-    featured: false,
-    itineraryHeadline: 'Eleven days. Two nights in town, four in the vines, four on the water.',
-    itinerary: [
-      {
-        n: 1,
-        where: 'Cape Town',
-        title: 'Arrive under the mountain.',
-        body: 'Met at the airport and driven to a small hotel at the foot of Table Mountain. A late lunch, a swim, and the first dinner with the group.',
-        stay: 'Cape Town',
-        free: 'Afternoon free',
-        media: 'cp-1',
-      },
-      {
-        n: 2,
-        where: 'Cape Town',
-        title: 'The mountain and the market.',
-        body: 'Up Table Mountain early, before the wind, then a morning in the city with a friend who knows which market stalls matter. The afternoon is yours.',
-        stay: 'Cape Town',
-        free: 'Afternoon free',
-        media: 'cp-2',
-      },
-      {
-        n: 3,
-        where: 'Cape Town → the Winelands',
-        title: 'Into the vines.',
-        body: 'An hour inland to a farmhouse among the vineyards, mountains on every side. Lunch on arrival, and the first of many long tables.',
-        stay: 'The Winelands',
-        free: 'Afternoon free',
-        media: 'cp-3',
-      },
-      {
-        n: 4,
-        where: 'Franschhoek',
-        title: 'Winemakers we have known for years.',
-        body: 'Two cellars, both family-run, both friends — a morning in the vines with one, lunch with the other. Nobody spits, nobody hurries.',
-        stay: 'The Winelands',
-        free: 'Evening free',
-        media: 'cp-4',
-      },
-      {
-        n: 5,
-        where: 'The Winelands',
-        title: 'A private table at a chef’s home.',
-        body: 'Free until the evening. Then dinner at a chef’s own house — one table, one menu, the garden it came from just outside the window.',
-        stay: 'The Winelands',
-        free: 'Morning free',
-        media: 'cp-5',
-      },
-      {
-        n: 6,
-        where: 'The Winelands',
-        title: 'A morning with nothing planned.',
-        body: 'Nothing before lunch. In the afternoon, a walk through the vines to a neighbor’s farm for the last tasting, and the last of the winelands sunsets.',
-        stay: 'The Winelands',
-        free: 'Morning free',
-        media: 'cp-6',
-      },
-      {
-        n: 7,
-        where: 'The Winelands → the Atlantic',
-        title: 'Over the mountains to the sea.',
-        body: 'The scenic way to the peninsula’s Atlantic side — over the pass, along the coast road, to a house above a long empty beach where we stay four nights.',
-        stay: 'The Atlantic',
-        free: 'Evening free',
-        media: 'cp-7',
-      },
-      {
-        n: 8,
-        where: 'The Cape Peninsula',
-        title: 'Cape Point, and the penguins.',
-        body: 'The tip of the continent before the coaches, the penguin beach on the way back, and a long lunch of fish landed that morning.',
-        stay: 'The Atlantic',
-        free: 'Afternoon free',
-        media: 'cp-8',
-      },
-      {
-        n: 9,
-        where: 'The Atlantic',
-        title: 'Nothing planned.',
-        body: 'A whole day with nothing in it. The beach at low tide, a horse ride along it for anyone who wants one, a fire in the evening.',
-        stay: 'The Atlantic',
-        free: 'Entire day free',
-        media: 'cp-9',
-      },
-      {
-        n: 10,
-        where: 'The Atlantic',
-        title: 'The last long table.',
-        body: 'A morning on the water in a boat with a friend, then the final dinner — outdoors, over a fire, with the winemakers driving down to join us.',
-        stay: 'The Atlantic',
-        free: 'Afternoon free',
-        media: 'cp-10',
-      },
-      {
-        n: 11,
-        where: '→ Cape Town',
-        title: 'Depart, unhurried.',
-        body: 'No early departure. Breakfast on the terrace, then transfers to the airport timed to your flights.',
-        stay: '—',
-        free: 'Morning free',
-        media: 'cp-11',
-      },
-    ],
-  },
-  {
-    slug: 'como-and-the-engadin',
-    n: 'No. 05',
-    title: 'Como & the Engadin',
-    lead: 'Where the lakes meet the peaks.',
-    blurb:
-      'The journey that gave the company its name in one week: a villa on Como, the Bernina line over the pass, and the high valley in larch-gold light.',
-    country: 'Italy & Switzerland',
-    region: 'Como to the Engadin',
-    coords: [9.26, 45.99],
-    route: [
-      { name: 'Milan', coords: [9.19, 45.464] },
-      { name: 'Como', coords: [9.085, 45.808] },
-      { name: 'Bellagio', coords: [9.262, 45.987], by: 'boat' },
-      { name: 'Tirano', coords: [10.168, 46.216] },
-      { name: 'St. Moritz', coords: [9.839, 46.491], by: 'rail' },
-      { name: 'Bregaglia', coords: [9.538, 46.342] },
-      { name: 'Zürich', coords: [8.542, 47.377] },
-    ],
-    days: 10,
-    departure: '26 Sept 2027',
-    departureWindow: '26 September – 5 October 2027',
-    departureISO: '2027-09-26',
-    group: 'Max. 18',
-    groupMax: 18,
-    priceFrom: '$14,200',
     hostedByMarc: false,
-    season: 'Autumn',
-    who: ['Couples', 'Solo'],
-    inspire: ['Mountains & Lakes', 'Art & Design', 'Culture'],
-    tags: ['Mountains & Lakes', 'Art & Design'],
-    listMedia: 'ce-list',
-    cardMedia: 'jl-5',
-    heroMedia: 'jl-5',
-    featured: false,
-    itineraryHeadline: 'Ten days, from the lake to the peaks.',
-    itinerary: [
-      {
-        n: 1,
-        where: 'Milan → Como',
-        title: 'Arrive at the villa.',
-        body: 'Met at Milan and on the lake within the hour. A villa with its own jetty and garden, a swim, and dinner as the lights come on across the water.',
-        stay: 'A villa on Como',
-        free: 'Afternoon free',
-        media: 'ce-1',
+    who: [],
+    inspire: ['Coast & Islands', 'Culture', 'Food & Wine'],
+    tags: ['Coast & Islands', 'Culture'],
+    listMedia: 'ac-list',
+    cardMedia: 'ac-card',
+    heroMedia: 'ac-hero',
+    featured: true,
+    seo: {
+      title: 'The Adriatic Collection: Venice to Dubrovnik',
+      description:
+        'An 11-day small luxury group journey from Venice to Dubrovnik through Istria and the Dalmatian Coast, for no more than 18 guests.',
+    },
+    flyer: {
+      included: experience,
+      marcNote: {
+        quote:
+          'The Adriatic has a light and a rhythm unlike anywhere else. From Venice’s canals to Dubrovnik’s ancient walls, this journey is about slowing down and living the coast.',
+        approved: false,
       },
-      {
-        n: 2,
-        where: 'Lake Como',
-        title: 'The lake from the water.',
-        body: 'A private boat for the day — the villas seen as they were meant to be seen, a swim off the boat, and lunch in a village with no road to it.',
-        stay: 'A villa on Como',
-        free: 'Evening free',
-        media: 'ce-2',
-      },
-      {
-        n: 3,
-        where: 'Bellagio',
-        title: 'Gardens, and a house full of art.',
-        body: 'A villa garden opened for us before hours, then a collector’s house that is never open at all. Lunch on a terrace above the point where the lake divides.',
-        stay: 'A villa on Como',
-        free: 'Afternoon free',
-        media: 'ce-3',
-      },
-      {
-        n: 4,
-        where: 'Lake Como',
-        title: 'Nothing planned.',
-        body: 'A whole day with nothing in it. The garden, the jetty, a rowing boat, the town across the water if you want it.',
-        stay: 'A villa on Como',
-        free: 'Entire day free',
-        media: 'ce-4',
-      },
-      {
-        n: 5,
-        where: 'Como → Tirano → the Engadin',
-        title: 'The Bernina line over the pass.',
-        body: 'The day the company is named for: from the lake up the Bernina railway, past the glacier and the highest station, and down into the high valley in larch-gold light.',
-        stay: 'The Engadin',
-        free: 'Evening free',
-        media: 'ce-5',
-      },
-      {
-        n: 6,
-        where: 'St. Moritz',
-        title: 'Painters of the light.',
-        body: 'A morning with the Engadin painters — Segantini, Giacometti — in the museums built for them, then lunch in a village restaurant that has not changed its menu in decades.',
-        stay: 'The Engadin',
-        free: 'Afternoon free',
-        media: 'ce-6',
-      },
-      {
-        n: 7,
-        where: 'Val Roseg',
-        title: 'The larches at their gold.',
-        body: 'A horse-drawn carriage up the valley to the glacier hut, and the walk back down through the larch forest at the one week of the year it is entirely gold.',
-        stay: 'The Engadin',
-        free: 'Afternoon free',
-        media: 'ce-7',
-      },
-      {
-        n: 8,
-        where: 'The Engadin',
-        title: 'Nothing planned.',
-        body: 'A whole day with nothing in it. The spa, the lakes, a walk from the door, or nothing at all.',
-        stay: 'The Engadin',
-        free: 'Entire day free',
-        media: 'ce-8',
-      },
-      {
-        n: 9,
-        where: 'Bregaglia',
-        title: 'The village on the ledge.',
-        body: 'Down the Maloja pass to Soglio, a village on a ledge above the valley with the granite peaks behind it, for a last long lunch and the last dinner back at the hotel.',
-        stay: 'The Engadin',
-        free: 'Evening free',
-        media: 'ce-9',
-      },
-      {
-        n: 10,
-        where: '→ Zürich',
-        title: 'Depart, late.',
-        body: 'A long breakfast, then the train down to Zürich timed to your flights.',
-        stay: '—',
-        free: 'Morning free',
-        media: 'ce-10',
-      },
-    ],
+      parts: [
+        {
+          title: 'Venice & Istria',
+          subtitle: 'Venetian Romance, Istrian Coastal & Countryside Charm',
+          stays: [
+            {
+              place: 'Venice',
+              nights: 2,
+              tagline: 'Discover Venice beyond the ordinary.',
+              doing: [
+                'Arrive in true Venetian style by private water taxi at your exclusive island retreat.',
+                'Discover Venice’s iconic treasures and hidden corners with your private guide.',
+                'Step inside a traditional gondola workshop and meet the artisans preserving this centuries-old craft.',
+              ],
+              media: 'ac-venice',
+            },
+            {
+              place: 'Rovinj & Istria',
+              nights: 2,
+              tagline: 'Where Adriatic beauty meets Istrian charm.',
+              doing: [
+                'Wander Rovinj’s romantic cobblestone streets overlooking the Adriatic.',
+                'Discover medieval Motovun, perched above Istria’s picturesque countryside.',
+                'Savor exceptional Istrian wines during an intimate tasting at a local vineyard.',
+              ],
+              moment:
+                'Join a local truffle hunter and his dog in search of Istria’s prized treasures, followed by a memorable countryside lunch.',
+            },
+          ],
+        },
+        {
+          title: 'The Dalmatian Coast',
+          subtitle: 'The Magic of the Dalmatian Coast',
+          stays: [
+            {
+              place: 'Split & the Dalmatian Coast',
+              nights: 3,
+              tagline: 'Ancient history meets Adriatic island magic.',
+              doing: [
+                'Discover the spectacular waterfalls of Krka National Park on a memorable excursion from Split.',
+                'Step back 1,700 years exploring Split’s remarkable Diocletian’s Palace.',
+                'Set sail on a private speedboat adventure to glamorous Hvar and the stunning Pakleni Islands.',
+              ],
+            },
+            {
+              place: 'Dubrovnik',
+              nights: 3,
+              tagline: 'The timeless jewel of the Adriatic.',
+              doing: [
+                'Wander Dubrovnik’s UNESCO-listed Old Town and walk its legendary medieval walls.',
+                'Raise a glass atop Mount Srđ, with spectacular views over Dubrovnik and the Adriatic.',
+                'Enjoy time to explore at your leisure before a memorable farewell dinner within Dubrovnik’s ancient walls.',
+              ],
+            },
+          ],
+        },
+      ],
+      hotels: [
+        { place: 'Venice', name: 'JW Marriott Venice Resort & Spa' },
+        {
+          place: 'Rovinj',
+          name: 'Grand Park Hotel Rovinj',
+          credit: 'Photo: Maistra Hospitality Group',
+        },
+        { place: 'Split', name: 'Hotel Ambasador Split' },
+        { place: 'Dubrovnik', name: 'Hotel Excelsior Dubrovnik' },
+      ],
+    },
   },
 ];
 
@@ -959,10 +690,20 @@ export type JourneySummary = Pick<
 export type JourneyStay = { name: string; nights: string };
 
 /**
- * Where a journey sleeps, in order: its hotels once the write-up exists,
- * else the stops of the working day by day (consecutive nights in one place).
+ * Where a journey sleeps, in order: the flyer's stays, or its hotels once the
+ * write-up exists, else the stops of the working day by day (consecutive
+ * nights in one place).
  */
 export function journeyStays(journey: Journey): JourneyStay[] {
+  if (journey.flyer)
+    return journey.flyer.parts.flatMap((part) =>
+      part.stays
+        .filter((s) => s.nights)
+        .map((s) => ({
+          name: s.place,
+          nights: `${s.nights} ${s.nights === 1 ? 'night' : 'nights'}`,
+        })),
+    );
   if (journey.detail)
     return journey.detail.hotels.map((h) => ({ name: h.name, nights: h.nights ?? '' }));
   const stops: { name: string; nights: number }[] = [];
@@ -1043,6 +784,10 @@ export function getJourney(slug: string): Journey | undefined {
 
 export type FilterKey = 'country' | 'season' | 'who' | 'inspire';
 
+/*
+ * With a handful of journeys, destination alone is enough (launch brief).
+ * Add 'season' and 'who' groups back once there are more journeys to sort.
+ */
 export const filterGroups: {
   key: FilterKey;
   label: string;
@@ -1052,34 +797,8 @@ export const filterGroups: {
   {
     key: 'country',
     label: 'Destination',
-    options: ['Italy', 'Switzerland', 'Spain', 'South Africa'],
+    options: ['Switzerland', 'Italy', 'Croatia'],
     match: (j, v) => j.country.includes(v),
-  },
-  {
-    key: 'season',
-    label: 'When',
-    options: ['Summer', 'Autumn', 'Winter'],
-    match: (j, v) => j.season === v,
-  },
-  {
-    key: 'who',
-    label: 'Traveling with',
-    options: ['Couples', 'Friends', 'Families', 'Solo'],
-    match: (j, v) => j.who.some((w) => w === v),
-  },
-  {
-    key: 'inspire',
-    label: 'What inspires you',
-    options: [
-      'Culture',
-      'Food & Wine',
-      'Nature',
-      'Wellness',
-      'Art & Design',
-      'Coast & Islands',
-      'Mountains & Lakes',
-    ],
-    match: (j, v) => j.inspire.some((i) => i === v),
   },
 ];
 

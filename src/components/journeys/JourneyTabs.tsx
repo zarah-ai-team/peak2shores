@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { ButtonLink } from '@/components/ui/Button';
+import { RATES_TBA } from '@/lib/journeys';
 
 export type JourneyTab = { id: string; label: string };
 
@@ -20,7 +21,7 @@ export function JourneyTabs({
   cta,
 }: {
   tabs: JourneyTab[];
-  priceFrom: string;
+  priceFrom?: string;
   cta: string;
 }) {
   const [current, setCurrent] = useState(tabs[0]?.id);
@@ -81,7 +82,13 @@ export function JourneyTabs({
         </ul>
         <div className="hidden shrink-0 items-center gap-6 md:flex">
           <p className="meta m-0 text-body">
-            From <span className="font-semibold text-ink">{priceFrom}</span> per person
+            {priceFrom ? (
+              <>
+                From <span className="font-semibold text-ink">{priceFrom}</span> per person
+              </>
+            ) : (
+              RATES_TBA
+            )}
           </p>
           <ButtonLink href="#enquire" variant="navy" className="!py-3.5">
             {cta}

@@ -4,58 +4,59 @@ import { NewsletterForm } from '@/components/ui/NewsletterForm';
 import { circle, founderStory, statement } from '@/lib/data/home';
 import { site, whatsappHref } from '@/lib/site';
 import { HomeMedia } from './HomeMedia';
+import { QuoteWords } from './QuoteWords';
+import './home-fixes.css';
 
-/** 02 — The short introduction, set large and centred after the film. */
+/** 02 — The philosophy: Marc's statement, centered between two short gold rules. */
 export function Intro() {
   return (
-    <section className="hc-intro" aria-label="About Peaks2Shores">
-      <div className="lab">Peaks2Shores</div>
+    <section className="hc-intro" aria-label="Our philosophy">
+      <span className="rule" aria-hidden />
       <p>
         From the peaks to the shores, we design journeys to the places we know and love —{' '}
         <em>personally curated</em>, thoughtfully paced and enriched by meaningful experiences and
         connections.
       </p>
-      {/* No call to action: this is the brand statement, an editorial pause
-          between the film (which already offers the way on) and the ways to
-          travel. */}
+      {/* No call to action: the film above already offers the way on. */}
+      <span className="rule" aria-hidden />
     </section>
   );
 }
 
-/** 05 — Marc's line over his film of the journeys: a pause between the journeys and the principles. */
+/** 05 — Marc's remark over his film, framed like a note and read word by word. */
 export function Statement() {
   return (
-    <section className="hc-pause" aria-label="Founder statement">
+    <section className="hc-pause framed" aria-label="A word from our founder">
       <div className="bg" aria-hidden>
         <HomeMedia visual={statement.film} sizes="100vw" />
       </div>
+      <span className="frame" aria-hidden />
+      <span className="mark" aria-hidden>
+        “
+      </span>
       <div className="in">
-        <span className="mark" aria-hidden>
-          “
-        </span>
-        <blockquote>
-          {statement.before}
-          <em>{statement.emphasis}</em>
-          {statement.after}
-        </blockquote>
-        <cite>
-          {site.founder.name} · Founder, {site.name}
-        </cite>
-        <div className="ctarow">
-          <Link className="tlink light" href="#name">
-            Discover the Peaks2Shores story →
+        <QuoteWords before={statement.before} emphasis={statement.emphasis} after={statement.after}>
+          <p className="credit">
+            <i aria-hidden />
+            <span>
+              {site.founder.name} <b aria-hidden>·</b> Founder, {site.name}
+            </span>
+            <i aria-hidden />
+          </p>
+          <Link className="qlink" href="#story">
+            Discover the Peaks2Shores story <span aria-hidden>→</span>
           </Link>
-        </div>
+        </QuoteWords>
       </div>
     </section>
   );
 }
 
-/** 07b — The founder: his portrait on stone, the story beside it. */
+/** 07b — The founder: his portrait on the left, the story beside a gold rule. */
 export function FounderStory() {
   return (
-    <section className="hc-fd" id="story" aria-labelledby="founder-title">
-      <div className="img">
+    <section className="hc-fd story" id="story" aria-labelledby="founder-title">
+      <figure className="img">
         <Image
           src={founderStory.portrait.img}
           alt={founderStory.portrait.alt}
@@ -63,16 +64,32 @@ export function FounderStory() {
           sizes="(max-width: 900px) 100vw, 42vw"
           className="fill"
         />
-      </div>
+        <figcaption>
+          <span className="nm">{site.founder.name}</span>
+          <span className="rl">Founder, {site.name}</span>
+        </figcaption>
+      </figure>
       <div className="c">
-        <h2 id="founder-title">The Peaks2Shores story</h2>
-        <p className="sub-h">{founderStory.headline}</p>
-        <p>{founderStory.body}</p>
-        <div className="ctarow left" style={{ marginTop: 0 }}>
-          <Link className="btn btn-ink" href="/our-story">
-            Our story
-          </Link>
-        </div>
+        <span className="vline" aria-hidden />
+        <p className="eyebrow">
+          <i aria-hidden />
+          The Peaks2Shores story
+        </p>
+        <h2 id="founder-title">{founderStory.headline}</h2>
+        <p className="body">{founderStory.body}</p>
+        <dl className="facts">
+          <div>
+            <dt>Where it began</dt>
+            <dd>Switzerland</dd>
+          </div>
+          <div>
+            <dt>Based in Miami</dt>
+            <dd>25+ years</dd>
+          </div>
+        </dl>
+        <Link className="btn btn-ink" href="/our-story">
+          Read our story <span aria-hidden>→</span>
+        </Link>
       </div>
     </section>
   );

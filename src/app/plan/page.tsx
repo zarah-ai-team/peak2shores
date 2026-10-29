@@ -141,7 +141,13 @@ function Ledger({ journeys }: { journeys: JourneySummary[] }) {
               <td className="meta py-6 pr-6 text-body">{journey.days}</td>
               <td className="meta py-6 pr-6 text-body">Max. {journey.groupMax}</td>
               <td className="meta py-6 pr-6 text-body">
-                <span className="font-semibold text-ink">{journey.priceFrom}</span> pp
+                {journey.priceFrom ? (
+                  <>
+                    <span className="font-semibold text-ink">{journey.priceFrom}</span> pp
+                  </>
+                ) : (
+                  'To be announced'
+                )}
               </td>
               <td className="py-6">{status(journey)}</td>
             </tr>
@@ -171,7 +177,13 @@ function Ledger({ journeys }: { journeys: JourneySummary[] }) {
               <div>
                 <dt className="kicker-sm mb-1">From</dt>
                 <dd className="m-0">
-                  <span className="font-semibold text-ink">{journey.priceFrom}</span> pp
+                  {journey.priceFrom ? (
+                    <>
+                      <span className="font-semibold text-ink">{journey.priceFrom}</span> pp
+                    </>
+                  ) : (
+                    'To be announced'
+                  )}
                 </dd>
               </div>
               <div>

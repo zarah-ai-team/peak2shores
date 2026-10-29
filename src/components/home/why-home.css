@@ -1,0 +1,787 @@
+/*
+ * The why, the what and the rhythm: How we travel (.hc-hw), the Peaks2Shores
+ * Experience (.hc-xpi) and Taste · Meet · Pause · Wander (.hc-rh). Every rule
+ * is scoped to one of the three, and they read the home tokens set on .hc.
+ * Gold is the accent here: a hairline and caps label over each heading, the
+ * 18, the closing card's button and the strip's progress line.
+ */
+
+.hc-hw,
+.hc-xpi,
+.hc-rh {
+  --gold: #d1a965;
+  /* Gold as small text on a light ground: 5:1 on paper and on panel. */
+  --gold-ink: #80612c;
+  /* Gold on the night-blue grounds. */
+  --gold-lt: #d8b27a;
+}
+
+/* -- The heading pattern: gold label, blue heading, its line -------------- */
+.hc-hw .hw-lab,
+.hc-xpi .hw-lab {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin: 0;
+  color: var(--gold-ink);
+}
+.hc-hw .hw-lab::before,
+.hc-xpi .hw-lab::before {
+  content: '';
+  display: block;
+  width: 2.5rem;
+  height: 1px;
+  background: var(--gold);
+}
+.hc-hw h2,
+.hc-xpi h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--h2);
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  color: var(--lake);
+  margin: 1rem 0 0;
+  text-wrap: balance;
+}
+.hc-hw .hw-sub,
+.hc-xpi .hw-sub {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.1875rem, 1.27vw, 1.5rem);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--muted);
+  max-width: 32ch;
+  margin: 0.875rem 0 0;
+}
+
+/* -- How we travel: six cards in a rail ------------------------------------ */
+.hc-hw {
+  background: var(--paper);
+  color: var(--ink);
+  border-top: 1px solid rgb(20 29 36 / 0.12);
+  padding: clamp(5rem, 6.89vw, 8.125rem) var(--gut);
+  overflow: hidden;
+}
+.hc-hw .hw-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem;
+  margin-bottom: clamp(1.5rem, 2.33vw, 2.75rem);
+}
+.hc-hw .hw-nav {
+  display: flex;
+  gap: 0.75rem;
+}
+.hc .hc-hw .hw-nav .circ:disabled {
+  opacity: 0.35;
+  cursor: default;
+  background: transparent;
+  border-color: rgb(20 29 36 / 0.45);
+  color: var(--ink);
+}
+
+/* The rail runs to both edges of the screen, so the fifth card shows at the margin and
+   says there is more. It pads above and below so a lifted card and its shadow
+   are not cut off by the scroller. */
+.hc-hw .hw-rail {
+  --gap: clamp(1rem, 1.27vw, 1.5rem);
+  --drop: clamp(1.5rem, 2.33vw, 2.75rem);
+  margin: 0 calc(var(--gut) * -1);
+  padding: 1.5rem 0 3.5rem var(--gut);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gut);
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+.hc-hw .hw-rail::-webkit-scrollbar {
+  display: none;
+}
+.hc-hw .hw-rail:focus-visible {
+  outline: 2px solid var(--lake);
+  outline-offset: -2px;
+}
+.hc-hw .hw-cards {
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--gut) var(--drop) 0;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap);
+  width: max-content;
+  perspective: 87.5rem;
+}
+
+/* Four to the width of the page's column. */
+.hc-hw .card {
+  --w: calc((100vw - 2 * var(--gut) - 3 * var(--gap)) / 4);
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(16rem, var(--w), 25rem);
+  min-height: clamp(32rem, 38.9vw, 38rem);
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+  padding: 1.625rem 1.5rem 1.5rem;
+  border-radius: 1.125rem;
+  background: var(--night);
+  color: #fff;
+  box-shadow: 0 1.5rem 3.125rem rgb(20 29 36 / 0.16);
+  transform-style: preserve-3d;
+  /* Let go, a card settles back with a little give, like something set down. */
+  transition:
+    transform 0.9s cubic-bezier(0.34, 1.32, 0.64, 1),
+    box-shadow 0.9s var(--ease);
+}
+/* The second, fourth and sixth sit lower. */
+.hc-hw .card:nth-child(even) {
+  margin-top: var(--drop);
+}
+/* Under a mouse the tilt follows the pointer (TiltCards sets --rx and --ry);
+   otherwise, and for the keyboard, each card tips a little toward the next. */
+.hc-hw .card:hover,
+.hc-hw .card:focus-within {
+  transform: translateY(-0.625rem) rotateX(var(--rx, 4deg)) rotateY(var(--ry, -4deg));
+  box-shadow: var(--sx, 1.125rem) 2.5rem 5rem -1.5rem rgb(8 20 28 / 0.55);
+  transition-duration: 0.5s;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hc-hw .card:nth-child(even):hover,
+.hc-hw .card:nth-child(even):focus-within {
+  transform: translateY(-0.625rem) rotateX(var(--rx, 4deg)) rotateY(var(--ry, 4deg));
+  box-shadow: var(--sx, -1.125rem) 2.5rem 5rem -1.5rem rgb(8 20 28 / 0.55);
+}
+/* Each part at its own depth, so the card reads as built, not printed. */
+.hc-hw .kick,
+.hc-hw .body,
+.hc-hw .ph {
+  transition: transform 0.7s var(--ease);
+}
+.hc-hw .card:is(:hover, :focus-within) .kick {
+  transform: translateZ(1.125rem);
+}
+.hc-hw .card:is(:hover, :focus-within) .body {
+  transform: translateZ(1.75rem);
+}
+.hc-hw .card:is(:hover, :focus-within) .ph {
+  transform: translateZ(2.75rem);
+}
+
+.hc-hw .kick {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0;
+}
+.hc-hw .kick .n {
+  font-family: var(--serif);
+  font-size: 1rem;
+  color: #dde6ec;
+}
+.hc-hw .kick .k {
+  font-family: var(--sans);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #9fb3c1;
+  text-align: right;
+}
+.hc-hw .plus {
+  display: inline-block;
+  margin-left: 0.375rem;
+  color: var(--gold-lt);
+  transition: transform 0.6s var(--ease);
+}
+.hc-hw .card:hover .plus {
+  transform: rotate(90deg);
+}
+.hc-hw .body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+}
+.hc-hw h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.375rem, 1.8vw, 1.75rem);
+  line-height: 1.15;
+  letter-spacing: -0.012em;
+  min-height: 3.45em;
+  margin: 0;
+  color: #dde6ec;
+}
+.hc-hw .rule {
+  display: block;
+  height: 1px;
+  background: rgb(255 255 255 / 0.16);
+}
+.hc-hw .note {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: #c3d0da;
+  margin: 0;
+}
+.hc-hw .ph {
+  position: relative;
+  flex: 0 0 auto;
+  height: clamp(11rem, 13.9vw, 13.5rem);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background: #2b4152;
+}
+.hc-hw .ph img {
+  transition: scale 1.6s var(--ease);
+}
+.hc-hw .card:hover .ph img {
+  scale: 1.06;
+}
+/* A soft light that crosses the photograph with the pointer. */
+.hc-hw .ph::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--gx, 30%) var(--gy, 20%),
+    rgb(255 255 255 / 0.22),
+    rgb(255 255 255 / 0) 60%
+  );
+  opacity: 0;
+  transition: opacity 0.6s var(--ease);
+}
+.hc-hw .card:is(:hover, :focus-within) .ph::after {
+  opacity: 1;
+}
+
+/* The closing card: lake light, a gold edge, peaks over water, the way on. */
+.hc-hw .card.cta {
+  justify-content: space-between;
+  padding: 1.75rem;
+  background: radial-gradient(120% 80% at 80% 0%, #14506f 0%, #0e2f42 50%, var(--night) 100%);
+  border: 1px solid rgb(216 178 122 / 0.45);
+}
+.hc-hw .cta .hw-lines {
+  position: absolute;
+  right: 0;
+  top: 4.375rem;
+  width: 100%;
+  height: auto;
+  opacity: 0.35;
+  pointer-events: none;
+}
+.hc-hw .cta .kick .n {
+  font-size: 1.25rem;
+  color: #fff;
+}
+.hc-hw .cta .kick .k {
+  color: var(--gold-lt);
+}
+.hc-hw .cta .body {
+  position: relative;
+  flex: 0 0 auto;
+}
+.hc-hw .cta h3 {
+  min-height: 0;
+  font-size: clamp(1.5rem, 2.08vw, 1.875rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.hc-hw .cta .note {
+  font-size: 0.9375rem;
+  color: #e9e3d6;
+}
+.hc-hw .hw-gold {
+  align-self: flex-start;
+  margin-top: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.875rem;
+  min-height: 3.25rem;
+  padding: 0 1.75rem;
+  border-radius: 999px;
+  background: var(--gold-lt);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background-color 0.5s var(--ease);
+}
+.hc-hw .hw-gold:hover {
+  background: #fff;
+}
+.hc-hw .hw-gold svg {
+  width: 1rem;
+  height: 1rem;
+  stroke-width: 1.5;
+  transition: transform 0.6s var(--ease);
+}
+.hc-hw .hw-gold:hover svg {
+  transform: translateX(0.3125rem);
+}
+.hc-hw .hw-gold:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+/* The blue line under the rail, and the bridge to what is included. */
+.hc-hw .hw-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+.hc-hw .hw-prog {
+  position: relative;
+  width: min(22.5rem, 100%);
+  height: 2px;
+  border-radius: 2px;
+  background: rgb(20 29 36 / 0.14);
+}
+.hc-hw .hw-prog span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 2px;
+  background: var(--lake);
+  transition: width 0.6s var(--ease);
+}
+.hc-hw .hw-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 44px;
+  font-family: var(--serif);
+  font-size: clamp(1.0625rem, 1.39vw, 1.25rem);
+  color: var(--ink);
+  text-decoration: none;
+}
+.hc-hw .hw-next > span {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  border: 1px solid rgb(20 29 36 / 0.25);
+  transition:
+    background-color 0.4s,
+    color 0.4s,
+    border-color 0.4s,
+    transform 0.5s var(--ease);
+}
+.hc-hw .hw-next svg {
+  width: 1rem;
+  height: 1rem;
+  stroke-width: 1.5;
+}
+.hc-hw .hw-next:hover > span {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+  transform: translateY(3px);
+}
+
+/* -- The Peaks2Shores Experience: six boxes -------------------------------- */
+.hc-xpi {
+  background: var(--color-panel);
+  color: var(--ink);
+  padding: clamp(5rem, 6.89vw, 8.125rem) var(--gut);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 45rem);
+  gap: clamp(2rem, 3.33vw, 3rem);
+  align-items: start;
+  scroll-margin-top: var(--nav-h, 5rem);
+}
+.hc-xpi .xpi-head {
+  padding-top: 0.5rem;
+}
+.hc-xpi h2 {
+  max-width: 14ch;
+}
+.hc-xpi .xpi-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.875rem;
+}
+.hc-xpi .box {
+  min-height: 14.75rem;
+  padding: 1.625rem 1.5rem;
+  border-radius: 0.875rem;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  transition:
+    transform 0.7s var(--ease),
+    box-shadow 0.7s var(--ease);
+}
+.hc-xpi .box:hover {
+  transform: translateY(-0.375rem);
+  box-shadow: 0 1.5rem 3rem rgb(20 29 36 / 0.1);
+}
+.hc-xpi .big {
+  font-family: var(--serif);
+  font-size: clamp(3.5rem, 5vw, 4.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: #b8925a;
+}
+.hc-xpi .ic {
+  color: var(--lake);
+  transition: color 0.5s var(--ease);
+}
+.hc-xpi .box:hover .ic {
+  color: #b8925a;
+}
+.hc-xpi h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.25rem, 1.6vw, 1.4375rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 1.125rem 0 0;
+  color: var(--ink);
+}
+.hc-xpi .big + h3 {
+  margin-top: 0.375rem;
+}
+.hc-xpi .box p {
+  font-family: var(--sans);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* -- The rhythm of every journey: Taste · Meet · Pause · Wander ----------- */
+.hc-rh {
+  position: relative;
+  height: min(56.25rem, 100svh);
+  min-height: 40rem;
+  overflow: hidden;
+  background: var(--night);
+  color: #fff;
+}
+.hc-rh .rbg {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.4s var(--ease);
+}
+.hc-rh .rbg.on {
+  opacity: 1;
+}
+.hc-rh .rbg .fill {
+  scale: 1.1;
+  transition: scale 8s var(--ease);
+}
+.hc-rh .rbg.on .fill {
+  scale: 1.02;
+}
+.hc-rh .rshade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgb(8 20 28 / 0.7) 0%, rgb(8 20 28 / 0) 45%),
+    linear-gradient(
+      90deg,
+      rgb(8 20 28 / 0.82) 0%,
+      rgb(8 20 28 / 0.55) 40%,
+      rgb(8 20 28 / 0.25) 70%,
+      rgb(8 20 28 / 0.45) 100%
+    );
+}
+.hc-rh .rin {
+  position: absolute;
+  left: var(--gut);
+  top: clamp(5rem, 10.7svh, 6rem);
+  z-index: 3;
+}
+.hc-rh .lab {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin: 0;
+  color: var(--gold-lt);
+}
+.hc-rh .lab::before {
+  content: '';
+  display: block;
+  width: 2.5rem;
+  height: 1px;
+  background: var(--gold-lt);
+}
+.hc-rh ul {
+  list-style: none;
+  margin: clamp(1rem, 1.53vw, 1.375rem) 0 0;
+  padding: 0;
+}
+.hc-rh .rw {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: clamp(0.875rem, 1.53vw, 1.375rem);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--serif);
+  color: rgb(255 255 255 / 0.38);
+  transition:
+    color 0.7s var(--ease),
+    transform 0.7s var(--ease);
+}
+.hc-rh .rw:hover {
+  color: rgb(255 255 255 / 0.8);
+}
+.hc-rh .rw.on {
+  color: #fff;
+  transform: translateX(1.125rem);
+}
+.hc-rh .rw:focus-visible {
+  outline: 2px solid var(--gold-lt);
+  outline-offset: 3px;
+}
+.hc-rh .rn {
+  width: 1.75rem;
+  font-size: 1rem;
+  color: var(--gold-lt);
+  opacity: 0.5;
+  transition: opacity 0.6s;
+}
+.hc-rh .rw.on .rn {
+  opacity: 1;
+}
+.hc-rh .rw em {
+  font-style: normal;
+  font-size: clamp(3.75rem, 8.2vw, 7.375rem);
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+}
+.hc-rh .rw.on em {
+  font-style: italic;
+}
+/* The gold line under the word in play: when it has filled, the next word
+   comes in (ExperienceWords listens for the end of the animation). */
+.hc-rh .rprog {
+  position: absolute;
+  left: 3.125rem;
+  right: 0;
+  bottom: 0.625rem;
+  height: 2px;
+  background: rgb(255 255 255 / 0.2);
+}
+.hc-rh .rprog span {
+  position: absolute;
+  inset: 0;
+  background: var(--gold-lt);
+  transform-origin: left;
+  animation: rh-fill 6s linear both paused;
+}
+.hc-rh.run .rprog span {
+  animation-play-state: running;
+}
+@keyframes rh-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.hc-rh .rside {
+  position: absolute;
+  right: var(--gut);
+  bottom: clamp(3.5rem, 6.67vw, 6rem);
+  z-index: 3;
+  width: min(26.25rem, calc(100% - 2 * var(--gut)));
+}
+.hc-rh .rcopies {
+  display: grid;
+}
+.hc-rh .rcopy {
+  grid-area: 1 / 1;
+  align-self: end;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(1rem);
+  transition:
+    opacity 0.6s var(--ease),
+    transform 0.8s var(--ease),
+    visibility 0s linear 0.6s;
+}
+.hc-rh .rcopy.on {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 0.3s, 0.3s, 0s;
+}
+.hc-rh .rline {
+  margin: 0;
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: clamp(1rem, 1.25vw, 1.125rem);
+  line-height: 1.6;
+  color: #f4f1ea;
+}
+.hc-rh .rex {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1.125rem 0 0;
+  padding-top: 1.125rem;
+  border-top: 1px solid rgb(255 255 255 / 0.22);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.125rem, 1.39vw, 1.25rem);
+  line-height: 1.4;
+  color: #fff;
+}
+.hc-rh .rex span {
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold-lt);
+}
+.hc-rh .btn {
+  margin-top: 1.875rem;
+}
+.hc-rh .btn:hover {
+  background: var(--gold-lt);
+  border-color: var(--gold-lt);
+  color: var(--ink);
+}
+.hc-rh .btn svg {
+  transition: transform 0.6s var(--ease);
+}
+.hc-rh .btn:hover svg {
+  transform: translateX(0.3125rem);
+}
+
+/* -- Tablet and phone ---------------------------------------------------- */
+@media (max-width: 1100px) {
+  .hc-hw .card {
+    width: clamp(16rem, calc((100vw - 2 * var(--gut) - 2 * var(--gap)) / 2.6), 22rem);
+  }
+  .hc-xpi {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hc-xpi h2 {
+    max-width: none;
+  }
+}
+@media (max-width: 900px) {
+  /* The strip in flow: the words at the top, the line and the way on below. */
+  .hc-rh {
+    height: auto;
+    min-height: min(100svh, 52rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2.5rem;
+    padding: 5rem var(--gut) 2.5rem;
+  }
+  .hc-rh .rin,
+  .hc-rh .rside {
+    position: relative;
+    inset: auto;
+    width: auto;
+  }
+  .hc-rh .rw.on {
+    transform: translateX(0.625rem);
+  }
+}
+@media (max-width: 700px) {
+  .hc-hw .hw-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .hc-hw .card {
+    width: min(20rem, 80vw);
+    min-height: 31rem;
+  }
+  .hc-hw .hw-rail {
+    --drop: 1.5rem;
+  }
+  .hc-hw .hw-foot {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .hc-xpi .xpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.625rem;
+  }
+  .hc-xpi .box {
+    min-height: 0;
+    padding: 1.25rem 1.125rem;
+  }
+  .hc-xpi h3 {
+    margin-top: 0.75rem;
+  }
+  .hc-rh .rprog {
+    left: 2.5rem;
+    bottom: 0.375rem;
+  }
+}
+@media (max-width: 380px) {
+  .hc-xpi .xpi-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* On a touch screen every control keeps a full 44px target. */
+@media (pointer: coarse) {
+  .hc-hw .circ {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hc-hw .card,
+  .hc-hw .card:is(:hover, :focus-within),
+  .hc-hw .card:nth-child(even):is(:hover, :focus-within),
+  .hc-hw .card:is(:hover, :focus-within) :is(.kick, .body, .ph),
+  .hc-xpi .box:hover {
+    transition: none;
+    transform: none;
+  }
+  .hc-hw .ph::after {
+    display: none;
+  }
+  .hc-hw .card:hover .ph img,
+  .hc-rh .rbg .fill {
+    scale: none;
+  }
+  .hc-hw *,
+  .hc-xpi *,
+  .hc-rh * {
+    transition: none !important;
+  }
+  /* Nothing moves on its own: the line stands full under the word in play. */
+  .hc-rh .rprog span {
+    animation: none;
+  }
+}

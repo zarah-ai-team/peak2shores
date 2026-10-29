@@ -8,6 +8,13 @@ import { EnquiryForm } from '@/components/journeys/EnquiryForm';
 import { JourneyMap } from '@/components/journeys/JourneyMap';
 import { JourneyTabs, type JourneyTab } from '@/components/journeys/JourneyTabs';
 import {
+  FlyerItinerary,
+  FlyerLink,
+  FlyerNote,
+  FlyerOverview,
+  FlyerStays,
+} from '@/components/journeys/FlyerSections';
+import {
   DatesAndRates,
   FromMarc,
   Gallery,
@@ -45,7 +52,10 @@ export async function generateStaticParams() {
 }
 
 function describe(journey: Journey) {
-  return `${journey.lead} ${journey.days} days, ${journey.region}, ${journey.departureWindow}. Maximum ${journey.groupMax} guests.`;
+  return (
+    journey.seo?.description ??
+    `${journey.lead} ${journey.days} days, ${journey.region}, ${journey.departureWindow}. Maximum ${journey.groupMax} guests.`
+  );
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
@@ -54,7 +64,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!journey) return {};
 
   const base = pageMetadata({
-    title: journey.title,
+    title: journey.seo?.title ?? journey.title,
     description: describe(journey),
     path: `/journeys/${journey.slug}`,
   });
@@ -85,7 +95,7 @@ function enquiryCopy(journey: Journey, founder: string) {
         intro: `${journey.title} has already run. If you would like something like it, tell us a little — inquiring holds nothing and commits you to nothing.`,
       };
     default:
-      return journey.detail
+      return journey.detail || journey.flyer
         ? { kicker: 'Plan your journey', intro: undefined }
         : {
             kicker: 'Register interest',
@@ -104,7 +114,15 @@ export default async function JourneyPage({ params }: Params) {
   const url = `${site.url}/journeys/${journey.slug}`;
   const days = journey.detail?.days ?? journey.itinerary ?? [];
   const heroMedia = getMedia(journey.detail?.heroMedia ?? journey.heroMedia ?? journey.listMedia);
-  const price = journey.priceFrom.replace(/[$,]/g, '');
+  const price = journey.priceFrom?.replace(/[$,]/g, '');
+  /* Itinerary steps for structured data: the day by day, or the flyer's stays. */
+  const steps = days.length
+    ? days.map((day) => ({ position: day.n, name: day.title, description: day.body }))
+    : (journey.flyer?.parts.flatMap((p) => p.stays) ?? []).map((stay, i) => ({
+        position: i + 1,
+        name: stay.place,
+        description: `${stay.tagline} ${stay.doing.join(' ')}`,
+      }));
 
   const trip = {
     '@context': 'https://schema.org',
@@ -114,45 +132,50 @@ export default async function JourneyPage({ params }: Params) {
     name: journey.title,
     description: journey.blurb,
     ...(heroMedia.src ? { image: `${site.url}${heroMedia.src}` } : {}),
-    touristType: journey.who,
-    temporalCoverage: journey.departureISO,
+    ...(journey.who.length ? { touristType: journey.who } : {}),
+    ...(journey.departureISO ? { temporalCoverage: journey.departureISO } : {}),
     provider: { '@id': `${site.url}/#organization` },
-    ...(days.length
+    ...(steps.length
       ? {
           itinerary: {
             '@type': 'ItemList',
-            numberOfItems: days.length,
-            itemListElement: days.map((day) => ({
+            numberOfItems: steps.length,
+            itemListElement: steps.map((step) => ({
               '@type': 'ListItem',
-              position: day.n,
+              position: step.position,
               item: {
                 '@type': 'TouristAttraction',
-                name: day.title,
-                description: day.body,
+                name: step.name,
+                description: step.description,
               },
             })),
           },
         }
       : {}),
-    offers: {
-      '@type': 'Offer',
-      url,
-      priceCurrency: 'USD',
-      price,
-      priceSpecification: {
-        '@type': 'UnitPriceSpecification',
-        price: Number(price),
-        priceCurrency: 'USD',
-        unitText: 'per person',
-      },
-      availability:
-        journey.status === 'past'
-          ? 'https://schema.org/Discontinued'
-          : journey.status === 'sold-out' || journey.status === 'waitlist'
-            ? 'https://schema.org/SoldOut'
-            : 'https://schema.org/LimitedAvailability',
-      validThrough: journey.departureISO,
-    },
+    // No offer until Marc sets a rate: a priceless Offer is invalid markup.
+    ...(price
+      ? {
+          offers: {
+            '@type': 'Offer',
+            url,
+            priceCurrency: 'USD',
+            price,
+            priceSpecification: {
+              '@type': 'UnitPriceSpecification',
+              price: Number(price),
+              priceCurrency: 'USD',
+              unitText: 'per person',
+            },
+            availability:
+              journey.status === 'past'
+                ? 'https://schema.org/Discontinued'
+                : journey.status === 'sold-out' || journey.status === 'waitlist'
+                  ? 'https://schema.org/SoldOut'
+                  : 'https://schema.org/LimitedAvailability',
+            ...(journey.departureISO ? { validThrough: journey.departureISO } : {}),
+          },
+        }
+      : {}),
   };
 
   const breadcrumbs = {
@@ -167,17 +190,21 @@ export default async function JourneyPage({ params }: Params) {
 
   const detail = journey.detail;
   const enquiry = enquiryCopy(journey, site.founder.name);
+  const flyer = journey.flyer;
   const cta =
     journey.status === 'sold-out' || journey.status === 'waitlist'
       ? 'Join the waitlist'
-      : 'Inquire';
+      : flyer
+        ? 'Reserve your place'
+        : 'Inquire';
 
   /* The A&K menu: Overview │ Itinerary │ Stays │ Dates & Rates. A tab whose
      section has nothing to show yet is left out rather than linking nowhere. */
-  const hasStays = !!detail || !!journey.itinerary?.some((d) => d.stay && d.stay !== '—');
+  const hasStays =
+    !!flyer || !!detail || !!journey.itinerary?.some((d) => d.stay && d.stay !== '—');
   const tabs: JourneyTab[] = [
     { id: 'overview', label: 'Overview' },
-    ...(days.length ? [{ id: 'itinerary', label: 'Itinerary' }] : []),
+    ...(days.length || flyer ? [{ id: 'itinerary', label: 'Itinerary' }] : []),
     ...(hasStays ? [{ id: 'stays', label: 'Stays' }] : []),
     { id: 'dates', label: 'Dates & Rates' },
   ];
@@ -194,7 +221,13 @@ export default async function JourneyPage({ params }: Params) {
       <JourneyTabs tabs={tabs} priceFrom={journey.priceFrom} cta={cta} />
 
       <div id="overview">
-        {detail ? (
+        {flyer ? (
+          <>
+            <FlyerOverview journey={journey} flyer={flyer} />
+            <JourneyMap journey={journey} />
+            <FlyerNote flyer={flyer} />
+          </>
+        ) : detail ? (
           <>
             <Overview detail={detail} />
             <WhyThisJourney detail={detail} />
@@ -211,7 +244,12 @@ export default async function JourneyPage({ params }: Params) {
         )}
       </div>
 
-      {detail ? (
+      {flyer ? (
+        <>
+          <FlyerItinerary flyer={flyer} />
+          <FlyerLink flyer={flyer} />
+        </>
+      ) : detail ? (
         <Itinerary days={detail.days} headline={detail.itineraryHeadline} />
       ) : (
         journey.itinerary &&
@@ -224,9 +262,9 @@ export default async function JourneyPage({ params }: Params) {
           />
         )
       )}
-      <Stays journey={journey} />
+      {flyer ? <FlyerStays flyer={flyer} /> : <Stays journey={journey} />}
       <DatesAndRates journey={journey} cta={cta} />
-      <Faq items={journeyFaq} />
+      <Faq items={[...journeyFaq, ...(flyer?.faq ?? [])]} />
       {detail && detail.quotes.length > 0 && <Guests detail={detail} />}
 
       <RelatedJourneys journeys={related} />

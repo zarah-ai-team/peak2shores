@@ -1,57 +1,120 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { experiences } from '@/lib/data/home';
+import { rhythm } from '@/lib/data/copy';
 import { HomeMedia } from './HomeMedia';
+import './why-home.css';
 
 /**
- * 08b — Experiences (the experiences and the connections behind them, as one
- * section): four words set very large down the left. Pointing at one (or
- * focusing or tapping it) brings up its photograph or film behind the whole
- * section and its line on the right. One way on: plan a journey.
+ * 08b — The rhythm of every journey: Taste · Meet · Pause · Wander, set very
+ * large down the left. Each word is a button; left alone they move on every
+ * six seconds, a gold line filling under the one in play. Its photograph (or
+ * film) fills the section, and on the right its line and a real example.
+ *
+ * The line's own animation keeps the time: when it ends, the next word comes
+ * in, so pausing the animation pauses the rotation. It pauses under the
+ * pointer, while anything in the section has focus, and while the section is
+ * off screen; under reduced motion there is no animation, so nothing moves on
+ * its own.
  */
 export function ExperienceWords() {
   const [current, setCurrent] = useState(0);
+  const [inView, setInView] = useState(false);
+  const [held, setHeld] = useState({ hover: false, focus: false });
+  const section = useRef<HTMLElement>(null);
+  const n = rhythm.length;
+
+  useEffect(() => {
+    const el = section.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), {
+      threshold: 0.35,
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const running = inView && !held.hover && !held.focus;
 
   return (
-    <section className="hc-xp" aria-labelledby="xp-title">
-      {experiences.map((x, i) => (
-        <div key={x.word} className={`xbg ${i === current ? 'on' : ''}`} aria-hidden>
+    <section
+      ref={section}
+      className={`hc-rh ${running ? 'run' : ''}`}
+      aria-labelledby="rh-title"
+      onPointerEnter={(e) => e.pointerType === 'mouse' && setHeld((h) => ({ ...h, hover: true }))}
+      onPointerLeave={() => setHeld((h) => ({ ...h, hover: false }))}
+      onFocus={() => setHeld((h) => ({ ...h, focus: true }))}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) setHeld((h) => ({ ...h, focus: false }));
+      }}
+    >
+      {rhythm.map((x, i) => (
+        <div key={x.word} className={`rbg ${i === current ? 'on' : ''}`} aria-hidden>
           <HomeMedia visual={x} active={i === current} sizes="100vw" />
         </div>
       ))}
-      <div className="xshade" />
+      <div className="rshade" />
 
-      <div className="xin">
-        <div className="lab" id="xp-title">
-          Experiences
-        </div>
+      <div className="rin">
+        <h2 className="lab" id="rh-title">
+          The rhythm of every journey
+        </h2>
         <ul>
-          {experiences.map((x, i) => (
+          {rhythm.map((x, i) => (
             <li key={x.word}>
               <button
                 type="button"
-                className={`xw ${i === current ? 'on' : ''}`}
+                className={`rw ${i === current ? 'on' : ''}`}
                 aria-pressed={i === current}
-                onMouseEnter={() => setCurrent(i)}
-                onFocus={() => setCurrent(i)}
+                aria-controls="rh-copy"
                 onClick={() => setCurrent(i)}
               >
-                {x.word}
+                <span className="rn" aria-hidden>
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <em>{x.word}</em>
+                {i === current && (
+                  <span className="rprog" aria-hidden>
+                    <span key={current} onAnimationEnd={() => setCurrent((c) => (c + 1) % n)} />
+                  </span>
+                )}
               </button>
             </li>
           ))}
         </ul>
       </div>
 
-      <div className="xside">
-        <p aria-live="polite">{experiences[current].line}</p>
-        <div className="tbtns">
-          <Link className="btn btn-light" href="/plan">
-            Plan your journey
-          </Link>
+      <div className="rside">
+        <div className="rcopies" id="rh-copy">
+          {rhythm.map((x, i) => (
+            <div
+              key={x.word}
+              className={`rcopy ${i === current ? 'on' : ''}`}
+              aria-hidden={i !== current}
+            >
+              <p className="rline">{x.line}</p>
+              <p className="rex">
+                <span>For example</span>
+                {x.example}
+              </p>
+            </div>
+          ))}
         </div>
+        <Link className="btn btn-light" href="/experiences">
+          See all experiences
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            aria-hidden
+          >
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </Link>
       </div>
     </section>
   );

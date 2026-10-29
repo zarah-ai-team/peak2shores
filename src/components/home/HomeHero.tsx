@@ -113,9 +113,18 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
       ))}
       <div className="shade" />
 
-      <div className="copy">
-        <h1>Luxury travel, personally curated.</h1>
-        <p>
+      {/* Left-aligned and low in the frame, editorial rather than centered. */}
+      <div className="copy left">
+        <p className="eyebrow">
+          <i aria-hidden />
+          Small Luxury Group Journeys
+        </p>
+        <h1>
+          Luxury travel,
+          <br />
+          personally curated.
+        </h1>
+        <p className="standfirst">
           Thoughtfully paced journeys designed to inspire, connect and experience the world
           differently.
         </p>

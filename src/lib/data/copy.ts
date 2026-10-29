@@ -98,6 +98,154 @@ export const reasons = [
   },
 ];
 
+/* -- Home: how we travel (the why) --------------------------------------- */
+
+export type Belief = {
+  label: string;
+  title: string;
+  body: string;
+  /** Omitted on the closing card, which carries the way on instead. */
+  img?: string;
+  alt?: string;
+  /** object-position for the photograph. */
+  pos?: string;
+};
+
+/**
+ * The beliefs behind every journey, as the homepage's six cards. Labels and
+ * lines are the brief's; 05 moved here from "Why travel with us"; 06 closes
+ * the row with the way on. Photographs are Marc's own, none shown elsewhere
+ * on the homepage.
+ */
+export const beliefs: Belief[] = [
+  {
+    label: 'Personally curated',
+    title: 'There is a real person behind every journey.',
+    body: 'Every journey begins with a personal passion for travel, shaped by decades of experience and personal connections to the places we explore.',
+    img: '/images/drive/marc-bern-overlook.jpg',
+    alt: 'Marc Haeni above the old town of Bern and the river Aare',
+    pos: '50% 35%',
+  },
+  {
+    label: 'Thoughtfully paced',
+    title: 'Free time is one of the luxuries.',
+    body: 'Beautifully balanced journeys, allowing time to explore, unwind and truly immerse yourself in each destination.',
+    img: '/images/drive/switzerland-guests-grindelwald-bench.jpg',
+    alt: 'Guests resting on a bench facing the peaks above Grindelwald',
+    pos: '50% 50%',
+  },
+  {
+    label: 'Meaningful experiences',
+    title: 'Experiences worth your time.',
+    body: 'Immersive experiences, authentic encounters and exceptional stays that create unforgettable memories long after the journey ends.',
+    img: '/images/drive/south-africa-safari-game-drive-sunset.jpg',
+    alt: 'An open game-drive vehicle under an acacia at golden sunrise, Qwabi, South Africa',
+    pos: '50% 55%',
+  },
+  {
+    label: 'Local connections',
+    title: 'Access comes from people, not passes.',
+    body: 'People we’ve known and trusted for years, opening doors to experiences no guidebook can offer.',
+    img: '/images/drive/switzerland-alpine-cheesemaker.jpg',
+    alt: 'An alpine cheesemaker beside his copper cauldron, Switzerland',
+    pos: '50% 45%',
+  },
+  {
+    label: 'Seamless by nature',
+    title: 'Seamless by nature.',
+    body: 'The complexity happens behind the scenes so you can stay present.',
+    img: '/images/drive/switzerland-zermatt-grand-hotel.jpg',
+    alt: 'A horse-drawn carriage waiting at the entrance of the Grand Hotel Zermatterhof, Zermatt',
+    pos: '45% 62%',
+  },
+  {
+    label: 'Your journey',
+    title: 'Tell us a little about the journey you have in mind.',
+    body: 'Join one of our upcoming departures, or design a private journey on your own dates.',
+  },
+];
+
+/* -- Home: the Peaks2Shores Experience (the what) ------------------------- */
+
+/** Included in every journey. The first box leads with the number. */
+export const included = [
+  {
+    icon: 'guests',
+    title: 'Intimate groups',
+    body: 'Never more than 18 guests, small enough for one table at dinner.',
+  },
+  {
+    icon: 'car',
+    title: 'Private transfers',
+    body: 'From arrival to the last evening, you’re met and driven.',
+  },
+  {
+    icon: 'guide',
+    title: 'Private guiding',
+    body: 'Local guides who bring each place to life, for our group only.',
+  },
+  {
+    icon: 'bed',
+    title: 'Exceptional hotels',
+    body: 'Part of the journey, not just places to sleep.',
+  },
+  {
+    icon: 'glass',
+    title: 'Authentic food & wine',
+    body: 'Tables, cellars and markets we’d book for ourselves.',
+  },
+  {
+    icon: 'compass',
+    title: 'Curated experiences',
+    body: 'Arranged through people we trust, not tour desks.',
+  },
+] as const;
+
+/* -- Home: the rhythm of every journey ------------------------------------ */
+
+export type Rhythm = {
+  word: string;
+  line: string;
+  example: string;
+  img: string;
+  alt: string;
+  /** Silent clip, played muted over the still. */
+  video?: string;
+};
+
+/** Taste · Meet · Pause · Wander: each word's line and a real example. */
+export const rhythm: Rhythm[] = [
+  {
+    word: 'Taste',
+    line: 'Food, wine, markets and chefs — and tables worth booking.',
+    example: 'Out with a truffle hunter and his dog in Istria, then a long Istrian lunch.',
+    img: '/images/home/xp-taste.jpg',
+    alt: 'Friends dining by candlelight on a lakeside terrace at dusk, the lights of a village across the water',
+  },
+  {
+    word: 'Meet',
+    line: 'Local people, artisans, historians and personalities — people we’ve known and trusted for years.',
+    example: 'A master craftsman’s gondola workshop in Venice.',
+    video: '/video/home/xp-meet.mp4',
+    img: '/images/home/xp-meet.jpg',
+    alt: 'A musician playing a street piano beside the Chapel Bridge in Lucerne, Switzerland',
+  },
+  {
+    word: 'Pause',
+    line: 'Free afternoons, long lunches and time to simply be there.',
+    example: 'A wine-paired lunch overlooking the Valpolicella vineyards.',
+    img: '/images/drive/switzerland-guests-lavaux-vineyards.jpg',
+    alt: 'Two guests among the Lavaux vineyard terraces above Lake Geneva',
+  },
+  {
+    word: 'Wander',
+    line: 'Old towns, trails and coastlines, discovered slowly with private guides.',
+    example: 'A private speedboat day from Split to Šolta, the Pakleni Islands and Hvar.',
+    img: '/images/drive/croatia-hvar-harbour.jpg',
+    alt: 'Hvar town and its harbor on the Dalmatian coast, the Pakleni Islands beyond',
+  },
+];
+
 /* -- Home: also designed for you ---------------------------------------- */
 
 /** The secondary offers — smaller than the journeys, but present. */

@@ -9,7 +9,7 @@ import { FactList, MetaItem, SectionLabel, Tick } from '@/components/ui/Editoria
 import { StatusTag } from '@/components/ui/StatusTag';
 import { journeyTagStatus } from '@/components/pages/journeyStatus';
 import { isNew, type Journey, type JourneyDetail, type JourneySummary } from '@/lib/content';
-import { journeyStays } from '@/lib/journeys';
+import { journeyStays, RATES_TBA } from '@/lib/journeys';
 import { enterAt } from '@/lib/motion';
 import { site } from '@/lib/site';
 import { JourneyCard } from './JourneyCard';
@@ -23,7 +23,7 @@ function journeyFacts(journey: Journey): { label: string; value: React.ReactNode
     { label: 'Days', value: `${journey.days} days · ${journey.days - 1} nights` },
     { label: 'Departure', value: journey.departureWindow },
     { label: 'Group', value: `Max. ${journey.groupMax} guests` },
-    { label: 'From', value: `${journey.priceFrom} per person` },
+    { label: 'From', value: journey.priceFrom ? `${journey.priceFrom} per person` : RATES_TBA },
     {
       label: 'Hosted by',
       value: journey.hostedByMarc ? site.founder.name : 'Our team on the ground',
@@ -48,7 +48,8 @@ function journeyFacts(journey: Journey): { label: string; value: React.ReactNode
  * on smaller screens.
  */
 export function JourneyHero({ journey }: { journey: Journey }) {
-  const [first, ...rest] = journey.title.split(', ');
+  // A flyer title is a name, set exactly as Marc gives it; no closing period.
+  const [first, ...rest] = journey.flyer ? [journey.title] : journey.title.split(', ');
   const facts = journeyFacts(journey);
 
   return (
@@ -80,7 +81,7 @@ export function JourneyHero({ journey }: { journey: Journey }) {
                 /
               </li>
               <li aria-current="page">
-                {journey.region} · {journey.country}
+                {journey.eyebrow ?? `${journey.region} · ${journey.country}`}
               </li>
             </ol>
           </nav>
@@ -189,17 +190,14 @@ export function WhyThisJourney({ detail }: { detail: JourneyDetail }) {
               {detail.why.headline}
             </h2>
           </Reveal>
-          <RevealGroup as="ol" className="m-0 list-none p-0" stagger={0.06}>
+          <RevealGroup as="ul" className="m-0 list-none p-0" stagger={0.06}>
             {detail.why.highlights.map((highlight) => (
               <RevealItem
                 as="li"
                 key={highlight.n}
                 distance={14}
-                className="grid grid-cols-[3.5rem_minmax(0,1fr)] gap-4 border-t border-line py-6"
+                className="border-t border-line py-6"
               >
-                <span aria-hidden className="h5 text-acqua-text">
-                  {highlight.n}
-                </span>
                 <div>
                   <h3 className="h5 mb-1.5">{highlight.title}</h3>
                   <p className="prose-body-sm">{highlight.body}</p>
@@ -395,7 +393,16 @@ export function DatesAndRates({ journey, cta }: { journey: Journey; cta: string 
               </td>
               <td className="meta py-0 pr-6 text-body md:py-6">
                 <span className="kicker-sm mb-1.5 block md:hidden">From</span>
-                <span className="font-semibold text-ink">{journey.priceFrom}</span> per person
+                {journey.priceFrom ? (
+                  <>
+                    <span className="font-semibold text-ink">{journey.priceFrom}</span> per person
+                  </>
+                ) : (
+                  RATES_TBA
+                )}
+                {journey.flyer?.ratesNote && (
+                  <span className="mt-1 block text-muted">{journey.flyer.ratesNote}</span>
+                )}
               </td>
               <td className="meta py-0 pr-6 md:py-6">
                 <span className="kicker-sm mb-1.5 block md:hidden">Availability</span>
@@ -441,7 +448,9 @@ export function DatesAndRates({ journey, cta }: { journey: Journey; cta: string 
         ) : (
           <div className="flex flex-wrap items-baseline gap-x-10 gap-y-4 border-t border-line pt-6">
             <p className="prose-body-sm measure m-0">
-              What the rate includes is confirmed with the full write-up of the journey.
+              {journey.flyer
+                ? 'International flights are not included. Deposit, payments and cancellation are set out in the booking terms.'
+                : 'What the rate includes is confirmed with the full write-up of the journey.'}
             </p>
             <ButtonLink href="/booking-terms" variant="rule" arrow>
               Booking terms

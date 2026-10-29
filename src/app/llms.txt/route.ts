@@ -27,13 +27,13 @@ export async function GET() {
     ...journeys.map(
       (j) =>
         `- [${j.title}](${url(`/journeys/${j.slug}`)}): ${j.country}, ${j.region}. ${j.days} days, ` +
-        `departs ${j.departureWindow}, from ${j.priceFrom} per person, maximum ${j.groupMax} guests` +
+        `${j.departureISO ? `departs ${j.departureWindow}` : 'dates to be announced'}, ${j.priceFrom ? `from ${j.priceFrom} per person` : 'rates to be announced'}, maximum ${j.groupMax} guests` +
         `${j.hostedByMarc ? ', hosted by Marc' : ''}${j.status && j.status !== 'open' ? ` (${j.status.replace('-', ' ')})` : ''}. ${j.lead}`,
     ),
     '',
     '## Key pages',
     '',
-    `- [All journeys](${url('/journeys')}): the current list, filterable by destination, season and who it suits`,
+    `- [All journeys](${url('/journeys')}): the current list, filterable by destination`,
     `- [Destinations](${url('/destinations')}): the countries the journeys go to`,
     `- [Experiences](${url('/experiences')}): what a day on a journey can hold`,
     `- [Our story](${url('/our-story')}): ${site.founder.name} and the philosophy behind the journeys`,

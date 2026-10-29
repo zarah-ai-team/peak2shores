@@ -112,8 +112,12 @@ export function WaysToTravel() {
     <section ref={section} className="hc-ways" id="ways" aria-labelledby="ways-title">
       <div className="head dk">
         <div>
-          <h2 id="ways-title">Experiences</h2>
-          <p className="sub-h">Experience the world your way.</p>
+          {/* "Ways to experience", so it no longer clashes with the Experiences page. */}
+          <p className="eyebrow">
+            <i aria-hidden />
+            Ways to experience
+          </p>
+          <h2 id="ways-title">Experience the world your way.</h2>
         </div>
         <div className="wnav">
           <span className="count">
@@ -211,14 +215,16 @@ export function WaysToTravel() {
         ))}
       </div>
 
-      <div className="prog" aria-hidden>
-        <i style={{ width: `${Math.round((shown / ways.length) * 100)}%` }} />
-      </div>
-      <div className="ctarow left">
-        <span className="hint">Not sure which suits you?</span>
-        <Link className="btn btn-ink" href="/plan#contact">
-          Speak to a travel designer <Arrow />
-        </Link>
+      <div className="wfoot">
+        <div className="prog" aria-hidden>
+          <i style={{ width: `${Math.round((shown / ways.length) * 100)}%` }} />
+        </div>
+        <div className="ctarow">
+          <span className="hint">Not sure which suits you?</span>
+          <Link className="btn btn-ink" href="/plan#contact">
+            Speak to a travel designer <Arrow />
+          </Link>
+        </div>
       </div>
     </section>
   );

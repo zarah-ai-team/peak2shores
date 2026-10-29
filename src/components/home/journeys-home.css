@@ -1,0 +1,769 @@
+/*
+ * 04 — Small Luxury Group Journeys (FeaturedJourneys + JourneySlider).
+ * A deep-blue panel risen over the paper: heading, the three promises as
+ * glass cards, then the journeys as one large rounded slider. Sizes are
+ * drawn at 1440px and scale with the viewport on a desktop, with floors that
+ * keep text legible and targets at least 44px. Scoped to `.hc-jr`.
+ */
+
+.hc-jr {
+  --gold: #d8b27a;
+  --gold-hi: #e8c890;
+  --mist: #c9d6de;
+  --sand: #e9e3d6;
+  /* Section titles on this panel: the sky blue, which reads on deep blue. */
+  --title: var(--sky);
+  --inset: clamp(0.5rem, 1.67vw, 1.5rem);
+  --pad: clamp(1.25rem, 4.44vw, 4rem);
+  background: var(--paper);
+  padding: clamp(1rem, 1.67vw, 1.5rem) var(--inset) clamp(3.5rem, 5vw, 5.5rem);
+}
+.hc-jr .panel {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: clamp(1.5rem, 2.78vw, 2.5rem);
+  background: radial-gradient(120% 60% at 85% 0%, #14506f 0%, #0e2f42 45%, var(--night) 100%);
+  color: #fff;
+  padding: clamp(3.5rem, 6.11vw, 5.5rem) var(--pad) var(--pad);
+}
+
+/* The peaks-to-shores line, faint, top right. */
+.hc-jr .motif {
+  position: absolute;
+  z-index: -1;
+  top: clamp(1rem, 2.36vw, 2.125rem);
+  right: -1.25rem;
+  width: clamp(20rem, 44.4vw, 40rem);
+  height: auto;
+  opacity: 0.22;
+  pointer-events: none;
+}
+.hc-jr .drift {
+  animation: jr-drift 9s ease-in-out infinite;
+}
+@keyframes jr-drift {
+  50% {
+    transform: translateX(-18px);
+  }
+}
+
+/* -- Heading ------------------------------------------------------------- */
+.hc-jr .head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem 2rem;
+  margin-bottom: clamp(2.25rem, 3.89vw, 3.5rem);
+}
+.hc-jr .gl {
+  display: block;
+  width: 3.5rem;
+  height: 1px;
+  margin-bottom: 1.125rem;
+  background: var(--gold);
+}
+.hc-jr h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--h2);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+.hc-jr .head p.sub-h {
+  font-style: italic;
+  color: var(--mist);
+  opacity: 1;
+}
+
+/* Buttons on the deep blue: white or gold, and gold or white on hover. */
+.hc-jr .btn {
+  white-space: nowrap;
+}
+.hc-jr .btn-light:hover {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--ink);
+}
+.hc-jr .btn-line:hover {
+  background: #fff;
+  border-color: #fff;
+  color: var(--ink);
+}
+.hc-jr .btn-gold {
+  background: var(--gold);
+  border: 1px solid var(--gold);
+  color: var(--ink);
+  font-weight: 600;
+}
+.hc-jr .btn-gold:hover {
+  background: #fff;
+  border-color: #fff;
+}
+
+/* -- The three promises: glass cards ------------------------------------- */
+.hc-jr .pts {
+  list-style: none;
+  margin: 0 0 clamp(2.5rem, 4.44vw, 4rem);
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.67vw, 1.5rem);
+}
+.hc-jr .pts li {
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(1rem, 1.53vw, 1.375rem);
+  padding: clamp(1.25rem, 2.08vw, 1.875rem) clamp(1.25rem, 2.22vw, 2rem);
+  border-radius: 1.5rem;
+  background: rgb(255 255 255 / 0.06);
+  border: 1px solid rgb(255 255 255 / 0.14);
+  backdrop-filter: blur(10px);
+  transition:
+    transform 0.8s var(--ease),
+    background-color 0.8s var(--ease),
+    border-color 0.8s var(--ease);
+}
+.hc-jr .pts li:hover {
+  transform: translateY(-0.5rem);
+  background: rgb(255 255 255 / 0.1);
+  border-color: rgb(216 178 122 / 0.55);
+}
+.hc-jr .ico {
+  flex: 0 0 auto;
+  width: clamp(2.75rem, 3.89vw, 3.5rem);
+  height: clamp(2.75rem, 3.89vw, 3.5rem);
+  border-radius: 50%;
+  border: 1px solid rgb(216 178 122 / 0.6);
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.6s var(--ease),
+    color 0.6s var(--ease);
+}
+.hc-jr .ico svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.hc-jr .pts li:hover .ico {
+  background: var(--gold);
+  color: #0e2f42;
+}
+.hc-jr .pts h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.25rem, 1.67vw, 1.5rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5rem;
+}
+.hc-jr .pts p {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: clamp(0.875rem, 1.04vw, 0.9375rem);
+  line-height: 1.6;
+  color: var(--mist);
+  margin: 0;
+}
+
+/* -- The slider ----------------------------------------------------------- */
+.hc-jr .frame {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  height: clamp(38rem, 52.8vw, 47.5rem);
+  border-radius: clamp(1.25rem, 2.22vw, 2rem);
+  background: var(--night);
+  box-shadow: 0 2.5rem 5.625rem rgb(0 0 0 / 0.35);
+}
+.hc-jr .bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  opacity: 0;
+  transition: opacity 1.4s var(--ease);
+}
+.hc-jr .bg.on {
+  opacity: 1;
+}
+.hc-jr .bg img {
+  transform: scale(1.1);
+  transition: transform 9s var(--ease);
+}
+.hc-jr .bg.on img {
+  transform: scale(1.02);
+}
+.hc-jr .hzbg {
+  background: var(--night);
+}
+.hc-jr .hz {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+/* The finale's picture moves gently: stars, the route, the sun, the waves. */
+.hc-jr .hz .tw {
+  animation: jr-tw 3.5s ease-in-out infinite;
+}
+.hc-jr .hz .tw2 {
+  animation-delay: 1.6s;
+}
+.hc-jr .hz .route {
+  animation: jr-march 4s linear infinite;
+}
+.hc-jr .hz .ping {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: jr-ping 2.4s var(--ease) infinite;
+}
+.hc-jr .hz .glow {
+  animation: jr-glow 6s ease-in-out infinite;
+}
+.hc-jr .hz .sunrise {
+  transform: translateY(90px);
+  transition: transform 2.4s var(--ease) 0.2s;
+}
+.hc-jr .hzbg.on .sunrise {
+  transform: none;
+}
+@keyframes jr-tw {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+@keyframes jr-march {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+@keyframes jr-ping {
+  0% {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+@keyframes jr-glow {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Shade for the words over a photograph: from the left, and from below. */
+.hc-jr .shade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(to top, rgb(8 20 28 / 0.72) 0%, rgb(8 20 28 / 0) 42%),
+    linear-gradient(
+      90deg,
+      rgb(8 20 28 / 0.85) 0%,
+      rgb(8 20 28 / 0.55) 36%,
+      rgb(8 20 28 / 0.12) 64%,
+      rgb(8 20 28 / 0.08) 100%
+    );
+  transition: opacity 0.9s var(--ease);
+}
+.hc-jr .fin .shade {
+  opacity: 0;
+}
+
+/* Every slide's words share one place; only the current one shows. */
+.hc-jr .stage {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  padding: 0 clamp(2rem, 3.89vw, 3.5rem) clamp(2.5rem, 5vw, 4.5rem);
+  pointer-events: none;
+}
+.hc-jr .copy {
+  grid-area: 1 / 1;
+  align-self: end;
+  width: min(35rem, 44%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(0.75rem, 1.25vw, 1.125rem);
+  opacity: 0;
+  transform: translateY(1.375rem);
+  transition:
+    opacity 0.7s var(--ease),
+    transform 0.9s var(--ease);
+}
+.hc-jr .copy.on {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  transition-delay: 0.35s;
+}
+.hc-jr .copy > * {
+  margin: 0;
+}
+.hc-jr .eye {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.hc-jr .eye .rule {
+  display: block;
+  width: 2.5rem;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1s var(--ease) 0.6s;
+}
+.hc-jr .copy.on .rule {
+  transform: scaleX(1);
+}
+.hc-jr .copy h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(2.125rem, 3.89vw, 3.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.hc-jr .copy .lead {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.125rem, 1.53vw, 1.375rem);
+  line-height: 1.35;
+  color: var(--sand);
+}
+.hc-jr .facts {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  color: var(--mist);
+}
+.hc-jr .facts [aria-hidden] {
+  color: var(--gold);
+}
+.hc-jr .acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.875rem;
+  margin-top: 0.625rem !important;
+}
+
+/* The finale: centred, high on the frame, large. */
+.hc-jr .copy.finale {
+  align-self: start;
+  justify-self: stretch;
+  width: auto;
+  align-items: center;
+  text-align: center;
+  gap: clamp(1rem, 1.53vw, 1.375rem);
+  padding: clamp(3.5rem, 7.78vw, 7rem) clamp(0rem, 4.44vw, 4rem) 0;
+}
+.hc-jr .copy.finale.on > * {
+  animation: jr-up 1s var(--ease) both;
+}
+.hc-jr .copy.finale.on > :nth-child(2) {
+  animation-delay: 0.15s;
+}
+.hc-jr .copy.finale.on > :nth-child(3) {
+  animation-delay: 0.35s;
+}
+.hc-jr .copy.finale.on > :nth-child(4) {
+  animation-delay: 0.5s;
+}
+@keyframes jr-up {
+  from {
+    opacity: 0;
+    transform: translateY(1.625rem);
+  }
+}
+.hc-jr .pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  height: 2.125rem;
+  padding: 0 1rem;
+  border-radius: 999px;
+  border: 1px solid rgb(216 178 122 / 0.6);
+  background: rgb(8 22 32 / 0.35);
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.hc-jr .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: jr-blink 1.8s ease-in-out infinite;
+}
+@keyframes jr-blink {
+  50% {
+    opacity: 0.25;
+  }
+}
+.hc-jr .finale h3 {
+  max-width: 15ch;
+  font-size: clamp(2.5rem, 6.67vw, 6rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  text-shadow: 0 6px 40px rgb(8 22 32 / 0.5);
+}
+.hc-jr .finale h3 em {
+  font-style: italic;
+  color: var(--gold-hi);
+}
+.hc-jr .finale .lead {
+  max-width: 34ch;
+}
+.hc-jr .finale .acts {
+  justify-content: center;
+}
+
+/* -- Up next, and the controls ------------------------------------------- */
+.hc-jr .side {
+  position: absolute;
+  right: clamp(1.5rem, 3.33vw, 3rem);
+  bottom: clamp(2.5rem, 5vw, 4.5rem);
+  width: min(33.5rem, 44%);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 2.5vw, 2.25rem);
+}
+.hc-jr .next {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--cards, 3), calc((100% - 2rem) / 3));
+  justify-content: end;
+  gap: 1rem;
+  transition: opacity 0.9s var(--ease);
+}
+.hc-jr .fin .next {
+  opacity: 0;
+  pointer-events: none;
+}
+.hc-jr .card {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 168 / 236;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 1.125rem;
+  border: 1px solid rgb(255 255 255 / 0.28);
+  color: #fff;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 0.8s var(--ease),
+    box-shadow 0.8s var(--ease),
+    border-color 0.6s var(--ease);
+}
+.hc-jr .card.horizon {
+  background: linear-gradient(160deg, #b8925a 0%, #0e2f42 62%, var(--night) 100%);
+}
+.hc-jr .card img {
+  transition: transform 1.4s var(--ease);
+}
+.hc-jr .card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgb(8 20 28 / 0.88) 0%,
+    rgb(8 20 28 / 0.2) 55%,
+    rgb(8 20 28 / 0) 100%
+  );
+}
+.hc-jr .card:hover {
+  transform: translateY(-0.625rem);
+  border-color: rgb(216 178 122 / 0.8);
+  box-shadow: 0 30px 60px rgb(0 0 0 / 0.45);
+}
+.hc-jr .card:hover img {
+  transform: scale(1.08);
+}
+.hc-jr .card .num,
+.hc-jr .card .cap,
+.hc-jr .card .mark {
+  position: absolute;
+  z-index: 1;
+}
+/* A bright photograph still lets the number and name read. */
+.hc-jr .card .num,
+.hc-jr .card .cap {
+  text-shadow: 0 1px 0.5rem rgb(8 20 28 / 0.6);
+}
+.hc-jr .card .num {
+  left: 1rem;
+  top: 0.875rem;
+  font-family: var(--serif);
+  font-size: 0.875rem;
+  color: rgb(255 255 255 / 0.85);
+}
+.hc-jr .card .mark {
+  left: 50%;
+  top: 40%;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin: -1.75rem 0 0 -1.75rem;
+  border-radius: 50%;
+  border: 1px solid rgb(216 178 122 / 0.8);
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hc-jr .card .mark svg {
+  width: 1.375rem;
+  height: 1.375rem;
+}
+.hc-jr .card .cap {
+  left: 0.875rem;
+  right: 0.875rem;
+  bottom: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+.hc-jr .card .ey {
+  font-family: var(--sans);
+  font-size: 0.5625rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.hc-jr .card .t {
+  font-family: var(--serif);
+  font-size: clamp(0.9375rem, 1.18vw, 1.0625rem);
+  line-height: 1.2;
+}
+
+.hc-jr .ctrl {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.hc-jr .round {
+  flex: 0 0 auto;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 1px solid rgb(255 255 255 / 0.45);
+  background: transparent;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background-color 0.4s var(--ease),
+    color 0.4s var(--ease),
+    border-color 0.4s var(--ease);
+}
+.hc-jr .round:hover {
+  background: #fff;
+  border-color: #fff;
+  color: var(--ink);
+}
+.hc-jr .round svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* The gold line fills over the 7 s a slide stays, and holds when paused. */
+.hc-jr .prog {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 1.5rem;
+  height: 1px;
+  margin: 0 0.75rem;
+  background: rgb(255 255 255 / 0.28);
+}
+.hc-jr .prog i {
+  position: absolute;
+  inset: 0;
+  background: var(--gold);
+  transform-origin: left;
+  animation: jr-fill 7s linear both paused;
+}
+.hc-jr .frame[data-run] .prog i {
+  animation-play-state: running;
+}
+@keyframes jr-fill {
+  from {
+    transform: scaleX(0);
+  }
+}
+.hc-jr .play {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 2.75rem;
+  height: 2.75rem;
+  padding: 0 0.375rem;
+  background: none;
+  border: 0;
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.hc-jr .play svg {
+  width: 0.75rem;
+  height: 0.75rem;
+  fill: currentColor;
+}
+.hc-jr .count {
+  flex: 0 0 auto;
+  margin: 0 0 0 0.625rem;
+  font-family: var(--serif);
+  font-size: clamp(2rem, 3.06vw, 2.75rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: lining-nums;
+}
+.hc-jr .count small {
+  margin-left: 0.375rem;
+  font-size: 0.9375rem;
+  color: rgb(255 255 255 / 0.55);
+}
+
+/* -- Tablet and phone: the words, then the controls, under the picture --- */
+@media (max-width: 1100px) {
+  .hc-jr .pts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 900px) {
+  .hc-jr .frame {
+    height: auto;
+    min-height: 40rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .hc-jr .shade {
+    background: linear-gradient(
+      to top,
+      rgb(8 20 28 / 0.92) 0%,
+      rgb(8 20 28 / 0.6) 48%,
+      rgb(8 20 28 / 0.1) 80%
+    );
+  }
+  .hc-jr .stage {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 4rem 1.25rem 1.5rem;
+  }
+  .hc-jr .copy {
+    width: auto;
+  }
+  .hc-jr .copy.finale {
+    align-self: center;
+    padding: 0;
+  }
+  .hc-jr .side {
+    position: relative;
+    inset: auto;
+    width: auto;
+    padding: 0 1.25rem 1.25rem;
+  }
+  .hc-jr .next {
+    display: none;
+  }
+}
+@media (max-width: 600px) {
+  .hc-jr .head .btn {
+    width: 100%;
+  }
+  .hc-jr .ctrl {
+    gap: 0.5rem;
+  }
+  .hc-jr .round {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+  .hc-jr .prog {
+    margin: 0 0.25rem;
+  }
+  .hc-jr .play .pt {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .hc-jr .count {
+    margin-left: 0.25rem;
+  }
+  .hc-jr .acts .btn {
+    flex: 1 1 auto;
+  }
+}
+
+/* -- Reduced motion: nothing drifts, rises or fills; slides simply change. */
+@media (prefers-reduced-motion: reduce) {
+  .hc-jr .drift,
+  .hc-jr .hz *,
+  .hc-jr .dot,
+  .hc-jr .copy.finale.on > *,
+  .hc-jr .prog i {
+    animation: none !important;
+  }
+  .hc-jr .bg img,
+  .hc-jr .bg.on img,
+  .hc-jr .copy,
+  .hc-jr .hz .sunrise,
+  .hc-jr .pts li:hover,
+  .hc-jr .card:hover,
+  .hc-jr .card:hover img {
+    transform: none;
+  }
+  .hc-jr .eye .rule {
+    transform: none;
+  }
+}

@@ -7,7 +7,7 @@ import { hotels } from '@/lib/data/home';
 import { Chevron, HomeMedia } from './HomeMedia';
 
 /**
- * 08 — Hotels, lodges & camps: five tall cards that turn over on hover or
+ * 08 — Hotels & lodges: five tall cards that turn over on hover or
  * tap to show the one detail that earns the place its booking and what lies
  * near it. Five across on a wide screen, a rail below that: swiped on a touch
  * screen, moved with the arrows beside the hint on a desktop. A bracketed
@@ -34,14 +34,14 @@ export function HotelFlips() {
 
   return (
     <section className="hc-hot" aria-labelledby="hotels-title">
-      <div className="head">
-        <div>
-          <h2 id="hotels-title">Hotels, lodges &amp; camps</h2>
-          <p className="sub-h">
-            Chosen for what they contribute to the journey, far beyond their star rating.
-          </p>
-        </div>
-        <p>Each place we stay earns its place for a reason we can name.</p>
+      <div className="head solo">
+        <p className="eyebrow">
+          <i aria-hidden />
+          Hotels &amp; lodges
+        </p>
+        <h2 id="hotels-title">
+          Chosen for what they contribute to the journey, far beyond their star rating.
+        </h2>
       </div>
 
       <div className="flips" ref={rail}>

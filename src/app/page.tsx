@@ -7,7 +7,6 @@ import { WaysToTravel } from '@/components/home/WaysToTravel';
 import { FeaturedJourneys } from '@/components/home/FeaturedJourneys';
 import { WhyPeaks } from '@/components/home/WhyPeaks';
 import { HowWeTravel } from '@/components/home/HowWeTravel';
-import { NameSlider } from '@/components/home/NameSlider';
 import { HotelFlips } from '@/components/home/HotelFlips';
 import { ExperienceWords } from '@/components/home/ExperienceWords';
 import { ExpertButton } from '@/components/home/ExpertButton';
@@ -47,10 +46,8 @@ export const revalidate = 3600;
  * out A&K-style (every departure as a card):
  *
  * the reel → who we are → ways to travel → the group journeys →
- * Marc's line → how we travel → why us → the name → the founder → where we stay → what you do
+ * Marc's line → how we travel → the experience → the founder → where we stay → what you do
  * → the circle. "Speak to a travel designer" stays in reach throughout.
- * ("Why travel with us", `WhyTravel` in HowWeTravel.tsx, is held back at the
- * client's request; it returns by placing it after <WhyPeaks />.)
  *
  * Grounds: film → paper → paper → paper → paper (ruled) → paper (ruled) →
  * photo → paper + stone → deep lake → film → photo → footer.
@@ -67,7 +64,6 @@ export default async function HomePage() {
       <Statement />
       <HowWeTravel />
       <WhyPeaks />
-      <NameSlider />
       <FounderStory />
       <HotelFlips />
       <ExperienceWords />

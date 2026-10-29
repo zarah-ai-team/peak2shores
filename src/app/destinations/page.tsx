@@ -9,6 +9,7 @@ import { journeyTagStatus } from '@/components/pages/journeyStatus';
 import { getDestinations, pageMetadata, type Destination } from '@/lib/content';
 import { getMedia } from '@/lib/media';
 import { site } from '@/lib/site';
+import { RATES_TBA } from '@/lib/journeys';
 
 export const metadata = pageMetadata({
   title: 'Destinations',
@@ -215,7 +216,13 @@ function Country({ place, index }: { place: Destination; index: number }) {
                     <span className="dz-j-facts">
                       <span>{journey.departureWindow}</span>
                       <span>
-                        From <b>{journey.priceFrom}</b> per person
+                        {journey.priceFrom ? (
+                          <>
+                            From <b>{journey.priceFrom}</b> per person
+                          </>
+                        ) : (
+                          RATES_TBA
+                        )}
                       </span>
                     </span>
                   </span>
