@@ -33,8 +33,8 @@ export function Faq({ items, id = 'faq' }: { items: FaqItem[]; id?: string }) {
           {items.map((item) => (
             <li key={item.question} className="border-b border-line">
               <details className="journey-day group/day">
-                <summary className="grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_24px] items-baseline gap-x-4 py-6">
-                  <h3 className="h5 m-0 transition-colors duration-300 group-hover/day:text-acqua-text">
+                <summary className="grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_1.5rem] items-baseline gap-x-4 py-6 lg:py-[clamp(1rem,1.27vw,1.5rem)]">
+                  <h3 className="h5 m-0 transition-colors duration-300 group-hover/day:text-brand">
                     {item.question}
                   </h3>
                   <span
@@ -42,7 +42,9 @@ export function Faq({ items, id = 'faq' }: { items: FaqItem[]; id?: string }) {
                     className="day-toggle relative block size-4 self-center justify-self-end"
                   />
                 </summary>
-                <p className="prose-body measure pb-8">{item.answer}</p>
+                <p className="prose-body measure pb-8 lg:pb-[clamp(1.25rem,1.695vw,2rem)]">
+                  {item.answer}
+                </p>
               </details>
             </li>
           ))}

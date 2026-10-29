@@ -53,7 +53,7 @@ export function PeaksShoresSlider({ content }: { content: Content }) {
   return (
     <div
       ref={box}
-      className="relative h-[70svh] min-h-[420px] touch-pan-y lg:h-auto lg:min-h-0 lg:flex-1 select-none overflow-hidden bg-navy-deep text-on-dark"
+      className="relative h-[70svh] min-h-[26.25rem] touch-pan-y lg:h-auto lg:min-h-0 lg:flex-1 select-none overflow-hidden bg-navy-deep text-on-dark"
       onPointerDown={(e) => {
         dragging.current = true;
         e.currentTarget.setPointerCapture(e.pointerId);
@@ -75,7 +75,7 @@ export function PeaksShoresSlider({ content }: { content: Content }) {
       />
 
       {/* The two lines, each on its own side. */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 grid grid-cols-2 gap-6 px-[var(--site-gutter)] pb-[clamp(32px,6vh,72px)]">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 grid grid-cols-2 gap-6 px-[var(--site-gutter)] pb-[clamp(2rem,6vh,4.5rem)]">
         <div style={{ opacity: peaksOpacity }} className="transition-opacity duration-300">
           <div className="h1">{peaks}</div>
           <p className="prose-body mt-4 hidden max-w-[34ch] text-on-dark md:block">

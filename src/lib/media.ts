@@ -959,7 +959,7 @@ export const media = {
   'marc-portrait': {
     label: 'Marc Haeni',
     brief: 'Studio portrait of Marc Haeni.',
-    tone: '#d9d0bf',
+    tone: '#dfecf5', // the stone ground he is cut out against (--color-stone)
     src: '/brand/marc.webp',
     alt: 'Marc Haeni, founder of Peaks2Shores',
     width: 1150,

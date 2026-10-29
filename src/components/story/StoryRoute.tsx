@@ -53,10 +53,10 @@ export function StoryRoute({ stops }: { stops: RouteStop[] }) {
       <div>
         <div className="relative">
           {/* The route: one ruled line, filled in blue as far as the current stop. */}
-          <span aria-hidden className="absolute inset-x-0 top-[3px] h-px bg-line" />
+          <span aria-hidden className="absolute inset-x-0 top-[0.1875rem] h-px bg-line" />
           <span
             aria-hidden
-            className="absolute left-0 top-[2px] h-[3px] bg-acqua transition-[width] duration-700 ease-out motion-reduce:transition-none"
+            className="absolute left-0 top-[2px] h-[0.1875rem] bg-acqua transition-[width] duration-700 ease-out motion-reduce:transition-none"
             style={{ width: `${fill}%` }}
           />
           <ol className="relative m-0 grid list-none grid-cols-2 gap-y-10 p-0 sm:grid-cols-4">
@@ -74,16 +74,16 @@ export function StoryRoute({ stops }: { stops: RouteStop[] }) {
                   >
                     <span
                       aria-hidden
-                      className={`absolute left-0 top-[-3px] block size-[13px] rounded-full border-2 transition-all duration-500 motion-reduce:transition-none ${
+                      className={`absolute left-0 top-[-0.1875rem] block size-[0.8125rem] rounded-full border-2 transition-all duration-500 motion-reduce:transition-none ${
                         passed ? 'border-acqua bg-acqua' : 'border-line bg-panel'
-                      } ${on ? 'scale-125 shadow-[0_0_0_6px_rgb(122_204_253/0.25)]' : ''}`}
+                      } ${on ? 'scale-125 shadow-[0_0_0_0.375rem_rgb(122_204_253/0.25)]' : ''}`}
                     />
                     <span className="kicker-sm mb-2 block">
                       {String(i + 1).padStart(2, '0')} · {stop.n}
                     </span>
                     <span
                       className={`h4 block transition-colors duration-500 ${
-                        on ? 'text-acqua-text' : 'group-hover:text-acqua-text'
+                        on ? 'text-acqua-text' : 'group-hover:text-brand'
                       }`}
                     >
                       {stop.label}
@@ -96,7 +96,7 @@ export function StoryRoute({ stops }: { stops: RouteStop[] }) {
         </div>
       </div>
 
-      <figure className="relative m-0 aspect-[4/3] overflow-hidden rounded-[6px] bg-navy-deep">
+      <figure className="relative m-0 aspect-[4/3] overflow-hidden rounded-[0.375rem] bg-navy-deep">
         {stops.map((stop, i) =>
           stop.src ? (
             <Image

@@ -149,7 +149,7 @@ export function MobileMenu({ open, onClose, returnFocusTo, primary, cta }: Mobil
           exit={{ opacity: 0, transition: { duration: duration.ui, ease: ease.exit } }}
           transition={{ duration: duration.uiSlow, ease: ease.editorial }}
         >
-          <div className="container-site flex h-full flex-col overflow-y-auto pb-10 pt-[calc(var(--nav-h)+16px)]">
+          <div className="container-site flex h-full flex-col overflow-y-auto pb-10 pt-[calc(var(--nav-h)+1rem)]">
             <nav aria-label="Primary" className="flex flex-col border-t border-line-dark">
               {primary.map((item, i) => {
                 const active = pathname?.startsWith(item.href);
@@ -193,7 +193,7 @@ export function MobileMenu({ open, onClose, returnFocusTo, primary, cta }: Mobil
               <Link
                 href={cta.href}
                 onClick={onClose}
-                className="btn inline-flex min-h-11 items-center gap-3 self-start bg-ivory px-7 py-[17px] font-ui text-[11.5px] font-medium uppercase leading-none tracking-[0.16em] text-ink hover:bg-brand hover:text-white"
+                className="btn inline-flex min-h-11 items-center gap-3 self-start bg-ivory px-7 py-[1.0625rem] font-ui text-[0.71875rem] font-medium uppercase leading-none tracking-[0.16em] text-ink hover:bg-brand hover:text-white"
               >
                 {cta.label}
                 <Arrow />

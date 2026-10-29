@@ -1,12 +1,16 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { pillars, reasons } from '@/lib/data/copy';
 import { getMedia } from '@/lib/media';
 import { site } from '@/lib/site';
+import { TiltCards } from './TiltCards';
 
 /**
- * How we travel — the four pillars as dark cards, the second and fourth set
- * lower, so the row reads as a sequence rather than a grid. Each card: its
- * number and name, the lead, the line, and its photograph.
+ * How we travel — the four pillars as journal cards, set like the departures'
+ * cards: the number and name, the lead, the photograph, the line, and the way
+ * on to the pillars on Our Story. The second and fourth sit lower. Under the
+ * pointer a card tilts toward it, each part lifted off the card at its own
+ * depth (TiltCards).
  */
 export function HowWeTravel() {
   return (
@@ -20,33 +24,49 @@ export function HowWeTravel() {
           Peaks2Shores isn’t a personal brand. It’s a promise — and these are the four parts of it.
         </p>
       </div>
-      <ol className="cards">
+      <TiltCards className="cards">
         {pillars.map((p) => {
           const photo = getMedia(p.media);
           return (
             <li key={p.n} className="card">
-              <div className="top">
-                <span className="n">{p.n}</span>
-                <span className="tag">{p.title} +</span>
-              </div>
+              <p className="kick">
+                <span>{p.n}</span>
+                <span aria-hidden>·</span>
+                <span>{p.title}</span>
+              </p>
               <h3>{p.lead}</h3>
-              <p>{p.body}</p>
               {photo.src && (
                 <div className="ph">
                   <Image
                     src={photo.src}
                     alt={photo.alt ?? ''}
                     fill
-                    sizes="(max-width: 900px) 90vw, 22vw"
+                    sizes="(max-width: 700px) 90vw, (max-width: 1100px) 45vw, 22vw"
                     className="fill"
                   />
                 </div>
               )}
-              <span className="cap">— {p.title}</span>
+              <p className="note">{p.body}</p>
+              <p className="foot">
+                <Link href="/our-story#pillars-title">
+                  Read more<span className="sr-only">: {p.title}</span>
+                  <svg
+                    width="10"
+                    height="10"
+                    viewBox="0 0 10 10"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.2"
+                    aria-hidden
+                  >
+                    <path d="M2 8 8 2M3.5 2H8v4.5" />
+                  </svg>
+                </Link>
+              </p>
             </li>
           );
         })}
-      </ol>
+      </TiltCards>
     </section>
   );
 }

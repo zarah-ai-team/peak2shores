@@ -93,9 +93,12 @@ export function WaysToTravel() {
     });
   }, [inView]);
 
+  /* One tile and the gap after it; both follow the viewport, so both are read. */
   const step = () => {
-    const card = rail.current?.querySelector<HTMLElement>('.wt');
-    return card ? card.offsetWidth + 18 : 400;
+    const el = rail.current;
+    const card = el?.querySelector<HTMLElement>('.wt');
+    if (!el || !card) return 400;
+    return card.offsetWidth + (parseFloat(getComputedStyle(el).columnGap) || 0);
   };
   const play = (i: number) => {
     const el = films.current[i];

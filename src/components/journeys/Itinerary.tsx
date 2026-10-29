@@ -34,7 +34,7 @@ export function Itinerary({
   return (
     <section id="itinerary" aria-labelledby="itinerary-title" className="py-section-sm">
       <div className="container-site grid-site gap-y-block">
-        <div className="col-span-4 self-start md:col-span-8 lg:sticky lg:top-[calc(var(--nav-h-compact)+96px)] lg:col-span-4">
+        <div className="col-span-4 self-start md:col-span-8 lg:sticky lg:top-[calc(var(--nav-h-compact)+6rem)] lg:col-span-4">
           <SectionLabel className="mb-stack">{kicker}</SectionLabel>
           <Reveal variant="mask">
             <h2 id="itinerary-title" className="h2 mb-stack max-w-[16ch]">
@@ -42,7 +42,7 @@ export function Itinerary({
             </h2>
           </Reveal>
           <p className="prose-body-sm flex items-center gap-3">
-            <Tick className="w-[18px]" />
+            <Tick className="w-[1.125rem]" />
             Free time is deliberate. It’s the point.
           </p>
         </div>
@@ -57,11 +57,11 @@ export function Itinerary({
               return (
                 <li key={day.n} id={`day-${day.n}`} className="border-b border-line">
                   <details className="journey-day group/day" open={i === 0}>
-                    <summary className="grid cursor-pointer list-none grid-cols-[72px_minmax(0,1fr)_24px] items-baseline gap-x-4 py-6 md:grid-cols-[96px_minmax(0,1fr)_24px]">
+                    <summary className="grid cursor-pointer list-none grid-cols-[4.5rem_minmax(0,1fr)_1.5rem] items-baseline gap-x-4 py-6 md:grid-cols-[6rem_minmax(0,1fr)_1.5rem]">
                       <span className="kicker text-acqua-text">Day {pad(day.n)}</span>
                       <span>
                         <span className="kicker-sm mb-1.5 block">{day.where}</span>
-                        <span className="h5 block transition-colors duration-300 group-hover/day:text-acqua-text">
+                        <span className="h5 block transition-colors duration-300 group-hover/day:text-brand">
                           {day.title}
                         </span>
                       </span>
@@ -70,7 +70,7 @@ export function Itinerary({
                         className="day-toggle relative block size-4 self-center justify-self-end"
                       />
                     </summary>
-                    <div className="grid gap-x-8 gap-y-6 pb-8 md:grid-cols-[96px_minmax(0,1fr)]">
+                    <div className="grid gap-x-8 gap-y-6 pb-8 md:grid-cols-[6rem_minmax(0,1fr)]">
                       <div aria-hidden className="hidden md:block" />
                       <div className={pictured ? 'grid gap-8 lg:grid-cols-2 lg:items-start' : ''}>
                         {pictured && (

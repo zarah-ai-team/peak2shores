@@ -678,12 +678,12 @@ export function Globe({
       />
       <div
         ref={labelRef}
-        className="pointer-events-none absolute left-0 top-0 whitespace-nowrap bg-navy-deep px-3 py-2 text-on-dark shadow-[0_8px_24px_rgb(10_34_50/0.18)] transition-opacity duration-200"
+        className="pointer-events-none absolute left-0 top-0 whitespace-nowrap bg-navy-deep px-3 py-2 text-on-dark shadow-[0_0.5rem_1.5rem_rgb(10_34_50/0.18)] transition-opacity duration-200"
         style={{ opacity: hovered ? 1 : 0 }}
       >
         {pin ? (
           <>
-            <span className="h5 block !text-[15px] leading-tight">{pin.title}</span>
+            <span className="h5 block !text-[0.9375rem] leading-tight">{pin.title}</span>
             <span className="kicker-sm mt-1 block !text-acqua">From {pin.when}</span>
           </>
         ) : (

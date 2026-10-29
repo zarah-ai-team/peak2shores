@@ -19,7 +19,11 @@ type PhotoHeroProps = {
    * `split`: photograph cols 1–7 at full height, paper text cols 8–12.
    */
   layout?: 'bleed' | 'split';
-  /** `full` = 100svh (min 600/640px); `tall` = 92svh (min 620px). */
+  /**
+   * `full` = 100svh (min 600/640px); `tall` = 92svh (min 620px). A `split`
+   * opening sits below the solid header, so from 1024px it gives that height
+   * back (min 520px) and the headline lands inside the first screen.
+   */
   height?: 'full' | 'tall';
   /** next/image sizes hint; defaults suit the layout. */
   sizes?: string;
@@ -30,8 +34,14 @@ type PhotoHeroProps = {
 };
 
 const heights = {
-  full: 'h-svh min-h-[600px] md:min-h-[640px]',
-  tall: 'h-[92svh] min-h-[620px]',
+  full: 'h-svh min-h-[37.5rem] md:min-h-[40rem]',
+  tall: 'h-[92svh] min-h-[38.75rem]',
+} as const;
+
+/* Desktop only: below 1024px the split stacks at 70svh (see the Frame). */
+const splitHeights = {
+  full: 'h-[calc(100svh-var(--nav-h))] min-h-[32.5rem]',
+  tall: 'h-[calc(92svh-var(--nav-h))] min-h-[32.5rem]',
 } as const;
 
 /**
@@ -80,9 +90,9 @@ export function PhotoHero({
           priority
           drift={drift}
           sizes={sizes ?? '(min-width: 1024px) 58vw, 100vw'}
-          className={`lg:col-span-7 ${heights[height]} max-lg:h-[70svh] max-lg:min-h-[420px]`}
+          className={`lg:col-span-7 ${splitHeights[height]} max-lg:h-[70svh] max-lg:min-h-[26.25rem]`}
         />
-        <div className="container-site flex flex-col justify-end gap-8 pb-block pt-[calc(var(--nav-h)+48px)] lg:col-span-5 lg:max-w-none lg:pl-[var(--grid-gap)]">
+        <div className="container-site flex flex-col justify-end gap-8 pb-block pt-[calc(var(--nav-h)+3rem)] lg:col-span-5 lg:max-w-none lg:gap-[clamp(1.25rem,1.695vw,2rem)] lg:pl-[var(--grid-gap)]">
           {kicker && (
             <p className="kicker enter m-0" style={enterAt(heroTiming.kicker)}>
               {kicker}
@@ -119,7 +129,7 @@ export function PhotoHero({
         sizes={sizes ?? '100vw'}
         className="absolute! inset-0"
       />
-      <div className="container-site relative flex h-full flex-col justify-end pb-[clamp(40px,7vh,88px)]">
+      <div className="container-site relative flex h-full flex-col justify-end pb-[clamp(2.5rem,7vh,5.5rem)]">
         <div className="grid-site items-end gap-y-8">
           <div className="col-span-full lg:col-span-8">
             {kicker && (
