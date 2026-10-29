@@ -22,7 +22,7 @@ export default function PrivacyPage() {
         {
           heading: 'Who we are',
           body: [
-            `This website is operated by ${site.legalName} (“${site.name}”, “we”, “us”), with offices in ${site.locations.replace(' · ', ' and ')}. We are responsible for the personal information described in this policy.`,
+            `This website is operated by ${site.legalName} (“${site.name}”, “we”, “us”), based in Miami. We are responsible for the personal information described in this policy.`,
             `For any question about your privacy, or to use any of the rights described below, write to ${site.email}. We aim to reply within 30 days.`,
           ],
         },

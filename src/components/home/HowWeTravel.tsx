@@ -14,7 +14,7 @@ export function HowWeTravel() {
       <div className="head">
         <div>
           <h2 id="how-title">How we travel</h2>
-          <p className="sub-h">Four things every journey is held to.</p>
+          <p className="sub-h">Four principles behind every journey.</p>
         </div>
         <p className="sub">
           Peaks2Shores isn’t a personal brand. It’s a promise — and these are the four parts of it.

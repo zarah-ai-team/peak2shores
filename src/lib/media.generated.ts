@@ -95,6 +95,8 @@ export const discovered: Record<string, { src: string }> = {
   'ce-8': { src: '/images/ce-8.jpg' },
   'ce-9': { src: '/images/ce-9.jpg' },
   'ce-10': { src: '/images/ce-10.jpg' },
+  'story-hero': { src: '/images/story-hero.jpg' },
+  'marc-eiger': { src: '/images/marc-eiger.jpg' },
   'jn-1': { src: '/images/jn-1.jpg' },
   'jn-2': { src: '/images/jn-2.jpg' },
   'jn-3': { src: '/images/jn-3.jpg' },

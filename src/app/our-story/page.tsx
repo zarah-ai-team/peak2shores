@@ -3,8 +3,7 @@ import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal';
 import { PhotoHero } from '@/components/ui/PhotoHero';
 import { Section } from '@/components/ui/Section';
 import { DarkCta } from '@/components/ui/DarkCta';
-import { WhyUs } from '@/components/home/WhyUs';
-import { FactList, Quote, SectionLabel, Tick } from '@/components/ui/Editorial';
+import { SectionLabel, Tick } from '@/components/ui/Editorial';
 import { ButtonLink } from '@/components/ui/Button';
 import { StoryRoute } from '@/components/story/StoryRoute';
 import { getMedia } from '@/lib/media';
@@ -13,24 +12,21 @@ import { getPageContent, getSiteSettings, jsonLd, pageMetadata } from '@/lib/con
 export const metadata = pageMetadata({
   title: 'Our story',
   description:
-    'From the peaks of Switzerland to the shores of Miami. Marc Haeni founded Peaks2Shores in 2022 as the natural extension of a life spent traveling and returning.',
+    'From the peaks of Switzerland to the shores of Miami. The story behind Peaks2Shores: thoughtfully curated luxury journeys, brought to life through exceptional hospitality and trusted local expertise.',
   path: '/our-story',
-  image: 'home-hero-2',
+  image: 'story-hero',
 });
 
 /**
- * Our story: the split photographic opening, Marc on stone, why it exists,
- * the signature — the Peaks → Shores route as a working timeline of its four
- * stops (labels only, no new facts) — the four pillars as a typographic
- * grid, why travel with us, and the closing invitation.
+ * Our story, kept short and brand-led (Marc's notes, October 2026): a compact
+ * split opening, the founder beside a smaller portrait, why it exists, the
+ * name as four ideas, the four principles, and the closing invitation.
  */
 export default async function OurStoryPage() {
-  const [{ founder, pillars }, { peaksToShores }, site] = await Promise.all([
+  const [{ founder, pillars }, site] = await Promise.all([
     getPageContent('our-story'),
-    getPageContent('destinations'),
     getSiteSettings(),
   ]);
-  const [firstParagraph, ...otherParagraphs] = founder.body;
 
   /* Marc, as the person behind the company (the Organization is in the layout). */
   const person = {
@@ -41,7 +37,7 @@ export default async function OurStoryPage() {
     jobTitle: site.founder.role,
     worksFor: { '@id': `${site.url}/#organization` },
     url: `${site.url}/our-story`,
-    image: `${site.url}/brand/marc.webp`,
+    image: `${site.url}/images/marc-eiger.jpg`,
   };
 
   return (
@@ -49,12 +45,13 @@ export default async function OurStoryPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(person) }} />
       <PhotoHero
         layout="split"
-        media="home-hero-2"
+        height="compact"
+        media="story-hero"
         titleSize="page-title"
         kicker={
           <span className="flex items-center gap-3.5">
             <Tick />
-            {site.founder.name} · {site.founder.role}
+            The story behind Peaks2Shores
           </span>
         }
         title={[
@@ -64,65 +61,48 @@ export default async function OurStoryPage() {
         ]}
       />
 
-      <Section ground="stone" pad="none" aria-labelledby="founder-title">
-        <div className="grid-site gap-y-block">
+      <Section ground="stone" pad="section-sm" aria-labelledby="founder-title">
+        <div className="grid-site items-center gap-y-block">
           <Frame
-            media="marc-portrait"
-            fit="contain"
-            sizes="(min-width: 1024px) 45vw, 100vw"
-            className="col-span-4 min-h-[480px] md:col-span-6 md:col-start-2 lg:col-span-6 lg:col-start-1 lg:min-h-[720px]"
+            media="marc-eiger"
+            ratio="4/5"
+            sizes="(min-width: 1024px) 30vw, (min-width: 768px) 50vw, 100vw"
+            className="col-span-4 md:col-span-4 lg:col-span-4"
           />
-          <div className="col-span-4 py-section-sm md:col-span-8 lg:col-span-5 lg:col-start-8 lg:self-center">
+          <div className="col-span-4 md:col-span-8 lg:col-span-7 lg:col-start-6">
             <SectionLabel as="h2" id="founder-title" tone="stone" className="mb-stack">
               The founder
             </SectionLabel>
             <Reveal>
-              <p className="lead measure-lead mb-stack">{firstParagraph}</p>
-              {otherParagraphs.map((paragraph) => (
-                <p key={paragraph} className="prose-body measure mb-block">
+              <p className="lead measure-lead mb-stack">{founder.body[0]}</p>
+              {founder.body.slice(1).map((paragraph) => (
+                <p key={paragraph} className="prose-body measure">
                   {paragraph}
                 </p>
               ))}
-            </Reveal>
-            <Reveal delay={0.1}>
-              <Quote className="mb-block">{founder.quote}</Quote>
-              <FactList
-                labelWidth={130}
-                tone="stone"
-                rowClassName="py-3.5"
-                rows={[
-                  { label: 'Born', value: 'Switzerland' },
-                  { label: 'Home', value: 'Miami, for more than 25 years' },
-                  { label: 'Founded', value: `Peaks2Shores, ${site.founded}` },
-                  { label: 'Group size', value: `Never more than ${site.maxGuests} guests` },
-                ]}
-              />
             </Reveal>
           </div>
         </div>
       </Section>
 
-      <Section aria-labelledby="why-exists-title">
-        <div className="grid-site gap-y-block">
+      <Section pad="section-sm" aria-labelledby="why-exists-title">
+        <div className="grid-site gap-y-stack lg:items-end">
           <div className="col-span-4 md:col-span-8 lg:col-span-6">
             <SectionLabel className="mb-stack">Why it exists</SectionLabel>
             <Reveal variant="mask">
-              <h2 id="why-exists-title" className="h2 max-w-[18ch]">
-                Peaks2Shores isn’t a personal brand. It’s a promise.
+              <h2 id="why-exists-title" className="h2 max-w-[20ch]">
+                {founder.why.headline}
               </h2>
             </Reveal>
           </div>
-          <Reveal
-            delay={0.1}
-            className="col-span-4 md:col-span-6 lg:col-span-4 lg:col-start-9 lg:self-end"
-          >
-            <p className="prose-body measure mb-stack">
-              There is a real person behind every journey, and he has already been where you’re
-              going. The name says the rest: peaks is where it began — the Alps, childhood, the
-              outdoors. Shores is where it lives now — Miami, the ocean, a different light.
-            </p>
-            <ButtonLink href="/destinations" variant="rule" arrow>
-              Where that takes us
+          <Reveal delay={0.1} className="col-span-4 md:col-span-8 lg:col-span-6 lg:col-start-7">
+            {founder.why.body.map((paragraph) => (
+              <p key={paragraph} className="prose-body measure mb-stack">
+                {paragraph}
+              </p>
+            ))}
+            <ButtonLink href="/journeys" variant="rule" arrow>
+              Explore our journeys
             </ButtonLink>
           </Reveal>
         </div>
@@ -130,23 +110,30 @@ export default async function OurStoryPage() {
 
       <Section ground="panel" pad="section-sm" aria-labelledby="route-title">
         <SectionLabel as="h2" id="route-title" className="mb-block">
-          {peaksToShores.headlineParts.join(' ')}
+          Peaks. 2. Shores.
         </SectionLabel>
         <StoryRoute
-          stops={peaksToShores.frames.map((frame) => {
-            const photo = getMedia(frame.media);
-            return { n: frame.n, label: frame.label, src: photo.src, alt: photo.alt };
+          stops={founder.name.stops.map((stop) => {
+            if ('img' in stop) return { label: stop.label, src: stop.img, alt: stop.alt };
+            const photo = getMedia(stop.media);
+            return { label: stop.label, src: photo.src, alt: photo.alt };
           })}
         />
-        <p className="prose-body measure mt-block">{peaksToShores.body}</p>
+        <div className="mt-block grid gap-x-[var(--grid-gap)] gap-y-stack lg:grid-cols-2">
+          {founder.name.body.map((paragraph) => (
+            <p key={paragraph} className="prose-body measure m-0">
+              {paragraph}
+            </p>
+          ))}
+        </div>
       </Section>
 
-      <Section aria-labelledby="pillars-title">
+      <Section pad="section-sm" aria-labelledby="pillars-title">
         <div className="mb-block">
           <SectionLabel className="mb-stack">How we travel</SectionLabel>
           <Reveal variant="mask">
             <h2 id="pillars-title" className="h2 max-w-[20ch]">
-              Four things every journey is held to.
+              Four principles behind every journey.
             </h2>
           </Reveal>
         </div>
@@ -156,7 +143,7 @@ export default async function OurStoryPage() {
               as="li"
               key={pillar.n}
               distance={16}
-              className={`grid grid-cols-[auto_minmax(0,1fr)] gap-x-6 border-b border-line py-block md:gap-x-10 ${
+              className={`grid grid-cols-[auto_minmax(0,1fr)] gap-x-6 border-b border-line py-stack md:gap-x-10 md:py-block ${
                 i % 2 === 0 ? 'md:border-r md:pr-10 lg:pr-16' : 'md:pl-10 lg:pl-16'
               }`}
             >
@@ -164,24 +151,19 @@ export default async function OurStoryPage() {
                 {pillar.n}
               </span>
               <div>
-                <h3 className="h3 mb-4">{pillar.title}</h3>
-                <p className="lead mb-4">{pillar.lead}</p>
-                <p className="prose-body measure">{pillar.body}</p>
+                <h3 className="h3 mb-3">{pillar.title}</h3>
+                <p className="lead mb-3">{pillar.lead}</p>
+                <p className="prose-body measure m-0">{pillar.body}</p>
               </div>
             </RevealItem>
           ))}
         </RevealGroup>
       </Section>
 
-      <div aria-hidden className="container-site">
-        <div className="rule" />
-      </div>
-      <WhyUs label="Why travel with us" />
-
       <DarkCta
         kicker="Plan your journey"
-        headline="Tell us a little. We’ll call you, not the other way round."
-        body="Join one of our upcoming departures, or design a private journey on your own dates. Either way it begins the same way — you tell us a little, and Marc calls you."
+        headline="Your extraordinary journey begins here."
+        body="Whether you’re joining one of our intimate luxury group journeys or dreaming of a privately tailored experience, we’d love to hear what inspires you. Share your travel aspirations with us, and our team will help bring them to life."
         href="/plan"
         cta="Plan your journey"
       />

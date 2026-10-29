@@ -19,8 +19,8 @@ type PhotoHeroProps = {
    * `split`: photograph cols 1–7 at full height, paper text cols 8–12.
    */
   layout?: 'bleed' | 'split';
-  /** `full` = 100svh (min 600/640px); `tall` = 92svh (min 620px). */
-  height?: 'full' | 'tall';
+  /** `full` = 100svh (min 600/640px); `tall` = 92svh (min 620px); `compact` = 68svh (520–720px). */
+  height?: 'full' | 'tall' | 'compact';
   /** next/image sizes hint; defaults suit the layout. */
   sizes?: string;
   /** Slow push-in on the photograph. */
@@ -32,6 +32,7 @@ type PhotoHeroProps = {
 const heights = {
   full: 'h-svh min-h-[600px] md:min-h-[640px]',
   tall: 'h-[92svh] min-h-[620px]',
+  compact: 'h-[68svh] min-h-[520px] max-h-[720px]',
 } as const;
 
 /**

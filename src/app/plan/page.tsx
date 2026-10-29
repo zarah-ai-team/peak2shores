@@ -39,7 +39,7 @@ export default async function PlanPage() {
     <>
       <PageTitle kicker="Plan your journey" title="Start with a conversation.">
         Join one of our upcoming departures, or design a private journey on your own dates. Either
-        way it begins the same way — you tell us a little, and Marc calls you.
+        way it begins the same way — you tell us a little, and our team takes it from there.
       </PageTitle>
 
       <Section ground="stone" pad="section-sm" id="private" aria-labelledby="private-title">

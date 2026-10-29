@@ -46,8 +46,9 @@ export const site = {
    * wording. While true they carry a draft notice and are kept out of search.
    */
   legalDraft: true,
-  locations: 'Miami · Switzerland',
-  legalName: 'Peaks2Shores LLC',
+  /** Switzerland is heritage, not an office (Marc, October 2026). */
+  locations: 'Miami-based · Swiss-inspired',
+  legalName: 'Peaks2Shores, Inc.',
   founder: {
     name: 'Marc Haeni',
     role: 'Founder',

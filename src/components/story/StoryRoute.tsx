@@ -4,12 +4,12 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useReducedMotion } from 'motion/react';
 
-export type RouteStop = { n: string; label: string; src?: string; alt?: string };
+export type RouteStop = { n?: string; label: string; src?: string; alt?: string };
 
 const DWELL = 4200;
 
 /**
- * The Peaks → Shores route as a working timeline: a ruled line with a stop at
+ * The name as a working timeline: a ruled line with a stop at
  * each place, the line filling in blue up to the current stop, and that
  * stop's photograph beside it. While the section is on screen it walks the
  * route on its own; pointing at, focusing or choosing a stop holds it there.
@@ -79,7 +79,8 @@ export function StoryRoute({ stops }: { stops: RouteStop[] }) {
                       } ${on ? 'scale-125 shadow-[0_0_0_6px_rgb(122_204_253/0.25)]' : ''}`}
                     />
                     <span className="kicker-sm mb-2 block">
-                      {String(i + 1).padStart(2, '0')} · {stop.n}
+                      {String(i + 1).padStart(2, '0')}
+                      {stop.n && ` · ${stop.n}`}
                     </span>
                     <span
                       className={`h4 block transition-colors duration-500 ${
@@ -116,7 +117,7 @@ export function StoryRoute({ stops }: { stops: RouteStop[] }) {
           aria-live="polite"
           className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent px-6 pb-5 pt-12 text-white"
         >
-          <span className="kicker-sm block text-white/80">{current.n}</span>
+          {current.n && <span className="kicker-sm block text-white/80">{current.n}</span>}
           <span className="h5 block">{current.label}</span>
         </figcaption>
       </figure>

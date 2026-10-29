@@ -49,7 +49,7 @@ export const planFaq: FaqItem[] = [
   {
     question: 'How does planning a private journey work?',
     answer:
-      'Tell us a little about who’s traveling and when. Marc calls you, and we design the journey around you.',
+      'Tell us a little about who’s traveling and when. Our team will be in touch, and we design the journey around you.',
   },
   {
     question: 'Can you arrange cruises, villas and sporting events?',

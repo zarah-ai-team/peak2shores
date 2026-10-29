@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { site, whatsappHref } from '@/lib/site';
 import type { Navigation } from '@/lib/content';
 import { FooterSignup } from '@/components/layout/FooterSignup';
-import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal';
+import { RevealGroup, RevealItem } from '@/components/motion/Reveal';
 import { Ground } from '@/components/motion/Ground';
 
 const link = 'transition-colors duration-300 hover:text-acqua';
@@ -22,17 +22,7 @@ export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
             barely differs, so the footer opens on its own rule. */}
         <div aria-hidden className="border-t border-line-dark" />
         <div className="grid-site gap-y-12 pb-block pt-section">
-          <Reveal variant="mask" className="col-span-full lg:col-span-7">
-            <p className="h2 m-0">
-              Iconic places. Extraordinary experiences. Lifelong connections.
-            </p>
-          </Reveal>
-          <Reveal
-            delay={0.1}
-            className="col-span-full md:col-span-6 lg:col-span-5 lg:col-start-8 lg:self-end"
-          >
-            <FooterSignup />
-          </Reveal>
+          <FooterSignup />
         </div>
 
         <RevealGroup
@@ -55,9 +45,9 @@ export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
                 className="h-11 w-auto"
               />
             </Link>
-            <p className="prose-body-sm max-w-[300px]">
-              Curated travel experiences. Small luxury group journeys of never more than{' '}
-              {site.maxGuests} guests, personally curated by {site.founder.name}.
+            <p className="prose-body-sm max-w-[320px]">
+              Thoughtfully curated luxury small-group journeys and bespoke private travel, brought
+              to life through exceptional hospitality and trusted local expertise.
             </p>
           </RevealItem>
 

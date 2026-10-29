@@ -19,7 +19,7 @@ export async function GET() {
     '',
     `${site.name} (${site.legalName}) designs small luxury group journeys of never more than ${site.maxGuests} guests, ` +
       `each personally curated by founder ${site.founder.name}, plus private journeys on the traveler's own dates. ` +
-      `Based in ${site.locations.replace(' · ', ' and ')}. Founded ${site.founded}. ` +
+      `Based in Miami, with Swiss roots. Founded ${site.founded}. ` +
       'Prices are per person in US dollars. Inquiring commits the traveler to nothing.',
     '',
     '## Journeys',

@@ -32,32 +32,32 @@ export const pillars: Pillar[] = [
   {
     n: '01',
     title: 'Personal',
-    lead: 'There is a real person behind every journey.',
-    body: 'Founder-led and relationship-driven. Marc has been where you are going, knows who to call, and hosts select departures himself.',
+    lead: 'Thoughtful service. Genuine attention.',
+    body: 'Every journey is shaped by personal destination knowledge, genuine relationships, and a commitment to exceptional service from beginning to end.',
     media: 'pillar-1',
     imageFirst: true,
   },
   {
     n: '02',
     title: 'Curated',
-    lead: 'Hand-picked. Never ordinary.',
-    body: 'Hand-picked destinations and exceptional hotels. Every stop has earned its place, and everything mediocre has already been filtered out.',
+    lead: 'Every detail has its purpose.',
+    body: 'Handpicked destinations, exceptional hotels, and meaningful experiences — carefully selected to create journeys that feel distinctive and effortless.',
     media: 'pillar-2',
     imageFirst: false,
   },
   {
     n: '03',
     title: 'Connected',
-    lead: 'Access comes from people, not passes.',
-    body: 'Local friends, artisans, chefs and historians built up over decades. The kind of access no guidebook and no concierge can arrange.',
+    lead: 'Local expertise. Meaningful connections.',
+    body: 'Our trusted network of local specialists and hospitality partners opens doors to authentic experiences and a deeper connection with each destination.',
     media: 'pillar-3',
     imageFirst: true,
   },
   {
     n: '04',
     title: 'Thoughtfully paced',
-    lead: 'Free time is one of the luxuries.',
-    body: 'Enough time to explore, to enjoy the hotel, to be spontaneous — and simply to be present. We never plan a day to the minute.',
+    lead: 'The luxury of time.',
+    body: 'A considered balance of discovery and leisure, with time to enjoy exceptional hotels, embrace spontaneous moments, and truly experience each destination.',
     media: 'pillar-4',
     imageFirst: false,
   },
@@ -69,7 +69,7 @@ export const reasons = [
   {
     n: '01',
     title: 'Small by design',
-    body: 'Never more than 18 guests. Small enough for one table at dinner.',
+    body: 'Intimate luxury group journeys with a maximum of 18 guests — or a private journey designed entirely around the way you love to travel.',
   },
   {
     n: '02',
@@ -89,12 +89,12 @@ export const reasons = [
   {
     n: '05',
     title: 'Exceptional stays',
-    body: 'Hotels are part of the journey, not just places to sleep.',
+    body: 'Handpicked luxury hotels that are an integral part of the journey.',
   },
   {
     n: '06',
     title: 'Seamless by nature',
-    body: 'The complexity happens behind the scenes so you can stay present.',
+    body: 'Thoughtful planning, professional coordination, and trusted local support throughout the experience.',
   },
 ];
 
@@ -236,9 +236,34 @@ export const signatureHotels = [
 export const founder = {
   headline: 'From the peaks of Switzerland to the shores of Miami.',
   body: [
-    'Marc Haeni was born and raised in Switzerland and has called Miami home for more than 25 years. In between, decades of international travel — and the relationships that come from returning to the same places, tables and people again and again.',
-    'Peaks2Shores began in 2022 as the natural extension of that life. It isn’t a personal brand. It’s a promise: there is a real person behind every journey, and he has already been where you’re going.',
+    'Born and raised in Switzerland and based in Miami for more than 25 years, Peaks2Shores founder Marc Haeni has built an international career spanning three decades in travel and hospitality, including leadership roles with some of the world’s leading travel and cruise brands.',
+    'His passion for extraordinary destinations, combined with decades of trusted industry relationships, forms the foundation of Peaks2Shores — bringing together vetted and carefully selected local experts and exceptional hospitality partners to create thoughtfully curated luxury journeys.',
   ],
+  /** Our story, "Why it exists" (Marc, October 2026). */
+  why: {
+    headline: 'Inspired by a lifetime of travel. Created to share the extraordinary.',
+    body: [
+      'Peaks2Shores was born from a simple belief: the most memorable journeys aren’t about how many destinations we visit or places we check off a list. They’re about thoughtfully designed, beautifully paced experiences, exceptional hospitality, authentic discoveries, and the meaningful connections we make along the way.',
+      'From iconic destinations to hidden gems, every journey brings together extraordinary places, local expertise, and carefully curated experiences that create lasting memories.',
+    ],
+  },
+  /** Our story, the name: four ideas rather than a route (Marc, October 2026). */
+  name: {
+    stops: [
+      { label: 'The Peaks', media: 'tr-1' as MediaKey },
+      { label: 'The Shores', media: 'tr-4' as MediaKey },
+      { label: 'The Places', media: 'tr-3' as MediaKey },
+      {
+        label: 'The Connections',
+        img: '/images/home/xp-meet.jpg',
+        alt: 'A musician playing a street piano beside the Chapel Bridge in Lucerne, Switzerland',
+      },
+    ],
+    body: [
+      'The name Peaks2Shores reflects both a personal journey and a lifelong passion for travel. From the Swiss Alps to the shores of Miami, it represents the places that shaped our beginnings — and the extraordinary destinations we’ve come to know and love along the way.',
+      'From majestic mountains and alpine lakes to spectacular coastlines and vibrant cultures, Peaks2Shores celebrates the beauty of discovery and the connections that make every journey memorable.',
+    ],
+  },
   quote: 'Iconic places. Extraordinary experiences. Lifelong connections.',
 };
 

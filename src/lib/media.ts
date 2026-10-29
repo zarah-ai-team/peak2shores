@@ -965,6 +965,21 @@ export const media = {
     width: 1150,
     height: 1400,
   },
+  // Chosen by Marc for Our Story (October 2026).
+  'story-hero': {
+    label: 'Our story · the opening',
+    brief: 'The Bachalpsee trail above Grindelwald: a path, an alpine lake, the peaks beyond.',
+    tone: '#4f7a4a',
+    src: '/images/story-hero.jpg',
+    alt: 'A gravel trail through green alpine meadows to the Bachalpsee above Grindelwald, Switzerland, snow-capped peaks beyond',
+  },
+  'marc-eiger': {
+    label: 'Marc Haeni',
+    brief: 'Marc in the VIP lounge of the Eiger Express, Grindelwald.',
+    tone: '#2f3b45',
+    src: '/images/marc-eiger.jpg',
+    alt: 'Marc Haeni, founder of Peaks2Shores, in the VIP lounge of the Eiger Express in Grindelwald, a gondola passing the window behind him',
+  },
 
   /* ---- Journal --------------------------------------------------------- */
   'jn-1': {
