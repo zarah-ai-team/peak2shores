@@ -112,32 +112,32 @@ export type Belief = {
 };
 
 /**
- * The beliefs behind every journey, as the homepage's six cards. Labels and
- * lines are the brief's; 05 moved here from "Why travel with us"; 06 closes
- * the row with the way on. Photographs are Marc's own, none shown elsewhere
- * on the homepage.
+ * The principles behind every journey, group or private, as the homepage's
+ * six cards; 06 closes the row with the way on. Lines are the client's notes
+ * of 30 Oct. The labels avoid "Thoughtfully paced" and the other promises the
+ * Signature Journeys section already makes.
  */
 export const beliefs: Belief[] = [
   {
     label: 'Personally curated',
-    title: 'There is a real person behind every journey.',
-    body: 'Every journey begins with a personal passion for travel, shaped by decades of experience and personal connections to the places we explore.',
-    img: '/images/drive/marc-bern-overlook.jpg',
-    alt: 'Marc Haeni above the old town of Bern and the river Aare',
-    pos: '50% 35%',
+    title: 'Personal by Design.',
+    body: 'Every journey is shaped by decades of travel expertise, genuine relationships, and a passion for creating extraordinary experiences.',
+    img: '/images/home/hw-personal-zambia.jpg',
+    alt: 'Marc Haeni with two local experts on safari in Zambia',
+    pos: '50% 38%',
   },
   {
-    label: 'Thoughtfully paced',
-    title: 'Free time is one of the luxuries.',
-    body: 'Beautifully balanced journeys, allowing time to explore, unwind and truly immerse yourself in each destination.',
+    label: 'Balance',
+    title: 'The Luxury of Time.',
+    body: 'Thoughtfully balanced itineraries combine extraordinary discoveries, memorable experiences, and time to truly enjoy each destination.',
     img: '/images/drive/switzerland-guests-grindelwald-bench.jpg',
     alt: 'Guests resting on a bench facing the peaks above Grindelwald',
     pos: '50% 50%',
   },
   {
     label: 'Meaningful experiences',
-    title: 'Experiences worth your time.',
-    body: 'Immersive experiences, authentic encounters and exceptional stays that create unforgettable memories long after the journey ends.',
+    title: 'Beyond the Ordinary.',
+    body: 'Authentic encounters, extraordinary experiences, and exceptional hospitality create moments that stay with you long after the journey ends.',
     img: '/images/drive/south-africa-safari-game-drive-sunset.jpg',
     alt: 'An open game-drive vehicle under an acacia at golden sunrise, Qwabi, South Africa',
     pos: '50% 55%',
@@ -145,59 +145,60 @@ export const beliefs: Belief[] = [
   {
     label: 'Local connections',
     title: 'Access comes from people, not passes.',
-    body: 'People we’ve known and trusted for years, opening doors to experiences no guidebook can offer.',
-    img: '/images/drive/switzerland-alpine-cheesemaker.jpg',
-    alt: 'An alpine cheesemaker beside his copper cauldron, Switzerland',
-    pos: '50% 45%',
+    body: 'Our trusted network of carefully selected local experts and hospitality partners opens doors to authentic experiences and a deeper connection with each destination.',
+    img: '/images/home/hw-local-desert-tea.jpg',
+    alt: 'A host in an orange turban pouring tea beside a fire at a desert camp at dusk',
+    pos: '50% 12%',
   },
   {
-    label: 'Seamless by nature',
-    title: 'Seamless by nature.',
-    body: 'The complexity happens behind the scenes so you can stay present.',
+    label: 'Every detail',
+    title: 'Seamless by Nature.',
+    body: 'From exceptional accommodations to thoughtfully coordinated experiences, every detail is carefully considered so you can simply enjoy the journey.',
     img: '/images/drive/switzerland-zermatt-grand-hotel.jpg',
     alt: 'A horse-drawn carriage waiting at the entrance of the Grand Hotel Zermatterhof, Zermatt',
     pos: '45% 62%',
   },
   {
     label: 'Your journey',
-    title: 'Tell us a little about the journey you have in mind.',
-    body: 'Join one of our upcoming departures, or design a private journey on your own dates.',
+    title: 'Your Extraordinary Journey Begins Here.',
+    body: 'Explore our intimate luxury group journeys or let us create a privately tailored experience inspired by you.',
   },
 ];
 
 /* -- Home: the Peaks2Shores Experience (the what) ------------------------- */
 
-/** Included in every journey. The first box leads with the number. */
+/** The signature touches: the tangible parts of a Peaks2Shores journey. What
+    each journey includes is set out on its own page. */
 export const included = [
   {
-    icon: 'guests',
-    title: 'Intimate groups',
-    body: 'Never more than 18 guests, small enough for one table at dinner.',
+    icon: 'bell',
+    title: 'Personal Attention',
+    body: 'Thoughtful service and genuine attention to detail, creating a more personal travel experience.',
   },
   {
     icon: 'car',
-    title: 'Private transfers',
-    body: 'From arrival to the last evening, you’re met and driven.',
+    title: 'Private Transfers',
+    body: 'Comfortable, carefully coordinated transportation throughout your journey, allowing you to travel with ease.',
   },
   {
     icon: 'guide',
-    title: 'Private guiding',
-    body: 'Local guides who bring each place to life, for our group only.',
+    title: 'Expert Local Guides',
+    body: 'Knowledgeable local specialists who bring destinations to life through authentic stories, insights, and personal connections.',
   },
   {
     icon: 'bed',
-    title: 'Exceptional hotels',
-    body: 'Part of the journey, not just places to sleep.',
+    title: 'Exceptional Hotels',
+    body: 'Handpicked luxury properties, selected for their character, outstanding hospitality, and sense of place.',
   },
   {
     icon: 'glass',
-    title: 'Authentic food & wine',
-    body: 'Tables, cellars and markets we’d book for ourselves.',
+    title: 'Culinary Discoveries',
+    body: 'From regional specialties and celebrated wines to memorable dining experiences that reveal the flavors of each destination.',
   },
   {
     icon: 'compass',
-    title: 'Curated experiences',
-    body: 'Arranged through people we trust, not tour desks.',
+    title: 'Extraordinary Experiences',
+    body: 'Carefully curated encounters, unique discoveries, and memorable moments that go beyond the expected.',
   },
 ] as const;
 
@@ -217,29 +218,29 @@ export type Rhythm = {
 export const rhythm: Rhythm[] = [
   {
     word: 'Taste',
-    line: 'Food, wine, markets and chefs — and tables worth booking.',
-    example: 'Out with a truffle hunter and his dog in Istria, then a long Istrian lunch.',
+    line: 'Discover the flavors of each destination through exceptional dining, local traditions, and memorable culinary encounters.',
+    example: 'Join a local truffle hunter and his dog in the forests of Istria, followed by a memorable lunch celebrating the region’s culinary treasures.',
     img: '/images/home/xp-taste.jpg',
     alt: 'Friends dining by candlelight on a lakeside terrace at dusk, the lights of a village across the water',
   },
   {
     word: 'Meet',
-    line: 'Local people, artisans, historians and personalities — people we’ve known and trusted for years.',
-    example: 'A master craftsman’s gondola workshop in Venice.',
-    img: '/images/home/xp-meet.jpg',
-    alt: 'A musician playing a street piano beside the Chapel Bridge in Lucerne, Switzerland',
+    line: 'Meet the people who bring each destination to life — local artisans, passionate experts, and remarkable personalities who share their stories and traditions.',
+    example: 'Step inside a traditional Venetian workshop and meet a master craftsman preserving the centuries-old art of gondola making.',
+    img: '/images/home/rh-meet-gondola-workshop.jpg',
+    alt: 'A master craftsman shaping the hull of a gondola in a Venetian boatyard, the domes of the city across the water',
   },
   {
     word: 'Pause',
-    line: 'Free afternoons, long lunches and time to simply be there.',
+    line: 'The luxury of time to savor exceptional places, embrace spontaneous moments, and enjoy each destination at your own pace.',
     example: 'A wine-paired lunch overlooking the Valpolicella vineyards.',
-    img: '/images/drive/switzerland-guests-lavaux-vineyards.jpg',
-    alt: 'Two guests among the Lavaux vineyard terraces above Lake Geneva',
+    img: '/images/home/rh-pause-valpolicella.jpg',
+    alt: 'Guests at a long candlelit table under a pergola, raising glasses over the Valpolicella vineyards at dusk',
   },
   {
     word: 'Wander',
-    line: 'Old towns, trails and coastlines, discovered slowly with private guides.',
-    example: 'A private speedboat day from Split to Šolta, the Pakleni Islands and Hvar.',
+    line: 'Explore extraordinary landscapes, captivating towns, and spectacular coastlines through thoughtfully curated adventures and authentic discoveries.',
+    example: 'Explore the magic of Croatia’s Dalmatian Coast on a private speedboat adventure through Šolta, the Pakleni Islands, and Hvar.',
     img: '/images/drive/croatia-hvar-harbour.jpg',
     alt: 'Hvar town and its harbor on the Dalmatian coast, the Pakleni Islands beyond',
   },

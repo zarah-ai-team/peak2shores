@@ -21,12 +21,12 @@ export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
         {/* Navy sections often end the page; navy against navy-deep
             barely differs, so the footer opens on its own rule. */}
         <div aria-hidden className="border-t border-line-dark" />
-        <div className="grid-site gap-y-12 pb-block pt-section">
+        <div className="grid-site gap-y-10 pb-[clamp(2.5rem,3.5vw,3.5rem)] pt-[clamp(4rem,5.5vw,6rem)]">
           <FooterSignup />
         </div>
 
         <RevealGroup
-          className="grid-site gap-y-12 border-t border-line-dark pt-12 lg:pt-[clamp(2rem,2.54vw,3rem)]"
+          className="grid-site gap-y-10 border-t border-line-dark pt-10 lg:pt-[clamp(2rem,2.54vw,3rem)]"
           stagger={0.08}
           amount={0.1}
         >
@@ -42,7 +42,7 @@ export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
                 unoptimized
                 width={2454}
                 height={1017}
-                className="h-11 w-auto lg:h-[clamp(2.125rem,2.33vw,2.75rem)]"
+                className="h-12 w-auto lg:h-[clamp(2.75rem,2.9vw,3.375rem)]"
               />
             </Link>
             <p className="prose-body-sm max-w-[20rem]">
@@ -89,21 +89,38 @@ export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
                   WhatsApp
                 </a>
               )}
+              <a href={site.bookingUrl ?? '/plan#contact'} className={`py-1.5 ${link}`}>
+                Book a call
+              </a>
               {site.instagram && (
                 <a
                   href={site.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`py-1.5 ${link}`}
+                  className={`inline-flex items-center gap-2 py-1.5 ${link}`}
                 >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.6"
+                    aria-hidden
+                  >
+                    <rect x="3" y="3" width="18" height="18" rx="5" />
+                    <circle cx="12" cy="12" r="4.2" />
+                    <circle cx="17.4" cy="6.6" r="0.9" fill="currentColor" stroke="none" />
+                  </svg>
                   @Peaks2Shores
+                  <span className="sr-only"> on Instagram</span>
                 </a>
               )}
             </p>
           </RevealItem>
         </RevealGroup>
 
-        <div className="kicker-sm mt-14 flex flex-col gap-4 border-t border-line-dark pt-6 text-on-dark-muted lg:mt-[clamp(2.25rem,2.97vw,3.5rem)] lg:flex-row lg:justify-between">
+        <div className="kicker-sm mt-10 flex flex-col gap-4 border-t border-line-dark pt-6 text-on-dark-muted lg:mt-[clamp(2.25rem,2.97vw,3.5rem)] lg:flex-row lg:justify-between">
           <span className="flex flex-wrap gap-x-6 gap-y-2">
             <span>
               © {new Date().getFullYear()} {site.legalName}

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 
 /**
  * Marc's line, read aloud: each word brightens in turn once the quote is on
- * screen, then the credit's gold rules draw out. Rendered fully lit, so the
+ * screen, then the credit's blue rules draw out. Rendered fully lit, so the
  * words never wait on JavaScript; only a quote that starts below the fold,
  * with motion allowed, dims and waits to be read.
  */

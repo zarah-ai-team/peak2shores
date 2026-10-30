@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { Arrow } from '@/components/ui/Button';
+import { useSwipe } from '@/components/ui/useDrag';
 
 /** One journey as the slider needs it — plain data, built on the server. */
 export type JourneySlide = {
@@ -11,7 +12,8 @@ export type JourneySlide = {
   title: string;
   /** The name on a small card. */
   short: string;
-  country: string;
+  /** The place words in the title, set in blue — the slide's only country cue. */
+  places: string[];
   lead: string;
   days: number;
   groupMax: number;
@@ -25,6 +27,15 @@ const CARDS = 3;
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
+/** A title with its place words picked out in blue. */
+function marked(text: string, places: string[]) {
+  if (!places.length) return text;
+  const words = places.map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  return text
+    .split(new RegExp(`\\b(${words.join('|')})\\b`))
+    .map((part, i) => (i % 2 ? <em key={i}>{part}</em> : part));
+}
+
 /**
  * The journeys as one large rounded frame: each journey a full photograph
  * with its name, route, length and group, and the two ways on; the others as
@@ -36,7 +47,14 @@ const pad = (n: number) => String(n).padStart(2, '0');
  * tab, and — unless the visitor presses Play — under reduced motion. The
  * first slide is rendered on the server, so it reads without JavaScript.
  */
-export function JourneySlider({ slides }: { slides: JourneySlide[] }) {
+export function JourneySlider({
+  slides,
+  horizon,
+}: {
+  slides: JourneySlide[];
+  /** The finale's photograph; without one, the drawn horizon. */
+  horizon?: { src?: string };
+}) {
   const n = slides.length + 1; // the journeys, then the finale
   const fin = slides.length;
   const [index, setIndex] = useState(0);
@@ -94,6 +112,8 @@ export function JourneySlider({ slides }: { slides: JourneySlide[] }) {
     };
   }, [running, index, go]);
 
+  useSwipe(frame, (dir) => go(index + dir));
+
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'ArrowRight') go(index + 1);
     else if (e.key === 'ArrowLeft') go(index - 1);
@@ -139,8 +159,19 @@ export function JourneySlider({ slides }: { slides: JourneySlide[] }) {
           )}
         </div>
       ))}
-      <div className={`bg hzbg${onFin ? ' on' : ''}`} aria-hidden>
-        <Horizon />
+      <div className={`bg hzbg${horizon?.src ? ' photo' : ''}${onFin ? ' on' : ''}`} aria-hidden>
+        {horizon?.src ? (
+          <Image
+            src={horizon.src}
+            alt=""
+            fill
+            sizes="(min-width: 900px) 92vw, 100vw"
+            quality={85}
+            className="photo-grade"
+          />
+        ) : (
+          <Horizon />
+        )}
       </div>
       <div className="shade" aria-hidden />
 
@@ -157,16 +188,12 @@ export function JourneySlider({ slides }: { slides: JourneySlide[] }) {
               aria-hidden={!on}
               inert={!on}
             >
-              <p className="eye">
-                <span className="rule" aria-hidden />
-                {s.country}
-              </p>
-              <h3>{s.title}</h3>
+              <h3>{marked(s.title, s.places)}</h3>
               <p className="lead">{s.lead}</p>
               <p className="facts">
                 <span>{s.days} days</span>
                 <span aria-hidden>·</span>
-                <span>Max. {s.groupMax} guests</span>
+                <span>Group size {s.groupMax}</span>
               </p>
               <div className="acts">
                 <Link
@@ -179,9 +206,9 @@ export function JourneySlider({ slides }: { slides: JourneySlide[] }) {
                 <Link
                   className="btn btn-line"
                   href={`/journeys/${s.slug}#enquire`}
-                  aria-label={`Enquire about ${s.title}`}
+                  aria-label={`Request details about ${s.title}`}
                 >
-                  Enquire
+                  Request Details
                 </Link>
               </div>
             </div>
@@ -197,10 +224,6 @@ export function JourneySlider({ slides }: { slides: JourneySlide[] }) {
           aria-hidden={!onFin}
           inert={!onFin}
         >
-          <p className="pill">
-            <span className="dot" aria-hidden />
-            On the horizon
-          </p>
           <h3>
             More journeys are <em>taking shape.</em>
           </h3>
@@ -208,7 +231,7 @@ export function JourneySlider({ slides }: { slides: JourneySlide[] }) {
             New journeys to the places we know and love. The circle hears first.
           </p>
           <div className="acts">
-            <Link className="btn btn-gold" href="#circle">
+            <Link className="btn btn-accent" href="#circle">
               Join the circle <Arrow />
             </Link>
             <Link className="btn btn-line" href="/plan#private">
@@ -219,7 +242,14 @@ export function JourneySlider({ slides }: { slides: JourneySlide[] }) {
       </div>
 
       <div className="side">
-        {/* Up next: the following slides as small cards; gone on the finale. */}
+        {/* Up next: the following slides as small cards; gone on the finale.
+            The label says plainly that there is more to see. */}
+        <p className="nlab" aria-hidden>
+          Up next
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </p>
         <ul
           className="next"
           style={{ ['--cards' as string]: upNext.length }}
@@ -229,6 +259,8 @@ export function JourneySlider({ slides }: { slides: JourneySlide[] }) {
         >
           {upNext.map((k) => {
             const s = slides[k];
+            // The finale's card shows its photograph too, when it has one.
+            const photo = s ? s.photo.src : horizon?.src;
             return (
               <li key={k}>
                 <button
@@ -238,17 +270,17 @@ export function JourneySlider({ slides }: { slides: JourneySlide[] }) {
                   aria-label={`Show ${s ? s.title : 'More journeys coming'}`}
                   style={s ? { backgroundColor: s.photo.tone } : undefined}
                 >
-                  {s?.photo.src && (
+                  {photo && (
                     <Image
-                      src={s.photo.src}
+                      src={photo}
                       alt=""
                       fill
-                      sizes="12rem"
+                      sizes="14rem"
                       quality={85}
                       className="photo-grade"
                     />
                   )}
-                  {!s && (
+                  {!photo && (
                     <span className="mark" aria-hidden>
                       <svg
                         viewBox="0 0 24 24"
@@ -268,8 +300,9 @@ export function JourneySlider({ slides }: { slides: JourneySlide[] }) {
                     {pad(k + 1)}
                   </span>
                   <span className="cap" aria-hidden>
-                    <span className="ey">{s ? s.country : 'On the horizon'}</span>
-                    <span className="t">{s ? s.short : 'More journeys coming'}</span>
+                    <span className="t">
+                      {s ? marked(s.short, s.places) : 'More journeys coming'}
+                    </span>
                   </span>
                 </button>
               </li>
@@ -290,7 +323,7 @@ export function JourneySlider({ slides }: { slides: JourneySlide[] }) {
           </button>
           <button
             type="button"
-            className="round"
+            className="round fwd"
             onClick={() => go(index + 1)}
             aria-label="Next slide"
           >
@@ -336,8 +369,8 @@ export function JourneySlider({ slides }: { slides: JourneySlide[] }) {
 
 /**
  * The finale's picture, drawn rather than photographed: a night sky with
- * stars, a gold sun rising between two ranges of peaks, its reflection on
- * the water, drifting waves, and a dotted gold route arcing over the words.
+ * stars, a pale-blue sun rising between two ranges of peaks, its reflection on
+ * the water, drifting waves, and a dotted blue route arcing over the words.
  */
 function Horizon() {
   return (
@@ -356,12 +389,12 @@ function Horizon() {
         </linearGradient>
         <radialGradient id="jr-hz-glow" cx="0.5" cy="0.5" r="0.5">
           <stop offset="0" stopColor="#f6e3bc" stopOpacity="0.8" />
-          <stop offset="0.3" stopColor="#d8b27a" stopOpacity="0.38" />
-          <stop offset="1" stopColor="#d8b27a" stopOpacity="0" />
+          <stop offset="0.3" stopColor="#7accfd" stopOpacity="0.38" />
+          <stop offset="1" stopColor="#7accfd" stopOpacity="0" />
         </radialGradient>
         <linearGradient id="jr-hz-sun" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#fbefd3" />
-          <stop offset="1" stopColor="#d8b27a" />
+          <stop offset="1" stopColor="#7accfd" />
         </linearGradient>
         <linearGradient id="jr-hz-sea" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#14465f" />
@@ -387,21 +420,21 @@ function Horizon() {
         className="route"
         d="M250 300 C300 120 480 64 632 64 S964 120 1014 300"
         fill="none"
-        stroke="#d8b27a"
+        stroke="#7accfd"
         strokeWidth="1.6"
         strokeLinecap="round"
         strokeDasharray="1 9"
         opacity="0.8"
       />
-      <circle cx="250" cy="300" r="4" fill="#d8b27a" />
-      <circle cx="1014" cy="300" r="4" fill="#d8b27a" />
+      <circle cx="250" cy="300" r="4" fill="#7accfd" />
+      <circle cx="1014" cy="300" r="4" fill="#7accfd" />
       <circle
         className="ping"
         cx="632"
         cy="64"
         r="11"
         fill="none"
-        stroke="#d8b27a"
+        stroke="#7accfd"
         strokeWidth="1.4"
       />
       <circle cx="632" cy="64" r="5" fill="#fbefd3" />
@@ -436,8 +469,8 @@ function Horizon() {
       <path d="M1264 600 L1264 490 L1140 450 L1030 520 L950 480 L800 600 Z" fill="#0e2f42" />
       {/* The water, the sun's reflection, and the waves. */}
       <rect y="600" width="1264" height="160" fill="url(#jr-hz-sea)" />
-      <line x1="0" y1="600" x2="1264" y2="600" stroke="#d8b27a" strokeOpacity="0.5" />
-      <g stroke="#d8b27a" strokeLinecap="round">
+      <line x1="0" y1="600" x2="1264" y2="600" stroke="#7accfd" strokeOpacity="0.5" />
+      <g stroke="#7accfd" strokeLinecap="round">
         <line x1="552" y1="618" x2="712" y2="618" strokeWidth="3" opacity="0.6" />
         <line x1="577" y1="636" x2="687" y2="636" strokeWidth="2.5" opacity="0.45" />
         <line x1="600" y1="654" x2="664" y2="654" strokeWidth="2" opacity="0.32" />

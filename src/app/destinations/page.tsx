@@ -8,7 +8,7 @@ import { ExpertButton } from '@/components/home/ExpertButton';
 import { journeyTagStatus } from '@/components/pages/journeyStatus';
 import { getDestinations, pageMetadata, type Destination } from '@/lib/content';
 import { getMedia } from '@/lib/media';
-import { site } from '@/lib/site';
+import { andList, site } from '@/lib/site';
 import { RATES_TBA } from '@/lib/journeys';
 
 export const metadata = pageMetadata({
@@ -191,7 +191,7 @@ function Country({ place, index }: { place: Destination; index: number }) {
           {pad(index + 1)}
         </span>
         <span className="dz-tile-cap">
-          <span className="lab">{place.regions.join(' · ')}</span>
+          <span className="lab">{andList.format(place.regions)}</span>
           <h3 id={titleId}>{place.country}</h3>
         </span>
       </Reveal>

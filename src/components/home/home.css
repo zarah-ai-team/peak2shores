@@ -314,6 +314,11 @@
   padding: 0 1.375rem;
   font-size: 0.6875rem;
 }
+/* The brand blue, brighter: over the dark film the house blue reads dull. Used
+   for the standfirst and the playing clip's bar. */
+.hc-hero {
+  --hero-blue: #2ab4f2;
+}
 .hc-hero .vctl {
   position: absolute;
   right: var(--gut);
@@ -359,7 +364,7 @@
   transition: background 0.6s var(--ease);
 }
 .hc-hero .vdot.on i {
-  background: var(--brand);
+  background: var(--hero-blue);
 }
 
 /* -- 02 Introduction ----------------------------------------------------- */
@@ -411,7 +416,7 @@
 }
 .hc-ways h2 {
   font-family: var(--serif);
-  font-weight: 400;
+  font-weight: var(--title-weight);
   font-size: var(--h2);
   line-height: 1;
   letter-spacing: -0.03em;
@@ -850,7 +855,7 @@
 .hc-fd h2 {
   margin: 1.625rem 0;
   font-family: var(--serif);
-  font-weight: 400;
+  font-weight: var(--title-weight);
   font-size: var(--h2);
   line-height: 1.04;
   letter-spacing: -0.03em;
@@ -884,7 +889,7 @@
 }
 .hc-hot h2 {
   font-family: var(--serif);
-  font-weight: 400;
+  font-weight: var(--title-weight);
   font-size: var(--h2);
   line-height: 1.02;
   letter-spacing: -0.03em;
@@ -946,10 +951,45 @@
   -webkit-backface-visibility: hidden;
   transform: rotateY(0deg);
 }
+/* A deep shade under the words, so the place and name read on any photograph. */
 .hc-hot .fs {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgb(8 20 28 / 0) 45%, rgb(8 20 28 / 0.85) 100%);
+  background: linear-gradient(180deg, rgb(8 20 28 / 0) 35%, rgb(8 20 28 / 0.55) 62%, rgb(8 20 28 / 0.9) 100%);
+}
+.hc-hot .fb {
+  text-shadow: 0 1px 12px rgb(8 20 28 / 0.55);
+}
+/* The turn mark: a frosted disc in the top corner of every card. */
+.hc-hot .turn {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.2);
+  border: 1px solid rgb(255 255 255 / 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #fff;
+  transition:
+    background 0.5s var(--ease),
+    transform 0.8s var(--ease);
+}
+.hc-hot .face .turn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1;
+}
+.hc-hot .turn svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+.hc-hot .flip:hover .face .turn {
+  background: var(--color-brand);
+  border-color: var(--color-brand);
+  transform: rotate(180deg);
 }
 .hc-hot .fb {
   position: absolute;
@@ -1023,13 +1063,30 @@
 .hc-hot .flip-hint {
   margin-top: 1.625rem;
   font-family: var(--sans);
-  font-size: 0.75rem;
-  letter-spacing: 0.2em;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #c9d6de;
+  color: #fff;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.875rem;
+}
+.hc-hot .flip-hint .turn {
+  background: var(--color-brand);
+  border-color: var(--color-brand);
+}
+/* The hint names the gesture the device has. */
+.hc-hot .flip-hint .by-hover {
+  display: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .hc-hot .flip-hint .by-hover {
+    display: inline;
+  }
+  .hc-hot .flip-hint .by-tap {
+    display: none;
+  }
 }
 /* The hint, and beside it the arrows that move the rail on a desktop. */
 .hc-hot .flip-foot {
@@ -1056,8 +1113,19 @@
   color: #fff;
   background: var(--night);
 }
+/* Positano sits to the right of the frame; drawn in from that side, the town
+   comes toward the middle and the open sea on the left shrinks. On a phone
+   the crop is upright, so it simply centres on the town. */
 .hc-circle .bg img {
-  filter: brightness(0.62) saturate(1.05);
+  filter: brightness(0.6) saturate(1.05);
+  transform: scale(1.32);
+  transform-origin: 96% 62%;
+}
+@media (max-width: 700px) {
+  .hc-circle .bg img {
+    transform: none;
+    object-position: 78% 50%;
+  }
 }
 /* A soft pool of shade behind the copy and the field, so the small type
    holds on the bright sky and sea at the center of the frame. */
@@ -1067,11 +1135,9 @@
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: radial-gradient(
-    ellipse 58% 62% at 50% 52%,
-    rgb(8 20 28 / 0.46) 0%,
-    rgb(8 20 28 / 0) 100%
-  );
+  background:
+    radial-gradient(ellipse 62% 70% at 50% 52%, rgb(8 20 28 / 0.55) 0%, rgb(8 20 28 / 0) 100%),
+    linear-gradient(180deg, rgb(8 20 28 / 0.25), rgb(8 20 28 / 0.35));
 }
 .hc-circle .in {
   position: relative;
@@ -1082,7 +1148,7 @@
 }
 .hc-circle h2 {
   font-family: var(--serif);
-  font-weight: 400;
+  font-weight: var(--title-weight);
   font-size: var(--h2);
   line-height: 0.98;
   letter-spacing: -0.035em;
@@ -1091,45 +1157,18 @@
 }
 .hc-circle .in > p {
   font-family: var(--sans);
-  font-weight: 300;
-  font-size: var(--sub);
-  line-height: 1.75;
+  font-weight: 400;
+  font-size: clamp(1.0625rem, 1.2vw, 1.25rem);
+  line-height: 1.7;
   margin: 0 auto 2.5rem;
-  max-width: 46ch;
-  color: #eef2f4;
-  text-shadow: 0 1px 0.875rem rgb(8 20 28 / 0.5);
+  max-width: 50ch;
+  color: #fff;
+  text-shadow: 0 1px 0.875rem rgb(8 20 28 / 0.6);
 }
 .hc-circle .form {
   /* The width of the form inside, so it centres under the copy. */
-  max-width: 32.5rem;
+  max-width: 36rem;
   margin: 0 auto;
-  text-align: left;
-}
-.hc-circle .talk {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 0.75rem 2.25rem;
-  margin-top: 2.75rem;
-  font-family: var(--sans);
-  font-size: 0.875rem;
-  color: #eef2f4;
-}
-.hc-circle .talk b {
-  font-weight: 500;
-  font-size: 0.6875rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--ice);
-  margin-right: 0.625rem;
-}
-.hc-circle .talk a {
-  text-decoration: none;
-  border-bottom: 1px solid rgb(255 255 255 / 0.4);
-  padding-bottom: 2px;
-}
-.hc-circle .talk a:hover {
-  color: var(--sky);
 }
 
 /* -- Speak to a travel designer (fixed, bottom right) ---------------------------- */
@@ -1416,7 +1455,7 @@
   margin-top: 0;
 }
 .hc-hot h2:has(+ p.sub-h) {
-  color: var(--sky);
+  color: #fff;
 }
 /* The circle is centred over its photograph: its name in white, and its line
    centred beneath it like everything else in the band. */
@@ -1424,10 +1463,14 @@
   color: #fff;
   margin-bottom: 0;
 }
+/* The headline line, larger than a usual section line: it is the invitation. */
 .hc-circle .in > p.sub-h {
-  margin: 0.875rem auto clamp(1rem, 1.27vw, 1.5rem);
-  opacity: 0.9;
-  text-shadow: 0 1px 0.875rem rgb(8 20 28 / 0.5);
+  margin: 1rem auto clamp(1.25rem, 1.6vw, 1.75rem);
+  max-width: none;
+  font-size: clamp(1.5rem, 2.4vw, 2.375rem);
+  font-style: italic;
+  opacity: 1;
+  text-shadow: 0 1px 0.875rem rgb(8 20 28 / 0.55);
 }
 .hc .hc-hot .fill,
 .hc-hot .fill {
@@ -1446,8 +1489,7 @@
   }
   .hc .lab,
   .hc .tlink,
-  .hc-pause cite,
-  .hc-hot .flip-hint {
+  .hc-pause cite {
     font-size: clamp(0.6875rem, 0.636vw, 0.75rem);
   }
   .hc .btn {
@@ -1461,8 +1503,7 @@
     width: clamp(2.5rem, 2.86vw, 3.375rem);
     height: clamp(2.5rem, 2.86vw, 3.375rem);
   }
-  .hc .ctarow,
-  .hc-circle .talk {
+  .hc .ctarow {
     margin-top: clamp(1.75rem, 2.33vw, 2.75rem);
   }
   .hc .hint,

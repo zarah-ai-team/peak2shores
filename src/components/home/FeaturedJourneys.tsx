@@ -9,39 +9,67 @@ import './journeys-home.css';
    is shown twice (the Journeys index and each journey's page open on others).
    A journey without one falls back to its list frame, then its card frame. */
 const homeFrames: Record<string, MediaKey> = {
-  'swiss-elegance': 'dep-swiss-lakes',
-  'the-italian-experience': 'dep-italian-experience',
+  'swiss-elegance': 'home-jr-swiss',
+  'the-italian-experience': 'home-jr-italy',
   'adriatic-collection': 'dep-adriatic',
 };
 
 /** What sets a Peaks2Shores group apart, said once above the journeys. */
 const promises = [
-  { title: 'Never more than 18 guests', line: 'Small enough for every table, boat and doorway.' },
   {
-    title: 'Personally curated',
-    line: 'Places Marc knows well, and people he has known for years.',
+    title: 'Intimate by Design',
+    line: 'No more than 18 guests, creating a more personal and connected travel experience.',
   },
-  { title: 'Thoughtfully paced', line: 'Fewer moves, longer stays, and free time on purpose.' },
+  {
+    title: 'Expertly Curated',
+    line: 'Exceptional destinations, handpicked hotels, and authentic experiences shaped by local expertise.',
+  },
+  {
+    title: 'Thoughtfully Paced',
+    line: 'A beautiful balance of discovery, memorable experiences, and time to enjoy each destination.',
+  },
 ];
 
-/** The promises' gold marks: a small group, a compass, an hourglass. */
+/** The promises' marks: two glasses raised to a small table, a cut gem for
+    the handpicked, and the sun going down slowly over the water. */
 const icons = [
   <>
-    <circle cx="9" cy="8" r="3" />
-    <path d="M3.5 19c.8-3.2 3-5 5.5-5s4.7 1.8 5.5 5" />
-    <circle cx="17" cy="9" r="2.4" />
-    <path d="M15.5 14.3c2.3-.3 4.3 1.2 5 4.2" />
+    <g transform="rotate(-14 7.5 12)">
+      <path d="M5 6h5v2.6a2.5 2.5 0 0 1-5 0z" />
+      <path d="M5.3 7.9h4.4" />
+      <path d="M7.5 11.1v7M5.5 18.1h4" />
+    </g>
+    <g transform="rotate(14 16.5 12)">
+      <path d="M14 6h5v2.6a2.5 2.5 0 0 1-5 0z" />
+      <path d="M14.3 7.9h4.4" />
+      <path d="M16.5 11.1v7M14.5 18.1h4" />
+    </g>
+    <path d="M12 1.6v2.2M9.7 2.7l1 .9M14.3 2.7l-1 .9" />
   </>,
   <>
-    <circle cx="12" cy="12" r="8.5" />
-    <path d="M15.5 8.5l-2 5-5 2 2-5z" />
+    <path d="M6.5 4.5h11l3.5 4.8L12 20.5 3 9.3z" />
+    <path d="M3 9.3h18" />
+    <path d="M9.6 4.5 8.3 9.3 12 20.5l3.7-11.2-1.3-4.8" />
+    <path d="M8.3 9.3 12 4.5l3.7 4.8" />
+    <path d="M20.2 1.4v2.2M19.1 2.5h2.2" />
   </>,
   <>
-    <path d="M7 3.5h10M7 20.5h10" />
-    <path d="M8 3.5c0 4.5 8 4.5 8 8.5s-8 4-8 8.5" />
-    <path d="M16 3.5c0 4.5-8 4.5-8 8.5s8 4 8 8.5" />
+    <path d="M6.5 14a5.5 5.5 0 0 1 11 0" />
+    <path d="M3 14h18" />
+    <path d="M12 4.6v1.9M5.9 7.4l1.3 1.3M18.1 7.4l-1.3 1.3" />
+    <path d="M4.5 17.4c1.25-.85 2.5-.85 3.75 0s2.5.85 3.75 0 2.5-.85 3.75 0 2.5.85 3.75 0" />
+    <path d="M8 20.4c1-.7 2-.7 3 0s2 .7 3 0 2-.7 3 0" />
   </>,
 ];
+
+/* The words in each title that name where it goes, set in blue on the slider
+   in place of a separate country label. A journey not listed here falls back
+   to its countries, where they appear in its title. */
+const titlePlaces: Record<string, string[]> = {
+  'swiss-elegance': ['Swiss', 'Italian'],
+  'the-italian-experience': ['Italy'],
+  'adriatic-collection': ['Adriatic'],
+};
 
 /** The journey's photograph: the first of its frames that has a file. */
 function slidePhoto(journey: JourneySummary): JourneySlide['photo'] {
@@ -53,9 +81,9 @@ function slidePhoto(journey: JourneySummary): JourneySlide['photo'] {
 }
 
 /**
- * 04 — Small Luxury Group Journeys, as a deep-blue panel risen over the
- * paper: the section's name and line, the three promises as glass cards,
- * then every upcoming journey as a full-photograph slide, closing on a drawn
+ * 04 — Small Luxury Group Journeys, on white: the section's name and line,
+ * the three promises as soft blue tiles,
+ * then every upcoming journey as a full-photograph slide, closing on a
  * "more journeys are taking shape" slide. No dates or prices here; those
  * live on each journey's page.
  */
@@ -66,12 +94,17 @@ export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
     .sort((a, b) => (a.departureISO ?? '~').localeCompare(b.departureISO ?? '~'));
   if (upcoming.length === 0) return null;
 
-  const slides: JourneySlide[] = upcoming.map((j) => ({
+  // A different journey leads each day, so the slider never always opens on
+  // the same country. The page regenerates hourly, so it turns on its own.
+  const turn = Math.floor(Date.now() / 86_400_000) % upcoming.length;
+  const ordered = [...upcoming.slice(turn), ...upcoming.slice(0, turn)];
+
+  const slides: JourneySlide[] = ordered.map((j) => ({
     slug: j.slug,
     title: j.title,
-    // The short name on a card: the title up to its first comma.
-    short: j.title.split(',')[0],
-    country: j.country,
+    // The short name on a card: the title up to its first comma or colon.
+    short: j.title.split(/[,:]/)[0],
+    places: titlePlaces[j.slug] ?? j.country.split(/\s*(?:&|,|\band\b)\s*/).filter(Boolean),
     lead: j.lead,
     days: j.days,
     groupMax: j.groupMax,
@@ -81,36 +114,14 @@ export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
   return (
     <section className="hc-jr" id="journeys" aria-labelledby="journeys-title">
       <div className="panel">
-        {/* Peaks to shores: a gold ridge over drifting water. */}
-        <svg className="motif" viewBox="0 0 640 300" fill="none" aria-hidden focusable="false">
-          <path
-            d="M0 210 L120 120 L170 160 L270 40 L360 150 L410 110 L520 200 L640 150"
-            stroke="var(--gold)"
-            strokeWidth="1.5"
-            strokeLinejoin="round"
-          />
-          <g className="drift">
-            <path
-              d="M0 240 C40 228 80 228 120 240 S200 252 240 240 S320 228 360 240 S440 252 480 240 S560 228 600 240 S660 252 700 240"
-              stroke="var(--sky)"
-              strokeWidth="1.2"
-            />
-            <path
-              d="M0 266 C40 254 80 254 120 266 S200 278 240 266 S320 254 360 266 S440 278 480 266 S560 254 600 266 S660 278 700 266"
-              stroke="var(--sky)"
-              strokeWidth="1.2"
-              opacity="0.6"
-            />
-          </g>
-        </svg>
-
         <div className="head">
           <div>
-            <span className="gl" aria-hidden />
-            <h2 id="journeys-title">Small Luxury Group Journeys</h2>
-            <p className="sub-h">A few journeys a year. Each one we’d take ourselves.</p>
+            <h2 id="journeys-title">Our Signature Journeys</h2>
+            <p className="sub-h">
+              Extraordinary destinations. Intimate groups. Thoughtfully curated experiences.
+            </p>
           </div>
-          <Link className="btn btn-light" href="/journeys">
+          <Link className="btn btn-ink" href="/journeys">
             View all journeys <Arrow />
           </Link>
         </div>
@@ -123,7 +134,7 @@ export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="1.4"
+                  strokeWidth="1.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   focusable="false"
@@ -139,7 +150,7 @@ export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
           ))}
         </ul>
 
-        <JourneySlider slides={slides} />
+        <JourneySlider slides={slides} horizon={getMedia('home-jr-horizon')} />
       </div>
     </section>
   );

@@ -110,8 +110,14 @@ export const footerNav: { label: string; items: NavItem[] }[] = [
     items: [
       { label: 'Our story', href: '/our-story' },
       { label: 'Plan your journey', href: '/plan' },
-      { label: 'Private & custom travel', href: '/plan#private' },
+      { label: 'Bespoke private travel', href: '/plan#private' },
       { label: 'Contact', href: '/plan#contact' },
     ],
   },
 ];
+
+/**
+ * Places and countries in running prose — "Bologna, Lake Garda and Venice" —
+ * never as a list run together with dots.
+ */
+export const andList = new Intl.ListFormat('en-GB', { style: 'long', type: 'conjunction' });

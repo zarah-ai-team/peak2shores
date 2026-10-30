@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Faq } from '@/components/ui/Faq';
+import { andList } from '@/lib/site';
 import { planFaq } from '@/lib/data/faq';
 import { Frame } from '@/components/ui/Frame';
 import { Reveal } from '@/components/motion/Reveal';
@@ -68,7 +69,7 @@ export default async function PlanPage() {
               className="max-w-[35rem]"
               rows={[
                 { label: 'Group size', value: `Max. ${site.maxGuests} guests` },
-                { label: 'Where', value: destinations.map((d) => d.country).join(' · ') },
+                { label: 'Where', value: andList.format(destinations.map((d) => d.country)) },
                 { label: 'Lead time', value: 'Six months is comfortable; less is often possible' },
               ]}
             />

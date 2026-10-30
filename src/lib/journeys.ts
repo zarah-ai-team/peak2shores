@@ -222,9 +222,9 @@ const experience = [
 ];
 
 const combineFaq = {
-  question: 'Can I combine Swiss Elegance with The Italian Experience?',
+  question: 'Can I combine Swiss Elegance with Italy Uncovered?',
   answer:
-    'Yes. The Italian Experience continues from Milan for 8 nights, or can be booked as a journey of its own.',
+    'Yes. Italy Uncovered continues from Milan for 8 nights, or can be booked as a journey of its own.',
 };
 
 /*
@@ -371,21 +371,21 @@ const allJourneys: Journey[] = [
       link: {
         kicker: 'Optional 8-Night Italian Extension',
         slug: 'the-italian-experience',
-        title: 'The Italian Experience',
-        places: 'Bologna · Motor Valley · Lake Garda · Venice',
+        title: 'Italy Uncovered: Emilia-Romagna, Lake Garda & Venice',
+        places: 'Bologna, Motor Valley, Lake Garda and Venice',
         text: 'Continue from Milan into Bologna’s culinary traditions, Italy’s supercar heritage, Lake Garda and a Venetian finale. Also available as a journey on its own.',
-        cta: 'Explore The Italian Experience',
+        cta: 'Explore Italy Uncovered',
       },
-      ratesNote: 'Swiss Elegance + The Italian Experience: rates to be announced.',
+      ratesNote: 'Swiss Elegance + Italy Uncovered: rates to be announced.',
       faq: [combineFaq],
     },
   },
   {
     slug: 'the-italian-experience',
     n: 'No. 02',
-    title: 'The Italian Experience',
+    title: 'Italy Uncovered: Emilia-Romagna, Lake Garda & Venice',
     eyebrow: 'Optional 8-Night Italian Extension · or a journey on its own',
-    lead: 'Bologna · Motor Valley · Lake Garda · Venice',
+    lead: 'From Bologna to Venice',
     blurb:
       'Bologna’s culinary traditions, Italy’s supercar heritage, the villages of Lake Garda and a Venetian finale. Join it after Swiss Elegance, or travel it as a journey of its own.',
     country: 'Italy',
@@ -412,7 +412,7 @@ const allJourneys: Journey[] = [
     heroMedia: 'ie-hero',
     featured: true,
     seo: {
-      title: 'The Italian Experience: Bologna to Venice',
+      title: 'Italy Uncovered: Emilia-Romagna, Lake Garda & Venice',
       description:
         '9 days through Bologna, Motor Valley, Lake Garda and Venice for no more than 18 guests, on its own or after Swiss Elegance.',
     },
@@ -489,7 +489,7 @@ const allJourneys: Journey[] = [
         kicker: 'Before this journey',
         slug: 'swiss-elegance',
         title: 'Swiss Elegance, Italian Lakes & Milanese Flair',
-        places: 'Lucerne · Grindelwald · Montreux · Zermatt · Stresa · Milan',
+        places: 'Lucerne, Grindelwald, Montreux, Zermatt, Stresa and Milan',
         text: 'From storybook Swiss villages and the high Alps to the shimmering Italian Lakes, ending in stylish Milan.',
         cta: 'Begin with Swiss Elegance, Italian Lakes & Milanese Flair',
       },
@@ -501,7 +501,7 @@ const allJourneys: Journey[] = [
     slug: 'adriatic-collection',
     n: 'No. 03',
     title: 'The Adriatic Collection',
-    eyebrow: 'Italy · Istria · The Dalmatian Coast',
+    eyebrow: 'Italy, Istria and the Dalmatian Coast',
     lead: 'Venice to Dubrovnik',
     blurb:
       'From Venice’s enchanting canals through Istria’s coastal charm and the sun-kissed Dalmatian Coast to the timeless beauty of Dubrovnik.',

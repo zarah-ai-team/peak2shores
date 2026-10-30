@@ -4,6 +4,7 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { useMemo, useState } from 'react';
 import { filterGroups, type JourneySummary } from '@/lib/journeys';
+import { andList } from '@/lib/site';
 import { Reveal } from '@/components/motion/Reveal';
 import { SectionLabel } from '@/components/ui/Editorial';
 import type { GlobePin } from './Globe';
@@ -198,7 +199,7 @@ export function JourneyGlobe({
               className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-2"
             >
               {regions.map((region, i) => {
-                const names = [...new Set(region.map((p) => p.country))].join(' · ');
+                const names = andList.format([...new Set(region.map((p) => p.country))]);
                 const on = i === framedRegion;
                 return (
                   <button
@@ -210,7 +211,7 @@ export function JourneyGlobe({
                       on ? '!text-ink' : ''
                     }`}
                   >
-                    {names} · {region.length}
+                    {names} ({region.length})
                   </button>
                 );
               })}

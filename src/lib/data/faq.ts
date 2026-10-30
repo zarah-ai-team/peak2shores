@@ -9,7 +9,7 @@ export type FaqItem = { question: string; answer: string };
  *   journeys — "What is included?" (meals and other inclusions per journey),
  *              "How active is the journey?" (pace and walking per journey);
  *   plan     — "How far ahead should I plan?" (lead time).
- * "Can I combine Swiss Elegance with The Italian Experience?" belongs on
+ * "Can I combine Swiss Elegance with Italy Uncovered?" belongs on
  * those two journey pages only, and goes in when they are on the site.
  */
 

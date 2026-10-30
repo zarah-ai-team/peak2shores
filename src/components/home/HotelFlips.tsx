@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { hotels } from '@/lib/data/home';
 import { Chevron, HomeMedia } from './HomeMedia';
+import { useDragScroll } from '@/components/ui/useDrag';
 
 /**
  * 08 — Hotels & lodges: five tall cards that turn over on hover or
@@ -18,10 +19,20 @@ import { Chevron, HomeMedia } from './HomeMedia';
  * a click that also toggled the card left it stuck turned, or turning back
  * under the pointer. A tap or Enter turns one card at a time.
  */
+/** Two arrows chasing round: turn the card over. */
+function TurnIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3M18 3v4h-4M6 21v-4h4" />
+    </svg>
+  );
+}
+
 export function HotelFlips() {
   const [flipped, setFlipped] = useState(-1);
   const pointer = useRef('');
   const rail = useRef<HTMLDivElement>(null);
+  useDragScroll(rail);
 
   /* One card and the gap after it, read from the page (both follow the viewport). */
   const move = (dir: 1 | -1) => {
@@ -35,13 +46,10 @@ export function HotelFlips() {
   return (
     <section className="hc-hot" aria-labelledby="hotels-title">
       <div className="head solo">
-        <p className="eyebrow">
-          <i aria-hidden />
-          Hotels &amp; lodges
+        <h2 id="hotels-title">Hotels &amp; Lodges</h2>
+        <p className="sub-h">
+          Exceptional Places to Stay. Extraordinary Experiences to Remember.
         </p>
-        <h2 id="hotels-title">
-          Chosen for what they contribute to the journey, far beyond their star rating.
-        </h2>
       </div>
 
       <div className="flips" ref={rail}>
@@ -78,6 +86,10 @@ export function HotelFlips() {
                     sizes="(max-width: 600px) 82vw, (max-width: 1699px) 360px, 20vw"
                   />
                   <span className="fs" />
+                  {/* The mark that says the card turns over. */}
+                  <span className="turn" aria-hidden>
+                    <TurnIcon />
+                  </span>
                   <span className="fb">
                     <span className="lab" id={`${id}-place`}>
                       {h.place}
@@ -120,18 +132,11 @@ export function HotelFlips() {
 
       <div className="flip-foot">
         <div className="flip-hint">
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            aria-hidden
-          >
-            <path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3M18 3v4h-4M6 21v-4h4" />
-          </svg>
-          Hover or tap to turn over
+          <span className="turn" aria-hidden>
+            <TurnIcon />
+          </span>
+          <span className="by-hover">Hover over a hotel to turn it over</span>
+          <span className="by-tap">Tap a hotel to turn it over</span>
         </div>
         <div className="fnav">
           <button

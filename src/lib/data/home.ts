@@ -67,20 +67,19 @@ export const reel: (ReelClip & { fallback?: ReelClip })[] = [
     img: '/images/home/reel-rail.jpg',
   },
   {
-    place: 'Positano · Italy',
+    place: 'Positano, Italy',
     alt: 'Positano on the Amalfi Coast, Italy, from the sea',
     video: '/video/home/reel-positano.mp4',
     img: '/images/home/reel-positano.jpg',
-    start: 27,
     fallback: {
-      place: 'Amalfi Coast · Italy',
+      place: 'Amalfi Coast, Italy',
       alt: 'A sailing boat at anchor off the Amalfi Coast, a cliffside town and the coast fading into haze behind',
       img: '/images/home-hero.jpg',
       hold: 9,
     },
   },
   {
-    place: 'Hvar · Croatia',
+    place: 'Hvar, Croatia',
     alt: 'Hvar on the Dalmatian Coast, Croatia, from the sea',
     video: '/video/home/reel-hvar.mp4',
     img: '/images/home/reel-hvar.jpg',
@@ -102,9 +101,10 @@ export const ways: (HomeVisual & { title: string; line: string; href: string; le
       title: 'Small Luxury Group Journeys',
       line: 'Intimate journeys for never more than 18 guests, bringing together exceptional places, meaningful experiences and the joy of discovering the world together.',
       href: '/journeys',
-      // Group, Private Travel and Safari use the design reference's photographs (29 Oct).
-      img: '/images/home/way-group-lucerne.jpg',
-      alt: 'Lake Lucerne and the old town spires, with the Alps beyond',
+      // Marc's own Lucerne frame at full resolution (30 Oct); Private Travel and
+      // Safari use the design reference's photographs (29 Oct).
+      img: '/images/home/way-group-lucerne-tower.jpg',
+      alt: 'The Water Tower and Chapel Bridge on the clear Reuss, Lucerne',
       lead: true,
     },
     {
@@ -125,26 +125,23 @@ export const ways: (HomeVisual & { title: string; line: string; href: string; le
       title: 'Cruises',
       line: 'Discover extraordinary destinations aboard handpicked luxury yachts, intimate cruises and elegant river voyages, with exceptional experiences both onboard and ashore.',
       href: '/plan#private',
-      ...marcs('client-way-cruises', {
-        ...still('home-way-cruises'),
-      }),
+      // Cruises, Sports & Events and Private Villas: the client's photographs (30 Oct).
+      img: '/images/home/way-cruises-ship.jpg',
+      alt: 'A cruise ship from above at sunset, its decks and pools over a dark sea',
     },
     {
       title: 'Sports & Events',
       line: 'Iconic sporting events, extraordinary cultural celebrations and exceptional travel experiences — thoughtfully brought together in one unforgettable journey.',
       href: '/plan#private',
-      ...marcs('client-way-events', {
-        img: '/images/home/way-events.jpg',
-        alt: 'A polo match on an English summer lawn',
-      }),
+      img: '/images/home/way-sports-monaco.jpg',
+      alt: 'A race car rounding the Monaco circuit beneath terraces of white umbrellas',
     },
     {
       title: 'Private Villas',
       line: 'Handpicked villas in extraordinary settings — where privacy, personalized service and unforgettable moments come together.',
       href: '/plan#private',
-      ...marcs('client-way-villas', {
-        ...still('home-way-villas'),
-      }),
+      img: '/images/home/way-villas-pool.jpg',
+      alt: 'A modern beachfront villa with an infinity pool, palms and the sea beyond',
     },
   ];
 
@@ -216,8 +213,16 @@ export const peaksShores = {
 /* 07b — The founder. */
 export const founderStory = {
   headline: 'A lifetime of travel. A passion for extraordinary journeys.',
-  body: 'Born and raised in Switzerland and based in Miami for over 25 years, founder Marc Haeni brings decades of international travel experience, trusted relationships and a genuine passion for discovering extraordinary destinations. Every Peaks2Shores journey reflects that experience — thoughtfully designed, personally curated and created to inspire lasting memories.',
-  portrait: still('marc-portrait'),
+  /** Two short paragraphs; the Our Story page carries the rest. */
+  body: [
+    'Born and raised in Switzerland and based in Miami for more than 25 years, Peaks2Shores founder Marc Haeni has built an international career spanning three decades in travel and hospitality, including leadership roles with some of the world’s leading travel and cruise brands.',
+    'His passion for extraordinary destinations, combined with decades of trusted industry relationships, forms the foundation of Peaks2Shores — bringing together vetted and carefully selected local experts and exceptional hospitality partners to create thoughtfully curated luxury journeys.',
+  ],
+  /** Marc's own film from safari, in place of a portrait; portrait-format. */
+  film: {
+    src: '/video/home/story.mp4',
+    label: 'Marc Haeni laughing with a group of children beside a safari vehicle in Kenya',
+  },
 };
 
 /* 08 — Hotels, lodges & camps: five places Marc names, each in his words. */
@@ -238,8 +243,6 @@ export const hotels: (HomeVisual & {
     nearby:
       'Explore Lucerne’s charming Old Town, discover the “Queen of the Mountains,” or cruise across the lake into the heart of the Swiss Alps.',
     ...still('client-hotel-lucerne'),
-    back: '/images/drive/switzerland-lake-lucerne-balcony-view.jpg',
-    backAlt: 'Lake Lucerne and Mount Pilatus from a balcony above the lakeside promenade, Lucerne',
   },
   {
     place: 'Stresa | Italy',
@@ -284,6 +287,8 @@ export const hotels: (HomeVisual & {
     nearby:
       'Discover pristine beaches and turquoise waters, explore the vibrant Swahili culture of the Kenyan coast, or sail the Indian Ocean aboard a traditional dhow.',
     ...still('client-hotel-vipingo'),
+    back: '/images/home/hotel-cardamom-entrance.jpg',
+    backAlt: 'The carved Swahili archway and pink urns at the entrance of Cardamom House, Vipingo',
   },
 ];
 
@@ -319,7 +324,7 @@ export const experiences: (HomeVisual & { word: string; line: string })[] = [
 
 /* 09 — The circle. */
 export const circle = {
-  headline: 'Where are we going next?',
-  body: 'New journeys are announced to the circle first, in a short letter from Marc — a place we love, a hotel worth the trip, a table worth booking.',
+  headline: 'A World of Inspiration, Delivered.',
+  body: 'Discover extraordinary destinations, inspiring travel stories, insider perspectives, and thoughtfully curated journeys. Join The Circle for a little inspiration from the world of Peaks2Shores, delivered to your inbox.',
   ...still('home-circle'),
 };

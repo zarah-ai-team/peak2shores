@@ -101,6 +101,9 @@
        spacer on solid-header routes, anchor scroll padding, the sticky
        itinerary rail, the mobile menu's top inset — reads this one value. */
     --nav-h: 4.25rem;
+    /* Every section title on the site, one weight: change it here, never on
+       a single heading. */
+    --title-weight: 700;
     /* Its height once the page moves (`data-compact`). A bar pinned beneath
        the header sits at this offset, so no gap opens between the two. */
     --nav-h-compact: 3.75rem;
@@ -442,9 +445,15 @@
   }
 
   .h2 {
+    font-weight: var(--title-weight);
     font-size: clamp(1.75rem, 2.65vw, 3.125rem);
     line-height: 1.02;
     letter-spacing: -0.018em;
+  }
+  /* A section title set at a smaller size is still a title: same weight. */
+  h2.h3,
+  h2.h4 {
+    font-weight: var(--title-weight);
   }
 
   .h3 {
@@ -945,11 +954,35 @@
   display: block;
   height: 2.25rem;
   transform-origin: left center;
-  transition: transform 0.45s var(--ease-editorial);
+  transition:
+    transform 0.45s var(--ease-editorial),
+    height 0.45s var(--ease-editorial);
 }
 @media (min-width: 1024px) {
   .site-logo {
     height: clamp(2.75rem, 2.54vw, 3rem); /* 44px on a laptop, 48px at 1888px */
+  }
+}
+/* Over the homepage film the bar is taller, the logo and the links a size
+   larger; once the bar turns solid they settle back to the usual sizes. */
+.site-header[data-home-hero]:not([data-solid]) {
+  height: calc(var(--nav-h) + 1rem);
+}
+.site-header[data-home-hero]:not([data-solid]) .site-logo {
+  height: 3rem; /* 48px on a phone */
+}
+@media (min-width: 1024px) {
+  .site-header[data-home-hero]:not([data-solid]) {
+    height: calc(var(--nav-h) + 1.75rem);
+  }
+  .site-header[data-home-hero]:not([data-solid]) .site-logo {
+    height: clamp(3.75rem, 3.6vw, 4.25rem); /* 60px on a laptop, 68px at 1888px */
+  }
+  .site-header[data-home-hero]:not([data-solid]) .nav-label {
+    font-size: clamp(0.875rem, 0.8vw, 0.9375rem); /* 14px → 15px */
+  }
+  .site-header[data-home-hero]:not([data-solid]) .header-cta {
+    font-size: clamp(0.8125rem, 0.74vw, 0.875rem);
   }
 }
 .site-header[data-compact] .site-logo {
@@ -1273,4 +1306,25 @@ html[data-js] [data-ground][data-inview]::before {
     transform: none !important;
     opacity: 1 !important;
   }
+}
+
+/* Carousels a mouse can drag (useDrag): a grab hand, and while held, no
+   snapping or smooth scrolling to fight the hand, and no text selection. */
+@media (hover: hover) and (pointer: fine) {
+  [data-drag] {
+    cursor: grab;
+  }
+  [data-drag].is-dragging,
+  [data-drag].is-dragging * {
+    cursor: grabbing !important;
+  }
+}
+[data-drag].is-dragging {
+  scroll-snap-type: none !important;
+  scroll-behavior: auto !important;
+  user-select: none;
+}
+/* A slide-at-a-time slider keeps vertical page scrolling on touch. */
+.hc-jr .frame {
+  touch-action: pan-y;
 }

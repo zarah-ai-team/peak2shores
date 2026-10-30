@@ -79,6 +79,41 @@ export function HomeMedia({
   );
 }
 
+/**
+ * A film on its own, with no still beneath: its first frame stands as the
+ * poster (the `#t=` fragment with metadata preloaded), so nothing else shows
+ * first. Muted, looping, playing only while on screen; under reduced motion
+ * it holds on that first frame.
+ */
+export function Film({ src, label, className = 'fill' }: { src: string; label: string; className?: string }) {
+  const video = useRef<HTMLVideoElement>(null);
+  const reduced = useReducedMotion();
+
+  useEffect(() => {
+    const el = video.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !reduced) el.play().catch(() => {});
+      else el.pause();
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [reduced]);
+
+  return (
+    <video
+      ref={video}
+      className={className}
+      src={`${src}#t=0.1`}
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      aria-label={label}
+    />
+  );
+}
+
 export function Chevron({ dir }: { dir: 'left' | 'right' }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden>

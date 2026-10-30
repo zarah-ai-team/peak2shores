@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Arrow } from './Button';
+import { useDragScroll } from '@/components/ui/useDrag';
 
 /**
  * A horizontal rail of items: native overflow scrolling with snap points, so
@@ -43,6 +44,7 @@ export function Rail({
   controls?: 'before' | 'after';
 }) {
   const trackRef = useRef<HTMLDivElement>(null);
+  useDragScroll(trackRef);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
 

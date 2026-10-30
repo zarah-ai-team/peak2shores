@@ -6,11 +6,11 @@
  */
 
 .hc {
-  --gold: #d8b27a;
-  --gold-deep: #b8925a;
+  --blue-lt: #2ab4f2;
+  --blue-deep: var(--color-brand);
 }
 
-/* A gold eyebrow: a short rule, then small caps. */
+/* An eyebrow: small caps above a section's heading. */
 .hc .eyebrow {
   display: flex;
   align-items: center;
@@ -22,12 +22,6 @@
   letter-spacing: 0.26em;
   text-transform: uppercase;
   color: var(--lake);
-}
-.hc .eyebrow i {
-  display: block;
-  width: 2.5rem;
-  height: 1px;
-  background: var(--gold-deep);
 }
 
 /* -- 01 Hero: left-aligned, low in the frame ------------------------------ */
@@ -53,8 +47,8 @@
   line-height: 1.45;
   max-width: 38ch;
   margin: 0 0 2.25rem;
-  color: #fff;
-  text-shadow: 0 1px 16px rgb(8 20 28 / 0.35);
+  color: var(--hero-blue);
+  text-shadow: 0 1px 16px rgb(8 20 28 / 0.55);
 }
 .hc .hc-hero .copy.left .ctas {
   justify-content: flex-start;
@@ -66,32 +60,45 @@
     linear-gradient(180deg, rgb(8 20 28 / 0.45) 0%, rgb(8 20 28 / 0) 22%);
 }
 
-/* -- 02 Philosophy: centered between two short gold rules ----------------- */
+/* -- 02 Philosophy: centered between two short blue rules ----------------- */
+/* One full screen under the solid header, the statement at its centre. */
 .hc .hc-intro {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2.5rem;
+  justify-content: center;
+  gap: clamp(2.5rem, 3.3vw, 3.5rem);
+  min-height: calc(100vh - var(--nav-h-compact));
+  min-height: calc(100svh - var(--nav-h-compact));
   padding: clamp(5.5rem, 9.7vw, 8.75rem) var(--gut);
 }
 .hc .hc-intro .rule {
   display: block;
   width: 3.5rem;
   height: 1px;
-  background: var(--gold-deep);
+  background: var(--blue-deep);
 }
 .hc .hc-intro p {
-  max-width: 60rem;
+  max-width: 68rem;
   margin: 0;
-  font-size: clamp(1.625rem, 2.78vw, 2.5rem);
-  line-height: 1.38;
+  font-size: clamp(1.875rem, 3.3vw, 3.25rem);
+  line-height: 1.34;
   letter-spacing: -0.012em;
 }
 
-/* -- 03 Ways to experience ------------------------------------------------ */
+/* -- 03 Ways to explore --------------------------------------------------- */
+/* A step larger; its line in italic beneath. */
 .hc .hc-ways .head h2 {
   margin: 0;
   color: var(--lake);
+  font-weight: var(--title-weight);
+  font-size: clamp(2.375rem, 3.2vw, 3.75rem);
+  letter-spacing: -0.02em;
+}
+.hc .hc-ways .head p.sub-h {
+  margin-top: 0.75rem;
+  font-style: italic;
+  opacity: 0.8;
 }
 /* Every title in one upright style; the signature card leads by width. */
 .hc .hc-ways .wt.lead {
@@ -102,11 +109,15 @@
   color: #fff;
   font-style: normal;
 }
+/* The signature pill in the house blue, frosted, with a fine light edge. */
 .hc .hc-ways .badge {
   border-radius: 999px;
   padding: 0.4375rem 0.875rem;
-  background: var(--gold);
-  color: var(--night);
+  background: rgb(17 144 203 / 0.88);
+  border: 1px solid rgb(255 255 255 / 0.35);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: #fff;
   font-weight: 500;
   font-style: normal;
 }
@@ -120,22 +131,23 @@
   flex: 1;
   margin: 0;
 }
-.hc .hc-ways .wfoot .ctarow {
+/* The arrows and count lead the bottom row; the line runs on to the right. */
+.hc .hc-ways .wfoot .count {
+  margin: 0 0 0 0.5rem;
+}
+/* "Not sure which suits you?" beside the heading, the button after it. */
+.hc .hc-ways .head .ctarow {
   margin: 0;
   padding: 0;
   flex-wrap: nowrap;
   gap: 1.25rem;
 }
-.hc .hc-ways .wfoot .btn:hover {
+.hc .hc-ways .head .btn:hover {
   background: var(--lake);
   border-color: var(--lake);
 }
 @media (max-width: 760px) {
-  .hc .hc-ways .wfoot {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .hc .hc-ways .wfoot .ctarow {
+  .hc .hc-ways .head .ctarow {
     flex-wrap: wrap;
   }
 }
@@ -172,7 +184,7 @@
   font-family: var(--serif);
   font-size: clamp(5rem, 8.3vw, 7.5rem);
   line-height: 0.82;
-  color: var(--gold);
+  color: var(--blue-lt);
   text-shadow: 0 0 24px rgb(8 20 28 / 0.6);
 }
 .hc .hc-pause .qw blockquote {
@@ -221,14 +233,14 @@
   text-transform: uppercase;
 }
 .hc .hc-pause .credit b {
-  color: var(--gold);
+  color: var(--blue-lt);
   font-weight: 500;
 }
 .hc .hc-pause .credit i {
   display: block;
   width: 4.5rem;
   height: 1px;
-  background: var(--gold);
+  background: var(--blue-lt);
 }
 .hc .hc-pause .qw.waiting .credit,
 .hc .hc-pause .qw.waiting .qlink {
@@ -251,7 +263,7 @@
   text-transform: uppercase;
   color: #fff;
   text-decoration: none;
-  border-bottom: 1px solid var(--gold);
+  border-bottom: 1px solid var(--blue-lt);
 }
 .hc .hc-pause .qlink span {
   transition: transform 0.6s var(--ease);
@@ -270,117 +282,73 @@
 }
 
 /* -- 07 The Peaks2Shores story -------------------------------------------- */
+/* Compact and editorial: the film in about a third of the width, its caption
+   a quiet line beneath, the story beside it. */
 .hc .hc-fd.story {
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: clamp(2.5rem, 5.5vw, 6.5rem);
+  align-items: center;
+  min-height: 0;
+  padding: clamp(4.5rem, 6.5vw, 7.5rem) var(--gut);
 }
 .hc .hc-fd.story .img {
   margin: 0;
+  height: auto;
+  overflow: visible;
+  background: none;
 }
-.hc .hc-fd.story .img img {
+.hc .hc-fd.story .img video {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
   object-fit: cover;
-  object-position: 45% 20%;
-  animation: story-settle 2.4s var(--ease) both;
-}
-@keyframes story-settle {
-  from {
-    transform: scale(1.08);
-  }
-}
-.hc .hc-fd.story .img::after {
-  content: '';
-  position: absolute;
-  inset: auto 0 0;
-  height: 12.5rem;
-  background: linear-gradient(to top, rgb(8 20 28 / 0.55), rgb(8 20 28 / 0));
+  object-position: 50% 45%;
+  border-radius: 1.125rem;
+  background: var(--color-stone);
+  box-shadow: 0 1.75rem 3.5rem -1.75rem rgb(11 92 133 / 0.45);
 }
 .hc .hc-fd.story figcaption {
-  position: absolute;
-  z-index: 1;
-  left: 2.5rem;
-  bottom: 2.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  color: #fff;
-}
-.hc .hc-fd.story .nm {
-  font-family: var(--serif);
-  font-size: 1.375rem;
-}
-.hc .hc-fd.story .rl {
+  margin-top: 1rem;
   font-family: var(--sans);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 500;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgb(255 255 255 / 0.85);
+  color: #5a646d;
+}
+.hc .hc-fd.story figcaption span {
+  margin: 0 0.5rem;
+  color: var(--color-brand);
 }
 .hc .hc-fd.story .c {
-  position: relative;
-  gap: 1.75rem;
-  padding-left: clamp(1.25rem, 7.8vw, 7rem);
-}
-.hc .hc-fd.story .vline {
-  position: absolute;
-  left: clamp(0.5rem, 3.9vw, 3.5rem);
-  top: 20%;
-  bottom: 20%;
-  width: 1px;
-  background: var(--gold);
+  padding: 0;
+  gap: 1.25rem;
 }
 .hc .hc-fd.story .eyebrow {
   margin: 0;
 }
 .hc .hc-fd.story h2 {
-  margin: 0;
-  max-width: 15em;
+  margin: 0 0 0.5rem;
+  max-width: 18em;
   font-size: var(--h2);
   line-height: 1.06;
   letter-spacing: -0.028em;
   color: var(--lake);
 }
 .hc .hc-fd.story .body {
-  margin: 0.25rem 0 0;
-  max-width: 35rem;
+  margin: 0;
+  max-width: 42rem;
   font-family: var(--sans);
   font-size: 1.0625rem;
   font-weight: 300;
   line-height: 1.76;
   color: #3b464f;
 }
-.hc .hc-fd.story .facts {
-  display: flex;
-  gap: 2rem;
-  max-width: 35rem;
-  margin: 0;
-  padding: 1.375rem 0;
-  border-block: 1px solid rgb(20 29 36 / 0.14);
-}
-.hc .hc-fd.story .facts div {
-  display: flex;
-  flex-direction: column-reverse;
-  gap: 0.25rem;
-}
-.hc .hc-fd.story .facts div + div {
-  padding-left: 2rem;
-  border-left: 1px solid rgb(20 29 36 / 0.14);
-}
-.hc .hc-fd.story dd {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: 1.75rem;
-  line-height: 1.1;
-}
-.hc .hc-fd.story dt {
-  font-family: var(--sans);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: #5a646d;
-}
 .hc .hc-fd.story .btn {
   align-self: flex-start;
+  margin-top: 0.75rem;
   gap: 0.875rem;
 }
 .hc .hc-fd.story .btn:hover {
@@ -392,30 +360,28 @@
     grid-template-columns: minmax(0, 1fr);
   }
   .hc .hc-fd.story .img {
-    height: min(110vw, 34rem);
-  }
-  .hc .hc-fd.story .vline {
-    display: none;
-  }
-  .hc .hc-fd.story .c {
-    padding-left: var(--gut);
+    width: min(100%, 24rem);
   }
 }
 
 /* -- 08 Hotels & lodges --------------------------------------------------- */
 .hc .hc-hot .head.solo {
   display: block;
-  max-width: 50rem;
-}
-.hc .hc-hot .head.solo .eyebrow {
-  color: var(--sky);
-}
-.hc .hc-hot .head.solo .eyebrow i {
-  background: var(--gold);
 }
 .hc .hc-hot .head.solo h2 {
   margin: 0;
-  color: var(--sky);
+  color: #fff;
+}
+.hc .hc-hot .head.solo p.sub-h {
+  color: #dce6ec;
+  opacity: 1;
+}
+/* The line beneath the title holds to one line wherever there is room. */
+@media (min-width: 1100px) {
+  .hc .hc-hot .head.solo p.sub-h {
+    max-width: none;
+    white-space: nowrap;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -423,7 +389,7 @@
   .hc .hc-pause .qw.reading .w,
   .hc .hc-pause .qw.reading .credit,
   .hc .hc-pause .qw.reading .qlink,
-  .hc .hc-fd.story .img img {
+  .hc .hc-fd.story .img video {
     animation: none;
     transition: none;
   }

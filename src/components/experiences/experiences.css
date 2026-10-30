@@ -23,6 +23,9 @@
   font-style: normal;
   margin: 0;
 }
+.xp h2 {
+  font-weight: var(--title-weight);
+}
 .xp .lab {
   margin: 0;
 }

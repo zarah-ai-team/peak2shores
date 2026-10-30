@@ -8,7 +8,7 @@ import { readFirstTouch } from '@/lib/attribution';
 
 type Status = 'idle' | 'sending' | 'done' | 'undelivered' | 'error';
 
-export type NewsletterVariant = 'compact' | 'large' | 'dark';
+export type NewsletterVariant = 'compact' | 'large' | 'dark' | 'invite';
 
 /**
  * "Join the circle" — a rule, a field and a flush-left label.
@@ -18,6 +18,11 @@ export type NewsletterVariant = 'compact' | 'large' | 'dark';
  *   `.h5` size, with an ink submit.
  * - `dark`: for navy / navy-deep grounds (the footer) — on-dark rule,
  *   text and placeholder.
+ * - `invite`: the homepage Circle over its photograph — a frosted pill with a
+ *   clear field and a solid white button, stacking on a phone.
+ *
+ * Every form but the compact one carries the consent line: the privacy
+ * policy, and that one can leave at any time.
  *
  * Posts to /api/subscribe, which answers `{ ok, delivered }`. `delivered:
  * false` means no mailing provider is wired yet and nothing was stored, so the
@@ -38,7 +43,8 @@ export function NewsletterForm({
   className?: string;
 }) {
   const variant: NewsletterVariant = variantProp ?? (compact ? 'compact' : 'large');
-  const dark = variant === 'dark';
+  const invite = variant === 'invite';
+  const dark = variant === 'dark' || invite;
   const [email, setEmail] = useState('');
   const [website, setWebsite] = useState('');
   const [status, setStatus] = useState<Status>('idle');
@@ -79,13 +85,13 @@ export function NewsletterForm({
   }
 
   const resultClass = `outline-none ${
-    variant === 'compact' ? 'prose-body-sm' : variant === 'dark' ? 'h5 text-on-dark' : 'h5'
+    variant === 'compact' ? 'prose-body-sm' : dark ? 'h5 text-on-dark' : 'h5'
   }`;
 
   if (status === 'done') {
     return (
       <p ref={resultRef} tabIndex={-1} role="status" className={`${resultClass} ${className}`}>
-        You’re on the list. Marc’s next letter will find you.
+        Welcome to The Circle. Please check your inbox to confirm your subscription.
       </p>
     );
   }
@@ -100,7 +106,7 @@ export function NewsletterForm({
           dark ? 'text-on-dark-body' : ''
         } ${className}`}
       >
-        We couldn’t add you automatically just now. To join the circle, email{' '}
+        We couldn’t add you automatically just now. To join The Circle, email{' '}
         <a href={`mailto:${site.email}`} className="prose-link">
           {site.email}
         </a>{' '}
@@ -109,29 +115,37 @@ export function NewsletterForm({
     );
   }
 
-  const fieldText =
-    variant === 'large'
+  const fieldText = invite
+    ? 'prose-body py-3.5 pl-5 text-white placeholder:text-white/75'
+    : variant === 'large'
       ? 'font-display text-[clamp(1.375rem,1.48vw,1.75rem)] font-normal leading-[1.2] py-3 placeholder:text-muted'
       : variant === 'dark'
         ? 'prose-body py-3 text-on-dark placeholder:text-on-dark-muted'
         : 'prose-body-sm py-3 text-ink placeholder:text-muted';
 
-  const submit =
-    variant === 'large'
+  const submit = invite
+    ? 'btn--flat shrink-0 rounded-full bg-white px-7 py-3.5 text-ink transition-colors duration-300 hover:bg-brand hover:text-white'
+    : variant === 'large'
       ? 'btn ml-5 shrink-0 bg-ink px-[calc(var(--btn-px)-0.25rem)] py-[calc(var(--btn-py)-2px)] text-ivory hover:bg-brand'
       : `shrink-0 py-3 pl-5 transition-colors duration-300 ${
           dark ? 'text-on-dark hover:text-acqua' : 'hover:text-brand'
         }`;
 
   return (
-    <div className={`w-full ${variant === 'compact' ? '' : 'max-w-[32.5rem]'} ${className}`}>
+    <div
+      className={`w-full ${variant === 'compact' ? '' : invite ? 'max-w-[36rem]' : 'max-w-[32.5rem]'} ${className}`}
+    >
       {/* `.field-rule` re-rules the line in water-blue while the field has focus. */}
       <form
         onSubmit={onSubmit}
 
-        className={`field-rule relative flex items-center border-b ${
-          dark ? 'border-on-dark/40' : 'border-ink'
-        } ${variant === 'large' ? 'pb-2' : ''}`}
+        className={
+          invite
+            ? 'relative flex flex-col gap-2 rounded-[1.75rem] border border-white/45 bg-white/15 p-1.5 backdrop-blur-md sm:flex-row sm:items-center sm:rounded-full'
+            : `field-rule relative flex items-center border-b ${
+                dark ? 'border-on-dark/40' : 'border-ink'
+              } ${variant === 'large' ? 'pb-2' : ''}`
+        }
       >
         <label htmlFor={id} className="sr-only">
           Your email address
@@ -170,9 +184,20 @@ export function NewsletterForm({
           aria-disabled={status === 'sending'}
           className={`min-h-(--btn-h) font-ui text-(length:--type-button) font-medium uppercase leading-none tracking-[0.16em] aria-disabled:opacity-40 ${submit}`}
         >
-          {status === 'sending' ? 'Sending' : 'Join the circle'}
+          {status === 'sending' ? 'Sending' : 'Join The Circle'}
         </button>
       </form>
+      {variant !== 'compact' && (
+        <p
+          className={`prose-body-sm mt-3 ${invite ? 'text-center text-white/85' : dark ? 'text-on-dark-muted' : 'text-muted'}`}
+        >
+          By joining, you agree to our{' '}
+          <a href="/privacy" className="underline underline-offset-2 hover:no-underline">
+            Privacy Policy
+          </a>
+          . Unsubscribe at any time.
+        </p>
+      )}
       <p
         id={`${id}-error`}
         role="alert"

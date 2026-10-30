@@ -9,7 +9,7 @@ import './why-home.css';
 /**
  * 08b — The rhythm of every journey: Taste · Meet · Pause · Wander, set very
  * large down the left. Each word is a button; left alone they move on every
- * six seconds, a gold line filling under the one in play. Its photograph (or
+ * six seconds, a blue line filling under the one in play. Its photograph (or
  * film) fills the section, and on the right its line and a real example.
  *
  * The line's own animation keeps the time: when it ends, the next word comes
@@ -58,7 +58,7 @@ export function ExperienceWords() {
 
       <div className="rin">
         <h2 className="lab" id="rh-title">
-          The rhythm of every journey
+          The Rhythm of Every Journey
         </h2>
         <ul>
           {rhythm.map((x, i) => (
@@ -83,6 +83,15 @@ export function ExperienceWords() {
             </li>
           ))}
         </ul>
+        {/* Says the words are choices, not a list. */}
+        <p className="rhint" aria-hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V10" />
+            <path d="M12 9.5a1.5 1.5 0 0 1 3 0V11" />
+            <path d="M15 10.5a1.5 1.5 0 0 1 3 0v3.5a6 6 0 0 1-6 6h-.7a6 6 0 0 1-4.6-2.2L4.4 15a1.6 1.6 0 0 1 2.4-2.1L9 15" />
+          </svg>
+          Choose an experience
+        </p>
       </div>
 
       <div className="rside">
@@ -102,7 +111,7 @@ export function ExperienceWords() {
           ))}
         </div>
         <Link className="btn btn-light" href="/experiences">
-          See all experiences
+          See All Experiences
           <svg
             width="16"
             height="16"

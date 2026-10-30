@@ -415,10 +415,10 @@ export const media = {
   },
   'client-hotel-lucerne': {
     label: 'Stay · Mandarin Oriental Palace, Lucerne',
-    brief: 'Drive — Mandarin Oriental Palace, Lucerne. Upright crop.',
+    brief: 'Drive — Mandarin Oriental Palace, Lucerne. Upright crop. The earlier still showed another hotel on the lake; until a photograph of the Palace itself arrives, the view over the lake from the promenade stands in.',
     tone: '#5d7a78',
-    src: '/images/drive/switzerland-lake-lucerne-grand-hotel.jpg',
-    alt: 'The Belle Époque façade of the Mandarin Oriental Palace on Lake Lucerne',
+    src: '/images/drive/switzerland-lake-lucerne-balcony-view.jpg',
+    alt: 'Lake Lucerne and Mount Pilatus from a balcony above the lakeside promenade, Lucerne',
   },
   'client-hotel-stresa': {
     label: 'Stay · Hotel La Palma, Stresa',
@@ -447,6 +447,36 @@ export const media = {
     tone: '#a59a82',
     src: '/images/home/hotel-cardamom.jpg',
     alt: 'Cardamom House, a thatched white villa among trees and bougainvillea',
+  },
+
+  /* ---- Home, the journeys slider: the client's photographs (30 Oct) ---- */
+  'home-jr-swiss': {
+    label: 'Home slider · Swiss Elegance',
+    brief: 'Oeschinensee from above, peaks all round. Wide.',
+    tone: '#3f8fb0',
+    src: '/images/home/jr-swiss-oeschinensee.jpg',
+    alt: 'The turquoise Oeschinensee below rock walls and snowy peaks in the Bernese Oberland',
+  },
+  'home-jr-italy': {
+    label: 'Home slider · Italy Uncovered',
+    brief: 'A Bologna salumeria, a tray of local antipasti and a spritz. Wide.',
+    tone: '#8a5a3a',
+    src: '/images/home/jr-italy-bologna-salumeria.jpg',
+    alt: 'A traveller in a Bologna food shop holding a tray of prosciutto, cheeses and a spritz',
+  },
+  'home-xp-photo': {
+    label: 'Home · The Peaks2Shores Experience',
+    brief: 'One aspirational photograph beside the six signature touches. Upright.',
+    tone: '#2f8f9d',
+    src: '/images/drive/croatia-hvar-sailing.jpg',
+    alt: 'A sailing yacht at anchor in clear turquoise water off the Croatian coast',
+  },
+  'home-jr-horizon': {
+    label: 'Home slider · More journeys coming',
+    brief: 'A traveller among the columns of Karnak. Wide.',
+    tone: '#a06a3a',
+    src: '/images/home/jr-horizon-karnak-temple.jpg',
+    alt: 'A traveller in a long white dress among the carved columns of Karnak temple, Luxor',
   },
 
   /* ---- Home, all departures (one small bright frame per journey) ------- */

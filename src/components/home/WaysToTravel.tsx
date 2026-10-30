@@ -7,6 +7,7 @@ import { useReducedMotion } from 'motion/react';
 import { ways } from '@/lib/data/home';
 import { Arrow } from '@/components/ui/Button';
 import { Chevron, posterOf } from './HomeMedia';
+import { useDragScroll } from '@/components/ui/useDrag';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -27,6 +28,7 @@ const AUTO_MS = 5000;
 
 export function WaysToTravel() {
   const rail = useRef<HTMLDivElement>(null);
+  useDragScroll(rail);
   const films = useRef<(HTMLVideoElement | null)[]>([]);
   const [index, setIndex] = useState(0);
   const [inView, setInView] = useState(-1);
@@ -112,36 +114,17 @@ export function WaysToTravel() {
     <section ref={section} className="hc-ways" id="ways" aria-labelledby="ways-title">
       <div className="head dk">
         <div>
-          {/* "Ways to experience", so it no longer clashes with the Experiences page. */}
-          <h2 id="ways-title">Ways to experience</h2>
+          {/* "Ways to explore", so it no longer clashes with the Experiences page. */}
+          <h2 id="ways-title">Ways to Explore</h2>
           <p className="sub-h">Experience the world your way.</p>
         </div>
-        <div className="wnav">
-          <span className="count">
-            {pad(shown)} / {pad(ways.length)}
-          </span>
-          <button
-            type="button"
-            className="circ"
-            aria-label="Previous"
-            onClick={() => {
-              setAuto(false);
-              rail.current?.scrollBy({ left: -step(), behavior: 'smooth' });
-            }}
-          >
-            <Chevron dir="left" />
-          </button>
-          <button
-            type="button"
-            className="circ"
-            aria-label="Next"
-            onClick={() => {
-              setAuto(false);
-              rail.current?.scrollBy({ left: step(), behavior: 'smooth' });
-            }}
-          >
-            <Chevron dir="right" />
-          </button>
+        {/* The way to a designer sits up here, clear of the floating button
+            in the bottom corner; the slider's arrows sit beneath the cards. */}
+        <div className="ctarow">
+          <span className="hint">Not sure which suits you?</span>
+          <Link className="btn btn-ink" href="/plan#contact">
+            Speak to a travel designer <Arrow />
+          </Link>
         </div>
       </div>
 
@@ -212,15 +195,36 @@ export function WaysToTravel() {
         ))}
       </div>
 
-      <div className="wfoot">
+      <div className="wfoot dk">
+        <div className="wnav">
+          <button
+            type="button"
+            className="circ"
+            aria-label="Previous"
+            onClick={() => {
+              setAuto(false);
+              rail.current?.scrollBy({ left: -step(), behavior: 'smooth' });
+            }}
+          >
+            <Chevron dir="left" />
+          </button>
+          <button
+            type="button"
+            className="circ"
+            aria-label="Next"
+            onClick={() => {
+              setAuto(false);
+              rail.current?.scrollBy({ left: step(), behavior: 'smooth' });
+            }}
+          >
+            <Chevron dir="right" />
+          </button>
+          <span className="count">
+            {pad(shown)} / {pad(ways.length)}
+          </span>
+        </div>
         <div className="prog" aria-hidden>
           <i style={{ width: `${Math.round((shown / ways.length) * 100)}%` }} />
-        </div>
-        <div className="ctarow">
-          <span className="hint">Not sure which suits you?</span>
-          <Link className="btn btn-ink" href="/plan#contact">
-            Speak to a travel designer <Arrow />
-          </Link>
         </div>
       </div>
     </section>

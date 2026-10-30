@@ -7,38 +7,29 @@
  */
 
 .hc-jr {
-  --gold: #d8b27a;
-  --gold-hi: #e8c890;
+  /* The carousel's accent: the bright house blue the hero uses over its film,
+     and the sky blue for words set large on a photograph. */
+  --accent: #2ab4f2;
+  --accent-hi: #7accfd;
   --mist: #c9d6de;
   --sand: #e9e3d6;
-  /* Section titles on this panel: the sky blue, which reads on deep blue. */
-  --title: var(--sky);
+  /* Section titles on white: the lake blue, as elsewhere on the page. */
+  --title: var(--lake);
+  --tint: #eef6fb;
   --inset: clamp(0.5rem, 1.67vw, 1.5rem);
   --pad: clamp(1.25rem, 4.44vw, 4rem);
-  background: var(--paper);
+  background: #fff;
   padding: clamp(1rem, 1.67vw, 1.5rem) var(--inset) clamp(3.5rem, 5vw, 5.5rem);
 }
+/* White, like the page around it: the slider's photographs carry the colour. */
 .hc-jr .panel {
   position: relative;
-  overflow: hidden;
   isolation: isolate;
-  border-radius: clamp(1.5rem, 2.78vw, 2.5rem);
-  background: radial-gradient(120% 60% at 85% 0%, #14506f 0%, #0e2f42 45%, var(--night) 100%);
-  color: #fff;
+  background: #fff;
+  color: var(--ink);
   padding: clamp(3.5rem, 6.11vw, 5.5rem) var(--pad) var(--pad);
 }
-
-/* The peaks-to-shores line, faint, top right. */
-.hc-jr .motif {
-  position: absolute;
-  z-index: -1;
-  top: clamp(1rem, 2.36vw, 2.125rem);
-  right: -1.25rem;
-  width: clamp(20rem, 44.4vw, 40rem);
-  height: auto;
-  opacity: 0.22;
-  pointer-events: none;
-}
+/* The slider's horizon art. */
 .hc-jr .drift {
   animation: jr-drift 9s ease-in-out infinite;
 }
@@ -55,18 +46,11 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 1.5rem 2rem;
-  margin-bottom: clamp(2.25rem, 3.89vw, 3.5rem);
-}
-.hc-jr .gl {
-  display: block;
-  width: 3.5rem;
-  height: 1px;
-  margin-bottom: 1.125rem;
-  background: var(--gold);
+  margin-bottom: clamp(1.75rem, 2.78vw, 2.5rem);
 }
 .hc-jr h2 {
   font-family: var(--serif);
-  font-weight: 400;
+  font-weight: var(--title-weight);
   font-size: var(--h2);
   line-height: 1.04;
   letter-spacing: -0.03em;
@@ -74,99 +58,125 @@
 }
 .hc-jr .head p.sub-h {
   font-style: italic;
-  color: var(--mist);
+  color: var(--muted);
   opacity: 1;
 }
+/* On a desktop the line reads in one breath, on one line. */
+@media (min-width: 1100px) {
+  .hc-jr .head p.sub-h {
+    max-width: none;
+    white-space: nowrap;
+  }
+}
 
-/* Buttons on the deep blue: white or gold, and gold or white on hover. */
+/* Buttons on the photographs: white or blue, and blue or white on hover. */
 .hc-jr .btn {
   white-space: nowrap;
 }
 .hc-jr .btn-light:hover {
-  background: var(--gold);
-  border-color: var(--gold);
-  color: var(--ink);
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
 }
 .hc-jr .btn-line:hover {
   background: #fff;
   border-color: #fff;
   color: var(--ink);
 }
-.hc-jr .btn-gold {
-  background: var(--gold);
-  border: 1px solid var(--gold);
-  color: var(--ink);
+.hc-jr .btn-accent {
+  background: var(--brand);
+  border: 1px solid var(--brand);
+  color: #fff;
   font-weight: 600;
 }
-.hc-jr .btn-gold:hover {
+.hc-jr .btn-accent:hover {
   background: #fff;
   border-color: #fff;
+  color: var(--ink);
 }
 
-/* -- The three promises: glass cards ------------------------------------- */
+/* -- The three promises: compact soft blue tiles, the mark in a solid blue
+      disc beside the words, a blue rule drawn across the top on hover ---- */
 .hc-jr .pts {
   list-style: none;
-  margin: 0 0 clamp(2.5rem, 4.44vw, 4rem);
+  margin: 0 0 clamp(1.75rem, 2.78vw, 2.5rem);
   padding: 0;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(0.75rem, 1.67vw, 1.5rem);
 }
 .hc-jr .pts li {
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: flex-start;
-  gap: clamp(1rem, 1.53vw, 1.375rem);
-  padding: clamp(1.25rem, 2.08vw, 1.875rem) clamp(1.25rem, 2.22vw, 2rem);
-  border-radius: 1.5rem;
-  background: rgb(255 255 255 / 0.06);
-  border: 1px solid rgb(255 255 255 / 0.14);
-  backdrop-filter: blur(10px);
+  gap: clamp(0.875rem, 1.25vw, 1.125rem);
+  padding: clamp(1.125rem, 1.67vw, 1.5rem) clamp(1.125rem, 1.81vw, 1.625rem);
+  border-radius: 1rem;
+  background: var(--tint);
+  cursor: pointer;
   transition:
     transform 0.8s var(--ease),
-    background-color 0.8s var(--ease),
-    border-color 0.8s var(--ease);
+    box-shadow 0.8s var(--ease),
+    background-color 0.8s var(--ease);
+}
+.hc-jr .pts li::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: var(--brand);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.8s var(--ease);
 }
 .hc-jr .pts li:hover {
-  transform: translateY(-0.5rem);
-  background: rgb(255 255 255 / 0.1);
-  border-color: rgb(216 178 122 / 0.55);
+  transform: translateY(-0.375rem);
+  background: #fff;
+  box-shadow: 0 1.25rem 2.5rem rgb(11 92 133 / 0.12);
 }
+.hc-jr .pts li:hover::before {
+  transform: scaleX(1);
+}
+/* The mark: a deep-to-bright blue disc with a fine light ring inside, the
+   drawing lifting a little when its tile is hovered. */
 .hc-jr .ico {
   flex: 0 0 auto;
-  width: clamp(2.75rem, 3.89vw, 3.5rem);
-  height: clamp(2.75rem, 3.89vw, 3.5rem);
+  width: clamp(2.875rem, 3.47vw, 3.25rem);
+  height: clamp(2.875rem, 3.47vw, 3.25rem);
   border-radius: 50%;
-  border: 1px solid rgb(216 178 122 / 0.6);
-  color: var(--gold);
+  background: linear-gradient(145deg, #2ab4f2 0%, var(--brand) 45%, var(--color-brand-deep) 100%);
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition:
-    background-color 0.6s var(--ease),
-    color 0.6s var(--ease);
+  box-shadow:
+    inset 0 0 0 3px rgb(255 255 255 / 0.16),
+    0 0.625rem 1.5rem rgb(17 144 203 / 0.3);
 }
 .hc-jr .ico svg {
   width: 1.5rem;
   height: 1.5rem;
+  transition: transform 0.8s var(--ease);
 }
-.hc-jr .pts li:hover .ico {
-  background: var(--gold);
-  color: #0e2f42;
+.hc-jr .pts li:hover .ico svg {
+  transform: translateY(-2px) scale(1.08);
 }
 .hc-jr .pts h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(1.25rem, 1.67vw, 1.5rem);
+  font-size: clamp(1.125rem, 1.46vw, 1.3125rem);
   line-height: 1.25;
   letter-spacing: -0.01em;
-  margin: 0 0 0.5rem;
+  color: var(--lake);
+  margin: 0.125rem 0 0.375rem;
 }
 .hc-jr .pts p {
   font-family: var(--sans);
   font-weight: 300;
   font-size: clamp(0.875rem, 1.04vw, 0.9375rem);
-  line-height: 1.6;
-  color: var(--mist);
+  line-height: 1.55;
+  color: var(--muted);
   margin: 0;
 }
 
@@ -175,12 +185,15 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  /* As wide as the panel allows, but never taller than the screen under the
-     header, so the words and controls always show whole. */
-  height: clamp(30rem, min(52.8vw, 100vh - 7rem), 47.5rem);
-  height: clamp(30rem, min(52.8vw, 100svh - 7rem), 47.5rem);
+  /* The whole screen under the header, less a margin all round, so a journey
+     fills the view and shows whole with the header in place or not. */
+  height: max(34rem, 100vh - var(--nav-h-compact) - 2 * var(--inset));
+  height: max(34rem, 100svh - var(--nav-h-compact) - 2 * var(--inset));
+  scroll-margin-top: calc(var(--nav-h-compact) + var(--inset));
   border-radius: clamp(1.25rem, 2.22vw, 2rem);
   background: var(--night);
+  /* White words on the photographs, whatever the page around them. */
+  color: #fff;
   box-shadow: 0 2.5rem 5.625rem rgb(0 0 0 / 0.35);
 }
 .hc-jr .bg {
@@ -193,6 +206,10 @@
 .hc-jr .bg.on {
   opacity: 1;
 }
+/* Every photograph fills its frame or card, cropped, never stretched. */
+.hc-jr .frame img {
+  object-fit: cover;
+}
 .hc-jr .bg img {
   transform: scale(1.1);
   transition: transform 9s var(--ease);
@@ -202,6 +219,15 @@
 }
 .hc-jr .hzbg {
   background: var(--night);
+}
+/* The finale on a photograph: a soft shade at the centre, where the words sit. */
+.hc-jr .hzbg.photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 55% 65% at 50% 50%, rgb(8 20 28 / 0.62) 0%, rgb(8 20 28 / 0.2) 100%),
+    linear-gradient(to top, rgb(8 20 28 / 0.55) 0%, rgb(8 20 28 / 0) 45%);
 }
 .hc-jr .hz {
   position: absolute;
@@ -301,7 +327,7 @@
 .hc-jr .copy {
   grid-area: 1 / 1;
   align-self: end;
-  width: min(35rem, 44%);
+  width: min(34rem, 42%);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -321,55 +347,52 @@
 .hc-jr .copy > * {
   margin: 0;
 }
-.hc-jr .eye {
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  font-family: var(--sans);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: var(--gold);
-}
-.hc-jr .eye .rule {
-  display: block;
-  width: 2.5rem;
-  height: 1px;
-  background: var(--gold);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 1s var(--ease) 0.6s;
-}
-.hc-jr .copy.on .rule {
-  transform: scaleX(1);
-}
 .hc-jr .copy h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(2.125rem, 3.89vw, 3.5rem);
-  line-height: 1.04;
+  font-size: clamp(2.5rem, 4.4vw, 4.25rem);
+  line-height: 1.02;
   letter-spacing: -0.03em;
+  color: #fff;
   text-wrap: balance;
+  text-shadow: 0 2px 1.5rem rgb(8 20 28 / 0.35);
+}
+/* The place words in a title, in italic sky blue, as in the finale. */
+.hc-jr .copy h3 em,
+.hc-jr .card .t em {
+  font-style: italic;
+  color: var(--accent-hi);
 }
 .hc-jr .copy .lead {
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(1.125rem, 1.53vw, 1.375rem);
+  font-size: clamp(1.1875rem, 1.67vw, 1.5rem);
   line-height: 1.35;
-  color: var(--sand);
+  color: rgb(255 255 255 / 0.9);
 }
+/* The facts as two frosted pills. */
 .hc-jr .facts {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.5rem;
   font-family: var(--sans);
-  font-size: 0.8125rem;
-  color: var(--mist);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.hc-jr .facts span:not([aria-hidden]) {
+  padding: 0.5rem 0.875rem;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.12);
+  border: 1px solid rgb(255 255 255 / 0.28);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
 }
 .hc-jr .facts [aria-hidden] {
-  color: var(--gold);
+  display: none;
 }
 .hc-jr .acts {
   display: flex;
@@ -397,41 +420,10 @@
 .hc-jr .copy.finale.on > :nth-child(3) {
   animation-delay: 0.35s;
 }
-.hc-jr .copy.finale.on > :nth-child(4) {
-  animation-delay: 0.5s;
-}
 @keyframes jr-up {
   from {
     opacity: 0;
     transform: translateY(1.625rem);
-  }
-}
-.hc-jr .pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.625rem;
-  height: 2.125rem;
-  padding: 0 1rem;
-  border-radius: 999px;
-  border: 1px solid rgb(216 178 122 / 0.6);
-  background: rgb(8 22 32 / 0.35);
-  font-family: var(--sans);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: var(--gold);
-}
-.hc-jr .dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--gold);
-  animation: jr-blink 1.8s ease-in-out infinite;
-}
-@keyframes jr-blink {
-  50% {
-    opacity: 0.25;
   }
 }
 .hc-jr .finale h3 {
@@ -443,7 +435,7 @@
 }
 .hc-jr .finale h3 em {
   font-style: italic;
-  color: var(--gold-hi);
+  color: var(--accent-hi);
 }
 .hc-jr .finale .lead {
   max-width: 34ch;
@@ -457,19 +449,47 @@
   position: absolute;
   right: clamp(1.5rem, 3.33vw, 3rem);
   bottom: clamp(2.5rem, 5vw, 4.5rem);
-  width: min(33.5rem, 44%);
+  width: min(40rem, 48%);
   display: flex;
   flex-direction: column;
-  gap: clamp(1.25rem, 2.5vw, 2.25rem);
+  gap: clamp(1rem, 1.67vw, 1.5rem);
+}
+/* "Up next", so it is plain at a glance that there are more journeys. */
+.hc-jr .nlab {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.625rem;
+  margin: 0 0 -0.25rem;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 1px 0.5rem rgb(8 20 28 / 0.6);
+  transition: opacity 0.9s var(--ease);
+}
+.hc-jr .nlab svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.hc-jr .fin .nlab {
+  opacity: 0;
 }
 .hc-jr .next {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(var(--cards, 3), calc((100% - 2rem) / 3));
+  grid-template-columns: repeat(var(--cards, 3), calc((100% - 2.5rem) / 3));
   justify-content: end;
-  gap: 1rem;
+  gap: 1.25rem;
   transition: opacity 0.9s var(--ease);
 }
 .hc-jr .fin .next {
@@ -495,7 +515,7 @@
     border-color 0.6s var(--ease);
 }
 .hc-jr .card.horizon {
-  background: linear-gradient(160deg, #b8925a 0%, #0e2f42 62%, var(--night) 100%);
+  background: linear-gradient(160deg, #1190cb 0%, #0e2f42 62%, var(--night) 100%);
 }
 .hc-jr .card img {
   transition: transform 1.4s var(--ease);
@@ -513,7 +533,7 @@
 }
 .hc-jr .card:hover {
   transform: translateY(-0.625rem);
-  border-color: rgb(216 178 122 / 0.8);
+  border-color: rgb(42 180 242 / 0.8);
   box-shadow: 0 30px 60px rgb(0 0 0 / 0.45);
 }
 .hc-jr .card:hover img {
@@ -531,10 +551,10 @@
   text-shadow: 0 1px 0.5rem rgb(8 20 28 / 0.6);
 }
 .hc-jr .card .num {
-  left: 1rem;
-  top: 0.875rem;
+  left: 1.125rem;
+  top: 1rem;
   font-family: var(--serif);
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: rgb(255 255 255 / 0.85);
 }
 .hc-jr .card .mark {
@@ -544,8 +564,8 @@
   height: 3.5rem;
   margin: -1.75rem 0 0 -1.75rem;
   border-radius: 50%;
-  border: 1px solid rgb(216 178 122 / 0.8);
-  color: var(--gold);
+  border: 1px solid rgb(42 180 242 / 0.8);
+  color: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -555,24 +575,16 @@
   height: 1.375rem;
 }
 .hc-jr .card .cap {
-  left: 0.875rem;
-  right: 0.875rem;
-  bottom: 0.875rem;
+  left: 1.125rem;
+  right: 1.125rem;
+  bottom: 1.125rem;
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
-}
-.hc-jr .card .ey {
-  font-family: var(--sans);
-  font-size: 0.5625rem;
-  font-weight: 500;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--gold);
+  gap: 0.5rem;
 }
 .hc-jr .card .t {
   font-family: var(--serif);
-  font-size: clamp(0.9375rem, 1.18vw, 1.0625rem);
+  font-size: clamp(1.0625rem, 1.39vw, 1.3125rem);
   line-height: 1.2;
 }
 
@@ -581,13 +593,16 @@
   align-items: center;
   gap: 0.75rem;
 }
+/* The arrows: frosted, the forward one solid white, so the way on is clear. */
 .hc-jr .round {
   flex: 0 0 auto;
-  width: 3rem;
-  height: 3rem;
+  width: 3.5rem;
+  height: 3.5rem;
   border-radius: 50%;
-  border: 1px solid rgb(255 255 255 / 0.45);
-  background: transparent;
+  border: 1px solid rgb(255 255 255 / 0.7);
+  background: rgb(255 255 255 / 0.14);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
   color: #fff;
   display: flex;
   align-items: center;
@@ -603,28 +618,38 @@
   border-color: #fff;
   color: var(--ink);
 }
+.hc-jr .round.fwd {
+  background: #fff;
+  border-color: #fff;
+  color: var(--ink);
+}
+.hc-jr .round.fwd:hover {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
 .hc-jr .round svg {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: 1.25rem;
+  height: 1.25rem;
   fill: none;
   stroke: currentColor;
-  stroke-width: 1.5;
+  stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-/* The gold line fills over the 7 s a slide stays, and holds when paused. */
+/* The blue line fills over the 7 s a slide stays, and holds when paused. */
 .hc-jr .prog {
   position: relative;
   flex: 1 1 auto;
   min-width: 1.5rem;
-  height: 1px;
+  height: 2px;
   margin: 0 0.75rem;
-  background: rgb(255 255 255 / 0.28);
+  background: rgb(255 255 255 / 0.3);
 }
 .hc-jr .prog i {
   position: absolute;
   inset: 0;
-  background: var(--gold);
+  background: var(--accent);
   transform-origin: left;
   animation: jr-fill 7s linear both paused;
 }
@@ -679,7 +704,7 @@
 @media (max-width: 1100px) {
   .hc-jr .pts li {
     flex-direction: column;
-    gap: 0.875rem;
+    gap: 0.75rem;
   }
 }
 @media (max-width: 900px) {
@@ -725,7 +750,8 @@
     width: auto;
     padding: 0 1.25rem 1.25rem;
   }
-  .hc-jr .next {
+  .hc-jr .next,
+  .hc-jr .nlab {
     display: none;
   }
 }
@@ -763,7 +789,6 @@
 @media (prefers-reduced-motion: reduce) {
   .hc-jr .drift,
   .hc-jr .hz *,
-  .hc-jr .dot,
   .hc-jr .copy.finale.on > *,
   .hc-jr .prog i {
     animation: none !important;
@@ -773,11 +798,9 @@
   .hc-jr .copy,
   .hc-jr .hz .sunrise,
   .hc-jr .pts li:hover,
+  .hc-jr .pts li:hover .ico svg,
   .hc-jr .card:hover,
   .hc-jr .card:hover img {
-    transform: none;
-  }
-  .hc-jr .eye .rule {
     transform: none;
   }
 }

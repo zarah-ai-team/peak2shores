@@ -2,41 +2,33 @@
  * The why, the what and the rhythm: How we travel (.hc-hw), the Peaks2Shores
  * Experience (.hc-xpi) and Taste · Meet · Pause · Wander (.hc-rh). Every rule
  * is scoped to one of the three, and they read the home tokens set on .hc.
- * Gold is the accent here: a hairline and caps label over each heading, the
+ * Brand blue is the accent here: a caps label over each heading, the
  * 18, the closing card's button and the strip's progress line.
  */
 
 .hc-hw,
 .hc-xpi,
 .hc-rh {
-  --gold: #d1a965;
-  /* Gold as small text on a light ground: 5:1 on paper and on panel. */
-  --gold-ink: #80612c;
-  /* Gold on the night-blue grounds. */
-  --gold-lt: #d8b27a;
+  --blue: var(--color-brand);
+  /* Blue as small text on a light ground. */
+  --blue-ink: var(--color-brand-deep);
+  /* Blue on the night-blue grounds. */
+  --blue-lt: #2ab4f2;
 }
 
-/* -- The heading pattern: gold label, blue heading, its line -------------- */
+/* -- The heading pattern: blue label, blue heading, its line -------------- */
 .hc-hw .hw-lab,
 .hc-xpi .hw-lab {
   display: flex;
   align-items: center;
   gap: 0.875rem;
   margin: 0;
-  color: var(--gold-ink);
-}
-.hc-hw .hw-lab::before,
-.hc-xpi .hw-lab::before {
-  content: '';
-  display: block;
-  width: 2.5rem;
-  height: 1px;
-  background: var(--gold);
+  color: var(--blue-ink);
 }
 .hc-hw h2,
 .hc-xpi h2 {
   font-family: var(--serif);
-  font-weight: 400;
+  font-weight: var(--title-weight);
   font-size: var(--h2);
   line-height: 1.04;
   letter-spacing: -0.025em;
@@ -55,6 +47,21 @@
   max-width: 32ch;
   margin: 0.875rem 0 0;
 }
+/* Subtitles hold to one line wherever there is room for it. */
+@media (min-width: 1100px) {
+  .hc-hw .hw-sub {
+    max-width: none;
+    white-space: nowrap;
+  }
+}
+.hc-xpi .hw-sub {
+  max-width: none;
+}
+@media (min-width: 1280px) {
+  .hc-xpi .hw-sub {
+    white-space: nowrap;
+  }
+}
 
 /* -- How we travel: six cards in a rail ------------------------------------ */
 .hc-hw {
@@ -71,9 +78,32 @@
   gap: 1.5rem;
   margin-bottom: clamp(1.5rem, 2.33vw, 2.75rem);
 }
+/* The arrows under the cards, beside the count and the blue line: the way
+   on is a solid blue disc, so it reads as "more this way" at a glance. */
+.hc-hw .hw-ctl {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 1.5vw, 1.75rem);
+}
 .hc-hw .hw-nav {
   display: flex;
+  align-items: center;
   gap: 0.75rem;
+}
+.hc .hc-hw .hw-nav .circ {
+  border-color: rgb(20 29 36 / 0.35);
+  color: var(--ink);
+}
+.hc .hc-hw .hw-nav .circ.fwd {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+  box-shadow: 0 0.625rem 1.5rem -0.5rem rgb(17 144 203 / 0.55);
+}
+.hc .hc-hw .hw-nav .circ:hover {
+  background: var(--color-brand-deep, var(--brand));
+  border-color: var(--color-brand-deep, var(--brand));
+  color: #fff;
 }
 .hc .hc-hw .hw-nav .circ:disabled {
   opacity: 0.35;
@@ -81,16 +111,28 @@
   background: transparent;
   border-color: rgb(20 29 36 / 0.45);
   color: var(--ink);
+  box-shadow: none;
+}
+.hc-hw .hw-count {
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: rgb(20 29 36 / 0.6);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.hc-hw .hw-ctl .hw-prog {
+  width: clamp(7rem, 16vw, 18rem);
 }
 
-/* The rail runs to both edges of the screen, so the fifth card shows at the margin and
-   says there is more. It pads above and below so a lifted card and its shadow
-   are not cut off by the scroller. */
+/* The rail runs to both edges of the screen, so the fifth card shows at the
+   margin and says there is more. It pads below so the shadows are not cut off
+   by the scroller. */
 .hc-hw .hw-rail {
   --gap: clamp(1rem, 1.27vw, 1.5rem);
-  --drop: clamp(1.5rem, 2.33vw, 2.75rem);
   margin: 0 calc(var(--gut) * -1);
-  padding: 1.5rem 0 2.5rem var(--gut);
+  padding: 0.5rem 0 2rem var(--gut);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-padding-inline: var(--gut);
@@ -107,12 +149,11 @@
 .hc-hw .hw-cards {
   list-style: none;
   margin: 0;
-  padding: 0 var(--gut) var(--drop) 0;
+  padding: 0 var(--gut) 0 0;
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   gap: var(--gap);
   width: max-content;
-  perspective: 87.5rem;
 }
 
 /* Four to the width of the page's column. */
@@ -127,81 +168,24 @@
   display: flex;
   flex-direction: column;
   gap: 1.125rem;
-  padding: 1.625rem 1.5rem 1.5rem;
+  padding: 1.75rem 1.5rem 0;
   border-radius: 1.125rem;
-  background: var(--night);
+  overflow: hidden;
+  /* The site's lake blue, deepening toward the photograph. */
+  background: linear-gradient(170deg, var(--lake) 0%, #084766 100%);
   color: #fff;
-  box-shadow: 0 1.5rem 3.125rem rgb(20 29 36 / 0.16);
-  transform-style: preserve-3d;
-  /* Let go, a card settles back with a little give, like something set down. */
+  text-align: center;
+  box-shadow: 0 1.5rem 3.125rem rgb(11 92 133 / 0.22);
   transition:
-    transform 0.9s cubic-bezier(0.34, 1.32, 0.64, 1),
-    box-shadow 0.9s var(--ease);
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.6s var(--ease);
 }
-/* The second, fourth and sixth sit lower. */
-.hc-hw .card:nth-child(even) {
-  margin-top: var(--drop);
-}
-/* Under a mouse the tilt follows the pointer (TiltCards sets --rx and --ry);
-   otherwise, and for the keyboard, each card tips a little toward the next. */
-.hc-hw .card:hover,
-.hc-hw .card:focus-within {
-  transform: translateY(-0.625rem) rotateX(var(--rx, 4deg)) rotateY(var(--ry, -4deg));
-  box-shadow: var(--sx, 1.125rem) 2.5rem 5rem -1.5rem rgb(8 20 28 / 0.55);
-  transition-duration: 0.5s;
-  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-}
-.hc-hw .card:nth-child(even):hover,
-.hc-hw .card:nth-child(even):focus-within {
-  transform: translateY(-0.625rem) rotateX(var(--rx, 4deg)) rotateY(var(--ry, 4deg));
-  box-shadow: var(--sx, -1.125rem) 2.5rem 5rem -1.5rem rgb(8 20 28 / 0.55);
-}
-/* Each part at its own depth, so the card reads as built, not printed. */
-.hc-hw .kick,
-.hc-hw .body,
-.hc-hw .ph {
-  transition: transform 0.7s var(--ease);
-}
-.hc-hw .card:is(:hover, :focus-within) .kick {
-  transform: translateZ(1.125rem);
-}
-.hc-hw .card:is(:hover, :focus-within) .body {
-  transform: translateZ(1.75rem);
-}
-.hc-hw .card:is(:hover, :focus-within) .ph {
-  transform: translateZ(2.75rem);
+/* Under the pointer a card rises, its line opens and its photograph leans in. */
+.hc-hw .card:is(:hover, :focus-within) {
+  transform: translateY(-0.5rem);
+  box-shadow: 0 2.25rem 4.5rem -1rem rgb(11 92 133 / 0.42);
 }
 
-.hc-hw .kick {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  margin: 0;
-}
-.hc-hw .kick .n {
-  font-family: var(--serif);
-  font-size: 1rem;
-  color: #dde6ec;
-}
-.hc-hw .kick .k {
-  font-family: var(--sans);
-  font-size: 0.625rem;
-  font-weight: 500;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: #9fb3c1;
-  text-align: right;
-}
-.hc-hw .plus {
-  display: inline-block;
-  margin-left: 0.375rem;
-  color: var(--gold-lt);
-  transition: transform 0.6s var(--ease);
-}
-.hc-hw .card:hover .plus {
-  transform: rotate(90deg);
-}
 .hc-hw .body {
   flex: 1 1 auto;
   display: flex;
@@ -214,77 +198,58 @@
   font-size: clamp(1.375rem, 1.8vw, 1.75rem);
   line-height: 1.15;
   letter-spacing: -0.012em;
-  min-height: 3.45em;
+  /* Two lines' room, the title centred in it, so every card's line meets. */
+  min-height: 2.6em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 0;
-  color: #dde6ec;
+  color: #fff;
 }
 .hc-hw .rule {
   display: block;
-  height: 1px;
-  background: rgb(255 255 255 / 0.16);
+  align-self: center;
+  width: 3rem;
+  height: 2px;
+  border-radius: 2px;
+  background: #7accfd;
+  transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hc-hw .card:is(:hover, :focus-within) .rule {
+  width: 6rem;
 }
 .hc-hw .note {
   font-family: var(--sans);
   font-weight: 300;
   font-size: 0.875rem;
   line-height: 1.65;
-  color: #c3d0da;
+  color: #d6e7f1;
   margin: 0;
 }
+/* The photograph fills the foot of the card, edge to edge; the card's own
+   rounded corners finish it. */
 .hc-hw .ph {
   position: relative;
   flex: 0 0 auto;
-  height: clamp(11rem, 13.9vw, 13.5rem);
-  border-radius: 0.75rem;
+  height: clamp(15rem, 19vw, 19.5rem);
+  margin: 0 -1.5rem;
   overflow: hidden;
-  background: #2b4152;
+  background: #0a5277;
 }
 .hc-hw .ph img {
-  transition: scale 1.6s var(--ease);
+  transition: scale 1.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.hc-hw .card:hover .ph img {
-  scale: 1.06;
-}
-/* A soft light that crosses the photograph with the pointer. */
-.hc-hw .ph::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    circle at var(--gx, 30%) var(--gy, 20%),
-    rgb(255 255 255 / 0.22),
-    rgb(255 255 255 / 0) 60%
-  );
-  opacity: 0;
-  transition: opacity 0.6s var(--ease);
-}
-.hc-hw .card:is(:hover, :focus-within) .ph::after {
-  opacity: 1;
+.hc-hw .card:is(:hover, :focus-within) .ph img {
+  scale: 1.07;
 }
 
-/* The closing card: lake light, a gold edge, peaks over water, the way on. */
+
+/* The closing card: the brighter brand blue, its words and the way on
+   floating in the middle. */
 .hc-hw .card.cta {
-  justify-content: space-between;
+  justify-content: center;
   padding: 1.75rem;
-  background: radial-gradient(120% 80% at 80% 0%, #14506f 0%, #0e2f42 50%, var(--night) 100%);
-  border: 1px solid rgb(216 178 122 / 0.45);
-}
-.hc-hw .cta .hw-lines {
-  position: absolute;
-  right: 0;
-  top: 4.375rem;
-  width: 100%;
-  height: auto;
-  opacity: 0.35;
-  pointer-events: none;
-}
-.hc-hw .cta .kick .n {
-  font-size: 1.25rem;
-  color: #fff;
-}
-.hc-hw .cta .kick .k {
-  color: var(--gold-lt);
+  background: radial-gradient(120% 80% at 80% 0%, #2ab4f2 0%, var(--brand) 45%, var(--lake) 100%);
 }
 .hc-hw .cta .body {
   position: relative;
@@ -292,6 +257,7 @@
 }
 .hc-hw .cta h3 {
   min-height: 0;
+  display: block;
   font-size: clamp(1.5rem, 2.08vw, 1.875rem);
   line-height: 1.12;
   letter-spacing: -0.02em;
@@ -299,10 +265,10 @@
 }
 .hc-hw .cta .note {
   font-size: 0.9375rem;
-  color: #e9e3d6;
+  color: #eaf6fd;
 }
-.hc-hw .hw-gold {
-  align-self: flex-start;
+.hc-hw .hw-cta {
+  align-self: center;
   margin-top: 0.5rem;
   display: inline-flex;
   align-items: center;
@@ -310,8 +276,8 @@
   min-height: 3.25rem;
   padding: 0 1.75rem;
   border-radius: 999px;
-  background: var(--gold-lt);
-  color: var(--ink);
+  background: #fff;
+  color: var(--lake);
   font-family: var(--sans);
   font-size: 0.75rem;
   font-weight: 600;
@@ -320,19 +286,20 @@
   text-decoration: none;
   transition: background-color 0.5s var(--ease);
 }
-.hc-hw .hw-gold:hover {
-  background: #fff;
+.hc-hw .hw-cta:hover {
+  background: var(--ink);
+  color: #fff;
 }
-.hc-hw .hw-gold svg {
+.hc-hw .hw-cta svg {
   width: 1rem;
   height: 1rem;
   stroke-width: 1.5;
   transition: transform 0.6s var(--ease);
 }
-.hc-hw .hw-gold:hover svg {
+.hc-hw .hw-cta:hover svg {
   transform: translateX(0.3125rem);
 }
-.hc-hw .hw-gold:focus-visible {
+.hc-hw .hw-cta:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 3px;
 }
@@ -402,72 +369,147 @@
   background: var(--color-panel);
   color: var(--ink);
   padding: clamp(4rem, 5.56vw, 6.5rem) var(--gut);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 45rem);
-  gap: clamp(2rem, 3.33vw, 3rem);
-  align-items: start;
   scroll-margin-top: var(--nav-h, 5rem);
 }
 .hc-xpi .xpi-head {
-  padding-top: 0.5rem;
+  margin-bottom: clamp(2rem, 3.33vw, 3.25rem);
 }
-.hc-xpi h2 {
-  max-width: 14ch;
+/* The photograph on the left, the six cards on the right, the same height. */
+.hc-xpi .xpi-body {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 8fr);
+  gap: clamp(1rem, 1.5vw, 1.5rem);
+  align-items: stretch;
 }
+.hc-xpi .xpi-photo {
+  position: relative;
+  margin: 0;
+  min-height: 26rem;
+  border-radius: 1.125rem;
+  overflow: hidden;
+  box-shadow: 0 1.5rem 3.5rem -1.5rem rgb(11 92 133 / 0.35);
+}
+.hc-xpi .xpi-photo img {
+  transition: scale 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hc-xpi .xpi-photo:hover img {
+  scale: 1.04;
+}
+.hc-xpi .xpi-photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(6 40 58 / 0) 45%, rgb(6 40 58 / 0.78) 100%);
+  pointer-events: none;
+}
+.hc-xpi figcaption {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 1;
+  padding: clamp(1.5rem, 2.2vw, 2.25rem);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+.hc-xpi figcaption .t {
+  font-family: var(--serif);
+  font-size: clamp(1.625rem, 2.2vw, 2.25rem);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  max-width: 16ch;
+}
+.hc-xpi figcaption .s {
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: rgb(255 255 255 / 0.85);
+}
+.hc-xpi figcaption .s::before {
+  content: '';
+  display: block;
+  width: 3rem;
+  height: 2px;
+  margin-bottom: 0.875rem;
+  border-radius: 2px;
+  background: #7accfd;
+}
+
 .hc-xpi .xpi-grid {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.875rem;
+  gap: clamp(0.875rem, 1.1vw, 1.125rem);
 }
+/* White cards with a soft blue edge; under the pointer a blue line draws
+   across the top, the card rises and its icon fills with blue. */
 .hc-xpi .box {
-  min-height: 14.75rem;
-  padding: 1.625rem 1.5rem;
-  border-radius: 0.875rem;
+  position: relative;
+  overflow: hidden;
+  padding: clamp(1.5rem, 1.9vw, 2rem) clamp(1.25rem, 1.6vw, 1.75rem);
+  border-radius: 1rem;
   background: #fff;
+  border: 1px solid rgb(11 92 133 / 0.1);
+  box-shadow: 0 0.75rem 2rem -1.25rem rgb(11 92 133 / 0.25);
+  cursor: pointer;
   display: flex;
   flex-direction: column;
-  gap: 0.875rem;
   transition:
-    transform 0.7s var(--ease),
-    box-shadow 0.7s var(--ease);
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.6s var(--ease);
+}
+.hc-xpi .box::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, #2ab4f2, var(--color-brand));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .hc-xpi .box:hover {
   transform: translateY(-0.375rem);
-  box-shadow: 0 1.5rem 3rem rgb(20 29 36 / 0.1);
+  box-shadow: 0 1.75rem 3.5rem -1.5rem rgb(11 92 133 / 0.4);
 }
-.hc-xpi .big {
-  font-family: var(--serif);
-  font-size: clamp(3.5rem, 5vw, 4.5rem);
-  line-height: 0.9;
-  letter-spacing: -0.03em;
-  color: #b8925a;
+.hc-xpi .box:hover::before {
+  transform: scaleX(1);
 }
-.hc-xpi .ic {
-  color: var(--lake);
-  transition: color 0.5s var(--ease);
+.hc-xpi .ico {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: #e3f2fa;
+  color: var(--color-brand);
+  transition:
+    background 0.5s var(--ease),
+    color 0.5s var(--ease);
 }
-.hc-xpi .box:hover .ic {
-  color: #b8925a;
+.hc-xpi .ico svg {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+.hc-xpi .box:hover .ico {
+  background: linear-gradient(145deg, #2ab4f2, var(--color-brand) 45%, var(--color-brand-deep));
+  color: #fff;
 }
 .hc-xpi h3 {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(1.25rem, 1.6vw, 1.4375rem);
+  font-size: clamp(1.3125rem, 1.55vw, 1.5rem);
   line-height: 1.2;
   letter-spacing: -0.01em;
-  margin: 1.125rem 0 0;
+  margin: 1.375rem 0 0.75rem;
   color: var(--ink);
-}
-.hc-xpi .big + h3 {
-  margin-top: 0.375rem;
 }
 .hc-xpi .box p {
   font-family: var(--sans);
-  font-size: 0.875rem;
-  line-height: 1.6;
+  font-size: clamp(0.9375rem, 0.95vw, 1rem);
+  line-height: 1.65;
   color: var(--muted);
   margin: 0;
 }
@@ -501,6 +543,8 @@
   position: absolute;
   inset: 0;
   background:
+    /* Under the words on the right, so they read on any photograph. */
+    radial-gradient(70% 65% at 100% 100%, rgb(8 20 28 / 0.72) 0%, rgb(8 20 28 / 0) 70%),
     linear-gradient(to top, rgb(8 20 28 / 0.7) 0%, rgb(8 20 28 / 0) 45%),
     linear-gradient(
       90deg,
@@ -521,14 +565,7 @@
   align-items: center;
   gap: 0.875rem;
   margin: 0;
-  color: var(--gold-lt);
-}
-.hc-rh .lab::before {
-  content: '';
-  display: block;
-  width: 2.5rem;
-  height: 1px;
-  background: var(--gold-lt);
+  color: var(--blue-lt);
 }
 .hc-rh ul {
   list-style: none;
@@ -546,27 +583,30 @@
   cursor: pointer;
   text-align: left;
   font-family: var(--serif);
-  color: rgb(255 255 255 / 0.38);
+  /* The words not in play stay plainly readable, and plainly choices. */
+  color: rgb(255 255 255 / 0.62);
+  text-shadow: 0 2px 18px rgb(8 20 28 / 0.35);
   transition:
     color 0.7s var(--ease),
     transform 0.7s var(--ease);
 }
 .hc-rh .rw:hover {
-  color: rgb(255 255 255 / 0.8);
+  color: #fff;
+  transform: translateX(0.5rem);
 }
 .hc-rh .rw.on {
   color: #fff;
   transform: translateX(1.125rem);
 }
 .hc-rh .rw:focus-visible {
-  outline: 2px solid var(--gold-lt);
+  outline: 2px solid var(--blue-lt);
   outline-offset: 3px;
 }
 .hc-rh .rn {
   width: 1.75rem;
   font-size: 1rem;
-  color: var(--gold-lt);
-  opacity: 0.5;
+  color: var(--blue-lt);
+  opacity: 0.85;
   transition: opacity 0.6s;
 }
 .hc-rh .rw.on .rn {
@@ -581,7 +621,7 @@
 .hc-rh .rw.on em {
   font-style: italic;
 }
-/* The gold line under the word in play: when it has filled, the next word
+/* The blue line under the word in play: when it has filled, the next word
    comes in (ExperienceWords listens for the end of the animation). */
 .hc-rh .rprog {
   position: absolute;
@@ -594,7 +634,7 @@
 .hc-rh .rprog span {
   position: absolute;
   inset: 0;
-  background: var(--gold-lt);
+  background: var(--blue-lt);
   transform-origin: left;
   animation: rh-fill 6s linear both paused;
 }
@@ -610,6 +650,23 @@
   }
 }
 
+.hc-rh .rhint {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin: clamp(1rem, 1.6vw, 1.5rem) 0 0;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.85);
+}
+.hc-rh .rhint svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  color: var(--blue-lt);
+}
 .hc-rh .rside {
   position: absolute;
   right: var(--gut);
@@ -640,10 +697,11 @@
 .hc-rh .rline {
   margin: 0;
   font-family: var(--sans);
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(1rem, 1.25vw, 1.125rem);
   line-height: 1.6;
-  color: #f4f1ea;
+  color: #fff;
+  text-shadow: 0 1px 14px rgb(8 20 28 / 0.6);
 }
 .hc-rh .rex {
   display: flex;
@@ -657,6 +715,7 @@
   font-size: clamp(1.125rem, 1.39vw, 1.25rem);
   line-height: 1.4;
   color: #fff;
+  text-shadow: 0 1px 14px rgb(8 20 28 / 0.6);
 }
 .hc-rh .rex span {
   font-family: var(--sans);
@@ -665,14 +724,14 @@
   font-weight: 500;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--gold-lt);
+  color: var(--blue-lt);
 }
 .hc-rh .btn {
   margin-top: 1.875rem;
 }
 .hc-rh .btn:hover {
-  background: var(--gold-lt);
-  border-color: var(--gold-lt);
+  background: var(--blue-lt);
+  border-color: var(--blue-lt);
   color: var(--ink);
 }
 .hc-rh .btn svg {
@@ -687,14 +746,11 @@
   .hc-hw .card {
     width: clamp(16rem, calc((100vw - 2 * var(--gut) - 2 * var(--gap)) / 2.6), 22rem);
   }
-  .hc-xpi {
+  .hc-xpi .xpi-body {
     grid-template-columns: minmax(0, 1fr);
   }
-  .hc-xpi .box {
-    min-height: 12.5rem;
-  }
-  .hc-xpi h2 {
-    max-width: none;
+  .hc-xpi .xpi-photo {
+    min-height: clamp(18rem, 50vw, 26rem);
   }
 }
 @media (max-width: 900px) {
@@ -717,6 +773,17 @@
   .hc-rh .rw.on {
     transform: translateX(0.625rem);
   }
+  /* In flow on a phone the words sit over the photograph's top, so the
+     shade darkens evenly, and the four words are a size a thumb can choose. */
+  .hc-rh .rshade {
+    background: linear-gradient(180deg, rgb(8 20 28 / 0.7) 0%, rgb(8 20 28 / 0.35) 45%, rgb(8 20 28 / 0.8) 100%);
+  }
+  .hc-rh .rw em {
+    font-size: clamp(3rem, 14vw, 4.5rem);
+  }
+  .hc-rh .rw {
+    min-height: 44px;
+  }
 }
 @media (max-width: 700px) {
   .hc-hw .hw-head {
@@ -727,9 +794,6 @@
     width: min(20rem, 80vw);
     min-height: 31rem;
   }
-  .hc-hw .hw-rail {
-    --drop: 1.5rem;
-  }
   .hc-hw .hw-foot {
     flex-direction: column;
     align-items: flex-start;
@@ -739,11 +803,10 @@
     gap: 0.625rem;
   }
   .hc-xpi .box {
-    min-height: 0;
     padding: 1.25rem 1.125rem;
   }
   .hc-xpi h3 {
-    margin-top: 0.75rem;
+    margin-top: 1rem;
   }
   .hc-rh .rprog {
     left: 2.5rem;
@@ -764,18 +827,13 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hc-hw .card,
-  .hc-hw .card:is(:hover, :focus-within),
-  .hc-hw .card:nth-child(even):is(:hover, :focus-within),
-  .hc-hw .card:is(:hover, :focus-within) :is(.kick, .body, .ph),
-  .hc-xpi .box:hover {
+  .hc-xpi .box:hover,
+  .hc-hw .card:is(:hover, :focus-within) {
     transition: none;
     transform: none;
   }
-  .hc-hw .ph::after {
-    display: none;
-  }
-  .hc-hw .card:hover .ph img,
+  .hc-hw .card:is(:hover, :focus-within) .ph img,
+  .hc-xpi .xpi-photo:hover img,
   .hc-rh .rbg .fill {
     scale: none;
   }

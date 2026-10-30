@@ -42,8 +42,8 @@ export function FooterSignup() {
         className="col-span-full md:col-span-6 lg:col-span-5 lg:col-start-8 lg:self-end"
       >
         {own ? (
-          <ButtonLink href="/plan" variant="rule-dark" arrow>
-            Plan your journey
+          <ButtonLink href="/plan" variant="outline-dark" arrow>
+            Plan Your Journey
           </ButtonLink>
         ) : (
           <>

@@ -1,10 +1,19 @@
+import Image from 'next/image';
 import { included } from '@/lib/data/copy';
-import { site } from '@/lib/site';
+import { getMedia } from '@/lib/media';
 import './why-home.css';
 
-/* Line icons, drawn on a 24px grid at a 1.4 stroke. */
+/* Line icons, drawn on a 24px grid at a 1.5 stroke. */
 const icons: Record<(typeof included)[number]['icon'], React.ReactNode> = {
-  guests: null,
+  bell: (
+    <>
+      <path d="M4.5 17a7.5 7.5 0 0 1 15 0" />
+      <path d="M3 17h18v1.5H3z" />
+      <path d="M12 9.5V7.5" />
+      <path d="M10.5 7.5h3" />
+      <path d="M8 13.5a4.5 4.5 0 0 1 2.5-2.4" />
+    </>
+  ),
   car: (
     <>
       <path d="M4 16v-4l2-5h12l2 5v4" />
@@ -47,49 +56,65 @@ const icons: Record<(typeof included)[number]['icon'], React.ReactNode> = {
 };
 
 /**
- * The Peaks2Shores Experience — the what: what is included on every journey,
- * answering "what's included?" after the beliefs above. The heading on the
- * left, six white boxes on the right; the first leads with the number that
- * defines the journeys (18 guests), the others with a blue line icon that
- * turns gold under the pointer. (The export keeps its old name, so the page
- * needs no change.)
+ * The Peaks2Shores Experience — our signature touches: the tangible parts of
+ * a journey (attention, transfers, guides, hotels, food, experiences). The
+ * heading runs across the page; beneath it a photograph on the left, with the
+ * section's promise and a note that each journey's page lists its own
+ * inclusions, and the six cards on the right. (The export keeps its old name,
+ * so the page needs no change.)
  */
 export function WhyPeaks() {
+  const photo = getMedia('home-xp-photo');
   return (
     <section className="hc-xpi" id="experience" aria-labelledby="experience-title">
       <div className="xpi-head">
-        <p className="hw-lab lab">The what</p>
+        <p className="hw-lab lab">Our signature touches</p>
         <h2 id="experience-title">The Peaks2Shores Experience</h2>
-        <p className="hw-sub">Included in every journey, so all you have to do is enjoy it.</p>
+        <p className="hw-sub">
+          Thoughtfully selected experiences, exceptional hospitality, and seamless arrangements —
+          bringing every journey beautifully together.
+        </p>
       </div>
-      <ul className="xpi-grid">
-        {included.map((b) => (
-          <li key={b.title} className="box">
-            {b.icon === 'guests' ? (
-              <span className="big" aria-hidden>
-                {site.maxGuests}
+
+      <div className="xpi-body">
+        <figure className="xpi-photo" style={{ backgroundColor: photo.tone }}>
+          {photo.src && (
+            <Image
+              src={photo.src}
+              alt={photo.alt ?? ''}
+              fill
+              sizes="(max-width: 1100px) 100vw, 40vw"
+              className="fill"
+            />
+          )}
+          <figcaption>
+            <span className="t">The details that make the difference.</span>
+            <span className="s">Each journey’s page sets out exactly what it includes.</span>
+          </figcaption>
+        </figure>
+
+        <ul className="xpi-grid">
+          {included.map((b) => (
+            <li key={b.title} className="box">
+              <span className="ico" aria-hidden>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  focusable="false"
+                >
+                  {icons[b.icon]}
+                </svg>
               </span>
-            ) : (
-              <svg
-                className="ic"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden
-              >
-                {icons[b.icon]}
-              </svg>
-            )}
-            <h3>{b.title}</h3>
-            <p>{b.body}</p>
-          </li>
-        ))}
-      </ul>
+              <h3>{b.title}</h3>
+              <p>{b.body}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
     </section>
   );
 }

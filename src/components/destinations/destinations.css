@@ -131,7 +131,7 @@
 }
 .dz-head h2 {
   font-family: var(--serif);
-  font-weight: 400;
+  font-weight: var(--title-weight);
   font-size: clamp(2.125rem, 3.18vw, 3.75rem);
   line-height: 1.02;
   letter-spacing: -0.03em;
