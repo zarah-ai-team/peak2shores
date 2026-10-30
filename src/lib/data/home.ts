@@ -94,43 +94,38 @@ export const reel: (ReelClip & { fallback?: ReelClip })[] = [
   },
 ];
 
-/* 02 — Ways to experience. */
+/* 02 — Ways to experience. Photographs only: the opening reel is the
+   homepage's one film (client, 30 Oct). */
 export const ways: (HomeVisual & { title: string; line: string; href: string; lead?: boolean })[] =
   [
     {
       title: 'Small Luxury Group Journeys',
       line: 'Intimate journeys for never more than 18 guests, bringing together exceptional places, meaningful experiences and the joy of discovering the world together.',
       href: '/journeys',
-      // Marc's Kenya frame is a still; the film goes once it lands.
-      ...marcs('client-way-group', {
-        video: '/video/home/way-group.mp4',
-        img: '/images/home/way-group.jpg',
-        alt: 'A table laid for a long lunch, candles and flowers',
-      }),
+      // Group, Private Travel and Safari use the design reference's photographs (29 Oct).
+      img: '/images/home/way-group-lucerne.jpg',
+      alt: 'Lake Lucerne and the old town spires, with the Alps beyond',
       lead: true,
     },
     {
       title: 'Private Travel',
       line: 'Bespoke destinations, exceptional stays and authentic experiences — exclusively designed around you and the way you love to travel.',
       href: '/plan#private',
-      video: '/video/home/way-private.mp4',
-      img: '/images/home/way-private.jpg',
-      alt: 'Two travelers raising glasses of red wine among the trees',
+      img: '/images/home/way-private-venice.jpg',
+      alt: 'A spritz on a terrace above the Grand Canal in Venice, the Salute dome beyond',
     },
     {
       title: 'Safari',
       line: 'Extraordinary wildlife, remarkable landscapes and intimate lodges — bringing you closer to the wild in unforgettable ways.',
       href: '/plan#private',
-      video: '/video/home/way-safari.mp4',
-      img: '/images/home/way-safari.jpg',
-      alt: 'Zebra crossing golden grassland',
+      img: '/images/drive/botswana-chobe-elephant-river.jpg',
+      alt: 'An elephant drinking at the water’s edge on the Chobe River, Botswana',
     },
     {
       title: 'Cruises',
       line: 'Discover extraordinary destinations aboard handpicked luxury yachts, intimate cruises and elegant river voyages, with exceptional experiences both onboard and ashore.',
       href: '/plan#private',
       ...marcs('client-way-cruises', {
-        video: '/video/home/way-cruises.mp4',
         ...still('home-way-cruises'),
       }),
     },
@@ -139,7 +134,6 @@ export const ways: (HomeVisual & { title: string; line: string; href: string; le
       line: 'Iconic sporting events, extraordinary cultural celebrations and exceptional travel experiences — thoughtfully brought together in one unforgettable journey.',
       href: '/plan#private',
       ...marcs('client-way-events', {
-        video: '/video/home/way-events.mp4',
         img: '/images/home/way-events.jpg',
         alt: 'A polo match on an English summer lawn',
       }),
@@ -149,7 +143,6 @@ export const ways: (HomeVisual & { title: string; line: string; href: string; le
       line: 'Handpicked villas in extraordinary settings — where privacy, personalized service and unforgettable moments come together.',
       href: '/plan#private',
       ...marcs('client-way-villas', {
-        video: '/video/home/way-villas.mp4',
         ...still('home-way-villas'),
       }),
     },
@@ -160,13 +153,11 @@ export const statement = {
   before: 'The journeys we remember most aren’t measured by how much we see, but by how ',
   emphasis: 'deeply',
   after: ' we experience the moments along the way.',
-  /* Behind it, a slow flight along a sandstone headland above the sea: the sea
-     stack offshore, then the walkers at the lookout. Not shown anywhere else
-     on the page. The poster is the film's first frame, so play starts clean. */
+  /* Behind it, a sandstone headland above the sea, a sea stack offshore.
+     A photograph: only the opening reel plays film on the homepage. */
   film: {
     img: '/images/home/pause-dune.jpg',
     alt: 'A sandstone headland above the sea, a sea stack offshore',
-    video: '/video/home/pause-dune.mp4',
   } satisfies HomeVisual,
 };
 

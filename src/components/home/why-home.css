@@ -61,7 +61,7 @@
   background: var(--paper);
   color: var(--ink);
   border-top: 1px solid rgb(20 29 36 / 0.12);
-  padding: clamp(5rem, 6.89vw, 8.125rem) var(--gut);
+  padding: clamp(4rem, 5.56vw, 6.5rem) var(--gut) clamp(3.5rem, 4.44vw, 5rem);
   overflow: hidden;
 }
 .hc-hw .hw-head {
@@ -90,7 +90,7 @@
   --gap: clamp(1rem, 1.27vw, 1.5rem);
   --drop: clamp(1.5rem, 2.33vw, 2.75rem);
   margin: 0 calc(var(--gut) * -1);
-  padding: 1.5rem 0 3.5rem var(--gut);
+  padding: 1.5rem 0 2.5rem var(--gut);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-padding-inline: var(--gut);
@@ -121,7 +121,8 @@
   position: relative;
   flex: 0 0 auto;
   width: clamp(16rem, var(--w), 25rem);
-  min-height: clamp(32rem, 38.9vw, 38rem);
+  /* Tall enough to hold its words and photograph, with no gap between. */
+  min-height: clamp(26rem, 31vw, 30rem);
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
@@ -400,7 +401,7 @@
 .hc-xpi {
   background: var(--color-panel);
   color: var(--ink);
-  padding: clamp(5rem, 6.89vw, 8.125rem) var(--gut);
+  padding: clamp(4rem, 5.56vw, 6.5rem) var(--gut);
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 45rem);
   gap: clamp(2rem, 3.33vw, 3rem);
@@ -688,6 +689,9 @@
   }
   .hc-xpi {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .hc-xpi .box {
+    min-height: 12.5rem;
   }
   .hc-xpi h2 {
     max-width: none;

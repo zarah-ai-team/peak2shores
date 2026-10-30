@@ -9,7 +9,7 @@ calm light, no crowds, the right destination) and its provenance read from the
 source page itself. None of it was shot for Peaks2Shores; see
 `PHOTOGRAPHY-BRIEF.md` for what a commissioned shoot should replace first.
 
-- **93** frames from Unsplash under the
+- **102** frames from Unsplash under the
   [Unsplash License](https://unsplash.com/license): free for commercial use, no
   attribution required (credited here and on `/credits` anyway). The licence
   does not allow selling the photos unaltered or compiling them into a
@@ -33,6 +33,7 @@ source page itself. None of it was shot for Peaks2Shores; see
 
 | Slot | File | Source | Photographer | Licence |
 | --- | --- | --- | --- | --- |
+| `ac-venice` | ac-venice.jpg | [Unsplash](https://unsplash.com/photos/venice-italy-during-daytime-RKsLQoSnuTc) | Henrique Ferreira | Unsplash License |
 | `am-h1` | am-h1.jpg | [Unsplash](https://unsplash.com/photos/a-balcony-with-a-table-and-chairs-and-a-view-of-the-ocean-wf5JpohfnX4) | Christopher Pap de Pestény | Unsplash License |
 | `am-h2` | am-h2.jpg | [Unsplash](https://unsplash.com/photos/arches-of-a-cloister-overlooking-a-courtyard-garden-iuXDLwK3jo0) | Paolo Chiabrando | Unsplash License |
 | `am-hero` | am-hero.jpg | [Unsplash](https://unsplash.com/photos/a-small-village-on-a-cliff-overlooking-the-ocean-jnwHRs7eVtw) | Alexander Voronov | Unsplash License |
@@ -72,6 +73,7 @@ source page itself. None of it was shot for Peaks2Shores; see
 | `dep-amalfi` | dep-amalfi.jpg | [Unsplash](https://unsplash.com/photos/colorful-town-on-a-steep-hillside-overlooking-the-blue-ocean-RpZ70IXS4DQ) | Rafael Peier | Unsplash License |
 | `dep-cape` | dep-cape.jpg | [Unsplash](https://unsplash.com/photos/aerial-view-photography-of-seashore-rqrv0bbzMLg) | John O'Nolan | Unsplash License |
 | `dep-como` | dep-como.jpg | [Unsplash](https://unsplash.com/photos/a-balcony-with-a-view-of-a-lake-and-mountains--sfd2AOOW6k) | Anton B | Unsplash License |
+| `dep-italian-experience` | dep-italian-experience.jpg | [Unsplash](https://unsplash.com/photos/gondolier-navigates-a-gondola-with-passengers-through-a-venice-canal-AtPFyeTjoNY) | Wojciech Wyszkowski | Unsplash License |
 | `dep-mallorca` | dep-mallorca.jpg | [Unsplash](https://unsplash.com/photos/boats-anchored-in-a-bay-with-palm-trees-and-buildings-N46bZr4krOo) | Alexis Presa | Unsplash License |
 | `dep-swiss-lakes` | dep-swiss-lakes.jpg | [Unsplash](https://unsplash.com/photos/historic-paddle-steamer-cruising-serene-lake-before-a-towering-mountain-uo8tzpinBG4) | Reto Muff | Unsplash License |
 | `ex-1` | ex-1.jpg | [Unsplash](https://unsplash.com/photos/a-table-set-up-for-a-meal-under-a-pergolated-roof-z9MAxYlXv3s) | Steffen Lemmerzahl | Unsplash License |
@@ -96,6 +98,12 @@ source page itself. None of it was shot for Peaks2Shores; see
 | `hotel-1` | hotel-1.jpg | [Unsplash](https://unsplash.com/photos/coastal-town-buildings-overlooking-a-vibrant-blue-sea-with-boats-GasM0nsuews) | Rafael Peier | Unsplash License |
 | `hotel-2` | hotel-2.jpg | [Unsplash](https://unsplash.com/photos/brown-and-white-concrete-building-beside-body-of-water-during-daytime-CNVYC8IR4tY) | Simon Schwyter | Unsplash License |
 | `hotel-3` | hotel-3.jpg | [Unsplash](https://unsplash.com/photos/a-courtyard-with-a-tree-in-the-middle-of-it-sjB6J6113l0) | Max Harlynking | Unsplash License |
+| `ie-bologna` | ie-bologna.jpg | [Unsplash](https://unsplash.com/photos/historic-orange-and-yellow-portico-with-people-walking-r07cnoOYIe0) | Florian Klassen | Unsplash License |
+| `ie-card` | ie-card.jpg | [Unsplash](https://unsplash.com/photos/town-and-buildnigs-2PWiM7LaMJA) | Julia Solonina | Unsplash License |
+| `ie-garda` | ie-garda.jpg | [Unsplash](https://unsplash.com/photos/a-city-on-the-water-wjZML-7fiKI) | Grant Van Cleemput | Unsplash License |
+| `ie-hero` | ie-hero.jpg | [Unsplash](https://unsplash.com/photos/a-castle-like-building-next-to-a-body-of-water-haJ5Gjp5x8k) | Rachel van Elk | Unsplash License |
+| `ie-list` | ie-list.jpg | [Unsplash](https://unsplash.com/photos/historic-orange-buildings-with-archways-line-a-sunny-street-uMIwjWzaQOM) | Jamie Kettle | Unsplash License |
+| `ie-venice` | ie-venice.jpg | [Unsplash](https://unsplash.com/photos/landscape-photo-of-a-venice-canal-5mcnzeSHFvE) | Kit Suman | Unsplash License |
 | `jl-1` | jl-1.jpg | [Unsplash](https://unsplash.com/photos/coastal-town-nestled-into-steep-mountains-with-ocean-in-foreground-dis_sHK2oQM) | Ahmet Yüksek ✪ | Unsplash License |
 | `jl-3` | jl-3.jpg | [Unsplash](https://unsplash.com/photos/a-village-nestled-between-lush-mountains-c5daUuAQOPY) | Nick Andreas | Unsplash License |
 | `jl-4` | jl-4.jpg | [Unsplash](https://unsplash.com/photos/green-forest-AJjaMQeLUak) | Matthijs van Schuppen | Unsplash License |
@@ -116,6 +124,7 @@ source page itself. None of it was shot for Peaks2Shores; see
 | `pillar-2` | pillar-2.jpg | [Unsplash](https://unsplash.com/photos/terraced-buildings-overlook-a-calm-blue-ocean-under-clear-skies-pDZpDy_KCeg) | Vasilis Caravitis | Unsplash License |
 | `pillar-3` | pillar-3.jpg | [Unsplash](https://unsplash.com/photos/orange-fruits-on-brown-wooden-crate-tDyPWf0PUwc) | Egor Myznik | Unsplash License |
 | `pillar-4` | pillar-4.jpg | [Unsplash](https://unsplash.com/photos/a-lone-chair-overlooks-the-sea-at-sunset-iDG5heMyY_o) | Alona Sosiedko | Unsplash License |
+| `se-milan` | se-milan.jpg | [Unsplash](https://unsplash.com/photos/duomo-di-milano-cathedral-in-milan-0xe2FGo7Vc0) | Ouael Ben Salah | Unsplash License |
 | `sl-1` | sl-1.jpg | [Unsplash](https://unsplash.com/photos/body-of-water-near-concrete-buildings-under-white-and-gray-sky-at-daytime-xpw5IOgLjuw) | Lin Mei | Unsplash License |
 | `sl-2` | sl-2.jpg | [Unsplash](https://unsplash.com/photos/a-large-white-boat-floating-on-top-of-a-body-of-water-FVMlr4uL3Bc) | Peter Borter | Unsplash License |
 | `sl-3` | sl-3.jpg | [Unsplash](https://unsplash.com/photos/green-and-black-mountains-under-blue-sky-during-daytime-7qYuJHmzOpk) | Emanuel Kionke | Unsplash License |

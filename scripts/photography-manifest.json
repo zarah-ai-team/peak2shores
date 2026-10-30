@@ -463,5 +463,50 @@
     "slot": "dep-cape",
     "source": "unsplash",
     "photo": "aerial-view-photography-of-seashore-rqrv0bbzMLg"
+  },
+  {
+    "slot": "se-milan",
+    "source": "unsplash",
+    "photo": "duomo-di-milano-cathedral-in-milan-0xe2FGo7Vc0"
+  },
+  {
+    "slot": "ie-hero",
+    "source": "unsplash",
+    "photo": "a-castle-like-building-next-to-a-body-of-water-haJ5Gjp5x8k"
+  },
+  {
+    "slot": "ie-list",
+    "source": "unsplash",
+    "photo": "historic-orange-buildings-with-archways-line-a-sunny-street-uMIwjWzaQOM"
+  },
+  {
+    "slot": "ie-card",
+    "source": "unsplash",
+    "photo": "town-and-buildnigs-2PWiM7LaMJA"
+  },
+  {
+    "slot": "ie-bologna",
+    "source": "unsplash",
+    "photo": "historic-orange-and-yellow-portico-with-people-walking-r07cnoOYIe0"
+  },
+  {
+    "slot": "ie-garda",
+    "source": "unsplash",
+    "photo": "a-city-on-the-water-wjZML-7fiKI"
+  },
+  {
+    "slot": "ie-venice",
+    "source": "unsplash",
+    "photo": "landscape-photo-of-a-venice-canal-5mcnzeSHFvE"
+  },
+  {
+    "slot": "ac-venice",
+    "source": "unsplash",
+    "photo": "venice-italy-during-daytime-RKsLQoSnuTc"
+  },
+  {
+    "slot": "dep-italian-experience",
+    "source": "unsplash",
+    "photo": "gondolier-navigates-a-gondola-with-passengers-through-a-venice-canal-AtPFyeTjoNY"
   }
 ]

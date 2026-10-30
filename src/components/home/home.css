@@ -870,7 +870,7 @@
 .hc-hot {
   background: var(--deep);
   color: #fff;
-  padding: clamp(6rem, 7.42vw, 8.75rem) var(--gut) clamp(6.25rem, 7.94vw, 9.375rem);
+  padding: clamp(4.5rem, 5.56vw, 6.5rem) var(--gut) clamp(4rem, 5.56vw, 6.5rem);
 }
 .hc-hot .head {
   display: grid;

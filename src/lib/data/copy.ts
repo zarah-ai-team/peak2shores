@@ -226,7 +226,6 @@ export const rhythm: Rhythm[] = [
     word: 'Meet',
     line: 'Local people, artisans, historians and personalities — people we’ve known and trusted for years.',
     example: 'A master craftsman’s gondola workshop in Venice.',
-    video: '/video/home/xp-meet.mp4',
     img: '/images/home/xp-meet.jpg',
     alt: 'A musician playing a street piano beside the Chapel Bridge in Lucerne, Switzerland',
   },

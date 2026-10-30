@@ -115,10 +115,6 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
 
       {/* Left-aligned and low in the frame, editorial rather than centered. */}
       <div className="copy left">
-        <p className="eyebrow">
-          <i aria-hidden />
-          Small Luxury Group Journeys
-        </p>
         <h1>
           Luxury travel,
           <br />
