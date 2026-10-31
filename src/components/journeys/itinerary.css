@@ -1,0 +1,641 @@
+/*
+ * The itinerary, stay by stay (JyItinerary, RouteLive), after the design
+ * sample "Itinerary": a dark map held beside the stays, which follows them.
+ * Scoped to `.jr` inside `.jy`. The sample's gold is the house sky blue on
+ * the map and lake blue on paper.
+ */
+
+.jr {
+  --cam: 1.6s;
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-variant-numeric: lining-nums;
+}
+
+/* -- The map ------------------------------------------------------------------- */
+
+.jr-side {
+  background: #eeeae0;
+}
+.jr-stick {
+  position: sticky;
+  top: calc(var(--nav-h-compact) + 3.5rem);
+  padding: clamp(1.25rem, 2.8vw, 2.5rem);
+}
+.jr-frame {
+  position: relative;
+  aspect-ratio: 15 / 16;
+  max-width: 35rem;
+  margin-inline: auto;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  background: #071622;
+  box-shadow: 0 1.625rem 3.75rem rgb(20 29 36 / 0.18);
+  isolation: isolate;
+}
+.jr-cam {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 0;
+  transition: transform var(--cam) var(--ease);
+  will-change: transform;
+}
+.jr-cam svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+.jr-grid {
+  fill: none;
+  stroke: rgb(255 255 255 / 0.07);
+  stroke-width: 0.8;
+}
+.jr-land {
+  stroke: rgb(244 241 234 / 0.22);
+  stroke-width: 0.7;
+}
+.jr-land.is-ours {
+  stroke: rgb(255 255 255 / 0.55);
+  stroke-width: 0.9;
+}
+.jr-countries text {
+  font-family: var(--sans);
+  font-size: 10px;
+  letter-spacing: 3px;
+  fill: #fff;
+  fill-opacity: 0.55;
+}
+
+/* The route: faint the whole way, drawn bright as far as the stay shown. */
+.jr-leg path {
+  fill: none;
+  stroke-linecap: round;
+}
+.jr-leg .base {
+  stroke: rgb(122 204 253 / 0.22);
+  stroke-width: 2;
+}
+.jr-leg .on {
+  stroke: var(--sky);
+  stroke-width: 2.5;
+}
+.jr-leg .glow {
+  stroke: rgb(122 204 253 / 0.22);
+  stroke-width: 8;
+}
+.jr-leg.is-rail .base,
+.jr-leg.is-rail .on {
+  stroke-dasharray: 9 5;
+}
+.jr-leg.is-boat .base,
+.jr-leg.is-boat .on {
+  stroke-dasharray: 1 7;
+}
+.jr-reveal {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 40;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.3s var(--ease) 0.25s;
+}
+.jr-reveal.on {
+  stroke-dashoffset: 0;
+}
+
+/* The places: sized in screen terms, so they hold their size as the camera closes in. */
+.jr-pins {
+  position: absolute;
+  inset: 0;
+}
+.jr-pin,
+.jr-traveller {
+  position: absolute;
+  width: 0;
+  height: 0;
+  transform: scale(calc(1 / var(--s, 1)));
+  transition:
+    transform var(--cam) var(--ease),
+    left var(--cam) var(--ease),
+    top var(--cam) var(--ease);
+}
+.jr-pin {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  z-index: 2;
+}
+.jr-pin.here {
+  z-index: 4;
+}
+.jr-pin .dot {
+  position: absolute;
+  left: -0.375rem;
+  top: -0.375rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.45);
+  border: 2px solid rgb(255 255 255 / 0.7);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.35);
+  transition:
+    background-color 0.5s,
+    border-color 0.5s,
+    transform 0.5s var(--ease);
+}
+.jr-pin.seen .dot {
+  background: #fff;
+  border-color: #fff;
+}
+.jr-pin.here .dot {
+  background: var(--sky);
+  border-color: #fff;
+  transform: scale(1.45);
+}
+.jr-pin.here .dot::after {
+  content: '';
+  position: absolute;
+  inset: -0.5rem;
+  border-radius: 50%;
+  border: 1px solid var(--sky);
+  animation: jr-ping 2s var(--ease) infinite;
+}
+.jr-pin .nm {
+  position: absolute;
+  top: -0.5rem;
+  white-space: nowrap;
+  font-family: var(--serif);
+  font-size: 0.8125rem;
+  line-height: 1;
+  color: #fff;
+  opacity: 0.8;
+  text-shadow:
+    0 0 6px rgb(7 22 34 / 0.9),
+    0 0 12px rgb(7 22 34 / 0.7);
+  transform-origin: left center;
+  transition:
+    opacity 0.5s,
+    transform 0.5s var(--ease);
+}
+.jr-pin[data-side='r'] .nm {
+  left: 0.875rem;
+}
+.jr-pin[data-side='l'] .nm {
+  right: 0.875rem;
+  transform-origin: right center;
+}
+.jr-pin.here .nm {
+  opacity: 1;
+  transform: scale(1.38);
+}
+.jr-pin:focus-visible {
+  outline: none;
+}
+.jr-pin:focus-visible .dot {
+  outline: 2px solid var(--sky);
+  outline-offset: 3px;
+}
+.jr-traveller {
+  z-index: 3;
+  opacity: 0;
+  pointer-events: none;
+}
+.jr-traveller::before {
+  content: '';
+  position: absolute;
+  left: -1.25rem;
+  top: -1.25rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(122 204 253 / 0.55), rgb(122 204 253 / 0) 70%);
+}
+.jr-traveller.on {
+  opacity: 1;
+  transition:
+    transform var(--cam) var(--ease),
+    left var(--cam) var(--ease),
+    top var(--cam) var(--ease),
+    opacity 0.6s;
+}
+.jr-traveller:not(.on) {
+  transition: opacity 0.25s;
+}
+
+.jr-vig {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 50%, rgb(7 22 34 / 0) 60%, rgb(7 22 34 / 0.7) 100%);
+}
+.jr-pill {
+  position: absolute;
+  left: 1.25rem;
+  bottom: 1.125rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  height: 2.25rem;
+  padding: 0 1rem;
+  border-radius: 999px;
+  background: rgb(11 26 36 / 0.66);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgb(255 255 255 / 0.16);
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  max-width: calc(100% - 6rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.jr-pill i {
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--sky);
+}
+.jr-play {
+  position: absolute;
+  right: 1.125rem;
+  bottom: 1.125rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgb(11 26 36 / 0.66);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgb(255 255 255 / 0.2);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.4s;
+}
+.jr-play:hover {
+  background: var(--lake);
+}
+.jr-play svg {
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.jr-foot {
+  max-width: 35rem;
+  margin: 1.375rem auto 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+.jr-key {
+  display: inline-flex;
+  gap: 1rem;
+}
+.jr-key > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+.jr-key path {
+  stroke: var(--lake);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.jr-key .is-rail {
+  stroke-dasharray: 6 4;
+}
+.jr-key .is-boat {
+  stroke-dasharray: 1 5;
+}
+
+/* -- Stay by stay -------------------------------------------------------------- */
+
+.jr-main {
+  padding: clamp(3.5rem, 7.2vw, 6.5rem) clamp(1.25rem, 6.7vw, 6rem) clamp(3.5rem, 6vw, 5.5rem)
+    clamp(1.25rem, 5.6vw, 5rem);
+}
+.jr-main > .lab {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  color: var(--lake);
+}
+.jr-main > .lab span {
+  display: block;
+  width: 2.5rem;
+  height: 1px;
+  background: var(--brand);
+}
+.jr .jr-main > h2 {
+  margin-bottom: 2.5rem;
+}
+.jr-stays {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.jr-part {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 2.75rem 0 1.125rem;
+}
+.jr-stays > li:first-child .jr-part {
+  padding-top: 0;
+}
+.jr-part span {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+.jr-part small {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--lake);
+}
+.jr-stay {
+  position: relative;
+  margin-left: 0.5rem;
+  padding-left: 2.5rem;
+  border-left: 1px solid rgb(11 92 133 / 0.35);
+}
+.jr-node {
+  position: absolute;
+  left: -0.5rem;
+  top: 1.875rem;
+  width: 0.9375rem;
+  height: 0.9375rem;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 1px var(--lake);
+  transition: background-color 0.5s;
+}
+.jr-stays > li.on .jr-node {
+  background: var(--brand);
+}
+.jr-acc {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 1.5rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  color: var(--ink);
+  font: inherit;
+}
+.jr-acc .hd {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  min-width: 0;
+}
+.jr-acc .row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.875rem;
+}
+.jr-acc .jr-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 1.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  background: #f4f1ea;
+  color: var(--ink);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition:
+    background-color 0.5s,
+    color 0.5s;
+}
+.jr-acc .jr-tag svg {
+  width: 0.75rem;
+  height: 0.75rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.jr-stays > li.on .jr-tag {
+  background: var(--lake);
+  color: #fff;
+}
+.jr-acc .when {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.jr-acc .tl {
+  font-family: var(--serif);
+  font-size: clamp(1.1875rem, 1.67vw, 1.5rem);
+  line-height: 1.25;
+}
+.jr-acc .chev {
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgb(20 29 36 / 0.2);
+  transition:
+    transform 0.5s var(--ease),
+    background-color 0.4s;
+}
+.jr-acc:hover .chev {
+  background: #f4f1ea;
+}
+.jr-acc[aria-expanded='true'] .chev {
+  transform: rotate(180deg);
+}
+.jr-acc .chev svg {
+  width: 0.875rem;
+  height: 0.875rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.jr-acc:focus-visible {
+  outline: 2px solid var(--lake);
+  outline-offset: 3px;
+}
+.jr-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.7s var(--ease),
+    opacity 0.5s;
+}
+.jr-body > div {
+  overflow: hidden;
+}
+.jr-body.on {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.jr-body .in {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 15rem;
+  gap: 2rem;
+  padding: 1.625rem 0 2.125rem;
+}
+.jr-body .tx {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.375rem;
+}
+.jr-body p {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.75;
+  color: #3b464f;
+}
+.jr-body .mo b {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--lake);
+}
+.jr-body .ht {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.jr-body .ht svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  fill: none;
+  stroke: var(--lake);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.jr-body a.ht span {
+  background: linear-gradient(var(--brand), var(--brand)) 0 100% / 100% 1px no-repeat;
+  padding-bottom: 3px;
+  transition: background-size 0.6s var(--ease);
+}
+.jr-body a.ht:hover span {
+  background-size: 30% 1px;
+}
+.jr-body .ph {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+.jr-body .ph img {
+  object-fit: cover;
+}
+
+@keyframes jr-ping {
+  from {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  to {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 1023px) {
+  .jr {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* On a narrow screen the map rides along at the top while the stays pass under it. */
+  .jr-stick {
+    top: calc(var(--nav-h-compact) + 3.25rem);
+    padding: 0.75rem var(--gut);
+  }
+  .jr-side {
+    position: sticky;
+    top: calc(var(--nav-h-compact) + 3.25rem);
+    z-index: 5;
+    align-self: start;
+  }
+  .jr-stick {
+    position: static;
+  }
+  .jr-frame {
+    aspect-ratio: auto;
+    height: min(38svh, 22rem);
+    max-width: none;
+  }
+  .jr-cam {
+    left: 50%;
+    right: auto;
+    top: 50%;
+    bottom: auto;
+    width: max(100%, calc(min(38svh, 22rem) * 15 / 16));
+    aspect-ratio: 15 / 16;
+    translate: -50% -50%;
+  }
+  .jr-foot {
+    display: none;
+  }
+}
+@media (max-width: 640px) {
+  .jr-body .in {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .jr-body .ph {
+    order: -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jr *,
+  .jr *::before,
+  .jr *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

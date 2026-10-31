@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import { Itinerary } from '@/components/journeys/Itinerary';
 import { EnquiryForm } from '@/components/journeys/EnquiryForm';
 import { JourneyMap } from '@/components/journeys/JourneyMap';
+import { JyItinerary } from '@/components/journeys/JourneyItinerary';
 import { JourneyTabs, type JourneyTab } from '@/components/journeys/JourneyTabs';
 import { FlyerLink, FlyerNote } from '@/components/journeys/FlyerSections';
 import {
@@ -24,7 +25,6 @@ import {
   JyIncluded,
   JyIntro,
   JyMore,
-  JyPlaces,
   JyStays,
 } from '@/components/journeys/JourneyEditorial';
 import {
@@ -223,8 +223,7 @@ export default async function JourneyPage({ params }: Params) {
       {flyer ? (
         <>
           <JyIntro journey={journey} flyer={flyer} />
-          <JyPlaces flyer={flyer} />
-          <JourneyMap journey={journey} />
+          <JyItinerary journey={journey} flyer={flyer} />
           <FlyerNote flyer={flyer} />
           <FlyerLink flyer={flyer} />
           <JyStays flyer={flyer} />

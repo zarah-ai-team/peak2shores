@@ -38,7 +38,7 @@ const modeLabel: Record<RouteMode, string> = {
 
 /* The 1:50m atlas the globe uses, read once per server process. */
 let countries: Country[] | null = null;
-function atlas(): Country[] {
+export function atlas(): Country[] {
   if (!countries) {
     const topology = JSON.parse(
       readFileSync(join(process.cwd(), 'public', 'geo', 'countries-50m.json'), 'utf8'),
@@ -51,7 +51,7 @@ function atlas(): Country[] {
 }
 
 /** A projection framed on the route, with room around it for the labels. */
-function frameRoute(stops: RouteStop[]): GeoProjection {
+export function frameRoute(stops: RouteStop[], w = W, h = H): GeoProjection {
   const lons = stops.map((s) => s.coords[0]);
   const lats = stops.map((s) => s.coords[1]);
   const [cx, cy] = [
@@ -70,8 +70,8 @@ function frameRoute(stops: RouteStop[]): GeoProjection {
   };
   return geoMercator().fitExtent(
     [
-      [W * 0.16, H * 0.14],
-      [W * 0.84, H * 0.86],
+      [w * 0.16, h * 0.14],
+      [w * 0.84, h * 0.86],
     ],
     box,
   );
