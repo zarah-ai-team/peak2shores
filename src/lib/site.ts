@@ -79,6 +79,7 @@ export type NavItem = { label: string; href: string };
 export function isHeroRoute(pathname: string) {
   return (
     pathname === '/' ||
+    pathname === '/journeys' ||
     pathname === '/destinations' ||
     pathname === '/experiences' ||
     /^\/journeys\/[^/]+$/.test(pathname)

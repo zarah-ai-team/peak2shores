@@ -40,6 +40,8 @@ export type ReelClip = {
   start?: number;
   /** How long a still without a film stays on screen, in seconds. */
   hold?: number;
+  /** A colour grade (a CSS filter) for a clip that reads flat. */
+  grade?: string;
 };
 
 /**
@@ -71,6 +73,8 @@ export const reel: (ReelClip & { fallback?: ReelClip })[] = [
     alt: 'Positano on the Amalfi Coast, Italy, from the sea',
     video: '/video/home/reel-positano.mp4',
     img: '/images/home/reel-positano.jpg',
+    // The clip reads grey and faded (client, 31 Oct): more colour in the sea.
+    grade: 'saturate(1.4) contrast(1.1) brightness(1.04)',
     fallback: {
       place: 'Amalfi Coast, Italy',
       alt: 'A sailing boat at anchor off the Amalfi Coast, a cliffside town and the coast fading into haze behind',
@@ -140,8 +144,9 @@ export const ways: (HomeVisual & { title: string; line: string; href: string; le
       title: 'Private Villas',
       line: 'Handpicked villas in extraordinary settings — where privacy, personalized service and unforgettable moments come together.',
       href: '/plan#private',
-      img: '/images/home/way-villas-pool.jpg',
-      alt: 'A modern beachfront villa with an infinity pool, palms and the sea beyond',
+      // Sharper than the pool villa, which read blurry at 1280px (client, 31 Oct).
+      img: '/images/home/way-villas-como.jpg',
+      alt: 'A lakeside villa and its gardens on Lake Como, a motor launch passing',
     },
   ];
 

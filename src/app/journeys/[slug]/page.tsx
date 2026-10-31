@@ -7,26 +7,26 @@ import { Itinerary } from '@/components/journeys/Itinerary';
 import { EnquiryForm } from '@/components/journeys/EnquiryForm';
 import { JourneyMap } from '@/components/journeys/JourneyMap';
 import { JourneyTabs, type JourneyTab } from '@/components/journeys/JourneyTabs';
+import { FlyerLink, FlyerNote } from '@/components/journeys/FlyerSections';
 import {
-  FlyerItinerary,
-  FlyerLink,
-  FlyerNote,
-  FlyerOverview,
-  FlyerStays,
-} from '@/components/journeys/FlyerSections';
-import {
-  DatesAndRates,
   FromMarc,
   Gallery,
   Guests,
   InPreparation,
-  JourneyHero,
   OnPacing,
   Overview,
-  RelatedJourneys,
   Stays,
   WhyThisJourney,
 } from '@/components/journeys/JourneySections';
+import {
+  JyDates,
+  JyHero,
+  JyIncluded,
+  JyIntro,
+  JyMore,
+  JyPlaces,
+  JyStays,
+} from '@/components/journeys/JourneyEditorial';
 import {
   getJourneyBySlug,
   getJourneySlugs,
@@ -217,39 +217,39 @@ export default async function JourneyPage({ params }: Params) {
         dangerouslySetInnerHTML={{ __html: jsonLd(breadcrumbs) }}
       />
 
-      <JourneyHero journey={journey} />
+      <JyHero journey={journey} />
       <JourneyTabs tabs={tabs} priceFrom={journey.priceFrom} cta={cta} />
-
-      <div id="overview">
-        {flyer ? (
-          <>
-            <FlyerOverview journey={journey} flyer={flyer} />
-            <JourneyMap journey={journey} />
-            <FlyerNote flyer={flyer} />
-          </>
-        ) : detail ? (
-          <>
-            <Overview detail={detail} />
-            <WhyThisJourney detail={detail} />
-            <JourneyMap journey={journey} />
-            <OnPacing detail={detail} />
-            <FromMarc detail={detail} />
-            <Gallery journey={journey} detail={detail} />
-          </>
-        ) : (
-          <>
-            <InPreparation journey={journey} />
-            <JourneyMap journey={journey} />
-          </>
-        )}
-      </div>
 
       {flyer ? (
         <>
-          <FlyerItinerary flyer={flyer} />
+          <JyIntro journey={journey} flyer={flyer} />
+          <JyPlaces flyer={flyer} />
+          <JourneyMap journey={journey} />
+          <FlyerNote flyer={flyer} />
           <FlyerLink flyer={flyer} />
+          <JyStays flyer={flyer} />
         </>
-      ) : detail ? (
+      ) : (
+        <div id="overview">
+          {detail ? (
+            <>
+              <Overview detail={detail} />
+              <WhyThisJourney detail={detail} />
+              <JourneyMap journey={journey} />
+              <OnPacing detail={detail} />
+              <FromMarc detail={detail} />
+              <Gallery journey={journey} detail={detail} />
+            </>
+          ) : (
+            <>
+              <InPreparation journey={journey} />
+              <JourneyMap journey={journey} />
+            </>
+          )}
+        </div>
+      )}
+
+      {flyer ? null : detail ? (
         <Itinerary days={detail.days} headline={detail.itineraryHeadline} />
       ) : (
         journey.itinerary &&
@@ -262,12 +262,13 @@ export default async function JourneyPage({ params }: Params) {
           />
         )
       )}
-      {flyer ? <FlyerStays flyer={flyer} /> : <Stays journey={journey} />}
-      <DatesAndRates journey={journey} cta={cta} />
+      {!flyer && <Stays journey={journey} />}
+      <JyDates journey={journey} cta={cta} />
+      {flyer && <JyIncluded flyer={flyer} />}
       <Faq items={[...journeyFaq, ...(flyer?.faq ?? [])]} />
       {detail && detail.quotes.length > 0 && <Guests detail={detail} />}
 
-      <RelatedJourneys journeys={related} />
+      <JyMore journeys={related} />
 
       <EnquiryForm
         journeyTitle={journey.title}

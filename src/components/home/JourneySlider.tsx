@@ -15,8 +15,12 @@ export type JourneySlide = {
   /** The place words in the title, set in blue — the slide's only country cue. */
   places: string[];
   lead: string;
-  days: number;
-  groupMax: number;
+  /** Length, group, and dates or rate once Marc sets them, as pills. */
+  facts: string[];
+  /** Where it stands for booking ("Now booking"), for a journey with a page. */
+  status?: string;
+  /** In the flipbook, not yet released: register interest instead of reserve. */
+  soon?: boolean;
   photo: { src?: string; alt: string; tone: string };
 };
 
@@ -38,7 +42,8 @@ function marked(text: string, places: string[]) {
 
 /**
  * The journeys as one large rounded frame: each journey a full photograph
- * with its name, route, length and group, and the two ways on; the others as
+ * with its booking status, name, tagline, length and group, and the two ways
+ * on — reserve, or the itinerary and dates; the others as
  * small cards on the right. A drawn finale ("More journeys are taking shape")
  * follows the last journey.
  *
@@ -48,13 +53,21 @@ function marked(text: string, places: string[]) {
  * first slide is rendered on the server, so it reads without JavaScript.
  */
 export function JourneySlider({
-  slides,
+  slides: now,
+  soon = [],
   horizon,
 }: {
+  /** The journeys open for booking. */
   slides: JourneySlide[];
+  /** The journeys still to come, shown when the visitor switches view. */
+  soon?: JourneySlide[];
   /** The finale's photograph; without one, the drawn horizon. */
   horizon?: { src?: string };
 }) {
+  // Two views, switched at the top of the frame: what can be booked now, and
+  // what is coming. Each plays on its own and ends on the finale.
+  const [view, setView] = useState<'now' | 'soon'>('now');
+  const slides = view === 'soon' && soon.length ? soon : now;
   const n = slides.length + 1; // the journeys, then the finale
   const fin = slides.length;
   const [index, setIndex] = useState(0);
@@ -65,18 +78,18 @@ export function JourneySlider({
   const [hiddenTab, setHiddenTab] = useState(false);
   const frame = useRef<HTMLDivElement>(null);
   /* Time already spent on the current slide, kept across pauses. Tagged with
-     its slide so a change of slide never inherits the last one's time. */
-  const spent = useRef({ slide: 0, ms: 0 });
+     its view and slide so a change of either never inherits the last one's time. */
+  const spent = useRef({ slide: 'now:0', ms: 0 });
 
   const running = playing && inView && !hovered && !focused && !hiddenTab;
 
   const go = useCallback(
     (k: number) => {
       const next = (k + n) % n;
-      spent.current = { slide: next, ms: 0 };
+      spent.current = { slide: `${view}:${next}`, ms: 0 };
       setIndex(next);
     },
-    [n],
+    [n, view],
   );
 
   // Reduced motion: still, until asked.
@@ -104,19 +117,30 @@ export function JourneySlider({
   useEffect(() => {
     if (!running) return;
     const start = performance.now();
-    const left = Math.max(0, DWELL - (spent.current.slide === index ? spent.current.ms : 0));
+    const left = Math.max(
+      0,
+      DWELL - (spent.current.slide === `${view}:${index}` ? spent.current.ms : 0),
+    );
     const t = window.setTimeout(() => go(index + 1), left);
     return () => {
       window.clearTimeout(t);
-      if (spent.current.slide === index) spent.current.ms += performance.now() - start;
+      if (spent.current.slide === `${view}:${index}`) spent.current.ms += performance.now() - start;
     };
-  }, [running, index, go]);
+  }, [running, index, go, view]);
 
   useSwipe(frame, (dir) => go(index + dir));
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'ArrowRight') go(index + 1);
     else if (e.key === 'ArrowLeft') go(index - 1);
+  };
+
+  // A change of view starts that view's first journey afresh.
+  const show = (v: 'now' | 'soon') => {
+    if (v === view) return;
+    spent.current = { slide: `${v}:0`, ms: 0 };
+    setIndex(0);
+    setView(v);
   };
 
   const onFin = index === fin;
@@ -175,6 +199,29 @@ export function JourneySlider({
       </div>
       <div className="shade" aria-hidden />
 
+      {soon.length > 0 && (
+        <div className="views" role="group" aria-label="Show journeys">
+          {(
+            [
+              ['now', 'Now booking', now.length],
+              ['soon', 'Coming soon', soon.length],
+            ] as const
+          ).map(([v, label, count]) => (
+            <button
+              key={v}
+              type="button"
+              className={view === v ? 'on' : undefined}
+              aria-pressed={view === v}
+              onClick={() => show(v)}
+            >
+              <i aria-hidden className={v} />
+              {label}
+              <span className="ct">{count}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="stage">
         {slides.map((s, i) => {
           const on = i === index;
@@ -188,29 +235,50 @@ export function JourneySlider({
               aria-hidden={!on}
               inert={!on}
             >
+              {/* Said first, so a slide reads as a journey to book, not a picture. */}
+              <p className={`badge${s.soon ? ' soon' : ''}`}>
+                <i aria-hidden />
+                Small-group journey
+                <b>{s.soon ? 'Coming soon' : s.status}</b>
+              </p>
               <h3>{marked(s.title, s.places)}</h3>
               <p className="lead">{s.lead}</p>
               <p className="facts">
-                <span>{s.days} days</span>
-                <span aria-hidden>·</span>
-                <span>Group size {s.groupMax}</span>
+                {s.facts.map((f) => (
+                  <span key={f}>{f}</span>
+                ))}
               </p>
-              <div className="acts">
-                <Link
-                  className="btn btn-light"
-                  href={`/journeys/${s.slug}`}
-                  aria-label={`Explore journey: ${s.title}`}
-                >
-                  Explore journey <Arrow />
-                </Link>
-                <Link
-                  className="btn btn-line"
-                  href={`/journeys/${s.slug}#enquire`}
-                  aria-label={`Request details about ${s.title}`}
-                >
-                  Request Details
-                </Link>
-              </div>
+              {s.soon ? (
+                <div className="acts">
+                  <Link
+                    className="btn btn-accent"
+                    href="/plan#contact"
+                    aria-label={`Register your interest in ${s.title}`}
+                  >
+                    Register your interest <Arrow />
+                  </Link>
+                  <Link className="btn btn-line" href="#circle">
+                    Hear first in The Circle
+                  </Link>
+                </div>
+              ) : (
+                <div className="acts">
+                  <Link
+                    className="btn btn-accent"
+                    href={`/journeys/${s.slug}#enquire`}
+                    aria-label={`Reserve your place on ${s.title}`}
+                  >
+                    Reserve your place <Arrow />
+                  </Link>
+                  <Link
+                    className="btn btn-light"
+                    href={`/journeys/${s.slug}`}
+                    aria-label={`View the itinerary and dates for ${s.title}`}
+                  >
+                    Itinerary &amp; dates
+                  </Link>
+                </div>
+              )}
             </div>
           );
         })}
@@ -300,6 +368,7 @@ export function JourneySlider({
                     {pad(k + 1)}
                   </span>
                   <span className="cap" aria-hidden>
+                    {s && <span className="st">{s.soon ? 'Coming soon' : s.status}</span>}
                     <span className="t">
                       {s ? marked(s.short, s.places) : 'More journeys coming'}
                     </span>
@@ -333,7 +402,7 @@ export function JourneySlider({
           </button>
           <span className="prog" aria-hidden>
             {/* Restarts with each slide; fills only while the slider runs. */}
-            <i key={index} />
+            <i key={`${view}-${index}`} />
           </span>
           <button
             type="button"

@@ -90,7 +90,10 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
             sizes="100vw"
             priority={i === 0}
             className={clip.video ? 'fill' : 'fill drift'}
-            style={clip.video ? undefined : { animationDuration: `${clip.hold ?? 8}s` }}
+            style={{
+              filter: clip.grade,
+              animationDuration: clip.video ? undefined : `${clip.hold ?? 8}s`,
+            }}
           />
           {clip.video && (
             <video
@@ -98,6 +101,7 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
                 videos.current[i] = el;
               }}
               className="fill"
+              style={{ filter: clip.grade }}
               poster={posterOf(clip.img)}
               src={armed ? clip.video : undefined}
               muted

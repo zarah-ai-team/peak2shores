@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { Arrow } from '@/components/ui/Button';
 import type { JourneySummary } from '@/lib/content';
+import { DATES_TBA } from '@/lib/journeys';
+import { comingSoon, flipbook, journeyRank, statusLabel } from '@/lib/data/flipbook';
 import { getMedia, type MediaKey } from '@/lib/media';
 import { JourneySlider, type JourneySlide } from './JourneySlider';
 import './journeys-home.css';
@@ -11,8 +13,21 @@ import './journeys-home.css';
 const homeFrames: Record<string, MediaKey> = {
   'swiss-elegance': 'home-jr-swiss',
   'the-italian-experience': 'home-jr-italy',
-  'adriatic-collection': 'dep-adriatic',
+  // Dubrovnik, the journey's finale (client, 31 Oct).
+  'adriatic-collection': 'ac-hero',
 };
+
+/* The flipbook's journeys still to come, as slides. */
+const comingSlides: JourneySlide[] = comingSoon.map((c) => ({
+  slug: c.slug,
+  title: c.title,
+  short: c.short,
+  places: c.places,
+  lead: c.tagline,
+  facts: ['Small group', 'Max. 18 guests'],
+  soon: true,
+  photo: c.photo,
+}));
 
 /** What sets a Peaks2Shores group apart, said once above the journeys. */
 const promises = [
@@ -30,35 +45,29 @@ const promises = [
   },
 ];
 
-/** The promises' marks: two glasses raised to a small table, a cut gem for
-    the handpicked, and the sun going down slowly over the water. */
+/** The promises' marks, drawn fine: a small party of three for the intimate
+    group, a compass for the expert hand, an hourglass for the unhurried pace. */
 const icons = [
   <>
-    <g transform="rotate(-14 7.5 12)">
-      <path d="M5 6h5v2.6a2.5 2.5 0 0 1-5 0z" />
-      <path d="M5.3 7.9h4.4" />
-      <path d="M7.5 11.1v7M5.5 18.1h4" />
-    </g>
-    <g transform="rotate(14 16.5 12)">
-      <path d="M14 6h5v2.6a2.5 2.5 0 0 1-5 0z" />
-      <path d="M14.3 7.9h4.4" />
-      <path d="M16.5 11.1v7M14.5 18.1h4" />
-    </g>
-    <path d="M12 1.6v2.2M9.7 2.7l1 .9M14.3 2.7l-1 .9" />
+    <circle cx="12" cy="7.4" r="2.7" />
+    <path d="M7 19.5a5 5 0 0 1 10 0" />
+    <circle cx="5" cy="9.7" r="2.1" />
+    <path d="M1.5 18.3a3.7 3.7 0 0 1 5.2-3.4" />
+    <circle cx="19" cy="9.7" r="2.1" />
+    <path d="M22.5 18.3a3.7 3.7 0 0 0-5.2-3.4" />
   </>,
   <>
-    <path d="M6.5 4.5h11l3.5 4.8L12 20.5 3 9.3z" />
-    <path d="M3 9.3h18" />
-    <path d="M9.6 4.5 8.3 9.3 12 20.5l3.7-11.2-1.3-4.8" />
-    <path d="M8.3 9.3 12 4.5l3.7 4.8" />
-    <path d="M20.2 1.4v2.2M19.1 2.5h2.2" />
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 2.2v2.3M12 19.5v2.3M2.2 12h2.3M19.5 12h2.3" />
+    <path d="M15.6 8.4l-2.3 4.9-4.9 2.3 2.3-4.9z" />
+    <circle cx="12" cy="12" r="0.6" fill="currentColor" />
   </>,
   <>
-    <path d="M6.5 14a5.5 5.5 0 0 1 11 0" />
-    <path d="M3 14h18" />
-    <path d="M12 4.6v1.9M5.9 7.4l1.3 1.3M18.1 7.4l-1.3 1.3" />
-    <path d="M4.5 17.4c1.25-.85 2.5-.85 3.75 0s2.5.85 3.75 0 2.5-.85 3.75 0 2.5.85 3.75 0" />
-    <path d="M8 20.4c1-.7 2-.7 3 0s2 .7 3 0 2-.7 3 0" />
+    <path d="M6 2.75h12M6 21.25h12" />
+    <path d="M7.5 2.75c0 4.6 4.5 6.3 4.5 9.25s-4.5 4.65-4.5 9.25" />
+    <path d="M16.5 2.75c0 4.6-4.5 6.3-4.5 9.25s4.5 4.65 4.5 9.25" />
+    <path d="M9 19.6c1.2-1.3 4.8-1.3 6 0" />
+    <path d="M10.2 7.4h3.6" />
   </>,
 ];
 
@@ -82,34 +91,40 @@ function slidePhoto(journey: JourneySummary): JourneySlide['photo'] {
 
 /**
  * 04 — Small Luxury Group Journeys, on white: the section's name and line,
- * the three promises as soft blue tiles,
- * then every upcoming journey as a full-photograph slide, closing on a
- * "more journeys are taking shape" slide. No dates or prices here; those
- * live on each journey's page.
+ * the three promises as bright cards in the house blues, then every upcoming journey as a
+ * full-photograph slide in Marc's order — each plainly bookable, with its
+ * status and a way to reserve — with a switch to the flipbook's journeys
+ * still to come; each view closes on a "more journeys are taking shape" slide.
  */
 export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
   const upcoming = journeys
     .filter((j) => j.status !== 'past')
     // Undated journeys keep catalog order, after any dated ones.
-    .sort((a, b) => (a.departureISO ?? '~').localeCompare(b.departureISO ?? '~'));
+    .sort((a, b) => (a.departureISO ?? '~').localeCompare(b.departureISO ?? '~'))
+    // Then Marc's order, for the journeys he has placed.
+    .sort((a, b) => journeyRank(a.slug) - journeyRank(b.slug));
   if (upcoming.length === 0) return null;
 
-  // A different journey leads each day, so the slider never always opens on
-  // the same country. The page regenerates hourly, so it turns on its own.
-  const turn = Math.floor(Date.now() / 86_400_000) % upcoming.length;
-  const ordered = [...upcoming.slice(turn), ...upcoming.slice(0, turn)];
-
-  const slides: JourneySlide[] = ordered.map((j) => ({
-    slug: j.slug,
-    title: j.title,
-    // The short name on a card: the title up to its first comma or colon.
-    short: j.title.split(/[,:]/)[0],
-    places: titlePlaces[j.slug] ?? j.country.split(/\s*(?:&|,|\band\b)\s*/).filter(Boolean),
-    lead: j.lead,
-    days: j.days,
-    groupMax: j.groupMax,
-    photo: slidePhoto(j),
-  }));
+  const slides: JourneySlide[] = upcoming.map((j) => {
+    const book = flipbook[j.slug];
+    const title = book?.title ?? j.title;
+    return {
+      slug: j.slug,
+      title,
+      // The short name on a card: the title up to its first comma or colon.
+      short: book?.short ?? title.split(/[,:]/)[0],
+      places: titlePlaces[j.slug] ?? j.country.split(/\s*(?:&|,|\band\b)\s*/).filter(Boolean),
+      lead: book?.tagline ?? j.lead,
+      facts: [
+        `${j.days} days`,
+        `Max. ${j.groupMax} guests`,
+        ...(j.departure && j.departure !== DATES_TBA ? [j.departure] : []),
+        ...(j.priceFrom ? [`From ${j.priceFrom}`] : []),
+      ],
+      status: statusLabel[j.status ?? 'open'],
+      photo: slidePhoto(j),
+    };
+  });
 
   return (
     <section className="hc-jr" id="journeys" aria-labelledby="journeys-title">
@@ -142,6 +157,9 @@ export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
                   {icons[i]}
                 </svg>
               </span>
+              <span className="no" aria-hidden>
+                {String(i + 1).padStart(2, '0')}
+              </span>
               <div>
                 <h3>{p.title}</h3>
                 <p>{p.line}</p>
@@ -150,7 +168,7 @@ export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
           ))}
         </ul>
 
-        <JourneySlider slides={slides} horizon={getMedia('home-jr-horizon')} />
+        <JourneySlider slides={slides} soon={comingSlides} horizon={getMedia('home-jr-horizon')} />
       </div>
     </section>
   );
