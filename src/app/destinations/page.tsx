@@ -119,11 +119,13 @@ export default async function DestinationsPage() {
             the same people waiting at the other end. That is what makes an itinerary worth writing.
           </p>
         </div>
-
-        {places.map((place, i) => (
-          <Country key={place.slug} place={place} index={i} />
-        ))}
       </section>
+
+      {/* Each country full bleed: its photograph, its name set large, and its
+          journeys as cards over the picture. */}
+      {places.map((place, i) => (
+        <Country key={place.slug} place={place} index={i} total={places.length} />
+      ))}
 
       {/* 04 — The closing invitation, over a photograph. */}
       <section className="hc-circle dz-close" aria-labelledby="dz-close-title" data-fab-away>
@@ -160,46 +162,41 @@ const numberWord = (n: number) => WORDS[n] ?? String(n);
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 const pad = (n: number) => String(n).padStart(2, '0');
 
+/** A line under each country's name, in the journeys' own voice. */
+const TAGLINE: Record<string, string> = {
+  italy: 'Lakes, kitchens and the lagoon, unhurried.',
+  switzerland: 'Marc’s home country, shown to a friend.',
+  spain: 'The island after the season leaves.',
+  'south-africa': 'Wine, sea and long tables.',
+  croatia: 'The Adriatic, from Venice down to Dubrovnik.',
+};
+
 /**
- * One country: its photograph as a tall tile with the name set over it, and
- * beside it the journeys that go there, each a card with its dates, length
- * and price. Rows alternate sides so no two neighbors share a skeleton.
+ * One country, full bleed: its photograph across the screen, the number and
+ * regions, the name set large, a line beneath, and the journeys that go there
+ * as glass cards over the picture — each with its length, dates and price.
  */
-function Country({ place, index }: { place: Destination; index: number }) {
+function Country({ place, index, total }: { place: Destination; index: number; total: number }) {
   const photo = getMedia(place.media);
   const titleId = `${place.slug}-title`;
-  const count = place.journeys.length;
+  const tagline = TAGLINE[place.slug];
 
   return (
-    <article
-      id={place.slug}
-      aria-labelledby={titleId}
-      className={`dz-place ${index % 2 ? 'flip' : ''}`}
-    >
-      <Reveal direction={index % 2 ? 'right' : 'left'} distance={20} className="dz-tile">
-        {photo.src && (
-          <Image
-            src={photo.src}
-            alt={photo.alt ?? ''}
-            fill
-            sizes="(max-width: 900px) 100vw, 58vw"
-            className="fill"
-          />
-        )}
-        <span className="ws" aria-hidden />
-        <span className="dz-num" aria-hidden>
-          {pad(index + 1)}
-        </span>
-        <span className="dz-tile-cap">
-          <span className="lab">{andList.format(place.regions)}</span>
-          <h3 id={titleId}>{place.country}</h3>
-        </span>
-      </Reveal>
+    <article id={place.slug} aria-labelledby={titleId} className="dz-place">
+      <div className="dz-bg" aria-hidden>
+        {photo.src && <Image src={photo.src} alt="" fill sizes="100vw" className="fill" />}
+      </div>
+      <span className="dz-shade" aria-hidden />
 
-      <div className="dz-body">
-        <div className="lab dz-count">
-          {count} {count === 1 ? 'journey' : 'journeys'} in {place.country}
-        </div>
+      <div className="dz-in">
+        <Reveal distance={24} className="dz-copy">
+          <div className="lab dz-no">
+            {pad(index + 1)} · {andList.format(place.regions)}
+          </div>
+          <h3 id={titleId}>{place.country}</h3>
+          {tagline && <p className="dz-tl">{tagline}</p>}
+        </Reveal>
+
         <RevealGroup as="ul" className="dz-journeys" stagger={0.08}>
           {place.journeys.map((journey) => {
             const tag = journeyTagStatus(journey);
@@ -207,28 +204,29 @@ function Country({ place, index }: { place: Destination; index: number }) {
               <RevealItem as="li" key={journey.slug} distance={14}>
                 <Link href={`/journeys/${journey.slug}`} className="dz-j">
                   <span className="dz-j-main">
-                    <span className="dz-j-meta">
-                      {journey.days} days
-                      {tag !== 'open' && <StatusTag status={tag} />}
-                    </span>
                     <span className="dz-j-title">{journey.title}</span>
-                    <span className="dz-j-lead">{journey.lead}</span>
                     <span className="dz-j-facts">
+                      <span>{journey.days} days</span>
                       <span>{journey.departureWindow}</span>
-                      <span>
-                        {journey.priceFrom ? (
-                          <>
-                            From <b>{journey.priceFrom}</b> per person
-                          </>
-                        ) : (
-                          RATES_TBA
-                        )}
+                      <span className="dz-j-price">
+                        {journey.priceFrom ? <>From {journey.priceFrom}</> : RATES_TBA}
                       </span>
+                      {tag !== 'open' && (
+                        <StatusTag status={tag} tone="dark" className="dz-j-tag" />
+                      )}
                     </span>
                   </span>
-                  <span className="circ dz-j-go" aria-hidden>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <path d="M5 12h14M13 6l6 6-6 6" />
+                  <span className="dz-j-go" aria-hidden>
+                    View
+                    <svg
+                      width="18"
+                      height="10"
+                      viewBox="0 0 18 10"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                    >
+                      <path d="M0 5h16M12 1l4 4-4 4" />
                     </svg>
                   </span>
                 </Link>
@@ -237,6 +235,10 @@ function Country({ place, index }: { place: Destination; index: number }) {
           })}
         </RevealGroup>
       </div>
+
+      <span className="dz-count" aria-hidden>
+        <b>{pad(index + 1)}</b> / {pad(total)}
+      </span>
     </article>
   );
 }

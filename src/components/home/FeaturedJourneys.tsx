@@ -4,6 +4,7 @@ import type { JourneySummary } from '@/lib/content';
 import { DATES_TBA } from '@/lib/journeys';
 import { comingSoon, flipbook, journeyRank, statusLabel } from '@/lib/data/flipbook';
 import { getMedia, type MediaKey } from '@/lib/media';
+import { site } from '@/lib/site';
 import { JourneySlider, type JourneySlide } from './JourneySlider';
 import './journeys-home.css';
 
@@ -29,47 +30,36 @@ const comingSlides: JourneySlide[] = comingSoon.map((c) => ({
   photo: c.photo,
 }));
 
-/** What sets a Peaks2Shores group apart, said once above the journeys. */
+/**
+ * What every group journey shares, said once above the journeys, in plain
+ * words and only what the site already stands behind: the 18-guest cap, the
+ * hotels, and the free afternoons the itineraries keep.
+ */
 const promises = [
   {
-    title: 'Intimate by Design',
-    line: 'No more than 18 guests, creating a more personal and connected travel experience.',
+    label: 'Group size',
+    title: `${site.maxGuests} guests, never more.`,
+    line: 'Few enough to share one table at dinner, and to go where a coach full of people can’t.',
   },
   {
-    title: 'Expertly Curated',
-    line: 'Exceptional destinations, handpicked hotels, and authentic experiences shaped by local expertise.',
+    label: 'Where you stay',
+    title: 'Hotels we would book for ourselves.',
+    line: 'Each is chosen for where it sits and how it looks after you, not for its star count.',
   },
   {
-    title: 'Thoughtfully Paced',
-    line: 'A beautiful balance of discovery, memorable experiences, and time to enjoy each destination.',
+    label: 'Pace',
+    title: 'Afternoons left open.',
+    line: 'Free time is built into every itinerary on purpose, for a long lunch, a swim, or a second look at a town you liked.',
   },
 ];
 
-/** The promises' marks, drawn fine: a small party of three for the intimate
-    group, a compass for the expert hand, an hourglass for the unhurried pace. */
-const icons = [
-  <>
-    <circle cx="12" cy="7.4" r="2.7" />
-    <path d="M7 19.5a5 5 0 0 1 10 0" />
-    <circle cx="5" cy="9.7" r="2.1" />
-    <path d="M1.5 18.3a3.7 3.7 0 0 1 5.2-3.4" />
-    <circle cx="19" cy="9.7" r="2.1" />
-    <path d="M22.5 18.3a3.7 3.7 0 0 0-5.2-3.4" />
-  </>,
-  <>
-    <circle cx="12" cy="12" r="9" />
-    <path d="M12 2.2v2.3M12 19.5v2.3M2.2 12h2.3M19.5 12h2.3" />
-    <path d="M15.6 8.4l-2.3 4.9-4.9 2.3 2.3-4.9z" />
-    <circle cx="12" cy="12" r="0.6" fill="currentColor" />
-  </>,
-  <>
-    <path d="M6 2.75h12M6 21.25h12" />
-    <path d="M7.5 2.75c0 4.6 4.5 6.3 4.5 9.25s-4.5 4.65-4.5 9.25" />
-    <path d="M16.5 2.75c0 4.6-4.5 6.3-4.5 9.25s4.5 4.65 4.5 9.25" />
-    <path d="M9 19.6c1.2-1.3 4.8-1.3 6 0" />
-    <path d="M10.2 7.4h3.6" />
-  </>,
-];
+/* The logo's own line, drawn once across the three: peaks at the left, a
+   lake's easy curve between, and waves at the right. It sits on y = 40 at
+   x = 0, 400 and 800, where each point's dot is pinned. */
+const RIDGE =
+  'M0 40 L52 16 L84 30 L132 6 L186 32 L224 20 L272 40 L400 40 ' +
+  'C470 40 520 28 600 28 S730 40 800 40 ' +
+  'Q825 30 850 40 T900 40 T950 40 T1000 40 T1050 40 T1100 40 T1150 40 T1200 40';
 
 /* The words in each title that name where it goes, set in blue on the slider
    in place of a separate country label. A journey not listed here falls back
@@ -91,7 +81,7 @@ function slidePhoto(journey: JourneySummary): JourneySlide['photo'] {
 
 /**
  * 04 — Small Luxury Group Journeys, on white: the section's name and line,
- * the three promises as bright cards in the house blues, then every upcoming journey as a
+ * the three promises hung on a line drawn like the logo, then every upcoming journey as a
  * full-photograph slide in Marc's order — each plainly bookable, with its
  * status and a way to reserve — with a switch to the flipbook's journeys
  * still to come; each view closes on a "more journeys are taking shape" slide.
@@ -133,7 +123,7 @@ export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
           <div>
             <h2 id="journeys-title">Our Signature Journeys</h2>
             <p className="sub-h">
-              Extraordinary destinations. Intimate groups. Thoughtfully curated experiences.
+              Small-group journeys, planned around the places and people we know best.
             </p>
           </div>
           <Link className="btn btn-ink" href="/journeys">
@@ -141,32 +131,29 @@ export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
           </Link>
         </div>
 
-        <ul className="pts" aria-label="What every journey shares">
-          {promises.map((p, i) => (
-            <li key={p.title}>
-              <span className="ico" aria-hidden>
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  focusable="false"
-                >
-                  {icons[i]}
-                </svg>
-              </span>
-              <span className="no" aria-hidden>
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <div>
+        <div className="pts-wrap">
+          <svg
+            className="ridge"
+            viewBox="0 0 1200 64"
+            preserveAspectRatio="none"
+            aria-hidden
+            focusable="false"
+          >
+            <path d={RIDGE} />
+          </svg>
+          <ol className="pts" aria-label="What every journey shares">
+            {promises.map((p, i) => (
+              <li key={p.label}>
+                <span className="dot" aria-hidden />
+                <span className="lab">
+                  {String(i + 1).padStart(2, '0')} · {p.label}
+                </span>
                 <h3>{p.title}</h3>
                 <p>{p.line}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
+              </li>
+            ))}
+          </ol>
+        </div>
 
         <JourneySlider slides={slides} soon={comingSlides} horizon={getMedia('home-jr-horizon')} />
       </div>
