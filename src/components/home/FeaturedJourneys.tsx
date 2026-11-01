@@ -4,7 +4,6 @@ import type { JourneySummary } from '@/lib/content';
 import { DATES_TBA } from '@/lib/journeys';
 import { comingSoon, flipbook, journeyRank, statusLabel } from '@/lib/data/flipbook';
 import { getMedia, type MediaKey } from '@/lib/media';
-import { site } from '@/lib/site';
 import { JourneySlider, type JourneySlide } from './JourneySlider';
 import './journeys-home.css';
 
@@ -31,25 +30,21 @@ const comingSlides: JourneySlide[] = comingSoon.map((c) => ({
 }));
 
 /**
- * What every group journey shares, said once above the journeys, in plain
- * words and only what the site already stands behind: the 18-guest cap, the
- * hotels, and the free afternoons the itineraries keep.
+ * What every group journey shares, said once above the journeys. Marc's
+ * wording, word for word (feedback of 29 Oct, Small Luxury Group Journeys).
  */
 const promises = [
   {
-    label: 'Group size',
-    title: `${site.maxGuests} guests, never more.`,
-    line: 'Few enough to share one table at dinner, and to go where a coach full of people can’t.',
+    title: 'Intimate by Design',
+    line: 'No more than 18 guests, creating a more personal and connected travel experience.',
   },
   {
-    label: 'Where you stay',
-    title: 'Hotels we would book for ourselves.',
-    line: 'Each is chosen for where it sits and how it looks after you, not for its star count.',
+    title: 'Expertly Curated',
+    line: 'Exceptional destinations, handpicked hotels, and authentic experiences shaped by local expertise.',
   },
   {
-    label: 'Pace',
-    title: 'Afternoons left open.',
-    line: 'Free time is built into every itinerary on purpose, for a long lunch, a swim, or a second look at a town you liked.',
+    title: 'Thoughtfully Paced',
+    line: 'A beautiful balance of discovery, memorable experiences, and time to enjoy each destination.',
   },
 ];
 
@@ -123,7 +118,7 @@ export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
           <div>
             <h2 id="journeys-title">Our Signature Journeys</h2>
             <p className="sub-h">
-              Small-group journeys, planned around the places and people we know best.
+              Extraordinary destinations. Intimate groups. Thoughtfully curated experiences.
             </p>
           </div>
           <Link className="btn btn-ink" href="/journeys">
@@ -143,11 +138,9 @@ export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
           </svg>
           <ol className="pts" aria-label="What every journey shares">
             {promises.map((p, i) => (
-              <li key={p.label}>
+              <li key={p.title}>
                 <span className="dot" aria-hidden />
-                <span className="lab">
-                  {String(i + 1).padStart(2, '0')} · {p.label}
-                </span>
+                <span className="lab">{String(i + 1).padStart(2, '0')}</span>
                 <h3>{p.title}</h3>
                 <p>{p.line}</p>
               </li>
