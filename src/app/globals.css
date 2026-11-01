@@ -104,9 +104,10 @@
     /* Every section title on the site, one weight: change it here, never on
        a single heading. */
     --title-weight: 700;
-    /* Its height once the page moves (`data-compact`). A bar pinned beneath
-       the header sits at this offset, so no gap opens between the two. */
-    --nav-h-compact: 3.75rem;
+    /* Its height once the page moves. The header keeps one size on every
+       page and at every scroll position, so this is the same value; it stays
+       a token because every bar pinned beneath the header reads it. */
+    --nav-h-compact: var(--nav-h);
     /* Outer margin and column gap of the site grid (§2.4). */
     --site-gutter: 1.25rem;
     --grid-gap: 1rem;
@@ -132,7 +133,6 @@
     :root {
       /* 4.75rem on a laptop (68px at its 90% root size), 84px at 1888px. */
       --nav-h: clamp(4.75rem, 4.45vw, 5.25rem);
-      --nav-h-compact: clamp(4rem, 3.6vw, 4.25rem);
       --spacing-stack: clamp(1.125rem, 1.27vw, 1.5rem);
       --type-kicker: clamp(0.65625rem, 0.609vw, 0.71875rem);
       --type-nav: clamp(0.71875rem, 0.636vw, 0.75rem);
@@ -963,34 +963,19 @@
     height: clamp(2.75rem, 2.54vw, 3rem); /* 44px on a laptop, 48px at 1888px */
   }
 }
-/* Over the homepage film the bar is taller, the logo and the links a size
-   larger; once the bar turns solid they settle back to the usual sizes. */
-.site-header[data-home-hero]:not([data-solid]) {
-  height: calc(var(--nav-h) + 1rem);
-}
-.site-header[data-home-hero]:not([data-solid]) .site-logo {
-  height: 3rem; /* 48px on a phone */
-}
-@media (min-width: 1024px) {
-  .site-header[data-home-hero]:not([data-solid]) {
-    height: calc(var(--nav-h) + 1.75rem);
-  }
-  .site-header[data-home-hero]:not([data-solid]) .site-logo {
-    height: clamp(3.75rem, 3.6vw, 4.25rem); /* 60px on a laptop, 68px at 1888px */
-  }
-  .site-header[data-home-hero]:not([data-solid]) .nav-label {
-    font-size: clamp(0.875rem, 0.8vw, 0.9375rem); /* 14px → 15px */
-  }
-  .site-header[data-home-hero]:not([data-solid]) .header-cta {
-    font-size: clamp(0.8125rem, 0.74vw, 0.875rem);
-  }
-}
-.site-header[data-compact] .site-logo {
-  transform: scale(0.89); /* 36 → 32px */
+/* One header on every page and at every scroll position: the same bar, logo,
+   links and button over a photograph or on paper, at the top or deep in the
+   page. Only its colour changes (transparent over a hero, frosted paper once
+   the page is read); nothing grows or shrinks. */
+.site-header .nav-label {
+  font-size: 0.8125rem;
 }
 @media (min-width: 1024px) {
-  .site-header[data-compact] .site-logo {
-    transform: scale(0.85); /* 48 → 41px; 44 → 37px on a laptop */
+  .site-header .nav-label {
+    font-size: clamp(0.8125rem, 0.74vw, 0.875rem); /* 13px → 14px */
+  }
+  .site-header .header-cta {
+    font-size: clamp(0.75rem, 0.68vw, 0.8125rem);
   }
 }
 
@@ -1290,10 +1275,6 @@ html[data-js] [data-ground][data-inview]::before {
     animation: none !important;
   }
 
-  .site-header[data-compact] .site-logo {
-    transform: none !important;
-  }
-
   .rail-marker {
     transition: none !important;
   }
@@ -1327,4 +1308,51 @@ html[data-js] [data-ground][data-inview]::before {
 /* A slide-at-a-time slider keeps vertical page scrolling on touch. */
 .hc-jr .frame {
   touch-action: pan-y;
+}
+
+/* --------------------------------------------------------------------------
+   Smooth by default, site-wide.
+
+   1. Sections settle in as they scroll into view: each block inside a section
+      (never a hero) rises 24px and fades in over the first part of its entry.
+      Scroll-driven CSS, so nothing waits on JavaScript. `backwards` only: once
+      a block has entered, the animation lets go entirely, so it never pins an
+      opacity or position a component sets for itself (slides, cross-fades).
+      `translate`, not `transform`, so a block's own transform is untouched.
+      A browser without scroll timelines simply shows everything, as before.
+   2. Links, buttons and fields change colour on hover and focus gently,
+      unless a component sets its own transition (`:where` adds no weight).
+   -------------------------------------------------------------------------- */
+@keyframes p2s-settle {
+  from {
+    opacity: 0;
+    translate: 0 1.5rem;
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    main
+      section:not([data-hero])
+      > :not([aria-hidden='true']):not([data-no-settle]):not(script):not(style),
+    main .dz-place .dz-in > * {
+      animation: p2s-settle linear backwards;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+  }
+}
+@media print {
+  main section > * {
+    animation: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :where(a, button, summary, input, select, textarea, label) {
+    transition-property:
+      color, background-color, border-color, text-decoration-color, opacity, box-shadow, fill,
+      stroke;
+    transition-duration: 0.3s;
+    transition-timing-function: cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
 }

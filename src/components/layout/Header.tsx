@@ -15,13 +15,11 @@ const HIDE_AFTER = 480;
  * The header has four states, all in CSS (`.site-header` in globals.css):
  *
  * - transparent over a hero, frosted paper once the page is read (`data-solid`)
- * - a little shorter as soon as the page moves (`data-compact`)
+ * - one size everywhere: the same bar, logo and links on every page and at
+ *   every scroll position (`data-compact` marks a moved page but changes no size)
  * - out of the way on a long scroll down, back on any scroll up (`data-hidden`),
  *   unless the page pins a bar beneath it (`[data-pin-header]`)
  * - on-dark over the open navy mobile menu (`data-menu`)
- *
- * Over the homepage film (`data-home-hero`, not yet solid) the logo and the
- * links are a size larger.
  *
  * Both logo files are in the tree; CSS cross-fades between them, so the swap
  * never waits on a render.
@@ -105,7 +103,6 @@ export function Header({ primary, cta }: { primary: NavItem[]; cta: NavItem }) {
         ref={barRef}
         className="site-header fixed inset-x-0 top-0 z-50"
         data-solid={scrolled || menuOpen ? '' : undefined}
-        data-home-hero={pathname === '/' ? '' : undefined}
         data-menu={menuOpen ? '' : undefined}
         data-compact={compact && !menuOpen ? '' : undefined}
         data-hidden={hidden && !menuOpen ? '' : undefined}

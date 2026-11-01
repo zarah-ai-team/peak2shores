@@ -37,14 +37,13 @@ const ZOOM = 1.75;
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
 /**
- * The itinerary, live: the map follows the stays. While it is on screen and
- * nobody has chosen a stay, it plays through them in the order the journey
- * travels — the camera glides and closes in on each place, the route draws
- * the leg that led there, a marker travels along it, and the stay lights in
- * the list — then pulls back to the whole route and begins again. Opening a
- * stay, or a place on the map, takes you there and holds it; the pointer over
- * the map pauses it; the button plays it again. Under reduced motion it rests
- * on the whole route until asked.
+ * The itinerary, live: the map follows the stays as you read them. Scrolling
+ * down the days moves the map with you — the stay at your eye line lights in
+ * the list, the camera glides and closes in on its place, the route draws the
+ * leg that led there and a marker travels along it. Above the first stay the
+ * map shows the whole route. Opening a stay, or a place on the map, takes you
+ * there. The play button tours the stays on its own instead (the pointer over
+ * the map pauses it), and any scroll hands the map back to your reading.
  *
  * The land is drawn on the server and handed in as `children`.
  */
@@ -74,14 +73,57 @@ export function RouteLive({
   // The stay the map is on (-1: the whole route), and the one opened in the list.
   const [active, setActive] = useState(-1);
   const [open, setOpen] = useState(-1);
-  const [playing, setPlaying] = useState(true);
+  const [playing, setPlaying] = useState(false);
   const [inView, setInView] = useState(false);
   const [held, setHeld] = useState(false);
   const frame = useRef<HTMLDivElement>(null);
+  const side = useRef<HTMLDivElement>(null);
+  const list = useRef<HTMLOListElement>(null);
+  // A chosen stay holds the map a moment, while its body opens and the page settles.
+  const holdUntil = useRef(0);
   const n = steps.length;
 
+  /* Follow the reading: the stay whose top has passed the eye line is the one
+     on the map. The eye line sits 45% down a desktop screen, and just under
+     the map where the map rides above the stays (tablet and phone). */
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) setPlaying(false);
+    const ol = list.current;
+    if (!ol) return;
+    let raf = 0;
+    let last = Number.NaN;
+    const read = () => {
+      raf = 0;
+      if (performance.now() < holdUntil.current) return;
+      const vh = window.innerHeight;
+      const stacked = window.matchMedia('(max-width: 1023px)').matches;
+      const mapFoot = stacked && side.current ? side.current.getBoundingClientRect().bottom : 0;
+      const line = stacked ? mapFoot + (vh - mapFoot) * 0.2 : vh * 0.45;
+      const items = Array.from(ol.children) as HTMLElement[];
+      let k = -1;
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].getBoundingClientRect().top <= line) k = i;
+      }
+      if (k === last) return;
+      const first = Number.isNaN(last);
+      last = k;
+      if (first) {
+        if (k >= 0) setActive(k);
+        return;
+      }
+      setPlaying(false);
+      setActive(k);
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(read);
+    };
+    read();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
 
   useEffect(() => {
@@ -106,6 +148,7 @@ export function RouteLive({
 
   /** A visitor's choice: the map goes there and stays; the stay opens, or closes. */
   const choose = (k: number) => {
+    holdUntil.current = performance.now() + 900;
     setPlaying(false);
     setActive(k);
     setOpen((o) => (o === k ? -1 : k));
@@ -133,7 +176,7 @@ export function RouteLive({
 
   return (
     <section className="jy jr" id="itinerary" aria-labelledby="jr-h">
-      <div className="jr-side">
+      <div className="jr-side" ref={side}>
         <div className="jr-stick">
           <div
             ref={frame}
@@ -257,7 +300,7 @@ export function RouteLive({
           Stay by stay
         </p>
         <h2 id="jr-h">Itinerary</h2>
-        <ol className="jr-stays">
+        <ol className="jr-stays" ref={list}>
           {steps.map((x, k) => (
             <li key={x.name} className={k === active ? 'on' : undefined}>
               {x.part && (
