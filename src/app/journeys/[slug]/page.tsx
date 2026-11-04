@@ -4,11 +4,9 @@ import { Faq } from '@/components/ui/Faq';
 import { journeyFaq } from '@/lib/data/faq';
 import { notFound } from 'next/navigation';
 import { Itinerary } from '@/components/journeys/Itinerary';
-import { EnquiryForm } from '@/components/journeys/EnquiryForm';
 import { JourneyMap } from '@/components/journeys/JourneyMap';
 import { JyItinerary } from '@/components/journeys/JourneyItinerary';
 import { JourneyTabs, type JourneyTab } from '@/components/journeys/JourneyTabs';
-import { FlyerLink, FlyerNote } from '@/components/journeys/FlyerSections';
 import {
   FromMarc,
   Gallery,
@@ -21,17 +19,17 @@ import {
 } from '@/components/journeys/JourneySections';
 import {
   JyDates,
+  JyExtension,
+  JyExtensionRow,
   JyHero,
-  JyIncluded,
   JyIntro,
-  JyMore,
   JyStays,
+  requestHref,
 } from '@/components/journeys/JourneyEditorial';
 import {
   getJourneyBySlug,
   getJourneySlugs,
   getMedia,
-  getRelatedJourneys,
   getSiteSettings,
   jsonLd,
   pageMetadata,
@@ -54,7 +52,7 @@ export async function generateStaticParams() {
 function describe(journey: Journey) {
   return (
     journey.seo?.description ??
-    `${journey.lead} ${journey.days} days, ${journey.region}, ${journey.departureWindow}. Maximum ${journey.groupMax} guests.`
+    `${journey.lead} ${journey.days} days, ${journey.region}, ${journey.departureWindow}. A small group journey.`
   );
 }
 
@@ -79,37 +77,12 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   };
 }
 
-/** What the inquiry block says, by booking state. Never hidden. */
-function enquiryCopy(journey: Journey, founder: string) {
-  const firstName = founder.split(' ')[0];
-  switch (journey.status) {
-    case 'sold-out':
-    case 'waitlist':
-      return {
-        kicker: 'Join the waitlist',
-        intro: `${journey.title} is ${journey.status === 'sold-out' ? 'full' : 'on a waitlist'}. An inquiry adds your name to the list — it holds nothing and commits you to nothing, and it starts a conversation with ${firstName}.`,
-      };
-    case 'past':
-      return {
-        kicker: 'This journey has departed',
-        intro: `${journey.title} has already run. If you would like something like it, tell us a little — inquiring holds nothing and commits you to nothing.`,
-      };
-    default:
-      return journey.detail || journey.flyer
-        ? { kicker: 'Plan your journey', intro: undefined }
-        : {
-            kicker: 'Register interest',
-            intro: `Tell us you are interested in ${journey.title} and who you would travel with. Inquiring holds nothing and commits you to nothing — it starts a conversation with ${firstName}.`,
-          };
-  }
-}
-
 export default async function JourneyPage({ params }: Params) {
   const { slug } = await params;
   const journey = await getJourneyBySlug(slug);
   if (!journey) notFound();
 
-  const [related, site] = await Promise.all([getRelatedJourneys(slug, 3), getSiteSettings()]);
+  const site = await getSiteSettings();
 
   const url = `${site.url}/journeys/${journey.slug}`;
   const days = journey.detail?.days ?? journey.itinerary ?? [];
@@ -189,22 +162,21 @@ export default async function JourneyPage({ params }: Params) {
   };
 
   const detail = journey.detail;
-  const enquiry = enquiryCopy(journey, site.founder.name);
   const flyer = journey.flyer;
   const cta =
     journey.status === 'sold-out' || journey.status === 'waitlist'
       ? 'Join the waitlist'
-      : flyer
-        ? 'Reserve your place'
-        : 'Inquire';
+      : 'Request details';
 
-  /* The A&K menu: Overview │ Itinerary │ Stays │ Dates & Rates. A tab whose
-     section has nothing to show yet is left out rather than linking nowhere. */
+  /* The A&K menu: Overview │ Itinerary │ (extension) │ Stays │ Dates & Rates.
+     A tab whose section has nothing to show yet is left out rather than
+     linking nowhere. */
   const hasStays =
     !!flyer || !!detail || !!journey.itinerary?.some((d) => d.stay && d.stay !== '—');
   const tabs: JourneyTab[] = [
     { id: 'overview', label: 'Overview' },
     ...(days.length || flyer ? [{ id: 'itinerary', label: 'Itinerary' }] : []),
+    ...(flyer?.extension ? [{ id: 'extension', label: flyer.extension.tab }] : []),
     ...(hasStays ? [{ id: 'stays', label: 'Stays' }] : []),
     { id: 'dates', label: 'Dates & Rates' },
   ];
@@ -218,14 +190,13 @@ export default async function JourneyPage({ params }: Params) {
       />
 
       <JyHero journey={journey} />
-      <JourneyTabs tabs={tabs} priceFrom={journey.priceFrom} cta={cta} />
+      <JourneyTabs tabs={tabs} cta={cta} ctaHref={requestHref(journey)} />
 
       {flyer ? (
         <>
           <JyIntro journey={journey} flyer={flyer} />
-          <JyItinerary journey={journey} flyer={flyer} />
-          <FlyerNote flyer={flyer} />
-          <FlyerLink flyer={flyer} />
+          <JyItinerary journey={journey} flyer={flyer} after={<JyExtensionRow flyer={flyer} />} />
+          <JyExtension journey={journey} flyer={flyer} />
           <JyStays flyer={flyer} />
         </>
       ) : (
@@ -262,21 +233,9 @@ export default async function JourneyPage({ params }: Params) {
         )
       )}
       {!flyer && <Stays journey={journey} />}
-      <JyDates journey={journey} cta={cta} />
-      {flyer && <JyIncluded flyer={flyer} />}
-      <Faq items={[...journeyFaq, ...(flyer?.faq ?? [])]} />
+      <JyDates journey={journey} />
+      <Faq items={[...journeyFaq, ...(flyer?.faq ?? [])]} className="pt-section-sm" />
       {detail && detail.quotes.length > 0 && <Guests detail={detail} />}
-
-      <JyMore journeys={related} />
-
-      <EnquiryForm
-        journeyTitle={journey.title}
-        departure={journey.departureWindow}
-        spotsLeft={journey.status && journey.status !== 'open' ? undefined : detail?.spotsLeft}
-        groupMax={journey.groupMax}
-        kicker={enquiry.kicker}
-        intro={enquiry.intro}
-      />
     </>
   );
 }

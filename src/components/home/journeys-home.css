@@ -204,26 +204,45 @@
   color: #fff;
   box-shadow: 0 2.5rem 5.625rem rgb(0 0 0 / 0.35);
 }
+/* A slide arrives as a wipe from the side it is coming from, over the one
+   leaving, which holds still beneath until the wipe is done. No zoom. */
 .hc-jr .bg {
   position: absolute;
   inset: 0;
-  z-index: -2;
+  z-index: -3;
   opacity: 0;
-  transition: opacity 1.4s var(--ease);
+  clip-path: inset(0 0 0 100%);
+  transition:
+    opacity 0s 1.2s,
+    clip-path 0s 1.2s;
+}
+.hc-jr [data-dir='prev'] .bg:not(.on) {
+  clip-path: inset(0 100% 0 0);
 }
 .hc-jr .bg.on {
+  z-index: -2;
   opacity: 1;
+  clip-path: inset(0);
+  transition: clip-path 1.2s cubic-bezier(0.77, 0, 0.18, 1);
 }
 /* Every photograph fills its frame or card, cropped, never stretched. */
 .hc-jr .frame img {
   object-fit: cover;
 }
+/* The photograph drifts in sideways behind the wipe, a little wider than its
+   frame so no edge ever shows. */
 .hc-jr .bg img {
-  transform: scale(1.1);
-  transition: transform 9s var(--ease);
+  left: -4% !important;
+  width: 108% !important;
+  transform: translateX(4%);
+  transition: transform 0s 1.2s;
+}
+.hc-jr [data-dir='prev'] .bg img {
+  transform: translateX(-4%);
 }
 .hc-jr .bg.on img {
-  transform: scale(1.02);
+  transform: none;
+  transition: transform 1.8s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .hc-jr .hzbg {
   background: var(--night);
@@ -354,6 +373,42 @@
 }
 .hc-jr .copy > * {
   margin: 0;
+}
+/* The words follow the wipe, line by line, from the side it came from. */
+.hc-jr .copy:not(.finale) > * {
+  opacity: 0;
+  translate: 2.5rem 0;
+  transition:
+    opacity 0.4s var(--ease),
+    translate 0.4s var(--ease);
+}
+.hc-jr [data-dir='prev'] .copy:not(.finale) > * {
+  translate: -2.5rem 0;
+}
+.hc-jr .copy.on:not(.finale) > * {
+  opacity: 1;
+  translate: 0 0;
+  transition:
+    opacity 0.8s var(--ease),
+    translate 1s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.hc-jr .copy.on:not(.finale) > :nth-child(1) {
+  transition-delay: 0.45s;
+}
+.hc-jr .copy.on:not(.finale) > :nth-child(2) {
+  transition-delay: 0.53s;
+}
+.hc-jr .copy.on:not(.finale) > :nth-child(3) {
+  transition-delay: 0.61s;
+}
+.hc-jr .copy.on:not(.finale) > :nth-child(4) {
+  transition-delay: 0.69s;
+}
+.hc-jr .copy.on:not(.finale) > :nth-child(5) {
+  transition-delay: 0.77s;
+}
+.hc-jr .copy.on:not(.finale) > :nth-child(n + 6) {
+  transition-delay: 0.85s;
 }
 .hc-jr .copy h3 {
   font-family: var(--serif);
@@ -945,6 +1000,7 @@
   .hc-jr .bg img,
   .hc-jr .bg.on img,
   .hc-jr .copy,
+  .hc-jr .copy > *,
   .hc-jr .hz .sunrise,
   .hc-jr .card:hover,
   .hc-jr .card:hover img {

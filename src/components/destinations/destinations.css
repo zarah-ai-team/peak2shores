@@ -5,31 +5,109 @@
    ========================================================================== */
 
 /* -- 01 Opening ---------------------------------------------------------- */
-/* The photograph settles once as the page opens, and then holds still. */
-.dz-settle {
-  animation: dz-settle 2.4s var(--ease) both;
+/* As on the Journeys page: the name on paper, then the photograph framed. */
+.dz-open {
+  padding: clamp(2.5rem, 5vw, 4.5rem) var(--dz-side) clamp(1rem, 2vw, 2rem);
+  background: var(--paper);
+  color: var(--ink);
 }
-@keyframes dz-settle {
-  from {
-    transform: scale(1.06);
+.dz-open-head {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  align-items: end;
+  gap: 1.5rem clamp(2rem, 6vw, 6rem);
+  margin-bottom: clamp(2rem, 3.4vw, 3rem);
+}
+.dz-open-lab {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--lake);
+}
+.dz-open-lab::before {
+  content: '';
+  width: 1.75rem;
+  height: 1px;
+  background: currentColor;
+}
+/* The same size as the Journeys page's title, on one line from a laptop up. */
+.dz-open h1 {
+  margin: 1rem 0 0.875rem;
+  font-family: var(--serif);
+  font-weight: var(--title-weight);
+  font-size: clamp(2rem, 3.3vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+@media (min-width: 1024px) {
+  .dz-open h1 {
+    white-space: nowrap;
   }
-  to {
-    transform: scale(1);
-  }
 }
-.dz-hero .dz-eb {
-  margin-bottom: 1.375rem;
-  color: var(--ice);
+.dz-open-line {
+  margin: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.0625rem, 1.3vw, 1.3125rem);
+  color: var(--lake);
 }
-.dz-hero .copy p {
-  max-width: 40ch;
+.dz-open-say > p {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+.dz-open-say .ctas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  margin-top: 1.25rem;
+}
+.dz-open-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--lake);
+  text-decoration: none;
+}
+.dz-open-link:hover {
+  color: var(--brand);
+}
+.dz-frame {
+  position: relative;
+  aspect-ratio: 1400 / 560;
+  overflow: hidden;
+  border-radius: 1.5rem;
+  background: var(--deep);
+  box-shadow: 0 1.5rem 3.5rem rgb(20 29 36 / 0.16);
+  isolation: isolate;
+}
+.dz-frame-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(8 20 28 / 0) 55%, rgb(8 20 28 / 0.55) 100%);
 }
 /* The countries, as a way into the page, along the foot of the photograph. */
 .dz-index {
   position: absolute;
-  left: var(--gut);
-  right: var(--gut);
-  bottom: clamp(1.5rem, 4svh, 2.5rem);
+  left: 1.25rem;
+  right: 1.25rem;
+  bottom: clamp(1rem, 2vw, 1.75rem);
   z-index: 5;
   display: flex;
   justify-content: center;
@@ -43,19 +121,18 @@
   min-height: 2.75rem;
   padding: 0 clamp(1rem, 1.06vw, 1.25rem);
   border-radius: 999px;
-  border: 1px solid rgb(255 255 255 / 0.32);
-  background: rgb(8 20 28 / 0.22);
-  backdrop-filter: blur(0.375rem);
-  -webkit-backdrop-filter: blur(0.375rem);
+  border: 1px solid rgb(255 255 255 / 0.4);
+  background: rgb(8 20 28 / 0.55);
   color: #fff;
   font-family: var(--sans);
-  font-size: clamp(0.6875rem, 0.636vw, 0.75rem);
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   text-decoration: none;
+  touch-action: manipulation;
   transition:
-    background 0.4s var(--ease),
+    background-color 0.4s var(--ease),
     border-color 0.4s var(--ease);
 }
 .dz-index a span {
@@ -106,7 +183,7 @@
 }
 .dz-facts span {
   font-family: var(--sans);
-  font-size: clamp(0.6875rem, 0.636vw, 0.75rem);
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -174,13 +251,6 @@
   position: absolute;
   inset: 0;
   z-index: -2;
-}
-.dz-bg img {
-  transform: scale(1.04);
-  transition: transform 2.4s var(--ease);
-}
-.dz-place:hover .dz-bg img {
-  transform: scale(1);
 }
 .dz-shade {
   position: absolute;
@@ -349,6 +419,12 @@
   }
 }
 @media (max-width: 900px) {
+  .dz-open-head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .dz-frame {
+    aspect-ratio: 4 / 3;
+  }
   .dz-head {
     grid-template-columns: minmax(0, 1fr);
     gap: 1.25rem;
@@ -372,9 +448,19 @@
   }
 }
 @media (max-width: 600px) {
-  /* The phone hero runs to the foot of the frame; the countries follow just below. */
+  /* On a phone the countries sit under the photograph, not over it. */
+  .dz-frame {
+    aspect-ratio: 4 / 3.4;
+  }
   .dz-index {
-    display: none;
+    gap: 0.375rem;
+    left: 0.75rem;
+    right: 0.75rem;
+  }
+  .dz-index a {
+    min-height: 2.5rem;
+    padding: 0 0.875rem;
+    font-size: 0.6875rem;
   }
   .dz-facts {
     grid-template-columns: minmax(0, 1fr);
@@ -420,10 +506,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dz-settle {
-    animation: none;
-  }
-  .dz-bg img,
+  .dz-index a,
   .dz-j,
   .dz-j-go svg {
     transition: none;

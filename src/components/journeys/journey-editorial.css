@@ -337,39 +337,6 @@
   flex-wrap: wrap;
   gap: 1rem 1.5rem;
 }
-.jy.marq {
-  overflow: hidden;
-  padding: 1.875rem 0;
-  background: linear-gradient(90deg, var(--brand), #0d77a9);
-  color: #fff;
-}
-.jy .mtrack {
-  display: flex;
-  width: max-content;
-  animation: jy-marq 60s linear infinite;
-}
-.jy.marq:hover .mtrack {
-  animation-play-state: paused;
-}
-.jy .mtrack span {
-  padding-right: 2.125rem;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(2rem, 3vw, 2.75rem);
-  white-space: nowrap;
-}
-.jy .mtrack b {
-  padding-left: 2.125rem;
-  font-style: normal;
-  font-weight: 400;
-  color: var(--sky);
-}
-@keyframes jy-marq {
-  to {
-    transform: translateX(-33.333%);
-  }
-}
-
 /* -- 3. The places, one at a time --------------------------------------------- */
 .jy.pl {
   scroll-margin-top: var(--nav-h-compact);
@@ -592,7 +559,10 @@
   cursor: pointer;
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  transition: all 0.5s var(--ease);
+  transition:
+    background-color 0.4s var(--ease),
+    border-color 0.4s var(--ease),
+    color 0.4s var(--ease);
 }
 .jy .round.fwd {
   background: #fff;
@@ -628,7 +598,289 @@
   transition: width 0.9s var(--ease);
 }
 
-/* -- 4. Where you stay ---------------------------------------------------------- */
+/* -- 1b. Hero, after Ishika's design (3 Nov) ----------------------------------
+   The title in one style, white; the lead line in italic in the house sky
+   blue (her gold, in the house colour); the route as a dotted line of stops. */
+.jy.hero h1 {
+  max-width: 16ch;
+  font-size: clamp(2.75rem, 5.4vw, 6rem);
+  line-height: 0.98;
+}
+.jy .tag {
+  margin: 0 0 1.75rem;
+  color: var(--sky);
+}
+.jy .hroute {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 44rem;
+  margin: 0;
+  padding: 1.375rem 0 0;
+  list-style: none;
+}
+.jy .hroute::before {
+  content: '';
+  position: absolute;
+  left: 0.3rem;
+  right: 0.3rem;
+  top: 0.3rem;
+  border-top: 1.5px dotted rgb(122 204 253 / 0.85);
+}
+.jy .hroute li {
+  position: relative;
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 1px 8px rgb(8 20 28 / 0.6);
+}
+.jy .hroute li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -1.375rem;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  background: var(--sky);
+  box-shadow: 0 0 0 3px rgb(122 204 253 / 0.25);
+}
+.jy .facts {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+.jy .facts dd.tba {
+  color: var(--sky);
+}
+.jy .facts dd.live i {
+  background: var(--sky);
+  box-shadow: none;
+  animation: none;
+}
+
+/* -- 2b. Overview: highlights and Marc's note --------------------------------- */
+.jy.intro .ov-more {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 2.5rem clamp(2.5rem, 6.7vw, 6rem);
+  align-items: start;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  padding-top: clamp(2rem, 3.6vw, 3rem);
+  border-top: 1px solid var(--rule);
+}
+.jy.intro .hl ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.jy.intro .hl li {
+  display: grid;
+  grid-template-columns: 0.875rem minmax(0, 1fr);
+  gap: 0.75rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: #2c3741;
+}
+.jy.intro .hl svg {
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-top: 0.3rem;
+  fill: var(--brand);
+}
+.jy.intro .note {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  gap: 1.25rem;
+  margin: 0;
+  padding: clamp(1.5rem, 2.4vw, 2rem);
+  border: 1px solid var(--rule);
+  border-radius: 1rem;
+  background: #fff;
+}
+.jy.intro .note .pic {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--color-stone);
+}
+.jy.intro .note .pic img {
+  width: 3.5rem;
+  height: auto;
+  margin-bottom: -0.5rem;
+}
+.jy.intro .note blockquote {
+  margin: 0.75rem 0 0.875rem;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.125rem, 1.4vw, 1.3125rem);
+  line-height: 1.5;
+}
+.jy.intro .note figcaption {
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+/* -- 3. The extension banner --------------------------------------------------- */
+.jy.ext {
+  scroll-margin-top: calc(var(--nav-h-compact) + 3.5rem);
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  padding: clamp(4rem, 7.6vw, 7rem) var(--gut);
+  background: var(--deep);
+  color: #fff;
+}
+.jy.ext .lab {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--sky);
+}
+.jy.ext .lab::before {
+  content: '';
+  width: 1.75rem;
+  height: 1px;
+  background: var(--sky);
+}
+.jy.ext h2 {
+  margin-top: 1rem;
+}
+.jy.ext .sub {
+  margin: 0.5rem 0 1.25rem;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.125rem, 1.5vw, 1.375rem);
+  color: var(--sky);
+}
+.jy.ext .tx {
+  max-width: 44ch;
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: #d5e0e7;
+}
+.jy .xroute {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 2rem 0 0;
+  padding: 1.25rem 0 0;
+  list-style: none;
+}
+.jy .xroute::before {
+  content: '';
+  position: absolute;
+  left: 0.3rem;
+  right: 0.3rem;
+  top: 0.3rem;
+  border-top: 1.5px dotted rgb(122 204 253 / 0.7);
+}
+.jy .xroute li {
+  position: relative;
+}
+.jy .xroute li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -1.25rem;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  background: var(--sky);
+}
+.jy .xroute li:last-child {
+  text-align: right;
+}
+.jy .xroute li:last-child::before {
+  left: auto;
+  right: 0;
+}
+.jy .xroute b {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1rem;
+}
+.jy .xroute span,
+.jy .xfacts dt {
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #a9bcc8;
+}
+.jy .xfacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 3rem;
+  margin: 1.75rem 0 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+}
+.jy .xfacts dd {
+  margin: 0.375rem 0 0;
+  font-family: var(--serif);
+  font-size: 1.125rem;
+}
+.jy .xctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.jy .collage {
+  display: grid;
+  gap: 0.75rem;
+  height: clamp(22rem, 36vw, 32rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.jy .collage.n4 {
+  grid-template-columns: 1.25fr 1fr;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+}
+.jy .collage.n4 li:first-child {
+  grid-row: 1 / -1;
+}
+.jy .collage.n3 {
+  grid-template-columns: 1.25fr 1fr;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+.jy .collage.n3 li:first-child {
+  grid-row: 1 / -1;
+}
+.jy .collage li {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.875rem;
+  background: #0b2534;
+}
+.jy .collage li span {
+  position: absolute;
+  left: 0.875rem;
+  bottom: 0.75rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 8px rgb(0 0 0 / 0.6);
+}
+
+/* -- 4. Where you'll stay ---------------------------------------------------------- */
 .jy.stay {
   scroll-margin-top: var(--nav-h-compact);
   padding: clamp(5rem, 9.7vw, 8.75rem) var(--gut);
@@ -638,333 +890,226 @@
 .jy.stay .lab {
   color: var(--lake);
 }
-.jy.stay h2 {
-  color: var(--lake);
-}
-.jy .hgrid {
-  list-style: none;
+.jy.stay .say {
+  max-width: 38ch;
   margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(1rem, 1.67vw, 1.5rem);
-}
-.jy .hc {
-  position: relative;
-  height: clamp(26rem, 34vw, 32rem);
-  overflow: hidden;
-  border-radius: 1.5rem;
-  background: var(--deep);
-  color: #fff;
-  outline-offset: 4px;
-}
-.jy .hc img {
-  transition: transform 2s var(--ease);
-}
-.jy .hc:hover img {
-  transform: scale(1.05);
-}
-.jy .hs {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgb(8 20 28 / 0) 45%, rgb(8 20 28 / 0.82) 100%);
-}
-.jy .hb {
-  position: absolute;
-  left: 1.75rem;
-  right: 1.75rem;
-  bottom: 1.75rem;
-  transition: opacity 0.5s var(--ease);
-}
-.jy .hb .lab {
-  color: var(--sky);
-}
-.jy .hc h3 {
-  margin: 0.625rem 0 0;
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(1.5rem, 2.08vw, 1.875rem);
-  line-height: 1.1;
-}
-.jy .hc:hover .hb,
-.jy .hc:focus-within .hb {
-  opacity: 0;
-}
-.jy .sheet {
-  position: absolute;
-  left: 1rem;
-  right: 1rem;
-  bottom: 1rem;
-  padding: 1.625rem 1.625rem 1.5rem;
-  border-radius: 1rem;
-  background: var(--paper);
-  color: var(--ink);
-  transform: translateY(calc(100% + 1.25rem));
-  transition: transform 1s var(--ease);
-}
-.jy .hc:hover .sheet,
-.jy .hc:focus-within .sheet {
-  transform: none;
-}
-.jy .sheet .lab {
-  color: var(--lake);
-}
-.jy .sheet h3 {
-  margin: 0.625rem 0 0.75rem;
-}
-.jy .sheet p {
-  margin: 0 0 0.5rem;
-  font-family: var(--sans);
-  font-weight: 300;
   font-size: 0.9375rem;
-  line-height: 1.7;
-  color: #3a434a;
-}
-.jy .hint {
-  margin: 1.375rem 0 0;
-  font-family: var(--sans);
-  font-size: 0.75rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  line-height: 1.6;
   color: var(--muted);
 }
+.jy .hgrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 1.7vw, 1.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.jy .hcard {
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 1rem;
+  background: #fff;
+}
+.jy .hcard .ph {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: var(--color-stone);
+}
+.jy .hcard .pill {
+  position: absolute;
+  left: 0.875rem;
+  top: 0.875rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 999px;
+  background: rgb(14 47 66 / 0.78);
+  color: #fff;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.jy .hcard .hb {
+  padding: 1.25rem 1.375rem 1.5rem;
+}
+.jy .hcard h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.125rem, 1.4vw, 1.3125rem);
+  line-height: 1.25;
+}
+.jy .hcard .tbc {
+  margin: 0.375rem 0 0;
+  font-size: 0.75rem;
+  color: #a4552b;
+}
+.jy .hcard a {
+  display: inline-block;
+  margin-top: 0.875rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--lake);
+  text-decoration: none;
+}
+.jy .hcard a:hover {
+  color: var(--brand);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
 
-/* -- 5. Departures & rates ------------------------------------------------------- */
+/* -- 5. Dates & rates ----------------------------------------------------------- */
 .jy.dep {
   scroll-margin-top: var(--nav-h-compact);
-  padding: clamp(5rem, 9.7vw, 8.75rem) var(--gut) clamp(4.5rem, 9vw, 8.125rem);
-  background: var(--deep);
-  color: #fff;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 25rem);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: start;
+  padding: clamp(5rem, 9.7vw, 8.75rem) var(--gut);
+  background: var(--color-stone);
+  color: var(--ink);
 }
 .jy.dep .lab {
-  color: var(--sky);
+  color: var(--lake);
+}
+.jy.dep h2 {
+  margin-bottom: clamp(2rem, 3.4vw, 3rem);
 }
 .jy .tbl {
   width: 100%;
   border-collapse: collapse;
-  font-family: var(--sans);
 }
 .jy .tbl th {
-  padding: 0 1rem 1rem 0;
-  border-bottom: 1px solid var(--line);
+  padding: 0 1rem 0.875rem 0;
+  border-bottom: 1px solid var(--rule);
   text-align: left;
   font-size: 0.6875rem;
   font-weight: 500;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #c9d6de;
+  color: var(--muted);
 }
 .jy .tbl td {
-  padding: 1.625rem 1rem 1.625rem 0;
-  border-bottom: 1px solid var(--line);
-  vertical-align: middle;
+  padding: 1.375rem 1rem 1.375rem 0;
+  border-bottom: 1px solid var(--rule);
   font-size: 0.9375rem;
-  color: #e6edf1;
+  vertical-align: middle;
 }
 .jy .tbl td.big {
   font-family: var(--serif);
-  font-size: clamp(1.25rem, 1.67vw, 1.5rem);
-  color: #fff;
-}
-.jy .tbl td small {
-  display: block;
-  margin-top: 0.25rem;
-  font-family: var(--sans);
-  font-size: 0.8125rem;
-  color: #c9d6de;
+  font-size: clamp(1.125rem, 1.5vw, 1.375rem);
 }
 .jy .tbl td.act {
   padding-right: 0;
   text-align: right;
 }
-.jy .tbl .btn {
-  min-height: 2.875rem;
-  padding: 0 1.375rem;
-}
 .jy .status {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.8125rem;
-  font-weight: 500;
+  padding: 0.375rem 0.75rem;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
 .jy .status i {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
-  background: #4ade80;
+  background: var(--brand);
 }
-.jy .status.priv {
-  color: #c9d6de;
+.jy .btn-outline {
+  min-height: 2.75rem;
+  padding: 0 1.25rem;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  background: transparent;
 }
-.jy .status.priv i {
-  background: var(--sky);
+.jy .btn-outline:hover {
+  background: var(--ink);
+  color: #fff;
 }
-.jy.dep .note {
-  margin: 1.75rem 0 0;
-  max-width: 60ch;
-  font-family: var(--sans);
-  font-weight: 300;
+.jy.dep .circle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  margin-top: 2rem;
+  padding: 1.5rem 1.75rem;
+  border-radius: 1rem;
+  background: #fff;
+}
+.jy.dep .circle p {
+  margin: 0;
   font-size: 0.875rem;
-  line-height: 1.7;
-  color: #c9d6de;
+  color: var(--muted);
 }
-
-/* -- 6. What's included ------------------------------------------------------------ */
-.jy.inc {
-  padding: clamp(5rem, 9.7vw, 8.75rem) var(--gut) clamp(3rem, 5vw, 4.5rem);
-  background: var(--paper);
+.jy.dep .circle p.t {
+  margin-bottom: 0.25rem;
+  font-family: var(--serif);
+  font-size: 1.1875rem;
   color: var(--ink);
 }
-.jy.inc .lab {
-  color: var(--lake);
+.jy.dep .circle .tlink {
+  padding-top: 0;
 }
-.jy.inc h2 {
-  margin-bottom: 2.5rem;
-  color: var(--lake);
-}
-.jy .icards {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.125rem;
-}
-.jy .icard {
+.jy .rate {
   display: flex;
-  align-items: center;
-  gap: 1.125rem;
-  padding: 1.75rem 1.75rem;
-  border-radius: 1.5rem;
-  border: 1px solid var(--rule);
-  background: #fff;
-  transition:
-    transform 0.8s var(--ease),
-    box-shadow 0.8s var(--ease),
-    border-color 0.8s var(--ease);
-}
-.jy .icard:hover {
-  transform: translateY(-0.5rem);
-  border-color: transparent;
-  box-shadow: 0 1.375rem 2.75rem rgb(17 144 203 / 0.16);
-}
-.jy .icard .ico {
-  flex: 0 0 auto;
-  width: 3.5rem;
-  height: 3.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 1rem;
-  background: linear-gradient(140deg, #5cc6f7, var(--brand));
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: clamp(1.75rem, 2.6vw, 2.25rem);
+  border-radius: 1.25rem;
+  background: var(--deep);
   color: #fff;
-  transition: transform 0.8s var(--ease);
+  box-shadow: 0 1.5rem 3rem rgb(14 47 66 / 0.25);
 }
-.jy .icard:hover .ico {
-  transform: rotate(-6deg) scale(1.06);
-}
-.jy .icard svg {
-  width: 1.75rem;
-  height: 1.75rem;
-}
-.jy .icard h3 {
-  margin: 0;
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(1.1875rem, 1.53vw, 1.375rem);
-  line-height: 1.25;
-}
-
-/* -- 7. More journeys ---------------------------------------------------------------- */
-.jy.more {
-  padding: clamp(5rem, 9vw, 8.125rem) var(--gut);
-  background: var(--night);
-  color: #fff;
-}
-.jy.more .lab {
+.jy .rate .lab {
   color: var(--sky);
 }
-.jy .mgrid {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.25rem;
-}
-.jy .mc {
-  position: relative;
-  display: block;
-  height: clamp(26rem, 36vw, 35rem);
-  overflow: hidden;
-  border-radius: 1.5rem;
-  background: var(--tint);
-  color: #fff;
-  text-decoration: none;
-}
-.jy .mc img {
-  transition: transform 1.8s var(--ease);
-}
-.jy .mc:hover img {
-  transform: scale(1.05);
-}
-.jy .ms {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 35%, var(--tint) 100%);
-  opacity: 0.95;
-}
-.jy .mb {
-  position: absolute;
-  left: 1.625rem;
-  right: 1.625rem;
-  bottom: 1.625rem;
-}
-.jy .mb .lab {
-  color: #dff2fc;
-}
-.jy .mc h3 {
-  margin: 0.625rem 0;
+.jy .rate .price {
+  margin: 0.25rem 0 0.25rem;
   font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(1.5rem, 2.08vw, 1.875rem);
+  font-size: clamp(1.75rem, 2.4vw, 2.25rem);
   line-height: 1.1;
 }
-.jy .mm {
-  display: block;
-  margin-bottom: 1rem;
-  font-family: var(--sans);
-  font-size: 0.8125rem;
-  color: #e6edf1;
+.jy .rate .sm {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #c9d6de;
 }
-.jy .go {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
-  border-radius: 999px;
-  background: #fff;
-  color: var(--ink);
-  font-family: var(--sans);
+.jy .rate .with {
+  margin: 1rem 0 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+.jy .rate .with p {
+  margin: 0.375rem 0 0;
+  font-size: 0.875rem;
+  color: #e3ebf0;
+}
+.jy .rate .btn {
+  margin-top: 0.625rem;
+}
+.jy .rate .fine {
+  margin: 1rem 0 0;
   font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  transition:
-    background-color 0.5s var(--ease),
-    color 0.5s var(--ease);
-}
-.jy .mc:hover .go {
-  background: var(--brand);
-  color: #fff;
+  line-height: 1.6;
+  color: #a9bcc8;
 }
 
 /* -- Tablet and phone ------------------------------------------------------------------ */
 @media (max-width: 1100px) {
-  .jy .hgrid,
-  .jy .icards {
+  .jy .hgrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .jy.ext,
+  .jy.dep {
+    grid-template-columns: minmax(0, 1fr);
   }
   .jy .facts {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1006,9 +1151,16 @@
     margin-top: 0;
   }
   .jy .hgrid,
-  .jy .icards,
-  .jy .mgrid {
+  .jy.intro .ov-more,
+  .jy.intro .hl ul {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .jy .hroute {
+    flex-wrap: wrap;
+    row-gap: 2rem;
+  }
+  .jy .collage {
+    height: 20rem;
   }
   .jy .pcard {
     transform: translateX(calc(-50% + var(--off) * 100%));
@@ -1024,7 +1176,7 @@
   }
   .jy .tbl tr {
     padding: 1.25rem 0;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid var(--rule);
   }
   .jy .tbl td {
     padding: 0.375rem 0;
@@ -1037,7 +1189,7 @@
     font-size: 0.6875rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: #c9d6de;
+    color: var(--muted);
   }
   .jy .tbl td.act {
     padding-top: 0.875rem;
@@ -1046,15 +1198,27 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .jy .hero-c > *,
-  .jy .mtrack,
   .jy .facts dd.live i {
     animation: none;
   }
   .jy .pcard,
-  .jy .plbg,
-  .jy .icard,
-  .jy .hc img,
-  .jy .mc img {
+  .jy .plbg {
     transition: none;
   }
+}
+
+/* The stays' line sits under the heading, on one line on a desktop. */
+.jy.stay .head {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.jy.stay .say {
+  max-width: none;
+}
+
+/* Figures line up in the dates table and the rate (UX: tabular numbers). */
+.jy .tbl td,
+.jy .rate .price {
+  font-variant-numeric: tabular-nums;
 }

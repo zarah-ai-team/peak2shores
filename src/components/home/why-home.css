@@ -243,7 +243,6 @@
   scale: 1.07;
 }
 
-
 /* The closing card: the brighter brand blue, its words and the way on
    floating in the middle. */
 .hc-hw .card.cta {
@@ -776,7 +775,12 @@
   /* In flow on a phone the words sit over the photograph's top, so the
      shade darkens evenly, and the four words are a size a thumb can choose. */
   .hc-rh .rshade {
-    background: linear-gradient(180deg, rgb(8 20 28 / 0.7) 0%, rgb(8 20 28 / 0.35) 45%, rgb(8 20 28 / 0.8) 100%);
+    background: linear-gradient(
+      180deg,
+      rgb(8 20 28 / 0.7) 0%,
+      rgb(8 20 28 / 0.35) 45%,
+      rgb(8 20 28 / 0.8) 100%
+    );
   }
   .hc-rh .rw em {
     font-size: clamp(3rem, 14vw, 4.5rem);

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Faq } from '@/components/ui/Faq';
-import { andList } from '@/lib/site';
+import { andList, site } from '@/lib/site';
 import { planFaq } from '@/lib/data/faq';
 import { Frame } from '@/components/ui/Frame';
 import { Reveal } from '@/components/motion/Reveal';
@@ -68,7 +68,7 @@ export default async function PlanPage() {
               tone="stone"
               className="max-w-[35rem]"
               rows={[
-                { label: 'Group size', value: `Max. ${site.maxGuests} guests` },
+                { label: 'Group size', value: 'Just your party' },
                 { label: 'Where', value: andList.format(destinations.map((d) => d.country)) },
                 { label: 'Lead time', value: 'Six months is comfortable; less is often possible' },
               ]}
@@ -93,6 +93,9 @@ export default async function PlanPage() {
 
       <EnquiryForm
         journeyOptions={titles}
+        journeySlugs={Object.fromEntries(
+          journeys.filter((j) => titles.includes(j.title)).map((j) => [j.slug, j.title]),
+        )}
         headline="Tell us a little. We’ll call you, not the other way round."
         intro="Whether it’s a departure on the list or something we have not planned yet, this is where it starts. Inquiring holds nothing and commits you to nothing."
       />
@@ -140,7 +143,7 @@ function Ledger({ journeys }: { journeys: JourneySummary[] }) {
               </th>
               <td className="meta py-6 pr-6 text-body">{journey.departureWindow}</td>
               <td className="meta py-6 pr-6 text-body">{journey.days}</td>
-              <td className="meta py-6 pr-6 text-body">Max. {journey.groupMax}</td>
+              <td className="meta py-6 pr-6 text-body">{site.groupSize}</td>
               <td className="meta py-6 pr-6 text-body">
                 {journey.priceFrom ? (
                   <>
@@ -173,7 +176,7 @@ function Ledger({ journeys }: { journeys: JourneySummary[] }) {
               </div>
               <div>
                 <dt className="kicker-sm mb-1">Group</dt>
-                <dd className="m-0">Max. {journey.groupMax}</dd>
+                <dd className="m-0">{site.groupSize}</dd>
               </div>
               <div>
                 <dt className="kicker-sm mb-1">From</dt>

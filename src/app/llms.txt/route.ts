@@ -17,7 +17,7 @@ export async function GET() {
     '',
     `> ${site.description}`,
     '',
-    `${site.name} (${site.legalName}) designs small luxury group journeys of never more than ${site.maxGuests} guests, ` +
+    `${site.name} (${site.legalName}) designs small luxury group journeys for intimate groups of travelers, ` +
       `each personally curated by founder ${site.founder.name}, plus private journeys on the traveler's own dates. ` +
       `Based in Miami, with Swiss roots. Founded ${site.founded}. ` +
       'Prices are per person in US dollars. Inquiring commits the traveler to nothing.',
@@ -27,7 +27,7 @@ export async function GET() {
     ...journeys.map(
       (j) =>
         `- [${j.title}](${url(`/journeys/${j.slug}`)}): ${j.country}, ${j.region}. ${j.days} days, ` +
-        `${j.departureISO ? `departs ${j.departureWindow}` : 'dates to be announced'}, ${j.priceFrom ? `from ${j.priceFrom} per person` : 'rates to be announced'}, maximum ${j.groupMax} guests` +
+        `${j.departureISO ? `departs ${j.departureWindow}` : 'dates to be announced'}, ${j.priceFrom ? `from ${j.priceFrom} per person` : 'rates to be announced'}, small group` +
         `${j.hostedByMarc ? ', hosted by Marc' : ''}${j.status && j.status !== 'open' ? ` (${j.status.replace('-', ' ')})` : ''}. ${j.lead}`,
     ),
     '',

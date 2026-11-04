@@ -85,7 +85,14 @@ export function ExperienceWords() {
         </ul>
         {/* Says the words are choices, not a list. */}
         <p className="rhint" aria-hidden>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V10" />
             <path d="M12 9.5a1.5 1.5 0 0 1 3 0V11" />
             <path d="M15 10.5a1.5 1.5 0 0 1 3 0v3.5a6 6 0 0 1-6 6h-.7a6 6 0 0 1-4.6-2.2L4.4 15a1.6 1.6 0 0 1 2.4-2.1L9 15" />

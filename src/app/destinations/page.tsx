@@ -4,11 +4,10 @@ import '@/components/home/home.css';
 import '@/components/destinations/destinations.css';
 import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal';
 import { StatusTag } from '@/components/ui/StatusTag';
-import { ExpertButton } from '@/components/home/ExpertButton';
 import { journeyTagStatus } from '@/components/pages/journeyStatus';
 import { getDestinations, pageMetadata, type Destination } from '@/lib/content';
 import { getMedia } from '@/lib/media';
-import { andList, site } from '@/lib/site';
+import { andList } from '@/lib/site';
 import { RATES_TBA } from '@/lib/journeys';
 
 export const metadata = pageMetadata({
@@ -23,7 +22,7 @@ export const metadata = pageMetadata({
 export const revalidate = 3600;
 
 /**
- * Destinations, in the homepage's language: a full-bleed opening with the
+ * Destinations, in the homepage's language: an opening on paper with the
  * countries as a way in, the statement set large on paper, then each country
  * as a photograph tile with its journeys beside it as cards, and a closing invitation over a photograph. Every fact is
  * derived from the catalog — nothing here is invented.
@@ -38,45 +37,49 @@ export default async function DestinationsPage() {
 
   return (
     <div className="hc dz">
-      {/* 01 — The opening. */}
-      <section data-hero aria-labelledby="dz-title" className="hc-hero dz-hero">
-        <div className="hv fill on">
+      {/* 01 — The opening, as on the Journeys page: the name and the line on
+          paper (only the homepage opens on a full-bleed photograph), then the
+          photograph in a frame with the countries along its foot. */}
+      <section aria-labelledby="dz-title" className="dz-open">
+        <div className="dz-open-head">
+          <div>
+            <p className="dz-open-lab">Destinations</p>
+            <h1 id="dz-title">A few places, known properly.</h1>
+            <p className="dz-open-line">Where mountains meet water.</p>
+          </div>
+          <div className="dz-open-say">
+            <p>The places Peaks2Shores returns to, and the journeys that go there.</p>
+            <div className="ctas">
+              <a className="btn btn-ink" href="#where">
+                Explore destinations
+              </a>
+              <Link className="dz-open-link" href="/journeys">
+                View all journeys <span aria-hidden>→</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+        <div className="dz-frame">
           {hero.src && (
             <Image
               src={hero.src}
               alt={hero.alt ?? ''}
               fill
               priority
-              sizes="100vw"
-              className="fill dz-settle"
+              sizes="(min-width: 1600px) 1600px, 100vw"
+              className="fill"
             />
           )}
+          <span className="dz-frame-shade" aria-hidden />
+          <nav className="dz-index" aria-label="Destinations on this page">
+            {places.map((place, i) => (
+              <a key={place.slug} href={`#${place.slug}`}>
+                <span>{pad(i + 1)}</span>
+                {place.country}
+              </a>
+            ))}
+          </nav>
         </div>
-        <div className="shade" />
-        <div className="copy">
-          <div className="lab eb dz-eb">
-            <i />
-            Where mountains meet water
-          </div>
-          <h1 id="dz-title">A few places, known properly.</h1>
-          <p>The places Peaks2Shores returns to, and the journeys that go there.</p>
-          <div className="ctas">
-            <a className="btn btn-light" href="#where">
-              Explore destinations
-            </a>
-            <Link className="btn btn-line" href="/journeys">
-              View all journeys
-            </Link>
-          </div>
-        </div>
-        <nav className="dz-index" aria-label="Destinations on this page">
-          {places.map((place, i) => (
-            <a key={place.slug} href={`#${place.slug}`}>
-              <span>{pad(i + 1)}</span>
-              {place.country}
-            </a>
-          ))}
-        </nav>
       </section>
 
       {/* 02 — The statement, and what it adds up to. */}
@@ -97,8 +100,8 @@ export default async function DestinationsPage() {
             <span>Small group journeys</span>
           </RevealItem>
           <RevealItem as="li" distance={12}>
-            <b>{site.maxGuests}</b>
-            <span>Guests at most, on any of them</span>
+            <b>Small</b>
+            <span>Groups, on every journey</span>
           </RevealItem>
         </RevealGroup>
       </section>
@@ -135,7 +138,7 @@ export default async function DestinationsPage() {
           )}
         </div>
         <div className="in">
-          <div className="lab">Private travel</div>
+          <div className="lab">Bespoke Private Travel</div>
           <h2 id="dz-close-title">Or a journey with only your names on the list.</h2>
           <p>
             Families, friends, a milestone. The same hotels, the same people on the ground, on your
@@ -143,16 +146,14 @@ export default async function DestinationsPage() {
           </p>
           <div className="ctarow">
             <Link className="btn btn-light" href="/plan#private">
-              Plan a private journey
+              Bespoke Private Travel
             </Link>
             <Link className="tlink light" href="/plan#contact">
-              Speak to a travel designer →
+              Connect with our team →
             </Link>
           </div>
         </div>
       </section>
-
-      <ExpertButton />
     </div>
   );
 }

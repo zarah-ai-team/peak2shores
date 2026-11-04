@@ -2,10 +2,8 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Arrow } from '@/components/ui/Button';
-import type { JourneySummary } from '@/lib/content';
-import { JourneyGlobe } from './JourneyGlobe';
 import './collection.css';
 
 /** One journey as a card on the Journeys page — plain data, built on the server. */
@@ -15,11 +13,11 @@ export type CollectionCard = {
   region: string;
   tagline: string;
   blurb: string;
-  /** The destinations it counts under, for the tabs and the filter. */
+  /** The destinations it counts under, for the filter. */
   dest: string[];
   inspire: string[];
   days?: number;
-  /** "Max. 18 guests" and, once set, the departure and the rate. */
+  /** The length, "Small group" and, once set, the departure. */
   facts: string[];
   priceFrom?: string;
   status: string;
@@ -43,58 +41,45 @@ const shows: [Show, string][] = [
 ];
 
 /**
- * The Journeys page, after the design sample "Journeys listing as products":
- *
- * 1. A full-bleed film with the page's name, its line and two ways on, and a
- *    row of destination tabs along its foot — choosing one filters the
- *    collection below and brings it into view.
- * 2. The collection, on paper: a heading that counts what is shown, a sort,
- *    a light filter panel of chips (destination, availability, inspiration),
- *    then the journeys as tall product cards — photographs to browse, the
- *    card settling into the colour of the place, the booking state, the
- *    facts as pills and a white button in. The flipbook's coming journeys sit
- *    among them, and a private-travel card closes the grid.
- * 3. Where we go: the globe, its country the same choice as the tabs.
+ * The Collection, after Ishika's notes of 3 November 2026: the label and
+ * heading with the sort beside them, then one white panel holding the three
+ * filters as dropdowns in a row (Destination · Availability · What inspires
+ * you), each option counting its journeys and greyed when it has none, a
+ * Clear link while any filter is on, and at the row's end the count and a
+ * List / Map switch (Map comes in a later phase). Then the journeys as tall
+ * product cards.
  */
-export function JourneyCollection({
-  cards,
-  journeys,
-  film,
-}: {
-  cards: CollectionCard[];
-  /** For the globe. */
-  journeys: JourneySummary[];
-  film: { src: string; poster: string; label: string };
-}) {
+export function JourneyCollection({ cards }: { cards: CollectionCard[] }) {
   const [dest, setDest] = useState('All');
   const [show, setShow] = useState<Show>('all');
   const [insp, setInsp] = useState<string[]>([]);
   const [sort, setSort] = useState<Sort>('featured');
-  const [hover, setHover] = useState<string | null>(null);
-  const colRef = useRef<HTMLElement>(null);
 
-  const dests = useMemo(() => {
-    const all = Array.from(new Set(cards.flatMap((c) => c.dest)));
-    return ['All', ...all];
-  }, [cards]);
+  const dests = useMemo(() => ['All', ...new Set(cards.flatMap((c) => c.dest))], [cards]);
   const inspirations = useMemo(
     () => Array.from(new Set(cards.flatMap((c) => c.inspire))).sort(),
     [cards],
   );
-  const countDest = (d: string) =>
-    d === 'All' ? cards.length : cards.filter((c) => c.dest.includes(d)).length;
+
+  /* Whether a card passes the filters, leaving one of them out (so each menu
+     counts what choosing an option would show). */
+  const pass = (c: CollectionCard, f: { dest?: string; show?: Show; insp?: string[] } = {}) => {
+    const d = f.dest ?? dest;
+    const s = f.show ?? show;
+    const i = f.insp ?? insp;
+    return (
+      (d === 'All' || c.dest.includes(d)) &&
+      (s === 'all' || (s === 'soon') === Boolean(c.soon)) &&
+      i.every((x) => c.inspire.includes(x))
+    );
+  };
 
   const shown = useMemo(() => {
-    const list = cards.filter(
-      (c) =>
-        (dest === 'All' || c.dest.includes(dest)) &&
-        (show === 'all' || (show === 'soon') === Boolean(c.soon)) &&
-        insp.every((i) => c.inspire.includes(i)),
-    );
+    const list = cards.filter((c) => pass(c));
     if (sort === 'featured') return list;
-    // Journeys without a length (the coming ones) sort last either way.
     const len = (c: CollectionCard) => c.days ?? (sort === 'shortest' ? 999 : -1);
     return [...list].sort((a, b) => (sort === 'shortest' ? len(a) - len(b) : len(b) - len(a)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cards, dest, show, insp, sort]);
 
   const anyOn = dest !== 'All' || show !== 'all' || insp.length > 0;
@@ -103,91 +88,14 @@ export function JourneyCollection({
     setShow('all');
     setInsp([]);
   };
-  const pickDest = (d: string, scroll = false) => {
-    setDest(d);
-    if (scroll) colRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
-  const bookable = cards.filter((c) => !c.soon).length;
-  const title =
-    dest === 'All'
-      ? `${cards.length} journeys, ${bookable} now booking.`
-      : `${dest}, ${countDest(dest)} ${countDest(dest) === 1 ? 'journey' : 'journeys'}.`;
-  const tabIndex = Math.max(0, dests.indexOf(dest));
-
-  // The globe knows only countries with a journey page.
-  const globeCountries = new Set(journeys.flatMap((j) => j.country.split(' & ')));
 
   return (
     <div className="jx">
-      {/* 1 — The film, the name, and the destinations along its foot. */}
-      <section className="hero" data-hero aria-labelledby="jx-h1">
-        <video
-          className="fill"
-          src={film.src}
-          poster={film.poster}
-          autoPlay
-          muted
-          loop
-          playsInline
-          aria-hidden
-        />
-        <div className="hshade" aria-hidden />
-        <div className="hc">
-          <p className="lab">Small Luxury Group Journeys</p>
-          <h1 id="jx-h1">
-            A short list, <em>on purpose.</em>
-          </h1>
-          <p className="lede">
-            Intimate journeys for never more than 18 guests — exceptional places, meaningful
-            experiences and the joy of discovering the world together, each one somewhere Marc knows
-            well.
-          </p>
-          <div className="hctas">
-            <a className="btn btn-light" href="#collection">
-              Browse the journeys <Arrow />
-            </a>
-            <Link className="btn btn-line" href="/plan#private">
-              Design a private journey
-            </Link>
-          </div>
-        </div>
-        <p className="hclip" aria-hidden>
-          <i />
-          {film.label}
-        </p>
-        <div
-          className="dtabs"
-          role="group"
-          aria-label="Choose a destination"
-          style={{ ['--n' as string]: dests.length }}
-        >
-          <span
-            className="dhi"
-            aria-hidden
-            style={{ transform: `translateX(${tabIndex * 100}%)` }}
-          />
-          {dests.map((d) => (
-            <button
-              key={d}
-              type="button"
-              className={d === dest ? 'on' : undefined}
-              aria-pressed={d === dest}
-              onClick={() => pickDest(d, true)}
-            >
-              {d}
-              <b>{countDest(d)}</b>
-            </button>
-          ))}
-        </div>
-      </section>
-
-      {/* 2 — The collection. */}
-      <section className="col" id="collection" ref={colRef} aria-labelledby="jx-col">
+      <section className="col" id="collection" aria-labelledby="jx-col">
         <div className="colh">
           <div>
-            <p className="lab">The collection</p>
-            <h2 id="jx-col">{title}</h2>
+            <p className="lab">Our journeys</p>
+            <h2 id="jx-col">The Collection</h2>
           </div>
           <div className="sort">
             Sort
@@ -207,80 +115,72 @@ export function JourneyCollection({
           </div>
         </div>
 
-        <div className="fpanel" role="group" aria-label="Filter journeys">
-          <p className="fl">Destination</p>
-          <div className="chips">
-            {dests.map((d) => (
-              <button
-                key={d}
-                type="button"
-                className={`chip${d === dest ? ' on' : ''}`}
-                aria-pressed={d === dest}
-                onClick={() => pickDest(d)}
-              >
-                {d}
-                <b>{countDest(d)}</b>
-              </button>
-            ))}
-          </div>
-          <p className="fl">Availability</p>
-          <div className="chips">
-            {shows.map(([k, t]) => (
-              <button
-                key={k}
-                type="button"
-                className={`chip${show === k ? ' on' : ''}`}
-                aria-pressed={show === k}
-                onClick={() => setShow(k)}
-              >
-                {k !== 'all' && <i className={`dot ${k}`} aria-hidden />}
-                {t}
-              </button>
-            ))}
-          </div>
+        <div className="fbar" role="group" aria-label="Filter journeys">
+          <Menu
+            label="Destination"
+            value={dest === 'All' ? 'All' : dest}
+            options={dests.map((d) => ({
+              key: d,
+              label: d,
+              count: cards.filter((c) => pass(c, { dest: d })).length,
+              on: d === dest,
+            }))}
+            onPick={(d) => setDest(d)}
+          />
+          <Menu
+            label="Availability"
+            value={shows.find(([k]) => k === show)?.[1] ?? 'All'}
+            options={shows.map(([k, t]) => ({
+              key: k,
+              label: t,
+              count: cards.filter((c) => pass(c, { show: k })).length,
+              on: k === show,
+            }))}
+            onPick={(k) => setShow(k as Show)}
+          />
           {inspirations.length > 0 && (
-            <>
-              <p className="fl">What inspires you</p>
-              <div className="chips">
-                {inspirations.map((i) => {
-                  const on = insp.includes(i);
-                  return (
-                    <button
-                      key={i}
-                      type="button"
-                      className={`chip${on ? ' on' : ''}`}
-                      aria-pressed={on}
-                      onClick={() =>
-                        setInsp((cur) => (on ? cur.filter((x) => x !== i) : [...cur, i]))
-                      }
-                    >
-                      {i}
-                    </button>
-                  );
-                })}
-              </div>
-            </>
+            <Menu
+              label="What inspires you"
+              multi
+              value={
+                insp.length === 0 ? 'All' : insp.length === 1 ? insp[0] : `${insp.length} chosen`
+              }
+              options={inspirations.map((i) => ({
+                key: i,
+                label: i,
+                count: cards.filter((c) =>
+                  pass(c, { insp: insp.includes(i) ? insp : [...insp, i] }),
+                ).length,
+                on: insp.includes(i),
+              }))}
+              onPick={(i) =>
+                setInsp((cur) => (cur.includes(i) ? cur.filter((x) => x !== i) : [...cur, i]))
+              }
+            />
           )}
-        </div>
-
-        <div className="fsum">
-          <span role="status" aria-live="polite">
-            Showing {shown.length} of {cards.length} journeys
-          </span>
           {anyOn && (
-            <button type="button" onClick={clearAll}>
-              Clear all
+            <button type="button" className="fclear" onClick={clearAll}>
+              Clear
             </button>
           )}
+          <div className="fend">
+            <span role="status" aria-live="polite">
+              Showing {shown.length} of {cards.length} journeys
+            </span>
+            <div className="seg view" role="group" aria-label="View">
+              <button type="button" className="on" aria-pressed>
+                List
+              </button>
+              <button type="button" disabled title="The map view is coming soon">
+                Map
+              </button>
+            </div>
+          </div>
         </div>
 
         <ul className="grid">
           {shown.map((c, i) => (
-            <li
-              key={c.slug}
-              onPointerEnter={() => setHover(c.soon ? null : c.slug)}
-              onPointerLeave={() => setHover(null)}
-            >
+            <li key={c.slug}>
               <ProductCard card={c} priority={i < 3} />
             </li>
           ))}
@@ -292,37 +192,84 @@ export function JourneyCollection({
               </button>
             </li>
           )}
-          <li className="priv">
-            <Image
-              className="fill"
-              src="/images/home/way-private-venice.jpg"
-              alt=""
-              fill
-              sizes="(min-width: 900px) 33vw, 100vw"
-            />
-            <div className="in">
-              <p className="lab">Private travel</p>
-              <h3>Or a journey with only your names on the list.</h3>
-              <p>
-                Families, friends, a milestone. The same hotels, the same people on the ground, on
-                your dates. Start with a conversation, not a form.
-              </p>
-              <Link className="pbtn" href="/plan#private">
-                Plan your journey <Arrow />
-              </Link>
-            </div>
-          </li>
         </ul>
       </section>
+    </div>
+  );
+}
 
-      {/* 3 — Where we go: the globe, its country the same choice as the tabs. */}
-      <JourneyGlobe
-        journeys={journeys}
-        selected={globeCountries.has(dest) ? dest : undefined}
-        onSelect={(country) => pickDest(dest === country ? 'All' : country)}
-        hover={hover}
-        onHover={setHover}
-      />
+type Option = { key: string; label: string; count: number; on: boolean };
+
+/** A filter as a dropdown: its name, what is chosen, and the options with their counts. */
+function Menu({
+  label,
+  value,
+  options,
+  onPick,
+  multi = false,
+}: {
+  label: string;
+  value: string;
+  options: Option[];
+  onPick: (key: string) => void;
+  multi?: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const box = useRef<HTMLDivElement>(null);
+  const id = useId();
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    const onDown = (e: PointerEvent) => {
+      if (box.current && !box.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('pointerdown', onDown);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', onDown);
+    };
+  }, [open]);
+
+  return (
+    <div className={`fmenu${open ? ' open' : ''}`} ref={box}>
+      <button
+        type="button"
+        className="fbtn"
+        aria-expanded={open}
+        aria-controls={id}
+        onClick={() => setOpen(!open)}
+      >
+        <small>{label}</small>
+        <span>{value}</span>
+        <svg viewBox="0 0 24 24" aria-hidden>
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      </button>
+      <ul className="flist" id={id} role="list" hidden={!open}>
+        {options.map((o) => {
+          const empty = o.count === 0 && !o.on;
+          return (
+            <li key={o.key}>
+              <button
+                type="button"
+                className={o.on ? 'on' : undefined}
+                aria-pressed={o.on}
+                disabled={empty}
+                onClick={() => {
+                  onPick(o.key);
+                  if (!multi) setOpen(false);
+                }}
+              >
+                {multi && <i className="box" aria-hidden />}
+                {o.label}
+                <b>{o.count}</b>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
@@ -331,7 +278,7 @@ export function JourneyCollection({
  * A journey as a product card: its photographs to browse at the top, the card
  * settling into the colour of the place, the region and booking state on it,
  * then the name with the rate, the tagline, the line, the facts as pills, and
- * a white button in. A coming journey says so, and asks for interest instead.
+ * a white button in.
  */
 function ProductCard({ card: c, priority }: { card: CollectionCard; priority: boolean }) {
   const [shot, setShot] = useState(0);
@@ -402,7 +349,7 @@ function ProductCard({ card: c, priority }: { card: CollectionCard; priority: bo
           href={href}
           aria-label={`${c.soon ? 'Register your interest in' : 'View the journey'} ${c.title}`}
         >
-          {c.soon ? 'Register your interest' : 'View the journey & reserve'} <Arrow />
+          {c.soon ? 'Register your interest' : 'View the journey'} <Arrow />
         </Link>
       </div>
     </article>

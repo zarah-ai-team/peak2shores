@@ -63,9 +63,7 @@ export function FounderStory() {
         </figcaption>
       </figure>
       <div className="c">
-        <p className="eyebrow">
-          The Peaks2Shores story
-        </p>
+        <p className="eyebrow">The Peaks2Shores story</p>
         <h2 id="founder-title">{founderStory.headline}</h2>
         {founderStory.body.map((p) => (
           <p key={p.slice(0, 24)} className="body">

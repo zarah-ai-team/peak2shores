@@ -130,6 +130,7 @@ export function WaysToTravel() {
 
       <div
         ref={rail}
+        data-rail
         className="rail"
         onPointerEnter={(e) => e.pointerType === 'mouse' && setPaused(true)}
         onPointerLeave={() => setPaused(false)}

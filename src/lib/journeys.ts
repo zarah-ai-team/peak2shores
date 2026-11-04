@@ -121,7 +121,34 @@ export type JourneyFlyer = {
   /** Shown only once Marc has approved the wording. */
   marcNote?: { quote: string; approved: boolean };
   parts: { title?: string; subtitle?: string; stays: FlyerStay[] }[];
-  hotels: { place: string; name: string; url?: string; credit?: string }[];
+  /** `unconfirmed`: Marc has still to confirm the hotel; the page marks it. */
+  hotels: { place: string; name: string; url?: string; credit?: string; unconfirmed?: boolean }[];
+  /** The overview's starred highlights, two columns (launch brief stay texts). */
+  highlights?: string[];
+  /**
+   * The journey this one pairs with, as the slim last row of the itinerary
+   * and a full-width banner after it ("Italian extension" in the menu).
+   */
+  extension?: {
+    /** The in-page menu's name for the banner. */
+    tab: string;
+    kicker: string;
+    /** The row: "Continue from Milan with Italy Uncovered". */
+    row: string;
+    /** "+8 nights" */
+    tag: string;
+    title: string;
+    sub: string;
+    text: string;
+    route: { place: string; nights: number }[];
+    /** "Adds 9 days · 8 nights" */
+    adds: string;
+    /** "Swiss Elegance + Italy Uncovered" */
+    combo: string;
+    slug: string;
+    cta: string;
+    photos: { media: MediaKey; label: string }[];
+  };
   /** A box pointing to the journey this one continues into, or follows. */
   link?: {
     kicker: string;
@@ -213,7 +240,7 @@ export type Journey = {
 
 /** The Peaks2Shores Experience: what every journey includes (launch brief). */
 const experience = [
-  'Intimate groups (max. 18 guests)',
+  'Intimate groups',
   'Private transfers',
   'Private guiding',
   'Exceptional hotels',
@@ -257,7 +284,7 @@ const allJourneys: Journey[] = [
     days: 13,
     departure: DATES_TBA,
     departureWindow: DATES_TBA,
-    group: 'Max. 18 guests',
+    group: 'Small group',
     groupMax: 18,
     hostedByMarc: false,
     who: [],
@@ -270,7 +297,7 @@ const allJourneys: Journey[] = [
     seo: {
       title: 'Swiss Elegance, Italian Lakes & Milanese Flair',
       description:
-        '13 days from Lucerne to Milan for no more than 18 guests: Swiss lakes and Alps, Lake Maggiore and Milan, with an optional 8-night Italian extension.',
+        '13 days from Lucerne to Milan for a small group: Swiss lakes and Alps, Lake Maggiore and Milan, with an optional 8-night Italian extension.',
     },
     flyer: {
       included: experience,
@@ -361,13 +388,65 @@ const allJourneys: Journey[] = [
       ],
       // Zermatt: Marc to confirm the hotel.
       hotels: [
-        { place: 'Lucerne', name: 'Mandarin Oriental Palace, Luzern' },
-        { place: 'Grindelwald', name: 'Hotel Bergwelt Grindelwald' },
-        { place: 'Montreux', name: 'Fairmont Le Montreux Palace' },
-        { place: 'Zermatt', name: 'Grand Hotel Zermatterhof' },
-        { place: 'Stresa', name: 'Hotel La Palma' },
-        { place: 'Milan', name: 'Palazzo Cordusio Gran Meliá' },
+        {
+          place: 'Lucerne',
+          name: 'Mandarin Oriental Palace, Luzern',
+          url: 'https://www.mandarinoriental.com/en/luzern/palace',
+        },
+        {
+          place: 'Grindelwald',
+          name: 'Hotel Bergwelt Grindelwald',
+          url: 'https://www.bergwelt.com/',
+        },
+        {
+          place: 'Montreux',
+          name: 'Fairmont Le Montreux Palace',
+          url: 'https://www.fairmont.com/montreux/',
+        },
+        {
+          place: 'Zermatt',
+          name: 'Grand Hotel Zermatterhof',
+          url: 'https://www.zermatterhof.ch/',
+          unconfirmed: true,
+        },
+        { place: 'Stresa', name: 'Hotel La Palma', url: 'https://www.hlapalma.it/' },
+        {
+          place: 'Milan',
+          name: 'Palazzo Cordusio Gran Meliá',
+          url: 'https://www.melia.com/en/hotels/italy/milan/palazzo-cordusio-gran-melia',
+        },
       ],
+      highlights: [
+        'Cross Lucerne’s iconic Chapel Bridge and cruise Lake Lucerne, surrounded by sweeping mountain scenery',
+        'Ride legendary mountain railways and cable cars into the Alps beneath the Eiger',
+        'Savor exceptional Swiss wines among the UNESCO-listed Lavaux vineyards',
+        'Take in the Matterhorn from Zermatt’s charming car-free village',
+        'Cruise Lake Maggiore to the Borromean Islands and their palace gardens',
+        'Celebrate the journey with a farewell evening in the heart of Milan',
+      ],
+      extension: {
+        tab: 'Italian extension',
+        kicker: 'Optional 8-night Italian extension',
+        row: 'Continue from Milan with Italy Uncovered',
+        tag: '+8 nights',
+        title: 'Italy Uncovered',
+        sub: 'Emilia-Romagna, Lake Garda & Venice',
+        text: 'Continue from Milan into Bologna’s culinary traditions, Italy’s supercar heritage, Lake Garda and a Venetian finale. Also available as a journey on its own.',
+        route: [
+          { place: 'Bologna & Emilia-Romagna', nights: 3 },
+          { place: 'Lake Garda', nights: 2 },
+          { place: 'Venice', nights: 3 },
+        ],
+        adds: 'Adds 9 days · 8 nights',
+        combo: 'Swiss Elegance + Italy Uncovered',
+        slug: 'the-italian-experience',
+        cta: 'Explore Italy Uncovered',
+        photos: [
+          { media: 'home-jr-italy', label: 'Bologna' },
+          { media: 'ie-garda', label: 'Lake Garda' },
+          { media: 'ie-venice', label: 'Venice' },
+        ],
+      },
       link: {
         kicker: 'Optional 8-Night Italian Extension',
         slug: 'the-italian-experience',
@@ -401,7 +480,7 @@ const allJourneys: Journey[] = [
     days: 9,
     departure: DATES_TBA,
     departureWindow: DATES_TBA,
-    group: 'Max. 18 guests',
+    group: 'Small group',
     groupMax: 18,
     hostedByMarc: false,
     who: [],
@@ -414,7 +493,7 @@ const allJourneys: Journey[] = [
     seo: {
       title: 'Italy Uncovered: Emilia-Romagna, Lake Garda & Venice',
       description:
-        '9 days through Bologna, Motor Valley, Lake Garda and Venice for no more than 18 guests, on its own or after Swiss Elegance.',
+        '9 days through Bologna, Motor Valley, Lake Garda and Venice for a small group, on its own or after Swiss Elegance.',
     },
     flyer: {
       included: experience,
@@ -485,6 +564,33 @@ const allJourneys: Journey[] = [
         { place: 'Lake Garda', name: 'Quellenhof Luxury Resort Lazise' },
         { place: 'Venice', name: 'JW Marriott Venice Resort & Spa' },
       ],
+      extension: {
+        tab: 'Swiss Elegance',
+        kicker: 'Travel it after Swiss Elegance',
+        row: 'Begin in Lucerne with Swiss Elegance',
+        tag: '+12 nights',
+        title: 'Swiss Elegance, Italian Lakes & Milanese Flair',
+        sub: 'From Lucerne to Milan',
+        text: 'From storybook Swiss villages and the high Alps to the shimmering Italian Lakes, ending in stylish Milan. Italy Uncovered continues from there.',
+        route: [
+          { place: 'Lucerne', nights: 3 },
+          { place: 'Grindelwald', nights: 2 },
+          { place: 'Montreux', nights: 1 },
+          { place: 'Zermatt', nights: 2 },
+          { place: 'Stresa', nights: 2 },
+          { place: 'Milan', nights: 2 },
+        ],
+        adds: 'Adds 13 days · 12 nights',
+        combo: 'Swiss Elegance + Italy Uncovered',
+        slug: 'swiss-elegance',
+        cta: 'Explore Swiss Elegance',
+        photos: [
+          { media: 'se-lucerne', label: 'Lucerne' },
+          { media: 'se-grindelwald', label: 'Grindelwald' },
+          { media: 'se-zermatt', label: 'Zermatt' },
+          { media: 'se-stresa', label: 'Lake Maggiore' },
+        ],
+      },
       link: {
         kicker: 'Before this journey',
         slug: 'swiss-elegance',
@@ -519,7 +625,7 @@ const allJourneys: Journey[] = [
     days: 11,
     departure: DATES_TBA,
     departureWindow: DATES_TBA,
-    group: 'Max. 18 guests',
+    group: 'Small group',
     groupMax: 18,
     hostedByMarc: false,
     who: [],
@@ -532,7 +638,7 @@ const allJourneys: Journey[] = [
     seo: {
       title: 'The Adriatic Collection: Venice to Dubrovnik',
       description:
-        'An 11-day small luxury group journey from Venice to Dubrovnik through Istria and the Dalmatian Coast, for no more than 18 guests.',
+        'An 11-day small luxury group journey from Venice to Dubrovnik through Istria and the Dalmatian Coast, for a small group of travelers.',
     },
     flyer: {
       included: experience,

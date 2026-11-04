@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { SectionLabel } from '@/components/ui/Editorial';
 import type { FaqItem } from '@/lib/data/faq';
 import { jsonLd } from '@/lib/seo';
@@ -6,9 +7,24 @@ import { jsonLd } from '@/lib/seo';
  * Short questions and answers as an open/close list — each a native
  * <details>, so it works without JavaScript and by keyboard — with the
  * FAQPage schema built from the same items, so the markup never says more
- * than the page shows. Styled as the itinerary's days.
+ * than the page shows. Styled as the itinerary's days. `aside` sits under the
+ * heading (the Journeys page puts "Connect with our team" there).
  */
-export function Faq({ items, id = 'faq' }: { items: FaqItem[]; id?: string }) {
+export function Faq({
+  items,
+  id = 'faq',
+  label = 'Questions',
+  title = 'Frequently asked questions',
+  aside,
+  className = '',
+}: {
+  items: FaqItem[];
+  id?: string;
+  label?: string;
+  title?: string;
+  aside?: ReactNode;
+  className?: string;
+}) {
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -20,14 +36,19 @@ export function Faq({ items, id = 'faq' }: { items: FaqItem[]; id?: string }) {
   };
 
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className="container-site pb-section-sm">
+    <section
+      id={id}
+      aria-labelledby={`${id}-title`}
+      className={`container-site scroll-mt-[calc(var(--nav-h-compact)+3.5rem)] pb-section-sm ${className}`}
+    >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
       <div className="grid-site gap-y-block">
         <div className="col-span-4 md:col-span-8 lg:col-span-4">
-          <SectionLabel className="mb-stack">Questions</SectionLabel>
+          <SectionLabel className="mb-stack">{label}</SectionLabel>
           <h2 id={`${id}-title`} className="h2 max-w-[16ch]">
-            Frequently asked questions
+            {title}
           </h2>
+          {aside && <div className="mt-block">{aside}</div>}
         </div>
         <ul className="col-span-4 m-0 list-none border-t border-ink p-0 md:col-span-8 lg:col-span-8">
           {items.map((item) => (

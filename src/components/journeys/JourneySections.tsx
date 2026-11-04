@@ -22,7 +22,7 @@ function journeyFacts(journey: Journey): { label: string; value: React.ReactNode
   return [
     { label: 'Days', value: `${journey.days} days · ${journey.days - 1} nights` },
     { label: 'Departure', value: journey.departureWindow },
-    { label: 'Group', value: `Max. ${journey.groupMax} guests` },
+    { label: 'Group', value: site.groupSize },
     { label: 'From', value: journey.priceFrom ? `${journey.priceFrom} per person` : RATES_TBA },
     {
       label: 'Hosted by',
@@ -389,7 +389,7 @@ export function DatesAndRates({ journey, cta }: { journey: Journey; cta: string 
               </td>
               <td className="meta py-0 pr-6 text-body md:py-6">
                 <span className="kicker-sm mb-1.5 block md:hidden">Group</span>
-                Max. {journey.groupMax} guests
+                {site.groupSize}
               </td>
               <td className="meta py-0 pr-6 text-body md:py-6">
                 <span className="kicker-sm mb-1.5 block md:hidden">From</span>

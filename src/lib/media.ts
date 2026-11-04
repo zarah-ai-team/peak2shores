@@ -415,7 +415,8 @@ export const media = {
   },
   'client-hotel-lucerne': {
     label: 'Stay · Mandarin Oriental Palace, Lucerne',
-    brief: 'Drive — Mandarin Oriental Palace, Lucerne. Upright crop. The earlier still showed another hotel on the lake; until a photograph of the Palace itself arrives, the view over the lake from the promenade stands in.',
+    brief:
+      'Drive — Mandarin Oriental Palace, Lucerne. Upright crop. The earlier still showed another hotel on the lake; until a photograph of the Palace itself arrives, the view over the lake from the promenade stands in.',
     tone: '#5d7a78',
     src: '/images/drive/switzerland-lake-lucerne-balcony-view.jpg',
     alt: 'Lake Lucerne and Mount Pilatus from a balcony above the lakeside promenade, Lucerne',
@@ -565,8 +566,8 @@ export const media = {
     label: 'Hero · Swiss Elegance',
     brief: 'Lake Lucerne and the Alps. Wide.',
     tone: '#5f7580',
-    src: '/images/drive/switzerland-rigi-lake-view.jpg',
-    alt: 'Lake Lucerne and the Alps seen from a meadow on the Rigi',
+    src: '/images/drive/switzerland-lake-lucerne-balcony-view.jpg',
+    alt: 'Lake Lucerne, the town’s waterfront and boats, with Mount Pilatus beyond',
   },
   'se-list': {
     label: 'Swiss Elegance',

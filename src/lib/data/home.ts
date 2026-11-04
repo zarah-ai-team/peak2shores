@@ -103,7 +103,7 @@ export const ways: (HomeVisual & { title: string; line: string; href: string; le
   [
     {
       title: 'Small Luxury Group Journeys',
-      line: 'Intimate journeys for never more than 18 guests, bringing together exceptional places, meaningful experiences and the joy of discovering the world together.',
+      line: 'Intimate journeys shared with a small circle of fellow travelers, bringing together exceptional places, meaningful experiences and the joy of discovering the world together.',
       href: '/journeys',
       // Marc's own Lucerne frame at full resolution (30 Oct); Private Travel and
       // Safari use the design reference's photographs (29 Oct).

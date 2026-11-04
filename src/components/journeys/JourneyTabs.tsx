@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { ButtonLink } from '@/components/ui/Button';
-import { RATES_TBA } from '@/lib/journeys';
 
 export type JourneyTab = { id: string; label: string };
 
@@ -17,12 +16,15 @@ export type JourneyTab = { id: string; label: string };
  */
 export function JourneyTabs({
   tabs,
-  priceFrom,
   cta,
+  ctaHref = '/plan#contact',
+  label = 'This journey',
 }: {
   tabs: JourneyTab[];
-  priceFrom?: string;
   cta: string;
+  /** Where the button goes: the inquiry form on the Plan page by default. */
+  ctaHref?: string;
+  label?: string;
 }) {
   const [current, setCurrent] = useState(tabs[0]?.id);
 
@@ -35,8 +37,17 @@ export function JourneyTabs({
       frame = 0;
       // The section whose top has passed a line just under the bar.
       const line = window.innerHeight * 0.3;
+      // The lowest section on the page whose top has passed it — by position,
+      // since the menu need not list the sections in page order.
       let active = sections[0]?.id;
-      for (const el of sections) if (el.getBoundingClientRect().top <= line) active = el.id;
+      let best = -Infinity;
+      for (const el of sections) {
+        const top = el.getBoundingClientRect().top;
+        if (top <= line && top > best) {
+          best = top;
+          active = el.id;
+        }
+      }
       setCurrent(active);
     };
     const onScroll = () => {
@@ -54,7 +65,7 @@ export function JourneyTabs({
 
   return (
     <nav
-      aria-label="This journey"
+      aria-label={label}
       data-journey-tabs
       data-pin-header
       className="sticky top-[var(--nav-h-compact)] z-20 border-b border-line bg-ivory/95 backdrop-blur-[0.875rem]"
@@ -81,16 +92,7 @@ export function JourneyTabs({
           })}
         </ul>
         <div className="hidden shrink-0 items-center gap-6 md:flex">
-          <p className="meta m-0 text-body">
-            {priceFrom ? (
-              <>
-                From <span className="font-semibold text-ink">{priceFrom}</span> per person
-              </>
-            ) : (
-              RATES_TBA
-            )}
-          </p>
-          <ButtonLink href="#enquire" variant="navy" className="!py-3.5">
+          <ButtonLink href={ctaHref} variant="navy" arrow className="!rounded-full !py-3.5">
             {cta}
           </ButtonLink>
         </div>

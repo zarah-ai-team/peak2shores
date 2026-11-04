@@ -2,19 +2,20 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { site, whatsappHref } from '@/lib/site';
+import './connect.css';
 
 /**
- * "Speak to a travel designer", fixed bottom right on the homepage: one tap opens the
- * ways to reach a travel designer. Escape or a click outside closes it. Call,
+ * "Connect with our team", fixed bottom right on every page: one tap opens the
+ * ways to reach the team. Escape or a click outside closes it. Call,
  * WhatsApp and the scheduling link appear only once they are set in site.ts;
  * until a scheduling link exists, "Book a call" opens the inquiry form.
  */
-export function ExpertButton() {
+export function ConnectButton() {
   const [open, setOpen] = useState(false);
   const [away, setAway] = useState(false);
   const box = useRef<HTMLDivElement>(null);
 
-  // The circle and the footer already offer every way to reach a designer,
+  // The circle and the footer already offer every way to reach us,
   // and the button would sit over their fields and links: it steps aside
   // while either is on screen.
   useEffect(() => {
@@ -51,10 +52,8 @@ export function ExpertButton() {
   return (
     <div ref={box} className={`hc hc-fab ${open ? 'open' : ''} ${away ? 'away' : ''}`}>
       <div className="panel" id="expert-panel" aria-hidden={!open}>
-        <div className="lab">Speak to a travel designer</div>
-        <p>
-          Our travel designers will help you choose the right journey — or design one around you.
-        </p>
+        <div className="lab">Connect with our team</div>
+        <p>Our team will help you choose the right journey — or design one around you.</p>
         {site.phone && site.phoneHref && (
           <a href={`tel:${site.phoneHref}`}>
             Call<span>{site.phone}</span>
@@ -97,7 +96,7 @@ export function ExpertButton() {
             <path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12Z" />
           )}
         </svg>
-        <span>Speak to a travel designer</span>
+        <span>Connect with our team</span>
       </button>
     </div>
   );

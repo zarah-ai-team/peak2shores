@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Arrow } from '@/components/ui/Button';
 import type { JourneySummary } from '@/lib/content';
 import { DATES_TBA } from '@/lib/journeys';
+import { site } from '@/lib/site';
 import { comingSoon, flipbook, journeyRank, statusLabel } from '@/lib/data/flipbook';
 import { getMedia, type MediaKey } from '@/lib/media';
 import { JourneySlider, type JourneySlide } from './JourneySlider';
@@ -24,7 +25,7 @@ const comingSlides: JourneySlide[] = comingSoon.map((c) => ({
   short: c.short,
   places: c.places,
   lead: c.tagline,
-  facts: ['Small group', 'Max. 18 guests'],
+  facts: ['Small group'],
   soon: true,
   photo: c.photo,
 }));
@@ -36,7 +37,7 @@ const comingSlides: JourneySlide[] = comingSoon.map((c) => ({
 const promises = [
   {
     title: 'Intimate by Design',
-    line: 'No more than 18 guests, creating a more personal and connected travel experience.',
+    line: 'Small groups of like-minded travelers, creating a more personal and connected travel experience.',
   },
   {
     title: 'Expertly Curated',
@@ -102,7 +103,7 @@ export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
       lead: book?.tagline ?? j.lead,
       facts: [
         `${j.days} days`,
-        `Max. ${j.groupMax} guests`,
+        site.groupSize,
         ...(j.departure && j.departure !== DATES_TBA ? [j.departure] : []),
         ...(j.priceFrom ? [`From ${j.priceFrom}`] : []),
       ],

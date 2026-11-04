@@ -2,10 +2,13 @@ export const site = {
   name: 'Peaks2Shores',
   tagline: 'Luxury travel, personally curated.',
   description:
-    'Small luxury group journeys of never more than 18 guests, personally curated by Marc Haeni. Iconic places, extraordinary experiences and lifelong connections.',
+    'Small luxury group journeys for an intimate circle of travelers, personally curated by Marc Haeni. Iconic places, extraordinary experiences and lifelong connections.',
   url: 'https://peaks2shores.com',
   founded: 2022,
+  /** The most a group can be; used to check enquiries, never shown as a figure. */
   maxGuests: 18,
+  /** How the size of a group is described wherever it is shown. */
+  groupSize: 'Small group',
   email: 'welcome@peaks2shores.com',
   /**
    * Confirmed by Marc, October 2026. (The old site's "Call" button dialled
@@ -77,13 +80,7 @@ export type NavItem = { label: string; href: string };
  * `data-hero` — sit in one place.
  */
 export function isHeroRoute(pathname: string) {
-  return (
-    pathname === '/' ||
-    pathname === '/journeys' ||
-    pathname === '/destinations' ||
-    pathname === '/experiences' ||
-    /^\/journeys\/[^/]+$/.test(pathname)
-  );
+  return pathname === '/' || pathname === '/experiences' || /^\/journeys\/[^/]+$/.test(pathname);
 }
 
 export const primaryNav: NavItem[] = [

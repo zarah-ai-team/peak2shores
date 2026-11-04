@@ -39,6 +39,11 @@ export type EnquiryFormProps = {
    * from. A private journey is always offered as well.
    */
   journeyOptions?: string[];
+  /**
+   * Journey addresses to their titles, so "Request details" on a journey page
+   * (/plan?journey=swiss-elegance#contact) arrives with that journey chosen.
+   */
+  journeySlugs?: Record<string, string>;
   /** Extra content under the intro, e.g. contact lines. */
   children?: ReactNode;
 };
@@ -78,8 +83,15 @@ export function EnquiryForm({
   headline = 'Tell us a little. We’ll call you, not the other way round.',
   intro,
   journeyOptions,
+  journeySlugs,
   children,
 }: EnquiryFormProps) {
+  const journeySelect = useRef<HTMLSelectElement>(null);
+  useEffect(() => {
+    const slug = new URLSearchParams(window.location.search).get('journey');
+    const title = slug ? journeySlugs?.[slug] : undefined;
+    if (title && journeySelect.current) journeySelect.current.value = title;
+  }, [journeySlugs]);
   const [party, setParty] = useState<string>('Couple');
   const [status, setStatus] = useState<Status>('idle');
   const [errorText, setErrorText] = useState('');
@@ -93,7 +105,7 @@ export function EnquiryForm({
   const firstName = site.founder.name.split(' ')[0];
   const defaultIntro =
     journeyTitle && departure && typeof spotsLeft === 'number'
-      ? `${journeyTitle} departs ${departure} with ${spotsLeft} of ${groupMax} places remaining. Inquiring holds nothing and commits you to nothing — it starts a conversation with ${firstName}.`
+      ? `${journeyTitle} departs ${departure} with ${spotsLeft} ${spotsLeft === 1 ? 'place' : 'places'} remaining. Inquiring holds nothing and commits you to nothing — it starts a conversation with ${firstName}.`
       : `Tell us where you’d like to go and who you’re traveling with. Inquiring holds nothing and commits you to nothing — it starts a conversation with ${firstName}.`;
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -333,6 +345,7 @@ export function EnquiryForm({
                         <span className="relative block">
                           <select
                             name="journey"
+                            ref={journeySelect}
                             defaultValue=""
                             className={`${inputClass} appearance-none pr-10`}
                           >

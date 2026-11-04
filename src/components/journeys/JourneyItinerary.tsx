@@ -1,10 +1,21 @@
-import { geoGraticule10, geoPath } from 'd3-geo';
+import type { ReactNode } from 'react';
 import type { Journey, JourneyFlyer } from '@/lib/content';
 import type { RouteMode } from '@/lib/journeys';
 import { getMedia } from '@/lib/media';
-import { atlas, frameRoute } from './JourneyMap';
+import { frameRoute } from './JourneyMap';
 import { RouteLive, type RouteStep } from './RouteLive';
 import './itinerary.css';
+
+/**
+ * The map itself is Esri's World Topographic basemap (relief, lakes, roads and
+ * the towns around the route, labelled), laid as tiles under the route, so the
+ * stops read against real places — Bern, Interlaken, Lake Geneva, Lake Como.
+ * Tiles are fetched straight from Esri; the attribution sits on the map.
+ */
+const TILE_URL =
+  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile';
+/** A tile's size on the canvas, at most: small enough to stay sharp at the camera's zoom. */
+const TILE_MAX = 230;
 
 /** The map's canvas: a little taller than wide, as in the design sample. */
 const W = 600;
@@ -34,7 +45,16 @@ const names = (a: string, b: string) => {
  * three nights from day 1 is "Days 1–3", and the last stay keeps its
  * departure day. A stay with no nights is a stop "Along the way".
  */
-export function JyItinerary({ journey, flyer }: { journey: Journey; flyer: JourneyFlyer }) {
+export function JyItinerary({
+  journey,
+  flyer,
+  after,
+}: {
+  journey: Journey;
+  flyer: JourneyFlyer;
+  /** The last row under the stays: the optional extension. */
+  after?: ReactNode;
+}) {
   const route = journey.route ?? [];
   if (route.length < 2) return null;
 
@@ -42,7 +62,6 @@ export function JyItinerary({ journey, flyer }: { journey: Journey; flyer: Journ
     [-2, -2],
     [W + 2, H + 2],
   ]);
-  const path = geoPath(projection);
   const at = (c: [number, number]) => projection(c) ?? [W / 2, H / 2];
 
   const legs = route.slice(1).map((stop, i) => {
@@ -120,29 +139,29 @@ export function JyItinerary({ journey, flyer }: { journey: Journey; flyer: Journ
     };
   });
 
-  const ours = new Set(journey.country.split(' & '));
-  const land = atlas().flatMap((country) => {
-    const [[x0, y0], [x1, y1]] = path.bounds(country);
-    if (x1 < 0 || y1 < 0 || x0 > W || y0 > H) return [];
-    const d = path(country);
-    if (!d) return [];
-    const [lx, ly] = path.centroid(country);
-    // Named on the map when its middle is on it and it is big enough to hold a name.
-    const named = lx > 50 && lx < W - 50 && ly > 30 && ly < H - 30 && path.area(country) > 9000;
-    return [
-      {
-        key: country.properties.name + (country.id ?? ''),
-        name: country.properties.name,
-        d,
-        ours: ours.has(country.properties.name),
-        label: named ? ([lx, ly] as const) : null,
-      },
-    ];
-  });
+  /* The basemap tiles that cover the canvas. d3's Mercator and the web's
+     tiles share a projection: at zoom z a tile spans T = 2π·scale / 2^z
+     canvas units, and tile (i, j) starts at T·i − π·scale + tx (and ty). */
+  const scale = projection.scale();
+  const [tx, ty] = projection.translate();
+  const z = Math.min(16, Math.ceil(Math.log2((2 * Math.PI * scale) / TILE_MAX)));
+  const T = (2 * Math.PI * scale) / 2 ** z;
+  const x0 = tx - Math.PI * scale;
+  const y0 = ty - Math.PI * scale;
+  const tiles: { key: string; href: string; x: number; y: number }[] = [];
+  for (let j = Math.floor(-y0 / T); j * T + y0 < H; j++) {
+    for (let i = Math.floor(-x0 / T); i * T + x0 < W; i++) {
+      tiles.push({
+        key: `${z}/${j}/${i}`,
+        href: `${TILE_URL}/${z}/${j}/${i}`,
+        x: x0 + i * T,
+        y: y0 + j * T,
+      });
+    }
+  }
   const nights = flyer.parts.flatMap((p) => p.stays).reduce((t, s) => t + (s.nights ?? 0), 0);
   const slept = stays.filter((s) => s.stay.nights).length;
   const modes = [...new Set(legs.map((l) => l.mode))];
-  const id = `jr-${journey.slug}`;
 
   return (
     <RouteLive
@@ -155,47 +174,20 @@ export function JyItinerary({ journey, flyer }: { journey: Journey; flyer: Journ
       summary={`${slept} stays · ${nights} nights`}
       ends={`${route[0].name} → ${route[route.length - 1].name}`}
       legend={modes.map((mode) => ({ mode, label: modeLabel[mode] }))}
+      after={after}
     >
-      <defs>
-        <radialGradient id={`${id}-sea`} cx="0.5" cy="0.45" r="0.85">
-          <stop offset="0" stopColor="#14506f" />
-          <stop offset="0.6" stopColor="#0d3550" />
-          <stop offset="1" stopColor="#071622" />
-        </radialGradient>
-        <linearGradient id={`${id}-land`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#243f33" />
-          <stop offset="1" stopColor="#33503f" />
-        </linearGradient>
-        <linearGradient id={`${id}-ours`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#47705a" />
-          <stop offset="1" stopColor="#6b9274" />
-        </linearGradient>
-      </defs>
-      <rect x={-W} y={-H} width={W * 3} height={H * 3} fill={`url(#${id}-sea)`} />
-      <path
-        className="jr-grid"
-        d={path(geoGraticule10()) ?? ''}
-        vectorEffect="non-scaling-stroke"
-      />
-      {land.map((c) => (
-        <path
-          key={c.key}
-          d={c.d}
-          className={c.ours ? 'jr-land is-ours' : 'jr-land'}
-          fill={`url(#${id}-${c.ours ? 'ours' : 'land'})`}
-          vectorEffect="non-scaling-stroke"
+      <rect x={0} y={0} width={W} height={H} fill="#dfe7e0" />
+      {tiles.map((t) => (
+        <image
+          key={t.key}
+          href={t.href}
+          x={t.x}
+          y={t.y}
+          width={T + 0.5}
+          height={T + 0.5}
+          preserveAspectRatio="none"
         />
       ))}
-      <g className="jr-countries">
-        {land.map(
-          (c) =>
-            c.label && (
-              <text key={c.key} x={c.label[0]} y={c.label[1]} textAnchor="middle">
-                {c.name.toUpperCase()}
-              </text>
-            ),
-        )}
-      </g>
     </RouteLive>
   );
 }

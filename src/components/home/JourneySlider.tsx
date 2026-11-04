@@ -71,6 +71,10 @@ export function JourneySlider({
   const n = slides.length + 1; // the journeys, then the finale
   const fin = slides.length;
   const [index, setIndex] = useState(0);
+  /* Which way the slides move, so the photograph wipes and the words slide from that side. */
+  const [dir, setDir] = useState<'next' | 'prev'>('next');
+  const at = useRef(0);
+  at.current = index;
   const [playing, setPlaying] = useState(true);
   const [inView, setInView] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -87,6 +91,7 @@ export function JourneySlider({
     (k: number) => {
       const next = (k + n) % n;
       spent.current = { slide: `${view}:${next}`, ms: 0 };
+      setDir(k < at.current ? 'prev' : 'next');
       setIndex(next);
     },
     [n, view],
@@ -150,6 +155,7 @@ export function JourneySlider({
     <div
       ref={frame}
       className={`frame${onFin ? ' fin' : ''}`}
+      data-dir={dir}
       role="region"
       aria-roledescription="carousel"
       aria-label="Journeys"
@@ -265,10 +271,10 @@ export function JourneySlider({
                 <div className="acts">
                   <Link
                     className="btn btn-accent"
-                    href={`/journeys/${s.slug}#enquire`}
-                    aria-label={`Reserve your place on ${s.title}`}
+                    href={`/plan?journey=${s.slug}#contact`}
+                    aria-label={`Request details on ${s.title}`}
                   >
-                    Reserve your place <Arrow />
+                    Request details <Arrow />
                   </Link>
                   <Link
                     className="btn btn-light"

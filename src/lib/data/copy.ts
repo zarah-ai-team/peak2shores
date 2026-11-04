@@ -69,7 +69,7 @@ export const reasons = [
   {
     n: '01',
     title: 'Small by design',
-    body: 'Intimate luxury group journeys with a maximum of 18 guests — or a private journey designed entirely around the way you love to travel.',
+    body: 'Intimate luxury group journeys shared with a small circle of fellow travelers — or a private journey designed entirely around the way you love to travel.',
   },
   {
     n: '02',
@@ -219,14 +219,16 @@ export const rhythm: Rhythm[] = [
   {
     word: 'Taste',
     line: 'Discover the flavors of each destination through exceptional dining, local traditions, and memorable culinary encounters.',
-    example: 'Join a local truffle hunter and his dog in the forests of Istria, followed by a memorable lunch celebrating the region’s culinary treasures.',
+    example:
+      'Join a local truffle hunter and his dog in the forests of Istria, followed by a memorable lunch celebrating the region’s culinary treasures.',
     img: '/images/home/xp-taste.jpg',
     alt: 'Friends dining by candlelight on a lakeside terrace at dusk, the lights of a village across the water',
   },
   {
     word: 'Meet',
     line: 'Meet the people who bring each destination to life — local artisans, passionate experts, and remarkable personalities who share their stories and traditions.',
-    example: 'Step inside a traditional Venetian workshop and meet a master craftsman preserving the centuries-old art of gondola making.',
+    example:
+      'Step inside a traditional Venetian workshop and meet a master craftsman preserving the centuries-old art of gondola making.',
     img: '/images/home/rh-meet-gondola-workshop.jpg',
     alt: 'A master craftsman shaping the hull of a gondola in a Venetian boatyard, the domes of the city across the water',
   },
@@ -240,7 +242,8 @@ export const rhythm: Rhythm[] = [
   {
     word: 'Wander',
     line: 'Explore extraordinary landscapes, captivating towns, and spectacular coastlines through thoughtfully curated adventures and authentic discoveries.',
-    example: 'Explore the magic of Croatia’s Dalmatian Coast on a private speedboat adventure through Šolta, the Pakleni Islands, and Hvar.',
+    example:
+      'Explore the magic of Croatia’s Dalmatian Coast on a private speedboat adventure through Šolta, the Pakleni Islands, and Hvar.',
     img: '/images/drive/croatia-hvar-harbour.jpg',
     alt: 'Hvar town and its harbor on the Dalmatian coast, the Pakleni Islands beyond',
   },

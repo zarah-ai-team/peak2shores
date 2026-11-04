@@ -74,7 +74,7 @@ export function JourneyCard({
           </div>
           <div>
             <dt className="kicker-sm mb-1.5">Group</dt>
-            <dd className="meta m-0 text-body">Max. {journey.groupMax} guests</dd>
+            <dd className="meta m-0 text-body">{site.groupSize}</dd>
           </div>
         </dl>
 
@@ -168,7 +168,7 @@ export function JourneyListing({
           </div>
           <div>
             <dt className="kicker-sm mb-1.5">Group</dt>
-            <dd className="meta m-0 text-body">Max. {journey.groupMax} guests</dd>
+            <dd className="meta m-0 text-body">{site.groupSize}</dd>
           </div>
         </dl>
 

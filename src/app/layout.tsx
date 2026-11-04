@@ -8,6 +8,8 @@ import { PageTransition } from '@/components/layout/PageTransition';
 import { ScrollProgress } from '@/components/layout/ScrollProgress';
 import { MotionProvider } from '@/components/motion/MotionProvider';
 import { Analytics } from '@/components/layout/Analytics';
+import { ConnectButton } from '@/components/layout/ConnectButton';
+import { SmoothScroll } from '@/components/motion/SmoothScroll';
 import { consentDefaults } from '@/lib/analytics';
 import { jsonLd } from '@/lib/seo';
 import { site } from '@/lib/site';
@@ -121,11 +123,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           {/* After the header: its color follows the header's state through a
               sibling selector (.scroll-progress in globals.css). */}
           <ScrollProgress />
+          <SmoothScroll />
           {/* Focusable so the skip link lands reliably in every browser. */}
           <main id="main" tabIndex={-1} className="outline-none">
             <PageTransition>{children}</PageTransition>
           </main>
           <Footer nav={nav} />
+          <ConnectButton />
           <Analytics />
         </MotionProvider>
       </body>

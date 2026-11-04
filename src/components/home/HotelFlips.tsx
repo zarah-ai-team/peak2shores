@@ -22,7 +22,14 @@ import { useDragScroll } from '@/components/ui/useDrag';
 /** Two arrows chasing round: turn the card over. */
 function TurnIcon() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3M18 3v4h-4M6 21v-4h4" />
     </svg>
   );
@@ -47,12 +54,10 @@ export function HotelFlips() {
     <section className="hc-hot" aria-labelledby="hotels-title">
       <div className="head solo">
         <h2 id="hotels-title">Hotels &amp; Lodges</h2>
-        <p className="sub-h">
-          Exceptional Places to Stay. Extraordinary Experiences to Remember.
-        </p>
+        <p className="sub-h">Exceptional Places to Stay. Extraordinary Experiences to Remember.</p>
       </div>
 
-      <div className="flips" ref={rail}>
+      <div className="flips" ref={rail} data-rail>
         {hotels.map((h, i) => {
           const placeholder = (v: string) => (v.startsWith('[') ? 'ph' : undefined);
           const id = `hotel-${i}`;

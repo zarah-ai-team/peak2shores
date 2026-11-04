@@ -1,0 +1,174 @@
+/*
+ * "Connect with our team" (ConnectButton): fixed bottom right on every page,
+ * opening the ways to reach the team. Carries its own tokens, since it sits
+ * outside any page's scope.
+ */
+.hc-fab {
+  --paper: var(--color-ivory);
+  --ink: #141d24;
+  --muted: #5a646d;
+  --lake: #0b5c85;
+  --brand: var(--color-brand);
+  --serif: var(--font-display);
+  --sans: var(--font-ui);
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  -webkit-font-smoothing: antialiased;
+}
+.hc-fab * {
+  box-sizing: border-box;
+}
+.hc-fab .lab {
+  margin: 0;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+.hc-fab {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.625rem;
+  font-family: var(--sans);
+  /* The closed panel still takes its room in this box, so the box lets the
+     pointer through to the page; only the button (and the panel, once open)
+     answer it. Otherwise a 310px square of the page under it, the right-hand
+     cards included, would not respond to hover or click. */
+  pointer-events: none;
+}
+/* A compact pill: always in reach, never the loudest thing on the screen. */
+.hc-fab .fab-btn {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: clamp(2.5rem, 2.33vw, 2.75rem);
+  padding: 0 1.125rem 0 0.875rem;
+  border-radius: 999px;
+  /* White 11px caps on the deeper blue: 5:1, where the brand blue is 3.6:1. */
+  background: var(--color-brand-deep);
+  color: #fff;
+  border: 0;
+  font-family: inherit;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 0.625rem 1.5rem -0.5rem rgb(8 20 28 / 0.45);
+  transition:
+    background 0.6s var(--ease),
+    transform 0.6s var(--ease);
+}
+.hc-fab .fab-btn svg {
+  width: 1rem;
+  height: 1rem;
+}
+.hc-fab .fab-btn:hover {
+  background: var(--lake);
+  transform: translateY(-2px);
+}
+/* Near the circle and the footer, which carry every way to reach us, the
+   button steps aside so it never sits over their fields and links. */
+.hc-fab {
+  transition:
+    opacity 0.4s var(--ease),
+    transform 0.4s var(--ease),
+    visibility 0s linear 0s;
+}
+.hc-fab.away {
+  opacity: 0;
+  transform: translateY(1rem);
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.4s var(--ease),
+    transform 0.4s var(--ease),
+    visibility 0s linear 0.4s;
+}
+.hc-fab .panel {
+  width: 19.375rem;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 0.875rem;
+  padding: 1.25rem 1.25rem 0.5rem;
+  box-shadow: 0 1.5rem 3.75rem rgb(0 0 0 / 0.35);
+  opacity: 0;
+  transform: translateY(0.75rem) scale(0.98);
+  transform-origin: bottom right;
+  pointer-events: none;
+  visibility: hidden;
+  transition:
+    opacity 0.5s var(--ease),
+    transform 0.6s var(--ease),
+    visibility 0s linear 0.6s;
+}
+.hc-fab.open .panel {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  visibility: visible;
+  transition:
+    opacity 0.5s var(--ease),
+    transform 0.6s var(--ease);
+}
+.hc-fab .panel .lab {
+  font-size: 0.6875rem;
+  letter-spacing: 0.24em;
+  color: var(--lake);
+}
+.hc-fab .panel p {
+  margin: 0.625rem 0 0.75rem;
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.4;
+}
+.hc-fab .panel a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  min-height: 2.875rem;
+  border-top: 1px solid rgb(20 29 36 / 0.14);
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.hc-fab .panel a span {
+  font-size: 0.8125rem;
+  font-weight: 300;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--muted);
+}
+.hc-fab .panel a:hover span {
+  color: var(--brand);
+}
+
+@media (pointer: coarse) {
+  .hc-fab .fab-btn {
+    min-height: 44px;
+  }
+}
+@media (max-width: 600px) {
+  .hc-fab {
+    right: 0.875rem;
+    bottom: 0.875rem;
+  }
+  .hc-fab .panel {
+    width: calc(100vw - 1.75rem);
+  }
+  .hc-fab .fab-btn {
+    padding: 0 1rem 0 0.875rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hc-fab * {
+    transition: none !important;
+  }
+}

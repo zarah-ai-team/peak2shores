@@ -14,7 +14,7 @@ import './why-home.css';
  * just under the cards beside the blue line, with a count, so it is plain
  * there are more. It is a plain scroller underneath, so it swipes on a phone
  * and scrolls without script. The last card closes the row with the way on,
- * and a bridge leads to what is included on every journey (#experience).
+ * and a bridge leads to what is included on every journey (on the Journeys page, /journeys#experience).
  */
 export function HowWeTravel() {
   const rail = useRef<HTMLDivElement>(null);
@@ -70,6 +70,7 @@ export function HowWeTravel() {
 
       <div
         className="hw-rail"
+        data-rail
         ref={rail}
         id="how-rail"
         role="region"
@@ -143,14 +144,14 @@ export function HowWeTravel() {
             <span style={{ width: `${Math.round(bar * 100)}%` }} />
           </div>
         </div>
-        <a className="hw-next" href="#experience">
+        <Link className="hw-next" href="/journeys#experience">
           And what that means on every journey
           <span aria-hidden>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path d="M12 5v14M6 13l6 6 6-6" />
             </svg>
           </span>
-        </a>
+        </Link>
       </div>
     </section>
   );

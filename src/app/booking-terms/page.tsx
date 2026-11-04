@@ -39,7 +39,7 @@ export default function BookingTermsPage() {
         {
           heading: 'If we cancel or change a journey',
           body: [
-            `Minimum group size, changes to hotels or itinerary, and refunds or alternatives if a journey cannot run. Groups are never more than ${site.maxGuests} guests.`,
+            `Minimum group size, changes to hotels or itinerary, and refunds or alternatives if a journey cannot run. Groups are kept small.`,
           ],
         },
         {

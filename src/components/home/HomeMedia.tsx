@@ -85,7 +85,15 @@ export function HomeMedia({
  * first. Muted, looping, playing only while on screen; under reduced motion
  * it holds on that first frame.
  */
-export function Film({ src, label, className = 'fill' }: { src: string; label: string; className?: string }) {
+export function Film({
+  src,
+  label,
+  className = 'fill',
+}: {
+  src: string;
+  label: string;
+  className?: string;
+}) {
   const video = useRef<HTMLVideoElement>(null);
   const reduced = useReducedMotion();
 

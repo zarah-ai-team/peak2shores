@@ -57,6 +57,7 @@ export function RouteLive({
   summary,
   ends,
   legend,
+  after,
   children,
 }: {
   W: number;
@@ -68,6 +69,8 @@ export function RouteLive({
   summary: string;
   ends: string;
   legend: { mode: Leg['mode']; label: string }[];
+  /** A row under the stays (the optional extension). */
+  after?: ReactNode;
   children: ReactNode;
 }) {
   // The stay the map is on (-1: the whole route), and the one opened in the list.
@@ -103,6 +106,11 @@ export function RouteLive({
       for (let i = 0; i < items.length; i++) {
         if (items[i].getBoundingClientRect().top <= line) k = i;
       }
+      // Once the foot of the list is well up the screen, the map is on the
+      // last stay (Milan), while the whole itinerary is still in view.
+      const foot = ol.getBoundingClientRect().bottom;
+      if (items.length && foot <= vh * 0.88 && items[0].getBoundingClientRect().top < vh * 0.5)
+        k = items.length - 1;
       if (k === last) return;
       const first = Number.isNaN(last);
       last = k;
@@ -253,6 +261,7 @@ export function RouteLive({
               </div>
             </div>
             <span className="jr-vig" aria-hidden />
+            <span className="jr-attr">Map: Esri, HERE, Garmin, USGS</span>
 
             <span className="jr-pill" aria-live="polite">
               <i aria-hidden />
@@ -387,6 +396,7 @@ export function RouteLive({
             </li>
           ))}
         </ol>
+        {after}
       </div>
     </section>
   );

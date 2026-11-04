@@ -46,7 +46,7 @@ export default async function LinksPage() {
       tag: journeyTagStatus(journey),
     })),
     { href: '/plan', title: 'Plan your journey', meta: 'Inquire, or design a private trip' },
-    { href: '/journeys', title: 'All journeys', meta: `Max. ${site.maxGuests} guests each` },
+    { href: '/journeys', title: 'All journeys', meta: 'Small groups, personally curated' },
     { href: '/journal', title: 'The journal', meta: 'Places, hotels and tables' },
     { href: '/our-story', title: 'Our story', meta: site.founder.name },
   ];
@@ -71,8 +71,8 @@ export default async function LinksPage() {
           Iconic places. Extraordinary experiences. Lifelong connections.
         </h1>
         <p className="prose-body mb-block">
-          Small luxury group journeys of never more than {site.maxGuests} guests, personally curated
-          by {site.founder.name}.
+          Small luxury group journeys for an intimate circle of travelers, personally curated by{' '}
+          {site.founder.name}.
         </p>
 
         {lead && (
