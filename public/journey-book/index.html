@@ -1,0 +1,640 @@
+<!doctype html><html><head><base href="/journey-book/"><meta name="robots" content="noindex, nofollow"><link rel="icon" href="/favicon.ico"><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta charset="utf-8">
+<title>Peaks2Shores Journey Book</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gelasio&text=0123456789&display=swap">
+<style>
+:root {
+  --night:#0B1A24; --cloth:#0E2F42; --deep:#0E2F42; --paper:#F6F1E7; --cream:#EFE3CF; --white:#FFFFFF;
+  --ink:#141D24; --muted:#5A646D; --lake:#0B5C85; --sky:#7ACCFD; --gold:#D8B27A; --mist:#C9D6DE;
+  --serif: Georgia, "Times New Roman", serif; --num: "Gelasio", Georgia, serif; --sans: "Poppins", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light;
+}
+html, body { min-height: 100%; }
+body { margin:0; background: var(--cream); color: var(--ink); font-family: var(--sans); font-variant-numeric: lining-nums;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 0; box-sizing: border-box; }
+.app { max-width: 1180px; margin: 0 auto; padding-block: 18px 28px; display: flex; flex-direction: column; gap: 16px; }
+.bar { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap: wrap; }
+.bar img { width:104px; height:auto; display:block; }
+.bar p { margin:0; font-size:11px; font-weight:500; letter-spacing:.26em; text-transform:uppercase; color: var(--lake); }
+.cols { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 28px; align-items:start; }
+@media (max-width: 760px) { .cols { grid-template-columns: minmax(0,1fr); gap: 34px; } }
+.col { display:flex; flex-direction:column; gap: 10px; min-width:0; }
+.colhead { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+.colhead b { font-family: var(--serif); font-weight:400; font-size: 20px; letter-spacing:.08em; text-transform:uppercase; color: var(--lake); }
+.colhead span { font-size: 13px; color: var(--muted); }
+.book-wrap { width: 100%; max-width: min(900px, calc((100vh - 250px) * 1.74)); margin: 0 auto; }
+@media (min-width: 761px) { .app { min-height: 100vh; box-sizing: border-box; justify-content: center; } }
+@media (max-width: 760px) { .book-wrap { max-width: 540px; } }
+.controls { display:flex; align-items:center; justify-content:center; gap: 14px; padding-bottom: env(safe-area-inset-bottom, 0px); }
+.btn { min-width:48px; min-height:48px; border-radius:999px; border:1px solid rgba(20,29,36,.2); background: transparent; color: var(--ink); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; transition: background .3s cubic-bezier(.22,.61,.36,1); }
+.btn:hover:not(:disabled) { background: rgba(20,29,36,.06); }
+.btn:disabled { opacity:.35; cursor: default; }
+.btn:focus-visible, .copy:focus-visible { outline: 2px solid var(--lake); outline-offset: 3px; }
+.where { min-width: 132px; text-align:center; font-size: 12px; font-weight:500; letter-spacing:.18em; text-transform:uppercase; color: var(--muted); }
+.hint { margin:0; text-align:center; font-size: 12px; color: var(--muted); }
+
+/* ---- pages: drawn on a 540-unit-wide grid; height follows the book (675 on wide screens, 900 on phones) ---- */
+.page { background: var(--night); overflow:hidden; container-type: inline-size; }
+.pc { position:absolute; inset:0; --u: calc(100cqw / 540); background: var(--night); color:#fff; }
+.pc.light { background: #FAFCFE; color: var(--ink); }
+.pc.paper { background: var(--paper); color: var(--ink); }
+.pc.white { background: #fff; color: var(--ink); }
+.pc.deep { background: var(--deep); }
+.pc.night { background: var(--night); }
+.ph { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+.shade { position:absolute; inset:0; background:
+  linear-gradient(to top, rgba(8,20,28,.70) 0%, rgba(8,20,28,.40) 24%, rgba(8,20,28,0) 46%),
+  linear-gradient(to bottom, rgba(8,20,28,.34) 0%, rgba(8,20,28,0) 14%); }
+.shade.soft { background: linear-gradient(to top, rgba(8,20,28,.55) 0%, rgba(8,20,28,0) 40%), linear-gradient(to bottom, rgba(8,20,28,.28) 0%, rgba(8,20,28,0) 14%); }
+.topsh { position:absolute; left:0; right:0; top:0; height: 16%; background: linear-gradient(to bottom, rgba(8,20,28,.38), rgba(8,20,28,0)); }
+.eb { position:absolute; left: calc(var(--u)*36); top: calc(var(--u)*30); margin:0; max-width: 78%; font-size: max(calc(var(--u)*13), 11px); line-height:1.4; font-weight:500; letter-spacing:.24em; text-transform:uppercase; color:#fff; text-shadow: 0 1px 4px rgba(0,0,0,.45); z-index: 3; }
+.pg { position:absolute; right: calc(var(--u)*30); top: calc(var(--u)*28); margin:0; font-family: var(--num); font-size: max(calc(var(--u)*16), 12px); color:#fff; text-shadow: 0 1px 4px rgba(0,0,0,.45); z-index: 3; }
+.eb.dk, .pg.dk { color: var(--lake); text-shadow:none; }
+/* A: one fixed text system on every photo page, so lines sit at the same height across facing pages */
+.hd { position:absolute; left: calc(var(--u)*22); right: calc(var(--u)*22); bottom: calc(var(--u)*124); margin:0; text-align:center; font-family: var(--serif); font-weight:400; font-size: calc(var(--u) * var(--hs, 36) * var(--k, 1)); white-space: nowrap; line-height:1.16; letter-spacing:.12em; padding-left:.12em; text-transform:uppercase; color:#fff; text-shadow: 0 2px 14px rgba(0,0,0,.45); }
+.sl { position:absolute; left: calc(var(--u)*26); right: calc(var(--u)*26); top: calc(100% - var(--u)*112); margin:0; display:flex; align-items:center; justify-content:center; gap: calc(var(--u)*12); color:#fff; text-shadow: 0 1px 6px rgba(0,0,0,.45); }
+.sl span { max-width: calc(var(--u)*360); text-align:center; font-size: calc(var(--u)*17); font-weight:300; line-height:1.4; letter-spacing:.03em; }
+.sl::before, .sl::after { content:""; flex: 0 0 calc(var(--u)*30); height:1px; background: rgba(255,255,255,.8); }
+.loc { position:absolute; left: calc(var(--u)*36); bottom: calc(var(--u)*26); margin:0; display:flex; align-items:center; gap: calc(var(--u)*9); color: var(--gold); font-size: max(calc(var(--u)*12), 11px); font-weight:500; letter-spacing:.24em; text-transform:uppercase; line-height:1.4; text-shadow: 0 1px 4px rgba(0,0,0,.5); }
+.loc svg, .bl svg { width: max(calc(var(--u)*13), 10px); height: max(calc(var(--u)*17), 13px); flex-shrink:0; }
+.phold { position:absolute; left: calc(var(--u)*36); right: calc(var(--u)*36); top: calc(var(--u)*76); bottom: calc(var(--u)*262); border: 1.5px dashed rgba(216,178,122,.6); border-radius: calc(var(--u)*14); display:flex; flex-direction:column; align-items:center; justify-content:center; gap: 8px; text-align:center; }
+.pk { font-size: max(calc(var(--u)*12), 11px); font-weight:500; letter-spacing:.26em; text-transform:uppercase; color: var(--gold); }
+.pv { font-family: var(--serif); font-style: italic; font-size: max(calc(var(--u)*17), 13px); color: var(--mist); }
+.cap { position:absolute; left: calc(var(--u)*30); bottom: calc(var(--u)*26); margin:0; font-size: max(calc(var(--u)*12), 11px); font-weight:500; letter-spacing:.18em; text-transform:uppercase; color:#fff; text-shadow: 0 1px 3px rgba(0,0,0,.6); }
+/* story text */
+.story { position:absolute; inset:0; box-sizing:border-box; padding: calc(var(--u)*96) calc(var(--u)*44) calc(var(--u)*40); display:flex; flex-direction:column; gap: calc(var(--u)*20 * var(--k, 1)); overflow:hidden; }
+.se { margin: 0 0 calc(var(--u)*12); font-size: max(calc(var(--u)*13), 11px); font-weight:500; letter-spacing:.24em; text-transform:uppercase; color: var(--lake); }
+.sh { margin: 0 0 calc(var(--u)*6); font-family: var(--serif); font-weight:700; color: var(--lake); font-size: calc(max(calc(var(--u)*28), 19px) * var(--k, 1)); line-height:1.28; letter-spacing:.06em; text-transform:uppercase; text-wrap: balance; }
+.sb { margin:0; font-size: calc(max(calc(var(--u)*15), 13px) * var(--k, 1)); line-height:1.62; font-weight:300; color: var(--ink); }
+/* chapter pages */
+.chap { position:absolute; inset:0; box-sizing:border-box; padding: calc(var(--u)*30) calc(var(--u)*44) calc(var(--u)*46); display:flex; flex-direction:column; }
+.chtop { display:flex; justify-content:space-between; align-items:center; margin-left: calc(var(--u)*-8); }
+.ce { margin:0; font-size: max(calc(var(--u)*13), 11px); font-weight:500; letter-spacing:.24em; text-transform:uppercase; color: var(--gold); }
+.cn { margin:0; font-family: var(--num); font-size: max(calc(var(--u)*16), 12px); color: var(--mist); margin-right: calc(var(--u)*-14); }
+.ct { margin: calc(var(--u)*110) 0 0; font-family: var(--serif); font-weight:400; font-size: calc(var(--u)*40); line-height:1.14; letter-spacing:.08em; text-transform:uppercase; color:#fff; text-wrap: balance; }
+.ct em { font-style: normal; color: var(--sky); }
+.chap.tight .ct { margin-top: calc(var(--u)*50); }
+.chap.tight .crule { margin: calc(var(--u)*22) 0 calc(var(--u)*20); }
+.chap.tight .sig { margin-top: calc(var(--u)*16); }
+.crule { border:0; height:1px; background: rgba(255,255,255,.18); width: calc(var(--u)*56); margin: calc(var(--u)*30) 0 calc(var(--u)*26); }
+.ci { margin:0; font-family: var(--serif); font-style: italic; font-size: max(calc(var(--u)*20), 15px); line-height:1.5; color:#fff; }
+.sig { margin: auto 0 0; font-size: max(calc(var(--u)*12), 11px); font-weight:500; letter-spacing:.18em; text-transform:uppercase; color: var(--mist); }
+.jl, .clist { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap: calc(var(--u)*11); }
+.jl li, .clist li { position:relative; padding-left: calc(var(--u)*22); }
+.jl li::before, .clist li::before { content:""; position:absolute; left:0; top: .55em; width: calc(var(--u)*7); height: calc(var(--u)*7); border-radius:50%; background: var(--gold); }
+.jl li { font-family: var(--serif); font-size: max(calc(var(--u)*16.5), 13px); line-height:1.32; color:#fff; }
+.jl.big li { font-size: max(calc(var(--u)*24), 17px); letter-spacing:.08em; text-transform:uppercase; }
+.clist { gap: calc(var(--u)*16); }
+.clist li::before { top: .35em; }
+.clist .k { margin:0; font-size: max(calc(var(--u)*11.5), 10.5px); font-weight:500; letter-spacing:.26em; text-transform:uppercase; color: var(--gold); line-height:1.4; }
+.clist .v, .clist a { margin:0; font-size: max(calc(var(--u)*18), 14px); line-height:1.4; color:#fff; text-decoration:none; }
+.clist a:hover { text-decoration: underline; }
+.copy { align-self:flex-start; margin-top: calc(var(--u)*28); min-height: 44px; padding: 0 calc(var(--u)*24); border-radius:999px; border:0; background: var(--gold); color: var(--ink); font-family: var(--sans); font-size: max(calc(var(--u)*12), 11px); font-weight:500; letter-spacing:.18em; text-transform:uppercase; cursor:pointer; }
+/* QR endpaper */
+.qrwrap { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap: calc(var(--u)*16); text-align:center; }
+.qicon { width: calc(var(--u)*50); height:auto; margin-bottom: calc(var(--u)*12); }
+.qr { width: calc(var(--u)*190); height: calc(var(--u)*190); display:block; }
+.qk { margin:0; font-size: max(calc(var(--u)*12), 11px); font-weight:500; letter-spacing:.26em; text-transform:uppercase; color: var(--lake); }
+.qv { margin:0; font-size: max(calc(var(--u)*15), 13px); color: var(--ink); }
+/* cloth covers */
+.cloth { position:absolute; inset:0; background-color: var(--cloth); background-image: repeating-linear-gradient(0deg, rgba(255,255,255,.028) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, rgba(0,0,0,.07) 0 1px, transparent 1px 3px); }
+.spine { position:absolute; top:0; bottom:0; width: calc(var(--u)*30); }
+.spine.left { left:0; background: linear-gradient(to right, rgba(0,0,0,.42), rgba(255,255,255,.07) 55%, rgba(0,0,0,.18)); }
+.spine.right { right:0; background: linear-gradient(to left, rgba(0,0,0,.42), rgba(255,255,255,.07) 55%, rgba(0,0,0,.18)); }
+.frame { position:absolute; top: calc(var(--u)*24); bottom: calc(var(--u)*24); border: 1px solid rgba(216,178,122,.55); }
+.frame.f-front { left: calc(var(--u)*50); right: calc(var(--u)*24); }
+.frame.f-back { left: calc(var(--u)*24); right: calc(var(--u)*50); }
+.cov { position:absolute; top:0; bottom:0; display:flex; flex-direction:column; align-items:center; text-align:center; box-sizing:border-box; }
+.cov.front { left: calc(var(--u)*50); right: calc(var(--u)*24); padding: calc(var(--u)*54) calc(var(--u)*30) calc(var(--u)*50); }
+.cov.back { left: calc(var(--u)*24); right: calc(var(--u)*50); padding: calc(var(--u)*50) calc(var(--u)*36); justify-content:center; }
+.cov .logo { width: calc(var(--u)*118); height:auto; }
+.covmid { margin: auto 0; display:flex; flex-direction:column; align-items:center; padding-bottom: calc(var(--u)*40); }
+.foil { margin:0; font-family: var(--serif); font-weight:400; color: var(--gold); font-size: calc(var(--u)*46); line-height:1.15; letter-spacing:.12em; padding-left:.12em; text-transform:uppercase; text-shadow: 0 1px 0 rgba(0,0,0,.45); }
+.goldrule { width: calc(var(--u)*48); height:1px; background: var(--gold); opacity:.7; margin: calc(var(--u)*24) 0; border:0; }
+.covsub { margin:0; font-family: var(--serif); font-style: italic; font-size: max(calc(var(--u)*20), 14px); line-height:1.4; color: var(--mist); }
+.cicon { width: calc(var(--u)*52); height:auto; opacity:.92; }
+.motto { margin: calc(var(--u)*22) 0 0; font-family: var(--serif); font-style: italic; font-size: max(calc(var(--u)*22), 15px); line-height:1.4; color: var(--gold); }
+.imprint { margin:0; font-size: max(calc(var(--u)*11.5), 10.5px); font-weight:500; letter-spacing:.3em; text-transform:uppercase; color: var(--gold); }
+
+/* ---- B: collage pieces ---- */
+.bh { margin:0; font-family: var(--serif); font-weight:400; font-size: calc(var(--u) * var(--bs, 24)); line-height:1.18; letter-spacing:.1em; text-transform:uppercase; text-wrap: balance; }
+.bs { margin: calc(var(--u)*8) 0 0; font-size: max(calc(var(--u)*15), 12.5px); font-weight:300; line-height:1.45; }
+.bl { margin: calc(var(--u)*12) 0 0; display:flex; align-items:center; gap: calc(var(--u)*8); font-size: max(calc(var(--u)*11.5), 10.5px); font-weight:500; letter-spacing:.22em; text-transform:uppercase; line-height:1.4; }
+.ink { color: var(--ink); } .bs.ink { color: #3B464F; } .bl.ink { color: var(--lake); }
+.lake { color: var(--lake); }
+.wh { color:#fff; text-shadow: 0 1px 8px rgba(0,0,0,.4); } .bl.wh { color: var(--gold); }
+.bintro { margin: calc(var(--u)*12) 0 0; font-family: var(--serif); font-style: italic; font-size: max(calc(var(--u)*17), 13.5px); line-height:1.5; color: #3B464F; }
+.glass { position:absolute; left: calc(var(--u)*26); right: calc(var(--u)*26); bottom: calc(var(--u)*26); background: rgba(255,255,255,.82); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,.75); border-radius: calc(var(--u)*22); padding: calc(var(--u)*22) calc(var(--u)*24); box-shadow: 0 calc(var(--u)*20) calc(var(--u)*44) rgba(4,14,20,.3); }
+.glass.center { text-align:left; }
+.pol { position:absolute; margin:0; background:#fff; padding: calc(var(--u)*9) calc(var(--u)*9) 0; box-shadow: 0 calc(var(--u)*10) calc(var(--u)*26) rgba(20,29,36,.28); transform: rotate(var(--r,0deg)); }
+.pol img, .pol video { display:block; width:100%; height:auto; object-fit:cover; }
+.pol figcaption { padding: calc(var(--u)*10) calc(var(--u)*6) calc(var(--u)*14); font-family: var(--serif); font-style: italic; font-size: max(calc(var(--u)*15), 12px); color: var(--ink); text-align:center; }
+.pol figcaption.blank { padding: calc(var(--u)*14) 0; }
+.tape { position:absolute; left:50%; top: calc(var(--u)*-12); width: calc(var(--u)*92); height: calc(var(--u)*26); transform: translateX(-50%) rotate(-3deg); background: rgba(255,255,255,.55); box-shadow: 0 1px 3px rgba(0,0,0,.12); z-index:2; }
+.polph { width:100%; background: #EDE6D8; border: 1.5px dashed rgba(184,146,90,.7); box-sizing:border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; gap: 6px; text-align:center; }
+.polph .pk { color: #8A6A3A; } .polph .pv { color: #5A646D; }
+.pol.video { left: calc(var(--u)*92); right: calc(var(--u)*92); top: calc(var(--u)*76); }
+.pol.big { left: calc(var(--u)*70); right: calc(var(--u)*70); top: calc(var(--u)*74); }
+.under { position:absolute; left: calc(var(--u)*44); right: calc(var(--u)*44); bottom: calc(var(--u)*38); text-align:center; }
+.under .bl { justify-content:center; }
+.post { position:absolute; left: calc(var(--u)*24); right: calc(var(--u)*24); bottom: calc(var(--u)*28); background: #FBF8F2; padding: calc(var(--u)*20) calc(var(--u)*20) calc(var(--u)*22); display:grid; grid-template-columns: minmax(0,1fr) auto; gap: calc(var(--u)*16); box-shadow: 0 calc(var(--u)*16) calc(var(--u)*36) rgba(4,14,20,.35); transform: rotate(var(--r,0deg)); border-radius: 2px; }
+.post .pl { min-width:0; border-right: 1px solid rgba(20,29,36,.14); padding-right: calc(var(--u)*14); }
+.post .pr { display:flex; flex-direction:column; align-items:flex-end; gap: calc(var(--u)*10); width: calc(var(--u)*96); position:relative; }
+.pk2 { margin: 0 0 calc(var(--u)*8); font-family: var(--serif); font-style: italic; font-size: max(calc(var(--u)*15), 12px); color: var(--lake); }
+.stamp { width: calc(var(--u)*80); height: calc(var(--u)*98); object-fit:cover; border: calc(var(--u)*5) solid #fff; outline: 1px dashed rgba(20,29,36,.35); outline-offset: calc(var(--u)*-3); box-shadow: 0 1px 4px rgba(0,0,0,.18); }
+.pmark { position:absolute; right: calc(var(--u)*44); top: calc(var(--u)*62); width: calc(var(--u)*62); height: calc(var(--u)*62); border-radius:50%; border: 1.5px solid rgba(11,92,133,.55); display:flex; align-items:center; justify-content:center; font-size: max(calc(var(--u)*9), 9px); font-weight:600; letter-spacing:.2em; text-transform:uppercase; color: rgba(11,92,133,.75); transform: rotate(-14deg); background: rgba(251,248,242,.25); }
+.pline { display:block; width:100%; height:1px; background: rgba(20,29,36,.18); margin-top: calc(var(--u)*14); }
+.post.big { left: calc(var(--u)*30); right: calc(var(--u)*30); top: calc(var(--u)*90); bottom:auto; }
+.post.big .clist li::before { background: var(--lake); }
+.post.big .clist .k { color: var(--lake); } .post.big .clist .v, .post.big .clist a { color: var(--ink); }
+.notif { position:absolute; left: calc(var(--u)*40); right: calc(var(--u)*40); top: calc(var(--u)*82); display:flex; align-items:center; gap: calc(var(--u)*12); padding: calc(var(--u)*12) calc(var(--u)*16); border-radius: calc(var(--u)*20); background: rgba(20,29,36,.5); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.22); color:#fff; }
+.notif .nic { width: calc(var(--u)*36); height: calc(var(--u)*36); min-width: 26px; min-height: 26px; border-radius: 50%; background: var(--gold); color: var(--ink); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.notif .nic svg { width: 45%; height: 55%; }
+.notif .ntx { display:flex; flex-direction:column; min-width:0; flex:1; font-size: max(calc(var(--u)*14), 12px); line-height:1.35; }
+.notif .ntx b { font-weight:600; } .notif .ntx span { font-weight:300; opacity:.9; }
+.notif .ntime { font-size: max(calc(var(--u)*11), 10px); opacity:.75; }
+.notif.light { position:relative; left:auto; right:auto; top:auto; background: rgba(255,255,255,.85); color: var(--ink); border-color: rgba(20,29,36,.08); box-shadow: 0 calc(var(--u)*10) calc(var(--u)*24) rgba(20,29,36,.12); }
+.bottomtext { position:absolute; left: calc(var(--u)*36); right: calc(var(--u)*36); bottom: calc(var(--u)*30); }
+.igtitle { position:absolute; left: calc(var(--u)*40); right: calc(var(--u)*40); top: calc(var(--u)*70); text-align:center; color: var(--lake); }
+.igc { position:absolute; left: calc(var(--u)*100); right: calc(var(--u)*100); bottom: calc(var(--u)*34); background:#fff; border-radius: calc(var(--u)*16); overflow:hidden; box-shadow: 0 calc(var(--u)*16) calc(var(--u)*36) rgba(20,29,36,.18); }
+.igh { display:flex; align-items:center; gap: calc(var(--u)*10); padding: calc(var(--u)*10) calc(var(--u)*12); }
+.igh img { width: calc(var(--u)*34); height: calc(var(--u)*34); border-radius:50%; border: 1px solid rgba(20,29,36,.12); padding: 3px; box-sizing:border-box; background:#fff; }
+.igh span { display:flex; flex-direction:column; font-size: max(calc(var(--u)*13), 11.5px); line-height:1.3; color: var(--ink); }
+.igh small { font-size: max(calc(var(--u)*11), 10px); color: var(--muted); }
+.igi { display:block; width:100%; aspect-ratio: 1/1; object-fit:cover; }
+.iga { display:flex; gap: calc(var(--u)*14); padding: calc(var(--u)*10) calc(var(--u)*12) 0; }
+.iga svg { width: calc(var(--u)*22); height: calc(var(--u)*22); fill:none; stroke: var(--ink); stroke-width:1.6; stroke-linejoin: round; stroke-linecap: round; }
+.igcap { margin:0; padding: calc(var(--u)*8) calc(var(--u)*12) calc(var(--u)*14); font-size: max(calc(var(--u)*13), 11.5px); line-height:1.45; color: var(--ink); }
+.sticker { position:absolute; left: calc(var(--u)*36); top: calc(var(--u)*70); z-index:3; background: var(--gold); color: var(--ink); font-size: max(calc(var(--u)*11), 10px); font-weight:600; letter-spacing:.2em; text-transform:uppercase; padding: calc(var(--u)*8) calc(var(--u)*14); border-radius: 999px; transform: rotate(-4deg); box-shadow: 0 2px 6px rgba(0,0,0,.15); }
+.pol.bts { left: calc(var(--u)*78); right: calc(var(--u)*78); top: calc(var(--u)*92); }
+.lined { position:absolute; left: calc(var(--u)*40); right: calc(var(--u)*40); bottom: calc(var(--u)*34); background: #FFFDF8 repeating-linear-gradient(to bottom, transparent 0 calc(var(--u)*27), rgba(11,92,133,.14) calc(var(--u)*27) calc(var(--u)*28)); padding: calc(var(--u)*18) calc(var(--u)*22) calc(var(--u)*20); box-shadow: 0 calc(var(--u)*10) calc(var(--u)*22) rgba(20,29,36,.14); text-align:center; }
+.lined.n1 { transform: rotate(1.2deg); } .lined.n2 { transform: rotate(-1deg); }
+.lined .bl { justify-content:center; }
+.pol.mini { width: calc(var(--u)*150); }
+.pol.mini.m1 { right: calc(var(--u)*34); top: calc(var(--u)*82); }
+.pol.mini.m2 { right: calc(var(--u)*150); top: calc(var(--u)*196); }
+.pol.mini.m3 { left: calc(var(--u)*40); top: calc(var(--u)*170); }
+.pol.mini figcaption.blank { padding: calc(var(--u)*10) 0; }
+.grid4 { position:absolute; left: calc(var(--u)*30); top: calc(var(--u)*88); width: calc(var(--u)*380); display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: calc(var(--u)*18); }
+.grid4 .pol { position:relative; padding-bottom: calc(var(--u)*9); }
+.grid4 .pol figcaption.blank { display:none; }
+.vt { position:absolute; right: calc(var(--u)*30); top: calc(var(--u)*80); bottom: calc(var(--u)*30); margin:0; writing-mode: vertical-rl; font-family: var(--serif); font-weight:400; font-size: calc(var(--u)*50); letter-spacing:.14em; text-transform:uppercase; color:#fff; text-align:center; }
+.itxt { position:absolute; left: calc(var(--u)*36); right: calc(var(--u)*110); bottom: calc(var(--u)*36); }
+.pol.c1 { width: calc(var(--u)*190); left: calc(var(--u)*40); top: calc(var(--u)*86); }
+.pol.c2 { width: calc(var(--u)*190); right: calc(var(--u)*44); top: calc(var(--u)*118); }
+.pol.c3 { width: calc(var(--u)*170); left: calc(var(--u)*176); top: calc(var(--u)*246); z-index:2; }
+.chb { position:absolute; left: calc(var(--u)*44); right: calc(var(--u)*44); bottom: calc(var(--u)*44); }
+.sstamp { position:absolute; right: calc(var(--u)*40); top: calc(var(--u)*40); width: calc(var(--u)*70); height: calc(var(--u)*86); object-fit:cover; border: calc(var(--u)*5) solid #fff; outline: 1px dashed rgba(20,29,36,.35); outline-offset: calc(var(--u)*-3); transform: rotate(5deg); box-shadow: 0 1px 4px rgba(0,0,0,.18); }
+.maptitle { position:absolute; left: calc(var(--u)*36); top: calc(var(--u)*62); margin:0; font-family: var(--serif); font-weight:400; font-size: calc(var(--u)*26); line-height:1.2; letter-spacing:.1em; text-transform:uppercase; color:#fff; }
+.route { position:absolute; inset:0; width:100%; height:100%; }
+.route path { fill:none; stroke: rgba(255,255,255,.7); stroke-width: 1.6; stroke-dasharray: 6 7; vector-effect: non-scaling-stroke; }
+.stop { position:absolute; transform: translate(-50%, -50%); display:flex; flex-direction:column; align-items:center; gap: calc(var(--u)*5); width: calc(var(--u)*120); text-align:center; }
+.stop img { width: calc(var(--u)*50); height: calc(var(--u)*50); border-radius:50%; object-fit:cover; border: calc(var(--u)*3) solid #fff; box-shadow: 0 calc(var(--u)*6) calc(var(--u)*12) rgba(0,0,0,.35); }
+.stop .gd { width: calc(var(--u)*16); height: calc(var(--u)*16); border-radius:50%; background: var(--gold); border: calc(var(--u)*3) solid var(--night); box-shadow: 0 0 0 1px var(--gold); }
+.stop .sn { font-family: var(--num); font-size: max(calc(var(--u)*11), 10px); color: var(--gold); }
+.stop .st { font-size: max(calc(var(--u)*11), 10px); line-height:1.3; font-weight:500; letter-spacing:.08em; text-transform:uppercase; color:#fff; }
+.mapnote { position:absolute; left: calc(var(--u)*36); bottom: calc(var(--u)*24); margin:0; font-family: var(--serif); font-style: italic; font-size: max(calc(var(--u)*14), 12px); color: var(--mist); }
+.hztitle { position:absolute; left: calc(var(--u)*40); right: calc(var(--u)*40); top: calc(var(--u)*110); text-align:center; color: var(--lake); }
+.tags { position:absolute; left: calc(var(--u)*95); right: calc(var(--u)*95); top: calc(50% + var(--u)*75); transform: translateY(-50%); display:flex; justify-content:center; gap: calc(var(--u)*16); flex-wrap: wrap; }
+.ltag { position:relative; min-width: calc(var(--u)*126); padding: calc(var(--u)*38) calc(var(--u)*14) calc(var(--u)*22); background: #FBF8F2; border: 1px solid rgba(20,29,36,.14); border-radius: calc(var(--u)*10) calc(var(--u)*10) calc(var(--u)*10) calc(var(--u)*10); text-align:center; transform: rotate(var(--r)); box-shadow: 0 calc(var(--u)*8) calc(var(--u)*18) rgba(20,29,36,.12); display:flex; flex-direction:column; gap: 4px; }
+.ltag .hole { position:absolute; left:50%; top: calc(var(--u)*14); width: calc(var(--u)*15); height: calc(var(--u)*15); transform: translateX(-50%); border-radius:50%; border: 1.5px solid rgba(184,146,90,.8); background: var(--paper); }
+.ltag .lk { font-size: calc(var(--u)*11); font-weight:600; letter-spacing:.2em; text-transform:uppercase; color: #8A6A3A; }
+.ltag .lv { margin-top: calc(var(--u)*4); font-family: var(--serif); white-space: nowrap; font-size: calc(var(--u)*21); letter-spacing:.08em; text-transform:uppercase; color: var(--ink); }
+.tunedb { position:absolute; left: calc(var(--u)*40); right: calc(var(--u)*40); top: calc(var(--u)*104); display:flex; flex-direction:column; gap: calc(var(--u)*14); }
+.tunedb .bh { margin-bottom: calc(var(--u)*14); }
+.pol.tunpol { width: calc(var(--u)*200); right: calc(var(--u)*56); bottom: calc(var(--u)*34); }
+
+/* semi-opaque text card on every photo page */
+.card { position:absolute; left: calc(var(--u)*18); bottom: calc(var(--u)*18); width: fit-content; max-width: calc(100% - var(--u)*36); box-sizing:border-box; padding: calc(var(--u)*10) calc(var(--u)*13) calc(var(--u)*11); background: rgba(255,255,255,.6); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.55); border-radius: calc(var(--u)*14); box-shadow: 0 calc(var(--u)*10) calc(var(--u)*24) rgba(4,14,20,.2); z-index: 3; }
+.card .bh { white-space: nowrap; text-wrap: nowrap; font-weight:700; font-size: calc(max(calc(var(--u) * var(--bs, 18)), 13.5px) * var(--k, 1)); letter-spacing:.06em; line-height:1.2; }
+.card .bs { margin-top: calc(var(--u)*4); font-size: calc(max(calc(var(--u)*12), 10.5px) * var(--ks, 1)); line-height:1.35; color: #26313A; }
+.card .bl { margin-top: calc(var(--u)*6); font-size: max(calc(var(--u)*9), 8.5px); letter-spacing:.2em; }
+.card .bl svg { width: max(calc(var(--u)*10), 8.5px); height: max(calc(var(--u)*13), 11px); }
+.phold { bottom: calc(var(--u)*250); }
+.pc.mapbg { background: #F3EEE3; }
+.topo { position:absolute; inset:0; width:100%; height:100%; }
+.topo path { fill: rgba(201,214,222,.10); stroke: rgba(11,92,133,.13); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.mtitle { position:absolute; left: calc(var(--u)*20); right: calc(var(--u)*20); top: calc(var(--u)*50); white-space:nowrap; margin:0; text-align:center; font-family: var(--serif); font-weight:700; font-size: calc(var(--u)*34 * var(--k, 1)); line-height:1; letter-spacing:.04em; text-transform:uppercase; color: var(--cloth); }
+.msub { position:absolute; left:0; right:0; top: calc(var(--u)*96); margin:0; text-align:center; font-size: calc(var(--u)*11); font-weight:500; letter-spacing:.34em; text-transform:uppercase; color: #8A6A3A; }
+.compass { position:absolute; right: calc(var(--u)*14); top: 45%; width: calc(var(--u)*84); height: calc(var(--u)*84); transform: translateY(-50%); color: var(--gold); }
+.mroute { position:absolute; inset:0; width:100%; height:100%; }
+.mroute path { fill:none; stroke: var(--lake); stroke-width: 1.8; stroke-dasharray: 5 6; stroke-linecap: round; opacity:.75; vector-effect: non-scaling-stroke; }
+.mstop { position:absolute; width: calc(var(--u)*124); transform: translate(-50%, calc(var(--u)*-39)); display:flex; flex-direction:column; align-items:center; gap: calc(var(--u)*6); text-align:center; }
+.mstop .tile { position:relative; width: calc(var(--u)*78); height: calc(var(--u)*78); box-sizing:border-box; padding: calc(var(--u)*5); background: #FBF8F2; border-radius: calc(var(--u)*16); box-shadow: 0 calc(var(--u)*6) calc(var(--u)*16) rgba(20,29,36,.18); }
+.mstop .tile > img { width:100%; height:100%; object-fit:cover; border-radius: calc(var(--u)*11); display:block; }
+.mstop .tph { width:100%; height:100%; border-radius: calc(var(--u)*11); background: #E4ECF0; display:flex; align-items:center; justify-content:center; }
+.mstop .tph img { width: 40%; height:auto; opacity:.55; }
+.mstop .tn { position:absolute; left: calc(var(--u)*-7); top: calc(var(--u)*-7); width: calc(var(--u)*22); height: calc(var(--u)*22); min-width: 17px; min-height: 17px; border-radius:50%; background: var(--gold); color: var(--ink); font-family: var(--num); font-weight:400; font-size: max(calc(var(--u)*10), 9px); display:flex; align-items:center; justify-content:center; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+.mstop .tl { font-size: calc(var(--u)*9.5); line-height:1.3; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color: var(--cloth); text-wrap: balance; }
+.mscale { position:absolute; left:0; right:0; bottom: calc(var(--u)*20); display:flex; flex-direction:column; align-items:center; gap: calc(var(--u)*7); }
+.mscale .bar { position:relative; width: calc(var(--u)*170); height: calc(var(--u)*7); border-bottom: 1px solid rgba(14,47,66,.55); display:flex; justify-content:space-between; }
+.mscale .bar i { width:1px; height:100%; background: rgba(14,47,66,.55); }
+.mscale p { margin:0; font-size: max(calc(var(--u)*10), 9px); font-weight:500; letter-spacing:.26em; text-transform:uppercase; color: var(--cloth); }
+/* book gutter: fold shadow where the two pages meet (spreads only), on every inside page */
+#book.spread .page.--left:not([data-density="hard"]) .pc::after,
+#book.spread .page.--right:not([data-density="hard"]) .pc::after { content:""; position:absolute; top:0; bottom:0; width: 12%; pointer-events:none; z-index: 20; --g1: rgba(10,18,24,.34); --g2: rgba(10,18,24,.13); --g3: rgba(10,18,24,.04); }
+#book.spread .page.dark.--left:not([data-density="hard"]) .pc::after,
+#book.spread .page.dark.--right:not([data-density="hard"]) .pc::after { --g1: rgba(0,0,0,.6); --g2: rgba(0,0,0,.24); --g3: rgba(0,0,0,.07); }
+#book.spread .page.--left:not([data-density="hard"]) .pc::after { right:0; background: linear-gradient(to left, var(--g1) 0%, var(--g2) 18%, var(--g3) 50%, rgba(0,0,0,0) 100%); }
+#book.spread .page.--right:not([data-density="hard"]) .pc::after { left:0; background: linear-gradient(to right, var(--g1) 0%, var(--g2) 18%, var(--g3) 50%, rgba(0,0,0,0) 100%); }
+/* magazine-style front cover */
+.pc.mag { background: var(--night); }
+.magsh { position:absolute; inset:0; background: linear-gradient(to bottom, rgba(8,20,28,.62) 0%, rgba(8,20,28,.42) 30%, rgba(8,20,28,.12) 44%, rgba(8,20,28,0) 52%), linear-gradient(to top, rgba(8,20,28,.5) 0%, rgba(8,20,28,.15) 18%, rgba(8,20,28,0) 28%); }
+.magspine { position:absolute; left:0; top:0; bottom:0; width: calc(var(--u)*16); background: linear-gradient(to right, rgba(0,0,0,.35), rgba(255,255,255,.08) 60%, rgba(0,0,0,0)); }
+.magtop { position:absolute; left: calc(var(--u)*30); right: calc(var(--u)*28); top: calc(var(--u)*24); display:flex; justify-content:space-between; align-items:center; }
+.magtop img { width: calc(var(--u)*70); height:auto; }
+.magtop span { font-size: calc(var(--u)*11); font-weight:600; letter-spacing:.24em; text-transform:uppercase; color:#fff; text-shadow: 0 1px 4px rgba(0,0,0,.5); }
+.masthead { position:absolute; left: calc(var(--u)*18); right: calc(var(--u)*14); top: calc(var(--u)*50); height: calc(var(--u)*146); display:flex; align-items:center; justify-content:center; margin:0; font-family: var(--serif); font-weight:700; font-size: calc(var(--u)*150*var(--k,1)); line-height:.86; letter-spacing:-.03em; color: var(--gold); text-align:center; white-space:nowrap; text-shadow: 0 3px 18px rgba(0,0,0,.28); }
+.magsub { position:absolute; right: calc(var(--u)*30); top: calc(var(--u)*200); margin:0; font-size: calc(var(--u)*11.5); font-weight:600; letter-spacing:.3em; text-transform:uppercase; color:#fff; text-shadow: 0 1px 4px rgba(0,0,0,.5); }
+.coverlines { position:absolute; left: calc(var(--u)*24); right: calc(var(--u)*24); top: calc(var(--u)*232); margin:0; padding:0; list-style:none; display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); }
+.coverlines li { display:flex; flex-direction:column; align-items:center; text-align:center; gap: calc(var(--u)*4); padding: 0 calc(var(--u)*10); }
+.coverlines li + li { border-left: 1px solid rgba(255,255,255,.7); }
+.coverlines .ck { font-size: calc(var(--u)*10); font-weight:600; letter-spacing:.13em; text-transform:uppercase; color: var(--gold); text-shadow: 0 1px 4px rgba(0,0,0,.6); }
+.coverlines .cv { font-family: var(--serif); font-size: calc(var(--u)*17); line-height:1.2; color:#fff; text-shadow: 0 1px 8px rgba(0,0,0,.55); }
+.feature { position:absolute; right: calc(var(--u)*30); bottom: calc(var(--u)*92); text-align:right; }
+.feature .fk { margin:0; font-family: var(--serif); font-weight:700; font-size: calc(var(--u)*40); line-height:1; color: var(--sky); text-shadow: 0 2px 12px rgba(0,0,0,.4); }
+.feature .fv { margin: calc(var(--u)*6) 0 0; font-family: var(--serif); font-size: calc(var(--u)*24); line-height:1.15; text-transform:uppercase; letter-spacing:.06em; color:#fff; text-shadow: 0 2px 10px rgba(0,0,0,.5); }
+.magbar { position:absolute; left: calc(var(--u)*30); right: calc(var(--u)*30); bottom: calc(var(--u)*24); display:flex; align-items:flex-end; justify-content:space-between; gap: calc(var(--u)*16); }
+.magbar p { margin:0; font-size: calc(var(--u)*10); font-weight:500; letter-spacing:.22em; text-transform:uppercase; color: var(--gold); line-height:1.6; text-shadow: 0 1px 4px rgba(0,0,0,.6); }
+.magbar p b { font-weight:600; color:#fff; letter-spacing:.16em; }
+.magqr { text-decoration:none; }
+.magv { position:absolute; left: calc(var(--u)*16); bottom: calc(var(--u)*26); display:flex; flex-direction:row; align-items:stretch; background:#fff; padding: calc(var(--u)*5) calc(var(--u)*3) calc(var(--u)*5) calc(var(--u)*4); box-shadow: 0 2px 8px rgba(0,0,0,.3); }
+.magv svg.bcv { width: calc(var(--u)*28); height: calc(var(--u)*96); display:block; fill: #141D24; }
+.magv span { writing-mode: vertical-rl; transform: rotate(180deg); margin-left: calc(var(--u)*2); text-align:center; font-size: calc(var(--u)*6.5); letter-spacing:.08em; color: #141D24; }
+/* photo-page text scales with the page (no fixed minimums) so lines never collide; location always on one line */
+.pc > .loc { font-size: calc(var(--u)*13) !important; letter-spacing:.2em; white-space: nowrap; gap: calc(var(--u)*8); right: calc(var(--u)*20); }
+.pc > .loc svg { width: calc(var(--u)*12); height: calc(var(--u)*16); }
+.magstrap { position:absolute; right: calc(var(--u)*30); top: calc(var(--u)*220); margin:0; font-family: var(--serif); font-size: calc(var(--u)*17); color:#fff; text-shadow: 0 1px 8px rgba(0,0,0,.6); }
+.maghero { position:absolute; right: calc(var(--u)*30); bottom: calc(var(--u)*30); text-align:right; }
+.maghero .mh { margin:0; font-family: var(--serif); font-size: calc(var(--u)*21); line-height:1.22; color:#fff; text-shadow: 0 2px 12px rgba(0,0,0,.55); }
+.maghero .mk { margin: calc(var(--u)*10) 0 0; font-size: calc(var(--u)*10.5); font-weight:600; letter-spacing:.22em; text-transform:uppercase; color: var(--gold); text-shadow: 0 1px 4px rgba(0,0,0,.6); }
+.magurl { position:absolute; left: calc(var(--u)*16); bottom: calc(var(--u)*30); margin:0; font-size: calc(var(--u)*8.5); letter-spacing:.16em; text-transform:uppercase; color:#fff; text-shadow: 0 1px 4px rgba(0,0,0,.6); }
+/* wraparound cover: one photo across back + front, like a real magazine */
+.wrapimg { position:absolute; top:0; height:100%; width:200%; max-width:none; object-fit:cover; object-position:50% 50%; display:block; }
+.wrapimg.front { left:-100%; }
+.wrapimg.back { left:0; }
+.backsh { position:absolute; inset:0; background: linear-gradient(to bottom, rgba(8,20,28,.5) 0%, rgba(8,20,28,.5) 30%, rgba(8,20,28,.42) 50%, rgba(8,20,28,.08) 68%, rgba(8,20,28,.35) 100%); }
+.magspine.r { left:auto; right:0; background: linear-gradient(to left, rgba(0,0,0,.35), rgba(255,255,255,.08) 60%, rgba(0,0,0,0)); }
+.backtxt { position:absolute; left: calc(var(--u)*40); right: calc(var(--u)*40); top: 40%; transform: translateY(-50%); display:flex; flex-direction:column; align-items:center; text-align:center; }
+.backtxt img { width: calc(var(--u)*52); height:auto; }
+.backtxt .motto { margin: calc(var(--u)*18) 0 0; font-family: var(--serif); font-style: italic; font-size: calc(var(--u)*22); line-height:1.4; color:#fff; text-shadow: 0 1px 8px rgba(0,0,0,.45); }
+.backtxt .goldrule { margin: calc(var(--u)*20) 0; }
+.backtxt .imprint { margin:0; font-size: calc(var(--u)*11); font-weight:500; letter-spacing:.3em; text-transform:uppercase; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.5); }
+.backurl { position:absolute; left:0; right:0; bottom: calc(var(--u)*24); margin:0; text-align:center; font-size: calc(var(--u)*10.5); letter-spacing:.24em; text-transform:uppercase; color:#fff; text-shadow: 0 1px 4px rgba(0,0,0,.6); }
+/* stacked-word chapter openers */
+.stk { position:absolute; inset:0; }
+.stk .eb.dk { color: #8A6A3A; }
+.stk .st { position:absolute; left: calc(var(--u)*30); right: calc(var(--u)*20); top: calc(var(--u)*76); margin:0; font-family: var(--serif); font-weight:400; font-size: calc(var(--u)*76 * var(--k, 1)); line-height:.98; letter-spacing:.01em; text-transform:uppercase; color: var(--lake); white-space: nowrap; }
+.stk .st em { font-style:normal; color: var(--gold); }
+.stk .si { position:absolute; left: calc(var(--u)*36); right: calc(var(--u)*50); bottom: calc(var(--u)*40); margin:0; font-family: var(--serif); font-style: italic; font-size: calc(var(--u)*22); line-height:1.55; color: #3B464F; }
+.stk .sn { position:absolute; right: calc(var(--u)*36); bottom: calc(var(--u)*44); margin:0; font-family: var(--serif); font-size: calc(var(--u)*22); color: var(--gold); }
+/* stay tuned over the Egypt photo */
+.tunsh { position:absolute; inset:0; background: linear-gradient(to right, rgba(8,20,28,.55) 0%, rgba(8,20,28,.25) 45%, rgba(8,20,28,0) 65%), linear-gradient(to bottom, rgba(8,20,28,.4) 0%, rgba(8,20,28,0) 30%, rgba(8,20,28,0) 75%, rgba(8,20,28,.4) 100%); }
+/* cover lines chosen by Marc (round 3) */
+.magstrap2 { position:absolute; right: calc(var(--u)*30); top: calc(var(--u)*222); margin:0; max-width: calc(var(--u)*300); text-align:right; font-family: var(--serif); font-size: calc(var(--u)*19); line-height:1.3; color:#fff; text-shadow: 0 1px 10px rgba(0,0,0,.7); }
+.magteaser { position:absolute; right: calc(var(--u)*30); bottom: calc(var(--u)*48); margin:0; max-width: calc(var(--u)*260); text-align:right; font-size: calc(var(--u)*12); font-weight:500; line-height:1.5; letter-spacing:.06em; color:#fff; text-shadow: 0 1px 6px rgba(0,0,0,.7); }
+.magweb { position:absolute; right: calc(var(--u)*30); bottom: calc(var(--u)*26); margin:0; font-size: calc(var(--u)*9.5); letter-spacing:.2em; color: var(--gold); text-shadow: 0 1px 4px rgba(0,0,0,.6); }
+/* contact page, stacked style + invitation card */
+.stkc .st { font-size: calc(var(--u)*62 * var(--k, 1)); }
+.ccard { position:absolute; left: calc(var(--u)*36); right: calc(var(--u)*36); bottom: calc(var(--u)*72); background:#fff; border-radius: calc(var(--u)*16); padding: calc(var(--u)*24) calc(var(--u)*26); box-shadow: 0 calc(var(--u)*10) calc(var(--u)*26) rgba(20,29,36,.1); }
+.ccard .cq { margin:0 0 calc(var(--u)*16); font-family: var(--serif); font-size: calc(var(--u)*21); line-height:1.35; color: var(--ink); }
+.cbtn { display:inline-flex; align-items:center; gap: calc(var(--u)*10); min-height: 44px; padding: 0 calc(var(--u)*26); border-radius:999px; background: var(--gold); color: var(--ink); font-family: var(--sans); font-size: calc(var(--u)*12.5); font-weight:500; letter-spacing:.18em; text-transform:uppercase; text-decoration:none; transition: background .3s; }
+.cbtn:hover { background: #E4C493; }
+.cbtn:focus-visible, .cbelow a:focus-visible { outline: 2px solid var(--lake); outline-offset: 3px; }
+.cbtn svg { width: calc(var(--u)*18); height: calc(var(--u)*12); }
+.cbelow { position:absolute; left: calc(var(--u)*36); right: calc(var(--u)*36); bottom: calc(var(--u)*34); display:flex; gap: calc(var(--u)*24); flex-wrap: wrap; }
+.cbelow a { font-size: calc(var(--u)*13); color: var(--body); text-decoration:none; }
+.cbelow a:hover { text-decoration: underline; text-decoration-color: var(--gold); }
+/* subtitle rules level with the first text line on every page */
+.sl { align-items: flex-start !important; }
+.sl::before, .sl::after { margin-top: calc(var(--u)*12); }
+/* page 30: smaller, see-through phone-style notifications */
+.tunedb { right: auto !important; width: calc(var(--u)*330); }
+.tunedb .notif.light { background: rgba(255,255,255,.42); -webkit-backdrop-filter: blur(16px) saturate(1.4); backdrop-filter: blur(16px) saturate(1.4); border: 1px solid rgba(255,255,255,.45); box-shadow: 0 calc(var(--u)*8) calc(var(--u)*20) rgba(0,0,0,.15); padding: calc(var(--u)*9) calc(var(--u)*12); gap: calc(var(--u)*10); border-radius: calc(var(--u)*16); color: var(--ink); }
+.tunedb .notif .nic { width: calc(var(--u)*28); height: calc(var(--u)*28); min-width:0; min-height:0; }
+.tunedb .notif .ntx { font-size: calc(var(--u)*12.5); line-height:1.3; }
+.tunedb .notif .ntime { font-size: calc(var(--u)*10); }
+/* page 31: neater CTA */
+.cbtn { min-height:0 !important; padding: calc(var(--u)*11) calc(var(--u)*20) !important; font-size: calc(var(--u)*14) !important; letter-spacing:.12em !important; font-weight:600 !important; gap: calc(var(--u)*8) !important; }
+.cbtn svg { width: calc(var(--u)*16) !important; height: calc(var(--u)*10) !important; }
+.ccard { padding: calc(var(--u)*22) calc(var(--u)*24) !important; }
+.botsh { position:absolute; left:0; right:0; bottom:0; height: 30%; background: linear-gradient(to top, rgba(8,20,28,.82) 0%, rgba(8,20,28,.45) 45%, rgba(8,20,28,0) 100%); }
+/* page 30: centred phone-style notifications */
+.tunedb { left: 50% !important; right: auto !important; width: calc(var(--u)*430) !important; transform: translateX(-50%); align-items: center; }
+.tunedb .bh { text-align:center; }
+.tunedb .notif.light { width: 100%; box-sizing: border-box; padding: calc(var(--u)*11) calc(var(--u)*14); }
+.tunedb .notif .nic { width: calc(var(--u)*32); height: calc(var(--u)*32); }
+.tunedb .notif .ntx { font-size: calc(var(--u)*13.5); }
+.tunedb .notif .ntx span { white-space: nowrap; }
+/* page 31 */
+.stkc .eb.dk { color: var(--lake); }
+.ccard { bottom: calc(var(--u)*104) !important; }
+.cbelow { bottom: calc(var(--u)*66) !important; }
+.sl span.nb { white-space: nowrap; max-width:none; }
+.cbelow a { display:inline-flex; align-items:center; gap: calc(var(--u)*6); }
+.cbelow .igic { width: calc(var(--u)*15); height: calc(var(--u)*15); color: var(--lake); }
+/* page 30: notifications in a column on the left, photo framed so the traveller sits to the right */
+.tunedb { left: calc(var(--u)*30) !important; transform:none !important; width: calc(var(--u)*265) !important; align-items: stretch !important; }
+.tunedb .bh { text-align:left !important; }
+.tunedb .notif .ntx span { white-space: normal !important; }
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); opacity: 0; pointer-events:none; z-index: 50; max-width: calc(100% - 32px); background: var(--night); color:#fff; font-family: var(--sans); font-size: 13px; padding: 10px 16px; border-radius: 999px; box-shadow: 0 8px 24px rgba(0,0,0,.25); transition: opacity .3s, transform .3s; text-align:center; }
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+/* page 14: whole photo visible, soft blurred fill behind */
+.ph.blurbg { filter: blur(18px) brightness(.75); transform: scale(1.15); }
+.ph.fitimg { object-fit: contain; object-position: 50% 38%; }
+/* map labels sit on a paper chip so the dotted route never runs through the words */
+.mstop .tl { background: rgba(243,238,227,.94); padding: calc(var(--u)*2) calc(var(--u)*5); border-radius: calc(var(--u)*4); position:relative; z-index:1; }
+.mstop { z-index: 1; }
+/* fallback when the page-turn library cannot load */
+.nolib .book { display:flex; flex-direction:column; gap: 20px; }
+.nolib .page { position:relative; width:100%; aspect-ratio: 4 / 5; }
+.nolib .controls, .nolib .hint { display:none; }
+@media (prefers-reduced-motion: reduce) { .btn { transition:none; } }
+</style>
+<div class="app">
+  <header class="bar"><img src="img/logo_blue.png" alt="Peaks2Shores"><p>The Journey Book</p></header>
+  <div class="book-wrap"><div class="book" id="book">
+<div class="page dark" data-density="hard"><div class="pc mag">
+  <img class="wrapimg front" src="img/oeschinen.jpg" alt="A mountain path above a turquoise alpine lake in the Swiss Alps">
+  <div class="magsh"></div><div class="magspine"></div>
+  <div class="magtop"><img src="img/logo_white.png" alt="Peaks2Shores"><span>Edition 01</span></div>
+  <h1 class="masthead"><span class="mw">Travelogue</span></h1>
+  <p class="magsub">The Journey Book</p>
+  <p class="magstrap2">Extraordinary places.<br>Thoughtfully curated journeys.</p>
+  <p class="magteaser">Discover our upcoming journeys.<br>Bookings opening soon.</p>
+  <p class="magweb">peaks2shores.com</p>
+  <a class="magqr magv" href="https://www.instagram.com/peaks2shores/" target="_blank" rel="noopener" aria-label="Peaks2Shores on Instagram"><svg class="bcv" viewBox="0 -10 40 198" preserveAspectRatio="none" shape-rendering="crispEdges" aria-hidden="true"><rect x="0" y="0" width="40" height="2"/><rect x="0" y="3" width="40" height="1"/><rect x="0" y="6" width="40" height="1"/><rect x="0" y="11" width="40" height="2"/><rect x="0" y="16" width="40" height="2"/><rect x="0" y="19" width="40" height="2"/><rect x="0" y="22" width="40" height="1"/><rect x="0" y="24" width="40" height="1"/><rect x="0" y="27" width="40" height="4"/><rect x="0" y="33" width="40" height="1"/><rect x="0" y="35" width="40" height="2"/><rect x="0" y="39" width="40" height="1"/><rect x="0" y="44" width="40" height="1"/><rect x="0" y="47" width="40" height="1"/><rect x="0" y="49" width="40" height="2"/><rect x="0" y="55" width="40" height="2"/><rect x="0" y="61" width="40" height="1"/><rect x="0" y="64" width="40" height="1"/><rect x="0" y="66" width="40" height="1"/><rect x="0" y="68" width="40" height="4"/><rect x="0" y="74" width="40" height="1"/><rect x="0" y="77" width="40" height="2"/><rect x="0" y="81" width="40" height="3"/><rect x="0" y="86" width="40" height="1"/><rect x="0" y="88" width="40" height="1"/><rect x="0" y="90" width="40" height="4"/><rect x="0" y="96" width="40" height="1"/><rect x="0" y="99" width="40" height="1"/><rect x="0" y="102" width="40" height="2"/><rect x="0" y="108" width="40" height="1"/><rect x="0" y="110" width="40" height="1"/><rect x="0" y="114" width="40" height="4"/><rect x="0" y="119" width="40" height="1"/><rect x="0" y="121" width="40" height="1"/><rect x="0" y="124" width="40" height="1"/><rect x="0" y="127" width="40" height="4"/><rect x="0" y="132" width="40" height="1"/><rect x="0" y="134" width="40" height="2"/><rect x="0" y="138" width="40" height="1"/><rect x="0" y="143" width="40" height="1"/><rect x="0" y="145" width="40" height="4"/><rect x="0" y="151" width="40" height="1"/><rect x="0" y="154" width="40" height="1"/><rect x="0" y="157" width="40" height="1"/><rect x="0" y="159" width="40" height="4"/><rect x="0" y="165" width="40" height="2"/><rect x="0" y="170" width="40" height="3"/><rect x="0" y="174" width="40" height="1"/><rect x="0" y="176" width="40" height="2"/></svg><span>@peaks2shores</span></a>
+  </div></div>
+<div class="page dark"><div class="pc"><img class="ph" src="img/hiking.jpg" alt="Marc Haeni hiking in the Swiss Alps in a Peaks2Shores T-shirt" style="object-position:50% 30%">
+  <div class="shade soft"></div><p class="cap">Marc Haeni · Founder, Peaks2Shores</p></div></div>
+<div class="page"><div class="pc light"><p class="eb dk">The Peaks2Shores story</p><div class="story">
+  <h2 class="sh">A lifetime of travel.<br>A passion for extraordinary journeys.</h2>
+  <p class="sb">Born and raised in Switzerland and based in Miami for more than 25 years, Peaks2Shores founder Marc Haeni has built an international career spanning three decades in travel and hospitality, including leadership roles with some of the world’s leading travel and cruise brands.</p><p class="sb">His passion for extraordinary destinations, combined with decades of trusted industry relationships, forms the foundation of Peaks2Shores — bringing together vetted and carefully selected local experts and exceptional hospitality partners to create thoughtfully curated luxury journeys.</p></div><p class="pg dk">02</p></div></div>
+<div class="page"><div class="pc paper"><div class="stk">
+  <p class="eb dk">Chapter one</p><p class="pg dk">03</p>
+  <h2 class="st">Places<br>that<br><em>inspire</em><br><em>us</em></h2>
+  <p class="si">From the peaks to the shores, a collection of extraordinary places, memorable connections, and experiences that have shaped our passion for travel.</p></div></div></div>
+<div class="page dark"><div class="pc"><img class="ph" decoding="async" src="img/lucerne_orig.jpg" alt="The Water Tower and Chapel Bridge on the clear Reuss river, Lucerne" style="object-position:50% 50%"><div class="shade"></div>
+  <p class="eb">Places that inspire us</p><p class="pg">04</p>
+  <h3 class="hd" style="--hs:34">Where our story<br>begins</h3>
+  <p class="sl"><span>On the shores of Lake Lucerne</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Lucerne · Switzerland</p></div></div>
+<div class="page dark"><div class="pc"><img class="ph" decoding="async" src="img/zermatt_sun.jpg" alt="A horse-drawn carriage at the entrance of the Grand Hotel Zermatterhof" style="object-position:45% 50%"><div class="shade"></div>
+  <p class="eb">Places that inspire us</p><p class="pg">05</p>
+  <h3 class="hd" style="--hs:34">Arriving<br>in style</h3>
+  <p class="sl"><span class="nb">A grand welcome<br>in the heart of Zermatt</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Zermatt · Switzerland</p></div></div>
+<div class="page dark"><div class="pc"><img class="ph" src="img/matterhorn.jpg" alt="The Matterhorn reflected in a clear alpine lake above Zermatt" style="object-position:42% 50%"><div class="topsh"></div><div class="botsh"></div>
+  <p class="eb">Places that inspire us</p><p class="pg">06</p><p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Matterhorn · Switzerland</p></div></div>
+<div class="page dark"><div class="pc"><img class="ph" decoding="async" src="img/zambia.jpg" alt="Marc Haeni with two local safari guides in Zambia" style="object-position:50% 92%"><div class="shade"></div>
+  <p class="eb">Places that inspire us</p><p class="pg">07</p>
+  <h3 class="hd" style="--hs:34">Extraordinary<br>places</h3>
+  <p class="sl"><span>Meaningful connections</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Livingstone · Zambia</p></div></div>
+<div class="page dark"><div class="pc"><img class="ph" decoding="async" src="img/zambezi.jpg" alt="Boats on the Zambezi River at sunset near Victoria Falls" style="object-position:50% 50%"><div class="shade"></div>
+  <p class="eb">Places that inspire us</p><p class="pg">08</p>
+  <h3 class="hd" style="--hs:34">Sundown on<br>the Zambezi</h3>
+  <p class="sl"><span>As the river turns gold</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Victoria Falls · Zimbabwe</p></div></div>
+<div class="page dark"><div class="pc"><img class="ph" decoding="async" src="img/chobe.jpg" alt="An elephant drinking at the water’s edge on the Chobe River" style="object-position:50% 40%"><div class="shade"></div>
+  <p class="eb">Places that inspire us</p><p class="pg">09</p>
+  <h3 class="hd" style="--hs:34">At the<br>water’s edge</h3>
+  <p class="sl"><span class="nb">Where extraordinary wildlife<br>moments unfold</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Chobe National Park · Botswana</p></div></div>
+<div class="page dark"><div class="pc"><img class="ph" decoding="async" src="img/desert.jpg" alt="A host in an orange turban pouring sparkling wine beside a fire at a desert camp at dusk" style="object-position:50% 28%"><div class="shade"></div>
+  <p class="eb">Places that inspire us</p><p class="pg">10</p>
+  <h3 class="hd" style="--hs:34">A toast beneath<br>desert skies</h3>
+  <p class="sl"><span>An unforgettable moment in the Moroccan desert</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Agafay Desert · Morocco</p></div></div>
+<div class="page dark"><div class="pc"><img class="ph" decoding="async" src="img/jaipur.jpg" alt="Marc Haeni dancing with a Rajasthani puppeteer under a red paisley canopy on a Jaipur rooftop" style="object-position:30% 45%"><div class="shade"></div>
+  <p class="eb">Places that inspire us</p><p class="pg">11</p>
+  <h3 class="hd" style="--hs:34">The Pink<br>City</h3>
+  <p class="sl"><span>Colour, craft and royal heritage</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Jaipur · India</p></div></div>
+<div class="page dark"><div class="pc"><img class="ph" decoding="async" src="img/kyoto.jpg" alt="A woman in a kimono on a stone lane below the Yasaka Pagoda in Kyoto" style="object-position:50% 35%"><div class="shade"></div>
+  <p class="eb">Places that inspire us</p><p class="pg">12</p>
+  <h3 class="hd" style="--hs:34">Timeless<br>Kyoto</h3>
+  <p class="sl"><span class="nb">Where ancient traditions meet<br>quiet beauty</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Kyoto · Japan</p></div></div>
+<div class="page dark"><div class="pc"><img class="ph" decoding="async" src="img/boat.jpg" alt="Boats anchored beneath pine-covered cliffs off the coast near Dubrovnik" style="object-position:40% 50%"><div class="shade"></div>
+  <p class="eb">Places that inspire us</p><p class="pg">13</p>
+  <h3 class="hd" style="--hs:34">The Adriatic<br>at its finest</h3>
+  <p class="sl"><span>Hidden coves, turquoise waters and unforgettable coastal discoveries</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Elaphiti Islands · Croatia</p></div></div>
+<div class="page dark"><div class="pc"><img class="ph blurbg" src="img/fiat_hd.jpg" alt=""><img class="ph fitimg" decoding="async" src="img/fiat_hd.jpg" alt="Marc Haeni at the wheel of a red vintage Fiat 500 in the Tuscan hills"><div class="shade"></div>
+  <p class="eb">Behind the scenes</p><p class="pg">14</p>
+  <h3 class="hd" style="--hs:34">The scenic<br>route</h3>
+  <p class="sl"><span class="nb">Discovering the extraordinary<br>along the way</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Tuscany · Italy</p></div></div>
+<div class="page dark"><div class="pc"><img class="ph" decoding="async" src="img/river_clean.jpg" alt="Marc Haeni with a glass of wine on the deck of a river ship on the Seine" style="object-position:50% 22%"><div class="shade"></div>
+  <p class="eb">Behind the scenes</p><p class="pg">15</p>
+  <h3 class="hd" style="--hs:34">Every detail<br>matters</h3>
+  <p class="sl"><span class="nb">Personally explored.<br>Thoughtfully curated.</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Seine River · France</p></div></div>
+<div class="page dark"><div class="pc"><img class="ph" decoding="async" src="img/cruise.jpg" alt="The grand lobby bar of a cruise ship beneath a glass chandelier" style="object-position:50% 40%"><div class="shade"></div>
+  <p class="eb">Beyond the horizon</p><p class="pg">16</p>
+  <h3 class="hd" style="--hs:34">The art<br>of cruising</h3>
+  <p class="sl"><span class="nb">A different way<br>to see the world</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Where the journey is the destination</p></div></div>
+<div class="page"><div class="pc paper"><div class="stk">
+  <p class="eb dk">Chapter two</p><p class="pg dk">17</p>
+  <h2 class="st">Journeys<br>in<br><em>the</em><br><em>making</em></h2>
+  <p class="si">An invitation to discover the extraordinary journeys we’re bringing to life.</p></div></div></div>
+<div class="page"><div class="pc mapbg">
+  <svg class="topo" viewBox="0 0 540 675" preserveAspectRatio="none" aria-hidden="true"><path d="M111.6,150.0 L111.9,152.3 L111.5,154.6 L110.2,156.6 L108.1,158.4 L105.5,159.8 L102.7,160.7 L99.8,161.4 L97.2,161.9 L95.0,162.3 L93.2,162.9 L91.6,163.6 L90.3,164.6 L88.9,165.6 L87.4,166.7 L85.8,167.6 L83.9,168.3 L82.0,168.6 L80.0,168.7 L78.0,168.5 L76.1,168.3 L74.1,168.1 L71.9,168.2 L69.5,168.4 L66.8,168.8 L63.6,169.2 L60.2,169.3 L56.8,169.0 L53.6,168.2 L51.0,166.6 L49.4,164.5 L48.9,161.9 L49.6,159.1 L51.2,156.3 L53.6,153.8 L56.1,151.7 L58.5,150.0 L60.2,148.6 L61.1,147.3 L61.1,145.9 L60.4,144.2 L59.3,142.1 L58.2,139.7 L57.5,137.1 L57.6,134.6 L58.5,132.4 L60.3,130.8 L62.8,129.9 L65.8,129.8 L68.8,130.4 L71.7,131.3 L74.2,132.4 L76.4,133.3 L78.3,133.8 L80.0,133.8 L81.8,133.3 L83.8,132.4 L86.0,131.5 L88.6,130.7 L91.2,130.3 L93.8,130.5 L96.1,131.2 L98.1,132.3 L99.7,133.9 L101.0,135.6 L102.1,137.3 L103.1,139.0 L104.4,140.7 L105.8,142.3 L107.4,144.0 L109.1,145.8 L110.5,147.8Z"/><path d="M143.1,150.0 L143.0,154.5 L141.2,158.9 L137.9,162.7 L133.2,165.9 L127.8,168.3 L122.2,170.0 L116.9,171.2 L112.3,172.2 L108.5,173.4 L105.5,174.9 L102.9,176.9 L100.6,179.2 L98.0,181.7 L95.1,184.1 L91.8,186.1 L88.1,187.5 L84.1,188.2 L80.0,188.4 L75.9,188.2 L71.8,188.0 L67.5,188.1 L62.9,188.5 L57.7,189.3 L51.7,190.1 L45.2,190.7 L38.4,190.6 L31.9,189.5 L26.2,187.0 L22.2,183.2 L20.1,178.3 L20.4,172.8 L22.7,167.1 L26.7,161.7 L31.5,157.0 L36.2,153.1 L40.0,150.0 L42.3,147.3 L42.7,144.6 L41.5,141.5 L39.1,137.8 L36.4,133.3 L34.2,128.3 L33.3,123.2 L34.1,118.4 L36.8,114.5 L41.1,112.0 L46.7,111.0 L52.8,111.4 L58.8,112.8 L64.3,114.7 L69.0,116.4 L73.0,117.6 L76.6,117.7 L80.0,116.9 L83.7,115.1 L88.0,113.0 L92.8,110.9 L98.0,109.5 L103.3,109.0 L108.4,109.6 L112.9,111.4 L116.7,114.1 L119.7,117.4 L122.2,120.9 L124.5,124.5 L126.9,127.8 L129.5,131.1 L132.6,134.3 L135.9,137.7 L139.1,141.5 L141.7,145.6Z"/><path d="M173.6,150.0 L172.2,156.6 L168.3,162.8 L162.3,168.1 L154.8,172.3 L146.7,175.5 L138.8,177.8 L131.7,179.7 L125.8,181.5 L121.3,183.8 L117.7,186.8 L114.6,190.5 L111.4,194.7 L107.8,198.9 L103.4,202.8 L98.2,205.8 L92.5,207.9 L86.3,209.1 L80.0,209.5 L73.6,209.5 L67.2,209.7 L60.3,210.2 L52.8,211.3 L44.4,212.6 L35.1,213.7 L25.2,214.1 L15.4,213.2 L6.4,210.4 L-0.8,205.6 L-5.2,198.9 L-6.4,190.9 L-4.4,182.3 L0.3,173.8 L6.7,166.1 L13.6,159.6 L19.6,154.3 L23.5,150.0 L24.9,146.0 L23.5,141.8 L20.0,136.8 L15.4,130.7 L11.0,123.6 L8.1,116.0 L7.7,108.5 L10.1,101.9 L15.4,97.0 L22.9,94.2 L31.9,93.6 L41.1,94.8 L49.9,97.1 L57.6,99.6 L64.1,101.4 L69.7,102.0 L74.8,100.9 L80.0,98.4 L85.9,94.9 L92.6,91.2 L100.2,88.1 L108.3,86.2 L116.3,86.1 L123.8,87.8 L130.2,91.2 L135.6,95.7 L139.9,100.9 L143.6,106.3 L147.1,111.5 L151.0,116.4 L155.4,121.2 L160.2,126.1 L165.1,131.3 L169.5,137.1 L172.5,143.4Z"/><path d="M202.0,150.0 L198.6,158.5 L192.1,166.2 L183.3,172.7 L173.1,177.8 L162.7,181.6 L153.1,184.6 L145.1,187.4 L138.9,190.5 L134.2,194.5 L130.6,199.5 L127.2,205.3 L123.4,211.6 L118.5,217.7 L112.4,223.1 L105.2,227.2 L97.2,229.9 L88.7,231.5 L80.0,232.2 L71.2,232.7 L62.1,233.4 L52.4,234.6 L41.7,236.2 L30.0,238.0 L17.3,239.0 L4.3,238.6 L-8.0,236.0 L-18.6,230.8 L-26.1,223.0 L-29.7,213.0 L-29.2,201.7 L-24.7,190.1 L-17.5,179.1 L-9.0,169.5 L-0.9,161.7 L5.0,155.4 L7.6,150.0 L6.5,144.7 L2.2,138.7 L-4.3,131.5 L-11.2,122.8 L-16.9,113.0 L-19.7,102.8 L-18.7,93.3 L-13.7,85.5 L-5.0,80.3 L6.1,77.8 L18.5,78.0 L30.8,80.1 L41.9,82.9 L51.3,85.4 L59.2,86.5 L66.1,85.5 L72.8,82.5 L80.0,77.7 L88.3,72.1 L97.9,66.9 L108.4,63.0 L119.4,61.3 L130.0,62.2 L139.5,65.5 L147.6,70.8 L154.3,77.4 L159.8,84.6 L164.7,91.7 L169.7,98.5 L175.3,104.9 L181.5,111.2 L188.0,117.8 L194.3,124.9 L199.3,132.8 L202.1,141.2Z"/><path d="M227.6,150.0 L221.7,160.2 L212.3,169.1 L200.7,176.5 L188.3,182.3 L176.4,186.8 L166.1,190.8 L158.1,194.9 L152.4,199.8 L148.3,206.0 L145.0,213.5 L141.4,221.9 L136.7,230.5 L130.3,238.5 L122.3,245.3 L112.8,250.3 L102.3,253.6 L91.3,255.5 L80.0,256.6 L68.5,257.6 L56.6,259.0 L43.8,260.9 L29.8,263.0 L14.7,264.8 L-1.1,265.1 L-16.6,263.2 L-30.7,258.2 L-41.7,249.8 L-48.6,238.5 L-50.4,224.9 L-47.4,210.3 L-40.3,196.0 L-30.9,183.1 L-21.2,172.2 L-13.4,163.5 L-9.1,156.4 L-9.4,150.0 L-14.1,143.2 L-22.2,135.2 L-31.9,125.4 L-40.9,113.9 L-47.0,101.4 L-48.8,89.0 L-45.2,78.1 L-36.6,69.7 L-24.0,64.7 L-9.0,63.0 L6.7,64.1 L21.5,66.8 L34.4,69.7 L45.1,71.4 L54.1,70.7 L62.2,67.4 L70.6,61.6 L80.0,54.2 L91.0,46.6 L103.6,40.2 L117.2,36.1 L130.9,35.3 L143.9,37.7 L155.2,43.1 L164.8,50.7 L172.6,59.5 L179.2,68.6 L185.5,77.4 L192.1,85.6 L199.5,93.4 L207.5,101.2 L215.6,109.5 L222.8,118.6 L227.8,128.6 L229.6,139.3Z"/><path d="M250.0,150.0 L241.2,161.6 L229.1,171.6 L215.2,179.7 L201.3,186.2 L188.9,191.6 L179.0,196.9 L172.0,202.8 L167.4,210.2 L164.3,219.1 L161.4,229.5 L157.4,240.7 L151.6,251.6 L143.4,261.5 L133.0,269.4 L120.9,275.2 L107.7,278.9 L94.0,281.1 L80.0,282.6 L65.7,284.2 L50.7,286.2 L34.7,288.6 L17.5,290.9 L-0.8,292.1 L-19.3,291.1 L-36.8,286.7 L-51.6,278.6 L-62.1,266.5 L-67.3,251.3 L-66.6,234.2 L-60.9,216.7 L-51.5,200.3 L-40.8,186.0 L-31.2,174.4 L-25.2,165.2 L-24.3,157.5 L-28.9,150.0 L-38.3,141.5 L-50.6,131.1 L-63.2,118.5 L-73.4,104.2 L-78.9,89.2 L-78.2,75.1 L-71.0,63.3 L-58.1,55.0 L-41.2,50.6 L-22.4,49.9 L-3.8,51.8 L12.9,54.7 L27.0,56.7 L38.5,56.6 L48.4,53.3 L57.8,46.7 L68.0,37.8 L80.0,27.8 L94.0,18.4 L109.8,11.4 L126.4,8.0 L142.7,8.7 L157.7,13.5 L170.5,21.4 L181.2,31.5 L190.0,42.5 L197.9,53.3 L205.7,63.5 L214.1,73.0 L223.3,82.1 L233.1,91.5 L242.4,101.5 L249.9,112.7 L254.3,124.8 L254.5,137.5Z"/><path d="M269.0,150.0 L257.4,162.7 L242.9,173.6 L227.5,182.4 L213.2,189.8 L201.5,196.5 L193.1,203.6 L187.9,212.0 L185.0,222.3 L183.0,234.5 L180.3,248.0 L175.6,262.0 L168.1,275.2 L157.6,286.5 L144.5,295.3 L129.5,301.5 L113.4,305.4 L96.8,307.9 L80.0,309.8 L62.7,311.9 L44.6,314.5 L25.4,317.1 L5.0,319.1 L-16.1,319.0 L-36.7,315.8 L-55.2,308.3 L-69.7,296.3 L-78.8,280.2 L-81.6,261.2 L-78.2,240.8 L-69.9,221.0 L-59.1,203.2 L-48.4,188.3 L-40.7,176.5 L-38.3,167.1 L-42.3,158.8 L-52.4,150.0 L-67.0,139.5 L-83.2,126.4 L-98.0,110.9 L-108.2,93.8 L-111.6,76.7 L-107.3,61.3 L-95.4,49.3 L-77.6,41.5 L-56.4,38.2 L-34.2,38.4 L-13.4,40.6 L4.6,42.8 L19.2,43.1 L31.2,40.1 L41.9,33.3 L52.7,23.1 L65.2,10.8 L80.0,-1.5 L97.3,-11.9 L116.3,-18.7 L135.7,-20.6 L154.3,-17.5 L170.9,-9.9 L185.0,0.9 L196.6,13.5 L206.5,26.4 L215.6,38.8 L225.0,50.2 L235.4,60.8 L246.6,71.1 L257.9,82.0 L268.0,93.9 L275.2,107.1 L278.3,121.3 L276.2,135.9Z"/><path d="M499.2,260.0 L499.6,262.1 L499.0,264.2 L497.5,266.0 L495.4,267.6 L492.8,268.7 L490.0,269.5 L487.5,270.1 L485.4,270.6 L483.8,271.3 L482.7,272.4 L481.8,273.9 L481.1,275.7 L480.2,277.9 L478.9,280.0 L477.2,282.0 L475.0,283.4 L472.6,284.2 L470.0,284.2 L467.5,283.5 L465.2,282.1 L463.4,280.3 L461.9,278.2 L460.8,276.2 L459.9,274.3 L459.1,272.7 L458.3,271.4 L457.4,270.3 L456.3,269.4 L455.1,268.6 L453.7,267.7 L452.3,266.7 L451.0,265.7 L449.6,264.5 L448.3,263.1 L447.0,261.7 L445.7,260.0 L444.4,258.2 L443.1,256.1 L442.1,253.9 L441.5,251.5 L441.4,249.1 L442.0,246.8 L443.4,244.7 L445.5,243.1 L448.2,242.1 L451.3,241.7 L454.6,241.9 L457.7,242.5 L460.6,243.4 L463.0,244.3 L465.1,245.0 L466.9,245.4 L468.4,245.3 L470.0,244.8 L471.7,244.1 L473.6,243.3 L475.6,242.7 L477.8,242.4 L479.9,242.6 L481.8,243.3 L483.4,244.3 L484.6,245.7 L485.7,247.1 L486.6,248.6 L487.6,249.9 L488.8,251.1 L490.3,252.2 L492.2,253.4 L494.3,254.7 L496.3,256.2 L498.1,258.0Z"/><path d="M529.2,260.0 L528.9,264.2 L526.9,268.2 L523.2,271.7 L518.4,274.5 L513.2,276.5 L508.0,278.0 L503.5,279.3 L500.1,280.7 L497.6,282.6 L495.9,285.3 L494.6,288.8 L493.2,293.0 L491.3,297.5 L488.5,301.7 L484.8,305.2 L480.2,307.4 L475.1,308.2 L470.0,307.4 L465.2,305.2 L461.0,301.9 L457.6,298.0 L454.9,294.0 L452.8,290.2 L451.1,286.9 L449.3,284.3 L447.3,282.2 L444.9,280.6 L442.2,279.1 L439.2,277.7 L436.0,276.1 L432.8,274.2 L429.7,272.0 L426.7,269.5 L423.7,266.7 L420.9,263.5 L418.1,260.0 L415.6,256.1 L413.4,251.8 L411.8,247.2 L411.3,242.5 L411.9,237.8 L414.1,233.5 L417.7,230.0 L422.7,227.4 L428.6,226.1 L435.0,225.8 L441.5,226.6 L447.5,228.0 L452.8,229.7 L457.2,231.1 L460.8,231.8 L463.9,231.8 L466.9,230.8 L470.0,229.3 L473.5,227.4 L477.4,225.6 L481.6,224.4 L486.0,224.0 L490.1,224.6 L493.8,226.2 L496.9,228.5 L499.4,231.3 L501.6,234.1 L503.7,236.8 L506.1,239.3 L509.0,241.5 L512.5,243.7 L516.6,246.1 L520.9,248.8 L524.7,252.1 L527.7,255.9Z"/><path d="M558.8,260.0 L557.1,266.2 L552.8,272.0 L546.4,276.8 L538.9,280.6 L531.2,283.4 L524.2,285.7 L518.6,287.9 L514.5,290.6 L511.9,294.3 L510.2,299.2 L508.6,305.2 L506.6,311.9 L503.3,318.6 L498.6,324.5 L492.5,328.8 L485.3,331.1 L477.6,331.0 L470.0,328.7 L463.1,324.5 L457.3,319.1 L452.6,313.2 L448.9,307.5 L445.8,302.5 L442.9,298.5 L439.7,295.5 L436.0,293.2 L431.7,291.4 L426.8,289.7 L421.5,287.8 L416.1,285.5 L410.8,282.7 L405.6,279.2 L400.8,275.2 L396.2,270.7 L391.8,265.6 L387.8,260.0 L384.3,253.9 L381.6,247.2 L380.2,240.3 L380.5,233.3 L382.9,226.7 L387.5,220.9 L394.1,216.4 L402.5,213.5 L411.9,212.4 L421.6,212.7 L430.9,214.2 L439.2,216.3 L446.3,218.3 L452.0,219.5 L456.8,219.5 L461.0,218.2 L465.3,215.7 L470.0,212.5 L475.4,209.2 L481.5,206.4 L488.0,204.8 L494.6,204.6 L500.7,206.0 L506.1,208.8 L510.6,212.5 L514.4,216.6 L517.9,220.7 L521.5,224.6 L525.7,228.0 L530.8,231.2 L536.7,234.5 L543.1,238.2 L549.3,242.6 L554.5,247.8 L557.9,253.7Z"/><path d="M587.1,260.0 L583.1,268.1 L576.0,275.3 L566.8,281.3 L556.8,285.9 L547.3,289.6 L539.3,292.8 L533.3,296.3 L529.5,300.9 L527.3,306.9 L525.8,314.5 L524.0,323.2 L520.9,332.3 L516.0,340.9 L509.0,347.8 L500.1,352.3 L490.1,353.7 L479.8,352.0 L470.0,347.5 L461.3,341.1 L454.2,333.7 L448.4,326.2 L443.6,319.4 L439.3,313.9 L434.9,309.9 L429.8,307.1 L423.9,305.1 L417.0,303.5 L409.4,301.7 L401.5,299.3 L393.6,296.2 L385.9,292.1 L378.8,287.2 L372.1,281.5 L365.9,275.0 L360.3,267.9 L355.3,260.0 L351.4,251.5 L349.0,242.5 L348.6,233.3 L350.7,224.4 L355.6,216.3 L363.4,209.5 L373.7,204.7 L385.6,202.0 L398.4,201.3 L411.1,202.4 L422.6,204.5 L432.5,206.8 L440.7,208.4 L447.2,208.6 L452.7,207.0 L457.9,203.7 L463.5,199.0 L470.0,193.9 L477.6,189.1 L486.0,185.5 L494.9,183.8 L503.6,184.3 L511.6,186.8 L518.6,191.0 L524.6,196.1 L529.8,201.6 L534.8,206.8 L540.3,211.6 L546.8,215.9 L554.3,220.1 L562.7,224.6 L571.2,229.8 L578.9,236.1 L584.7,243.4 L587.7,251.6Z"/><path d="M613.1,260.0 L606.2,269.8 L596.1,278.2 L584.3,285.1 L572.4,290.6 L561.9,295.2 L553.8,299.7 L548.5,305.1 L545.6,312.0 L544.2,320.8 L542.9,331.3 L540.6,342.7 L536.2,354.0 L529.1,363.9 L519.3,371.0 L507.5,374.7 L494.6,374.4 L481.8,370.5 L470.0,363.7 L459.8,355.1 L451.5,346.0 L444.7,337.5 L438.7,330.5 L432.9,325.3 L426.4,321.9 L418.8,319.9 L410.0,318.6 L400.1,317.3 L389.5,315.4 L378.8,312.4 L368.2,308.2 L358.3,302.7 L349.2,296.0 L341.0,288.4 L333.5,279.7 L327.1,270.3 L321.8,260.0 L318.2,249.1 L316.8,237.9 L318.3,226.7 L323.1,216.2 L331.4,207.0 L342.9,199.8 L357.0,195.1 L372.5,192.9 L388.2,193.0 L403.1,194.6 L416.1,196.9 L426.8,198.7 L435.3,199.0 L442.1,197.2 L448.2,193.2 L454.3,187.2 L461.5,180.1 L470.0,172.9 L479.9,166.8 L490.9,162.9 L502.2,161.6 L513.0,163.1 L522.8,167.1 L531.4,172.9 L538.8,179.5 L545.6,186.1 L552.5,192.3 L560.2,197.9 L569.2,203.1 L579.3,208.3 L590.0,214.1 L600.3,221.1 L608.9,229.5 L614.4,239.1 L616.0,249.5Z"/><path d="M636.1,260.0 L626.0,271.2 L613.1,280.7 L599.3,288.4 L586.4,294.7 L576.0,300.5 L568.8,306.8 L564.9,314.5 L563.4,324.3 L562.9,336.2 L561.7,349.6 L558.4,363.6 L552.0,376.5 L542.1,386.8 L529.2,393.4 L514.2,395.4 L498.6,392.8 L483.5,386.4 L470.0,377.2 L458.6,366.9 L449.2,356.8 L441.2,348.1 L433.7,341.7 L425.8,337.6 L416.8,335.6 L406.2,334.7 L394.0,334.2 L380.8,333.2 L366.9,330.9 L353.3,327.0 L340.3,321.4 L328.3,314.2 L317.6,305.5 L308.2,295.6 L300.0,284.6 L293.3,272.7 L288.5,260.0 L286.0,246.8 L286.5,233.5 L290.8,220.6 L299.0,209.0 L311.1,199.3 L326.6,192.1 L344.3,187.8 L362.9,186.3 L380.9,186.9 L397.0,188.7 L410.6,190.4 L421.3,190.8 L429.6,188.9 L436.4,184.3 L442.9,177.0 L450.2,167.9 L459.1,158.2 L470.0,149.2 L482.6,142.4 L496.1,138.6 L509.8,138.3 L522.6,141.4 L534.2,147.2 L544.3,154.5 L553.2,162.5 L561.8,170.2 L570.9,177.2 L581.2,183.5 L592.8,189.5 L605.5,195.9 L618.3,203.3 L629.7,212.3 L638.2,223.0 L642.6,235.1 L641.9,247.7Z"/><path d="M138.5,470.0 L136.7,471.2 L135.3,472.2 L134.6,473.2 L134.6,474.4 L135.3,475.9 L136.5,477.8 L137.7,480.2 L138.7,482.9 L139.1,485.7 L138.7,488.3 L137.4,490.4 L135.3,491.8 L132.7,492.3 L129.7,491.9 L126.8,490.9 L124.2,489.5 L121.9,488.1 L120.0,486.9 L118.3,486.2 L116.5,486.2 L114.5,486.8 L112.1,487.8 L109.3,488.9 L106.1,489.8 L102.8,490.2 L99.6,489.9 L97.0,488.9 L95.2,487.1 L94.3,484.8 L94.4,482.1 L95.3,479.4 L96.9,476.9 L98.7,474.7 L100.5,472.8 L102.1,471.3 L103.2,470.0 L103.9,468.8 L104.1,467.7 L104.0,466.5 L103.7,465.1 L103.5,463.7 L103.4,462.2 L103.5,460.5 L103.9,458.9 L104.4,457.2 L105.2,455.6 L106.2,453.9 L107.4,452.1 L108.9,450.5 L110.6,448.9 L112.7,447.6 L115.0,446.5 L117.4,445.9 L120.0,445.8 L122.5,446.2 L124.9,447.0 L127.1,448.2 L129.1,449.5 L130.9,450.9 L132.5,452.2 L134.2,453.4 L135.9,454.5 L137.7,455.5 L139.5,456.6 L141.3,457.8 L142.7,459.3 L143.6,461.0 L143.8,462.9 L143.3,464.9 L142.1,466.8 L140.4,468.5Z"/><path d="M154.6,470.0 L151.9,472.3 L150.3,474.4 L150.1,476.6 L151.3,479.3 L153.6,482.9 L156.5,487.3 L159.1,492.5 L160.7,498.0 L160.9,503.5 L159.2,508.3 L155.7,511.8 L150.7,513.6 L144.9,513.8 L138.8,512.5 L133.1,510.1 L128.0,507.3 L123.7,504.8 L120.0,503.1 L116.5,502.7 L112.8,503.5 L108.4,505.4 L103.2,507.7 L97.3,510.0 L90.8,511.4 L84.5,511.6 L78.8,510.3 L74.4,507.4 L71.8,503.1 L71.2,498.0 L72.3,492.6 L74.8,487.3 L78.1,482.5 L81.7,478.4 L84.8,475.1 L87.0,472.4 L88.3,470.0 L88.6,467.7 L88.0,465.4 L87.1,462.8 L86.0,459.9 L85.2,456.7 L84.8,453.3 L84.9,449.9 L85.6,446.3 L86.9,442.8 L88.6,439.3 L90.8,435.8 L93.5,432.3 L96.7,429.0 L100.5,426.1 L104.9,423.8 L109.7,422.2 L114.8,421.5 L120.0,421.8 L125.0,423.1 L129.7,425.1 L133.9,427.6 L137.6,430.3 L141.1,432.9 L144.4,435.3 L147.8,437.5 L151.3,439.4 L154.9,441.4 L158.5,443.5 L161.7,446.1 L164.1,449.1 L165.4,452.6 L165.3,456.5 L163.8,460.4 L161.2,464.0 L158.0,467.3Z"/><path d="M169.6,470.0 L167.1,473.4 L166.4,476.7 L168.0,480.5 L171.4,485.3 L175.9,491.4 L180.5,498.7 L184.1,506.8 L185.7,515.2 L184.5,522.9 L180.5,529.1 L173.9,533.2 L165.6,534.7 L156.3,533.8 L147.1,531.0 L138.7,527.2 L131.5,523.4 L125.4,520.6 L120.0,519.3 L114.7,520.0 L108.7,522.4 L101.7,526.0 L93.5,529.8 L84.3,532.8 L74.8,534.2 L65.9,533.4 L58.5,530.1 L53.4,524.6 L51.1,517.4 L51.5,509.3 L54.3,501.1 L58.6,493.5 L63.5,486.9 L68.1,481.4 L71.6,477.0 L73.5,473.3 L73.7,470.0 L72.6,466.6 L70.5,462.8 L68.1,458.6 L65.8,453.8 L64.2,448.7 L63.5,443.3 L63.8,437.7 L65.0,432.2 L67.2,426.7 L70.1,421.2 L73.8,415.9 L78.3,410.8 L83.7,406.2 L89.9,402.3 L96.9,399.4 L104.5,397.7 L112.3,397.5 L120.0,398.7 L127.3,401.2 L134.1,404.6 L140.1,408.5 L145.5,412.5 L150.6,416.2 L155.6,419.4 L160.7,422.3 L166.1,424.9 L171.5,427.7 L176.7,431.0 L181.0,435.0 L184.0,439.7 L185.2,445.1 L184.4,450.8 L181.8,456.4 L177.9,461.6 L173.6,466.2Z"/><path d="M185.0,470.0 L183.8,474.6 L185.4,479.5 L189.6,485.3 L195.7,492.6 L202.6,501.6 L208.6,511.9 L212.4,523.0 L212.7,533.8 L209.2,543.1 L201.9,550.0 L191.5,553.7 L179.2,554.1 L166.5,551.7 L154.4,547.4 L143.7,542.5 L134.7,538.3 L127.0,535.9 L120.0,536.0 L112.7,538.7 L104.3,543.2 L94.3,548.6 L82.9,553.6 L70.6,556.9 L58.5,557.4 L47.8,554.6 L39.6,548.6 L34.8,539.9 L33.6,529.4 L35.8,518.3 L40.4,507.7 L46.4,498.2 L52.2,490.2 L56.9,483.9 L59.5,478.7 L59.8,474.3 L57.9,470.0 L54.4,465.3 L50.1,459.9 L45.9,453.7 L42.4,446.8 L40.1,439.4 L39.3,431.8 L40.0,424.1 L42.2,416.4 L45.6,409.0 L50.1,401.7 L55.7,394.7 L62.4,388.3 L70.3,382.6 L79.2,378.1 L89.0,375.2 L99.4,374.1 L109.8,374.8 L120.0,377.4 L129.5,381.3 L138.0,386.2 L145.7,391.3 L152.7,396.3 L159.4,400.7 L166.2,404.4 L173.2,407.7 L180.4,411.0 L187.5,414.6 L194.1,419.0 L199.2,424.5 L202.4,431.0 L203.2,438.2 L201.5,445.7 L197.8,452.9 L193.1,459.4 L188.4,465.1Z"/><path d="M202.1,470.0 L203.5,476.0 L208.3,482.8 L215.8,491.1 L224.8,501.3 L233.6,513.4 L240.2,526.9 L243.0,540.6 L240.9,553.2 L233.8,563.3 L222.2,569.9 L207.5,572.5 L191.3,571.3 L175.2,567.1 L160.6,561.5 L148.1,556.1 L137.7,552.4 L128.7,551.6 L120.0,553.9 L110.5,559.1 L99.4,566.0 L86.3,573.1 L71.8,578.6 L56.7,581.2 L42.7,579.8 L31.0,574.2 L23.0,564.8 L19.4,552.5 L20.0,538.8 L24.1,525.1 L30.4,512.4 L37.2,501.7 L42.9,493.0 L46.4,486.2 L46.8,480.6 L44.3,475.4 L39.3,470.0 L32.8,463.7 L25.9,456.4 L19.8,448.0 L15.2,438.7 L12.6,428.9 L12.2,419.0 L13.9,409.1 L17.4,399.4 L22.5,390.0 L29.0,381.1 L37.0,372.8 L46.3,365.3 L57.0,359.1 L68.8,354.6 L81.5,352.2 L94.6,352.1 L107.6,354.2 L120.0,358.3 L131.3,363.7 L141.5,369.8 L150.7,375.9 L159.3,381.5 L167.7,386.2 L176.2,390.1 L185.1,393.7 L194.2,397.5 L203.0,402.0 L210.6,407.7 L216.3,414.7 L219.3,423.0 L219.5,432.0 L217.0,441.0 L212.7,449.6 L207.8,457.3 L203.9,464.0Z"/><path d="M222.5,470.0 L227.5,477.7 L236.1,486.8 L247.1,497.9 L258.6,511.4 L268.4,526.8 L274.3,543.1 L274.7,558.9 L268.9,572.5 L257.2,582.5 L240.7,588.0 L221.4,588.8 L201.4,585.6 L182.5,579.9 L166.0,573.6 L152.2,568.6 L140.7,566.4 L130.5,568.1 L120.0,573.4 L108.1,581.5 L94.1,590.6 L77.9,598.8 L60.5,604.1 L43.2,605.0 L27.9,600.7 L16.3,591.5 L9.3,578.2 L7.5,562.3 L10.1,545.6 L16.0,529.7 L23.2,515.8 L29.8,504.5 L34.0,495.7 L34.8,488.7 L31.7,482.8 L25.3,476.8 L16.4,470.0 L6.6,461.9 L-2.8,452.2 L-10.5,441.3 L-15.6,429.5 L-17.9,417.3 L-17.4,405.0 L-14.2,392.9 L-8.8,381.4 L-1.5,370.4 L7.6,360.1 L18.2,350.8 L30.5,342.8 L44.2,336.6 L59.0,332.6 L74.7,331.2 L90.4,332.5 L105.7,336.2 L120.0,341.8 L133.0,348.6 L144.6,355.6 L155.2,362.2 L165.3,367.8 L175.5,372.5 L186.0,376.3 L196.9,380.0 L207.8,384.2 L218.0,389.7 L226.5,396.7 L232.4,405.5 L235.2,415.5 L234.8,426.1 L231.8,436.6 L227.5,446.4 L223.4,455.0 L221.3,462.7Z"/><path d="M247.1,470.0 L256.4,479.8 L269.1,491.6 L283.2,505.9 L296.4,522.6 L306.0,541.1 L309.7,559.8 L306.2,576.9 L295.4,590.7 L278.2,599.7 L256.5,603.4 L232.8,602.1 L209.5,597.1 L188.4,590.3 L170.7,584.1 L156.1,580.6 L143.9,581.1 L132.4,586.0 L120.0,594.8 L105.5,605.8 L88.4,616.7 L69.3,625.2 L49.4,629.1 L30.6,627.2 L14.9,619.2 L4.1,605.8 L-1.2,588.4 L-0.9,569.2 L3.6,550.1 L10.5,532.8 L17.6,518.5 L22.5,507.3 L23.7,498.7 L20.4,491.9 L12.6,485.5 L1.4,478.5 L-11.6,470.0 L-24.7,459.6 L-36.2,447.4 L-44.7,433.8 L-49.7,419.3 L-51.0,404.6 L-48.7,390.1 L-43.4,376.2 L-35.5,363.0 L-25.5,350.7 L-13.6,339.5 L0.2,329.6 L15.5,321.6 L32.4,315.9 L50.3,312.9 L68.7,312.9 L86.8,315.7 L104.1,321.0 L120.0,328.0 L134.3,335.7 L147.3,343.2 L159.3,349.7 L171.1,354.9 L183.1,359.1 L195.7,362.5 L208.6,366.3 L221.3,371.0 L232.7,377.6 L241.9,386.1 L247.9,396.6 L250.3,408.3 L249.6,420.4 L246.7,432.2 L243.2,442.9 L241.1,452.5 L242.1,461.2Z"/><path d="M276.8,470.0 L290.7,482.2 L307.2,497.1 L323.6,514.7 L337.1,534.8 L344.8,555.9 L344.7,576.4 L335.9,594.0 L319.1,607.0 L295.9,614.2 L269.0,615.6 L241.4,612.1 L215.5,605.7 L193.2,598.8 L175.0,593.9 L160.2,592.9 L147.3,597.1 L134.5,606.0 L120.0,618.4 L102.7,631.9 L82.6,643.8 L60.7,651.4 L38.9,652.8 L19.3,647.1 L4.1,634.6 L-5.3,616.7 L-8.5,595.5 L-6.2,573.5 L-0.4,552.9 L6.5,535.2 L11.9,521.2 L13.6,510.7 L10.2,502.8 L1.4,496.1 L-11.9,489.1 L-28.2,480.6 L-45.3,470.0 L-61.1,457.0 L-73.9,442.0 L-82.4,425.5 L-86.3,408.4 L-85.6,391.4 L-80.8,374.9 L-72.6,359.4 L-61.8,344.9 L-48.6,331.7 L-33.5,320.0 L-16.6,310.1 L2.1,302.5 L22.0,297.7 L42.8,296.0 L63.7,297.6 L83.9,302.1 L102.8,308.8 L120.0,316.7 L135.5,324.7 L149.7,332.0 L163.2,337.9 L176.7,342.2 L190.8,345.5 L205.6,348.5 L220.5,352.3 L234.9,357.7 L247.5,365.5 L257.1,375.7 L263.1,387.8 L265.5,401.1 L264.8,414.6 L262.8,427.4 L261.2,439.0 L262.1,449.5 L267.1,459.4Z"/><path d="M462.0,590.0 L462.5,592.3 L462.5,594.7 L461.8,597.0 L460.4,599.1 L458.3,600.8 L455.7,602.2 L452.7,603.0 L449.6,603.5 L446.7,603.7 L444.1,603.8 L441.9,603.9 L440.1,604.4 L438.6,605.2 L437.3,606.4 L435.8,607.9 L434.2,609.4 L432.2,610.8 L430.0,611.8 L427.6,612.3 L425.3,612.0 L423.1,611.1 L421.2,609.7 L419.7,608.1 L418.4,606.4 L417.2,605.0 L415.9,603.8 L414.2,603.0 L411.9,602.4 L409.2,601.9 L406.2,601.3 L403.2,600.3 L400.5,598.8 L398.5,596.9 L397.6,594.7 L397.8,592.3 L399.2,590.0 L401.5,588.0 L404.4,586.3 L407.3,585.0 L409.9,584.0 L411.8,583.1 L413.0,581.9 L413.3,580.4 L413.2,578.4 L412.8,575.9 L412.6,573.0 L413.0,570.1 L414.1,567.3 L415.9,565.2 L418.4,563.9 L421.4,563.7 L424.5,564.4 L427.4,565.9 L430.0,568.0 L432.1,570.3 L433.7,572.6 L435.1,574.5 L436.3,575.9 L437.5,576.8 L439.0,577.2 L440.8,577.4 L442.8,577.5 L445.2,577.6 L447.6,577.9 L450.0,578.5 L452.3,579.4 L454.5,580.6 L456.5,582.1 L458.2,583.8 L459.7,585.7 L461.0,587.8Z"/><path d="M494.9,590.0 L495.3,594.7 L494.4,599.3 L492.2,603.7 L488.7,607.5 L483.9,610.6 L478.4,612.9 L472.4,614.3 L466.5,615.1 L461.2,615.5 L456.6,616.0 L452.9,616.8 L449.9,618.3 L447.4,620.6 L444.9,623.6 L442.1,626.9 L438.6,630.2 L434.6,632.9 L430.0,634.5 L425.2,634.9 L420.6,633.9 L416.4,631.8 L412.8,628.8 L409.8,625.6 L407.1,622.6 L404.3,620.1 L401.0,618.3 L397.0,617.1 L391.9,616.2 L386.1,615.2 L379.9,613.7 L374.1,611.4 L369.4,608.1 L366.5,604.0 L365.8,599.3 L367.5,594.5 L371.2,590.0 L376.3,586.1 L382.0,583.1 L387.4,580.6 L391.7,578.6 L394.4,576.4 L395.4,573.6 L395.2,570.0 L394.2,565.4 L393.3,559.9 L393.2,554.0 L394.4,548.3 L397.2,543.4 L401.6,540.1 L407.2,538.6 L413.4,539.1 L419.6,541.5 L425.2,545.1 L430.0,549.6 L433.8,554.0 L436.9,557.9 L439.5,560.9 L442.1,562.8 L445.0,563.7 L448.5,563.8 L452.6,563.5 L457.4,563.3 L462.5,563.4 L467.7,564.1 L472.7,565.5 L477.4,567.5 L481.7,570.2 L485.5,573.4 L488.8,577.1 L491.5,581.1 L493.6,585.4Z"/><path d="M527.7,590.0 L527.1,597.0 L524.6,603.7 L520.2,609.8 L514.0,615.1 L506.3,619.2 L497.8,622.1 L489.1,623.9 L481.0,625.1 L473.9,626.0 L468.1,627.3 L463.6,629.4 L460.0,632.7 L456.7,637.0 L453.2,642.2 L448.8,647.6 L443.4,652.5 L437.1,656.1 L430.0,657.9 L422.8,657.7 L415.9,655.5 L409.8,651.9 L404.5,647.4 L399.9,642.9 L395.6,638.9 L390.8,635.9 L385.1,633.9 L378.1,632.6 L369.8,631.4 L360.6,629.8 L351.6,627.1 L343.6,623.0 L337.8,617.5 L335.2,610.8 L335.9,603.6 L340.0,596.5 L346.6,590.0 L354.6,584.6 L362.6,580.3 L369.5,576.7 L374.3,573.4 L376.5,569.5 L376.4,564.6 L374.8,558.3 L372.8,550.6 L371.5,542.0 L371.9,533.2 L374.8,525.3 L380.1,519.2 L387.7,515.6 L396.7,515.0 L406.2,517.3 L415.3,521.9 L423.4,527.9 L430.0,534.4 L435.3,540.4 L439.6,545.1 L443.7,548.2 L448.0,549.5 L453.0,549.5 L459.1,548.6 L466.2,547.6 L474.1,546.9 L482.3,547.1 L490.5,548.4 L498.1,550.9 L505.1,554.4 L511.2,558.9 L516.5,564.2 L520.8,570.0 L524.3,576.4 L526.6,583.1Z"/><path d="M558.9,590.0 L556.7,599.1 L552.0,607.6 L544.9,615.2 L535.7,621.6 L525.1,626.4 L514.0,629.8 L503.2,632.0 L493.6,633.8 L485.7,635.6 L479.5,638.4 L474.8,642.5 L470.9,648.2 L467.0,655.1 L462.3,662.7 L456.2,670.1 L448.6,676.3 L439.6,680.3 L430.0,681.7 L420.4,680.4 L411.4,676.7 L403.4,671.5 L396.4,665.6 L390.1,660.1 L383.7,655.7 L376.5,652.7 L367.7,650.8 L357.3,649.6 L345.6,648.1 L333.3,645.5 L321.9,641.2 L312.7,634.9 L307.0,626.7 L305.8,617.3 L308.9,607.5 L316.0,598.2 L325.6,590.0 L336.0,583.3 L345.5,577.8 L352.7,573.0 L356.6,568.1 L357.2,562.1 L355.1,554.6 L351.8,545.1 L348.8,534.1 L347.6,522.5 L349.4,511.3 L354.8,501.9 L363.5,495.5 L374.8,492.9 L387.4,494.1 L400.2,498.7 L411.9,505.8 L421.9,514.0 L430.0,522.0 L436.6,528.6 L442.3,533.0 L448.0,535.0 L454.5,534.8 L462.3,533.2 L471.6,530.9 L482.1,529.0 L493.4,528.0 L504.9,528.6 L515.8,530.9 L525.9,534.9 L534.7,540.4 L542.3,547.1 L548.5,554.6 L553.5,562.9 L557.0,571.6 L558.9,580.8Z"/><path d="M587.6,590.0 L583.1,601.0 L575.7,611.1 L565.7,619.8 L553.7,626.9 L540.6,632.3 L527.5,636.1 L515.4,639.0 L505.3,641.8 L497.4,645.3 L491.6,650.2 L487.2,657.0 L483.2,665.5 L478.5,675.3 L472.3,685.4 L464.1,694.5 L453.9,701.4 L442.3,705.2 L430.0,705.6 L418.0,702.8 L406.9,697.4 L397.1,690.6 L388.4,683.8 L380.0,677.8 L371.2,673.5 L361.0,670.8 L348.8,669.3 L334.8,668.0 L319.7,665.9 L304.8,661.9 L291.9,655.4 L282.5,646.4 L278.2,635.3 L279.3,623.1 L285.6,610.9 L295.8,599.6 L308.0,590.0 L320.0,582.1 L329.7,575.5 L335.7,569.3 L337.5,562.4 L335.4,553.8 L330.9,543.1 L325.9,530.2 L322.5,516.0 L322.3,501.7 L326.5,488.9 L335.3,479.1 L348.0,473.5 L363.3,472.7 L379.6,476.4 L395.3,483.7 L409.2,493.1 L420.7,502.8 L430.0,511.3 L437.8,517.2 L445.0,520.1 L452.9,520.0 L462.1,517.6 L473.3,513.9 L486.2,510.1 L500.5,507.4 L515.3,506.6 L529.8,508.1 L543.4,512.0 L555.3,518.0 L565.6,525.8 L574.0,535.0 L580.6,545.1 L585.5,555.8 L588.4,567.1 L589.3,578.6Z"/><path d="M612.8,590.0 L605.7,602.6 L595.5,613.9 L582.7,623.6 L568.2,631.2 L553.2,637.1 L539.0,641.6 L526.8,645.6 L517.1,649.9 L510.1,655.7 L505.2,663.4 L501.3,673.4 L497.1,685.3 L491.4,698.0 L483.3,710.2 L472.6,720.4 L459.5,727.4 L445.0,730.4 L430.0,729.2 L415.6,724.5 L402.6,717.4 L391.0,709.5 L380.3,702.1 L369.6,696.2 L357.9,692.5 L344.2,690.4 L328.4,689.3 L310.8,687.7 L292.7,684.5 L275.9,678.5 L262.5,669.3 L254.3,657.2 L252.2,643.1 L256.6,628.1 L266.3,613.7 L279.4,600.8 L293.3,590.0 L305.5,581.1 L313.9,573.2 L317.4,565.2 L315.8,555.9 L310.5,544.3 L303.5,530.1 L297.3,513.8 L294.3,496.7 L296.3,480.3 L303.9,466.8 L317.0,457.6 L334.2,453.9 L353.6,455.7 L373.3,462.3 L391.5,472.1 L407.0,483.1 L419.7,493.3 L430.0,501.0 L439.1,505.0 L448.2,505.2 L458.7,502.1 L471.3,496.9 L486.3,491.0 L503.2,486.0 L521.3,483.1 L539.5,483.0 L556.7,486.1 L572.3,492.1 L585.6,500.7 L596.5,511.2 L605.1,523.0 L611.5,535.8 L615.7,549.2 L617.5,562.9 L616.6,576.6Z"/><path d="M314.0,380.0 L314.3,381.7 L313.6,383.4 L312.1,384.8 L310.0,386.0 L307.6,386.7 L305.2,387.2 L303.1,387.5 L301.5,387.9 L300.3,388.4 L299.4,389.2 L298.7,390.2 L298.1,391.5 L297.3,392.9 L296.3,394.2 L295.0,395.4 L293.5,396.3 L291.8,396.9 L290.0,397.2 L288.2,397.3 L286.3,397.3 L284.4,397.3 L282.3,397.2 L280.2,397.2 L278.1,397.0 L275.8,396.6 L273.7,395.9 L271.9,394.8 L270.5,393.4 L269.7,391.6 L269.6,389.7 L270.0,387.7 L270.8,385.7 L271.9,384.0 L273.0,382.5 L273.9,381.2 L274.5,380.0 L274.6,378.9 L274.5,377.8 L274.2,376.5 L273.9,375.2 L273.8,373.8 L274.1,372.5 L274.8,371.3 L276.0,370.4 L277.4,369.7 L278.9,369.2 L280.4,368.8 L281.7,368.3 L282.9,367.5 L284.0,366.5 L285.1,365.0 L286.4,363.3 L288.0,361.4 L290.0,359.7 L292.3,358.4 L294.8,357.8 L297.2,358.0 L299.3,359.0 L300.9,360.8 L301.9,363.1 L302.3,365.6 L302.2,368.1 L301.9,370.2 L301.8,371.9 L302.0,373.1 L302.8,373.9 L304.3,374.5 L306.3,375.1 L308.7,375.9 L310.9,377.0 L312.8,378.4Z"/><path d="M338.4,380.0 L338.0,383.4 L335.7,386.6 L332.1,389.2 L327.5,391.2 L322.8,392.5 L318.4,393.5 L314.9,394.3 L312.3,395.3 L310.5,396.8 L309.3,398.8 L308.3,401.4 L307.1,404.4 L305.5,407.3 L303.4,410.1 L300.6,412.4 L297.3,414.0 L293.7,415.1 L290.0,415.6 L286.2,415.7 L282.3,415.7 L278.4,415.6 L274.3,415.4 L270.0,415.1 L265.7,414.6 L261.4,413.4 L257.6,411.7 L254.4,409.2 L252.3,405.9 L251.3,402.2 L251.5,398.2 L252.7,394.2 L254.6,390.6 L256.7,387.3 L258.5,384.6 L259.7,382.2 L260.1,380.0 L259.7,377.8 L258.8,375.5 L257.8,372.9 L257.0,370.2 L256.9,367.4 L257.7,364.7 L259.4,362.4 L261.8,360.6 L264.6,359.2 L267.5,358.0 L270.3,356.9 L272.8,355.6 L275.0,353.6 L277.1,351.0 L279.4,347.7 L282.3,344.0 L285.8,340.4 L290.0,337.4 L294.7,335.5 L299.6,335.2 L304.2,336.5 L308.0,339.4 L310.7,343.6 L312.1,348.6 L312.5,353.6 L312.3,358.2 L312.0,361.9 L312.3,364.7 L313.5,366.5 L316.1,367.6 L319.9,368.6 L324.5,369.7 L329.4,371.4 L333.7,373.7 L336.9,376.6Z"/><path d="M362.4,380.0 L360.4,385.1 L355.9,389.5 L349.7,393.1 L342.7,395.7 L336.0,397.6 L330.3,399.1 L326.0,400.7 L323.1,402.8 L321.4,405.7 L320.2,409.6 L319.1,414.1 L317.4,418.9 L314.8,423.6 L311.2,427.7 L306.6,430.9 L301.4,433.1 L295.8,434.3 L290.0,434.9 L284.1,434.9 L278.2,434.8 L272.2,434.5 L266.0,434.2 L259.6,433.5 L253.3,432.2 L247.3,430.0 L242.1,426.8 L238.2,422.4 L235.9,417.2 L235.3,411.4 L236.3,405.4 L238.4,399.7 L241.1,394.6 L243.7,390.2 L245.6,386.4 L246.3,383.1 L245.8,380.0 L244.2,376.7 L242.2,373.1 L240.3,369.1 L239.1,364.8 L239.1,360.6 L240.6,356.6 L243.4,353.2 L247.1,350.5 L251.3,348.3 L255.6,346.3 L259.4,344.2 L262.9,341.5 L266.0,337.9 L269.3,333.3 L273.0,328.0 L277.6,322.5 L283.3,317.5 L290.0,313.9 L297.2,312.4 L304.3,313.3 L310.7,316.7 L315.6,322.2 L318.9,329.2 L320.4,336.8 L320.8,344.0 L320.6,350.1 L320.8,354.7 L322.3,357.8 L325.5,359.6 L330.6,360.8 L337.3,361.9 L344.8,363.6 L352.0,366.4 L357.9,370.2 L361.6,374.9Z"/><path d="M385.3,380.0 L380.9,386.5 L373.7,392.1 L364.9,396.5 L355.9,399.7 L347.8,402.1 L341.6,404.4 L337.3,407.2 L334.9,410.9 L333.7,415.8 L332.8,421.8 L331.4,428.5 L329.0,435.3 L325.0,441.6 L319.7,446.8 L313.1,450.7 L305.7,453.1 L297.9,454.3 L290.0,454.7 L282.0,454.6 L274.0,454.2 L265.9,453.7 L257.6,452.9 L249.3,451.5 L241.3,449.2 L234.0,445.6 L228.0,440.6 L223.8,434.3 L221.8,426.9 L221.9,419.1 L223.8,411.3 L226.7,404.2 L229.9,397.9 L232.3,392.7 L233.4,388.2 L232.8,384.1 L230.6,380.0 L227.4,375.5 L224.0,370.5 L221.1,364.9 L219.7,359.0 L220.2,353.3 L222.6,348.1 L226.7,343.7 L231.9,340.0 L237.4,336.9 L242.8,333.8 L247.6,330.3 L251.9,325.9 L256.0,320.2 L260.5,313.5 L265.9,306.3 L272.7,299.3 L280.8,293.7 L290.0,290.5 L299.6,290.2 L308.6,293.3 L316.3,299.5 L322.0,308.0 L325.4,317.8 L326.9,327.6 L327.3,336.4 L327.6,343.2 L329.1,347.9 L332.7,350.6 L338.7,352.0 L347.1,353.0 L357.0,354.4 L367.3,356.9 L376.4,361.0 L383.0,366.6 L386.1,373.1Z"/></svg>
+  <p class="pg dk">18</p>
+  <h3 class="mtitle"><span class="mw">Journeys on the horizon</span></h3><p class="msub">A collection in the making</p>
+  <svg class="mroute" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M18.0,28.0 C23.3,28.0 39.3,28.0 50.0,28.0 C60.7,28.0 79.0,24.8 82.0,28.0 C85.0,31.2 76.3,43.8 68.0,47.0 C59.7,50.2 40.3,43.8 32.0,47.0 C23.7,50.2 15.0,62.8 18.0,66.0 C21.0,69.2 39.3,66.0 50.0,66.0 C60.7,66.0 79.0,62.8 82.0,66.0 C85.0,69.2 76.3,81.8 68.0,85.0 C59.7,88.2 38.0,85.0 32.0,85.0"/></svg>
+  <div class="mstop" style="left:18%;top:28%"><span class="tile"><img src="img/f_train.jpg" alt=""></span><span class="tl">Swiss Elegance</span></div><div class="mstop" style="left:50%;top:28%"><span class="tile"><img src="img/f_bologna.jpg" alt=""></span><span class="tl">Italy Uncovered</span></div><div class="mstop" style="left:82%;top:28%"><span class="tile"><img src="img/positano.jpg" alt=""></span><span class="tl">La Dolce Vita in Southern Italy</span></div><div class="mstop" style="left:68%;top:47%"><span class="tile"><img src="img/sicily.jpg" alt=""></span><span class="tl">The Soul of Sicily</span></div><div class="mstop" style="left:32%;top:47%"><span class="tile"><img src="img/f_dubrovnik_hd.jpg" alt=""></span><span class="tl">The Adriatic Collection</span></div><div class="mstop" style="left:18%;top:66%"><span class="tile"><img src="img/andalusia.jpg" alt=""></span><span class="tl">Andalusia &amp; Morocco</span></div><div class="mstop" style="left:50%;top:66%"><span class="tile"><img src="img/gamedrive.jpg" alt=""></span><span class="tl">Southern Africa</span></div><div class="mstop" style="left:82%;top:66%"><span class="tile"><img src="img/kenya_villa.jpg" alt=""></span><span class="tl">Savannah to the Ocean</span></div><div class="mstop" style="left:68%;top:85%"><span class="tile"><img src="img/china.jpg" alt=""></span><span class="tl">China Reimagined</span></div><div class="mstop" style="left:32%;top:85%"><span class="tile"><img src="img/sydney.jpg" alt=""></span><span class="tl">Down Under &amp; Aotearoa</span></div></div></div>
+<div class="page dark"><div class="pc"><img class="ph" decoding="async" src="img/f_train.jpg" alt="A red mountain train climbing through wildflower meadows below snowy peaks" style="object-position:72% 50%"><div class="shade"></div>
+  <p class="eb">Our curated collection</p><p class="pg">19</p>
+  <h3 class="hd" style="--hs:24">Swiss Elegance, Italian<br>Lakes &amp; Milanese Flair</h3>
+  <p class="sl"><span class="nb">Where storybook villages meet<br>Italy’s stunning contrasts</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>From Lucerne to Milan</p></div></div>
+<div class="page dark"><div class="pc"><img class="ph" decoding="async" src="img/f_bologna.jpg" alt="A smiling woman holding a board of cured meats in a Bologna food shop" style="object-position:55% 40%"><div class="shade"></div>
+  <p class="eb">Our curated collection</p><p class="pg">20</p>
+  <h3 class="hd" style="--hs:24">Italy<br>Uncovered</h3>
+  <p class="sl"><span>Emilia-Romagna · Lake Garda · Venice</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>From Bologna to Venice</p></div></div>
+<div class="page dark"><div class="pc"><img class="ph" decoding="async" src="img/positano.jpg" alt="Positano on the Amalfi Coast from the sea" style="object-position:62% 50%"><div class="shade"></div>
+  <p class="eb">Our curated collection</p><p class="pg">21</p>
+  <h3 class="hd" style="--hs:24">Experience La Dolce Vita<br>in Southern Italy</h3>
+  <p class="sl"><span class="nb">From Puglia to the Amalfi Coast<br>and the allure of Capri</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Puglia · Amalfi Coast · Capri</p></div></div>
+<div class="page dark"><div class="pc"><img class="ph" decoding="async" src="img/sicily.jpg" alt="Cefalù and its cathedral below La Rocca on the Sicilian coast" style="object-position:45% 50%"><div class="shade"></div>
+  <p class="eb">Our curated collection</p><p class="pg">22</p>
+  <h3 class="hd" style="--hs:24">The Soul<br>of Sicily</h3>
+  <p class="sl"><span>A timeless Mediterranean love affair</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Sicily · Italy</p></div></div>
+<div class="page dark"><div class="pc"><img class="ph" decoding="async" src="img/f_dubrovnik_hd.jpg" alt="A terrace restaurant above the old town of Dubrovnik and the sea" style="object-position:64% 50%"><div class="shade"></div>
+  <p class="eb">Our curated collection</p><p class="pg">23</p>
+  <h3 class="hd" style="--hs:24">The Adriatic<br>Collection</h3>
+  <p class="sl"><span>From Venice to Dubrovnik</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Italy · Istria · Dalmatian Coast</p></div></div>
+<div class="page dark"><div class="pc"><img class="ph" decoding="async" src="img/andalusia.jpg" alt="A flamenco dancer in red at Plaza de España in Seville" style="object-position:40% 40%"><div class="shade"></div>
+  <p class="eb">Our curated collection</p><p class="pg">24</p>
+  <h3 class="hd" style="--hs:24">Andalusian Grace<br>&amp; Moroccan Mystique</h3>
+  <p class="sl"><span class="nb">Where royal heritage meets<br>the romance of discovery</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Spain · Morocco</p></div></div>
+<div class="page dark"><div class="pc"><img class="ph" decoding="async" src="img/gamedrive.jpg" alt="An open game-drive vehicle under an acacia at golden sunrise" style="object-position:40% 50%"><div class="shade"></div>
+  <p class="eb">Our curated collection</p><p class="pg">25</p>
+  <h3 class="hd" style="--hs:24">The Rhythm of<br>Southern Africa</h3>
+  <p class="sl"><span class="nb">Cape Town · Kruger National Park<br>Zimbabwe · Botswana · Zambia</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Southern Africa</p></div></div>
+<div class="page dark"><div class="pc"><img class="ph" decoding="async" src="img/kenya_villa.jpg" alt="A thatched Swahili villa with a turquoise pool and bougainvillea on the Kenyan coast" style="object-position:50% 50%"><div class="shade"></div>
+  <p class="eb">Our curated collection</p><p class="pg">26</p>
+  <h3 class="hd" style="--hs:24">From Savannah<br>to the Indian Ocean</h3>
+  <p class="sl"><span class="nb">An intimate exploration of<br>Kenya &amp; Tanzania</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Kenya · Tanzania</p></div></div>
+<div class="page dark"><div class="pc"><img class="ph" decoding="async" src="img/china.jpg" alt="The Temple of Heaven in Beijing framed by a painted gateway and a paper parasol" style="object-position:50% 50%"><div class="shade"></div>
+  <p class="eb">Our curated collection</p><p class="pg">27</p>
+  <h3 class="hd" style="--hs:24">China<br>Reimagined</h3>
+  <p class="sl"><span class="nb">Where ancient wonders meet<br>modern marvels</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Beijing · China</p></div></div>
+<div class="page dark"><div class="pc"><img class="ph" decoding="async" src="img/sydney.jpg" alt="Sydney Harbour with the Opera House, the city skyline and the Harbour Bridge" style="object-position:0% 50%"><div class="shade"></div>
+  <p class="eb">Our curated collection</p><p class="pg">28</p>
+  <h3 class="hd" style="--hs:24">The Down Under<br>&amp; Aotearoa Collective</h3>
+  <p class="sl"><span>Australia &amp; New Zealand, a world apart</span></p>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Australia · New Zealand</p></div></div>
+<div class="page"><div class="pc paper"><p class="eb dk">Our curated collection</p><p class="pg dk">29</p>
+  <h3 class="bh ink hztitle" style="--bs:30">More extraordinary journeys<br>on the horizon</h3>
+  <div class="tags"><div class="ltag" style="--r:-4deg"><span class="hole"></span><span class="lk">Coming soon</span><span class="lv">Egypt</span></div><div class="ltag" style="--r:3deg"><span class="hole"></span><span class="lk">Coming soon</span><span class="lv">Peru</span></div><div class="ltag" style="--r:-2deg"><span class="hole"></span><span class="lk">Coming soon</span><span class="lv">Thailand</span></div></div></div></div>
+<div class="page dark"><div class="pc"><img class="ph" src="img/egypt.jpg" alt="A traveller in a flowing dress among the giant columns of Karnak Temple, Luxor" style="object-position:34% 45%"><div class="tunsh"></div>
+  <p class="eb">Until the website launches</p><p class="pg">30</p>
+  <div class="tunedb"><h2 class="bh wh" style="--bs:44">Stay tuned</h2>
+  <div class="notif light"><span class="nic"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg></span><span class="ntx"><b>peaks2shores.com</b><span>Our new website is on its way</span></span><span class="ntime">soon</span></div>
+  <div class="notif light"><span class="nic"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg></span><span class="ntx"><b>Every journey in full</b><span>Until then, we would love to hear from you</span></span><span class="ntime">soon</span></div></div>
+  <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Luxor · Egypt</p></div></div>
+<div class="page"><div class="pc paper"><div class="stk stkc">
+  <p class="eb dk">Get in touch</p><p class="pg dk">31</p>
+  <h2 class="st">Connect<br>with<br><em>our</em><br><em>team</em></h2>
+  <div class="ccard"><p class="cq">Dreaming of a journey?<br>We’d love to hear from you.</p>
+  <a class="cbtn mailto" href="mailto:welcome@peaks2shores.com?subject=Journey%20Book%20enquiry&body=Hi%20Peaks2Shores%20team%2C%0A%0AI%20came%20across%20your%20Journey%20Book%20and%20would%20love%20to%20hear%20more%20about%20your%20journeys.%0A%0AName%3A%0ATravelling%20from%3A%0ADestinations%20I%27m%20interested%20in%3A%0AWhen%20I%27d%20like%20to%20travel%3A%0ANumber%20of%20travellers%3A%0A%0AKind%20regards%2C%0A" target="_blank" rel="noopener">Plan with us<svg viewBox="0 0 22 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M1 6h19"/><path d="M15 1l5 5-5 5"/></svg></a></div>
+  <div class="cbelow"><a class="mailto" href="mailto:welcome@peaks2shores.com?subject=Journey%20Book%20enquiry&body=Hi%20Peaks2Shores%20team%2C%0A%0AI%20came%20across%20your%20Journey%20Book%20and%20would%20love%20to%20hear%20more%20about%20your%20journeys.%0A%0AName%3A%0ATravelling%20from%3A%0ADestinations%20I%27m%20interested%20in%3A%0AWhen%20I%27d%20like%20to%20travel%3A%0ANumber%20of%20travellers%3A%0A%0AKind%20regards%2C%0A" target="_blank" rel="noopener">welcome@peaks2shores.com</a><a href="https://www.instagram.com/peaks2shores/" target="_blank" rel="noopener"><svg class="igic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>@peaks2shores</a></div>
+  </div></div></div>
+<div class="page"><div class="pc paper"><div class="qrwrap">
+  <img class="qicon" src="img/icon_blue.png" alt="">
+  <img class="qr" src="img/qr_email_t.png" alt="QR code that opens an email to welcome@peaks2shores.com with the subject Journey Book enquiry">
+  <p class="qk">Scan to write to us</p><p class="qv">welcome@peaks2shores.com</p></div>
+  <p class="pg dk">32</p></div></div>
+<div class="page dark" data-density="hard"><div class="pc mag">
+  <img class="wrapimg back" src="img/oeschinen.jpg" alt="">
+  <div class="backsh"></div><div class="magspine r"></div>
+  <div class="backtxt"><img src="img/icon_white.png" alt="Peaks2Shores"><p class="motto">Iconic places.<br>Extraordinary experiences.<br>Lifelong connections.</p><hr class="goldrule"><p class="imprint">Miami-based · Swiss-inspired</p></div>
+  <p class="backurl">peaks2shores.com</p>
+  </div></div>
+  </div></div>
+  <nav class="controls" aria-label="Turn the pages">
+    <button class="btn" id="prev" type="button" aria-label="Previous page"><svg width="22" height="12" viewBox="0 0 22 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 6H2"/><path d="M7 1L2 6l5 5"/></svg></button>
+    <span class="where" id="where" aria-live="polite">Cover</span>
+    <button class="btn" id="next" type="button" aria-label="Next page"><svg width="22" height="12" viewBox="0 0 22 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 6h19"/><path d="M15 1l5 5-5 5"/></svg></button>
+  </nav>
+  <p class="hint">Swipe, drag a corner or use the arrows to turn the pages.</p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
+<script>
+(function () {
+  document.querySelectorAll('.magqr, .cbtn, .cbelow a').forEach(function (a) {
+    ['mousedown', 'touchstart', 'pointerdown'].forEach(function (ev) { a.addEventListener(ev, function (e) { e.stopPropagation(); }, { passive: true }); });
+  });
+  // mail links: open the email app in a new window (embedded viewers block in-frame mailto); copy the address as a backup
+  var toast = document.createElement('div'); toast.className = 'toast'; toast.setAttribute('role', 'status'); document.body.appendChild(toast);
+  function say(t) { toast.textContent = t; toast.classList.add('on'); clearTimeout(say.t); say.t = setTimeout(function () { toast.classList.remove('on'); }, 3200); }
+  document.querySelectorAll('a.mailto').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      var w = null; try { w = window.open(a.href, '_blank'); } catch (err) {}
+      if (!w) { try { window.top.location.href = a.href; } catch (err) {} }
+      try { navigator.clipboard.writeText('welcome@peaks2shores.com'); } catch (err) {}
+      say('Opening your email app… (address copied: welcome@peaks2shores.com)');
+    });
+  });
+  document.querySelectorAll('.copy').forEach(function (b) {
+    function stop(e) { e.stopPropagation(); }
+    b.addEventListener('mousedown', stop); b.addEventListener('touchstart', stop, { passive: true });
+    b.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var el = document.getElementById(b.dataset.copy), text = 'welcome@peaks2shores.com';
+      function done() { b.textContent = 'Email copied'; setTimeout(function () { b.textContent = 'Copy our email'; }, 2200); }
+      function select() { var r = document.createRange(); r.selectNodeContents(el); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); }
+      try { navigator.clipboard.writeText(text).then(done, select); } catch (err) { select(); }
+    });
+  });
+  if (!window.St || !window.St.PageFlip) { document.body.classList.add('nolib'); return; }
+  var narrow = window.matchMedia('(max-width: 760px)').matches;
+  var H = 620;   // same page shape on phones and desktops so photos crop identically (Marc, 2 Nov voice note)
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var el = document.getElementById('book');
+  var cw = el.parentNode.clientWidth;
+  var minW = narrow ? Math.max(260, Math.floor(cw / 2) + 1) : 320;
+  var pf = new St.PageFlip(el, { width: 540, height: H, size: 'stretch', minWidth: minW, maxWidth: 540, minHeight: Math.round(minW * H / 540), maxHeight: H,
+    showCover: true, usePortrait: true, drawShadow: true, maxShadowOpacity: 0.45, flippingTime: reduce ? 1 : 900, mobileScrollSupport: true, autoSize: true });
+  pf.loadFromHTML(el.querySelectorAll('.page'));
+  var total = pf.getPageCount();
+  var where = document.getElementById('where'), prev = document.getElementById('prev'), next = document.getElementById('next');
+  function label(i) {
+    if (i === 0) return 'Cover';
+    if (i >= total - 1) return 'Back cover';
+    if (pf.getOrientation && pf.getOrientation() === 'portrait') return 'Page ' + i;
+    var a = i % 2 === 1 ? i : i - 1; return 'Pages ' + a + '–' + (a + 1);
+  }
+  function update(i) { where.textContent = label(i); prev.disabled = i <= 0; next.disabled = i >= total - 1; }
+  function fit() {
+    document.querySelectorAll('.story').forEach(function (s) {
+      var k = 1; s.style.setProperty('--k', 1);
+      if (!s.clientHeight) return;
+      while (s.scrollHeight > s.clientHeight + 1 && k > 0.6) { k -= 0.03; s.style.setProperty('--k', k.toFixed(2)); }
+    });
+    document.querySelectorAll('.sl span').forEach(function (sp) {
+      sp.style.width = '';
+      if (!sp.offsetWidth) return;
+      var r = document.createRange(); r.selectNodeContents(sp);
+      var w = 0; [].forEach.call(r.getClientRects(), function (q) { w = Math.max(w, q.width); });
+      var sc = sp.getBoundingClientRect().width / sp.offsetWidth || 1;
+      if (w) sp.style.width = Math.ceil(w / sc + 1) + 'px';
+    });
+    document.querySelectorAll('.hd, .masthead, .stk .st, .mtitle').forEach(function (h) {
+      if (!h.clientWidth) return;
+      var k = 1; h.style.setProperty('--k', 1);
+      var lo = h.classList.contains('masthead') ? 0.25 : 0.55;
+      var inner = h.querySelector('.mw');
+      function wide() { return inner ? inner.offsetWidth : h.scrollWidth; }
+      while (wide() > h.clientWidth + 1 && k > lo) { k -= 0.02; h.style.setProperty('--k', k.toFixed(2)); }
+    });
+    document.querySelectorAll('.card').forEach(function (card) {
+      var page = card.parentNode, h = card.querySelector('.bh'), sl = card.querySelector('.bs');
+      if (!page.clientWidth || !h || !sl) return;
+      var k = 1; h.style.setProperty('--k', 1); sl.style.setProperty('--ks', 1); sl.style.maxWidth = '';
+      var cs = getComputedStyle(card), pad = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight) + 2;
+      var room = page.clientWidth - 2 * card.offsetLeft;
+      // headline: always one line per <br>, shrink if wider than the page allows
+      sl.style.maxWidth = '1px';
+      while (h.scrollWidth + pad > room + 1 && k > 0.6) { k -= 0.03; h.style.setProperty('--k', k.toFixed(2)); }
+      // small line: as narrow as the headline, widened (then shrunk) until it fits in two lines
+      var w = Math.max(h.scrollWidth, 150), max = room - pad, ks = 1;
+      function lines() { return Math.round(sl.offsetHeight / parseFloat(getComputedStyle(sl).lineHeight)); }
+      sl.style.maxWidth = w + 'px';
+      while (lines() > 2 && w < max) { w = Math.min(max, w + 8); sl.style.maxWidth = w + 'px'; }
+      while (lines() > 2 && ks > 0.8) { ks -= 0.03; sl.style.setProperty('--ks', ks.toFixed(2)); }
+    });
+  }
+  fit(); window.addEventListener('resize', function () { setTimeout(fit, 120); });
+  setTimeout(fit, 250); setTimeout(fit, 900); setTimeout(fit, 2000);
+  if (window.ResizeObserver) { var fitT; new ResizeObserver(function () { clearTimeout(fitT); fitT = setTimeout(fit, 80); }).observe(el); } if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  pf.on('changeState', function (e) { if (e.data === 'read') fit(); });
+  pf.on('flip', function (e) { update(e.data); fit(); });
+  function spread() { el.classList.toggle('spread', pf.getOrientation && pf.getOrientation() === 'landscape'); }
+  spread();
+  pf.on('changeOrientation', function () { spread(); update(pf.getCurrentPageIndex()); });
+  prev.addEventListener('click', function () { pf.flipPrev(); });
+  next.addEventListener('click', function () { pf.flipNext(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') pf.flipNext(); if (e.key === 'ArrowLeft') pf.flipPrev(); });
+  update(0);
+  el.querySelectorAll('video').forEach(function (v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); });
+})();
+</script>
+
+</body></html>

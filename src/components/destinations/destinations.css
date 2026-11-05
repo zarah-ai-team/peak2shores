@@ -252,6 +252,40 @@
   inset: 0;
   z-index: -2;
 }
+
+/* The countries stack: each holds while the next slides up over it
+   (PlaceStack sets `top` and `--cover`). The arriving card lifts with a soft
+   shadow on its top edge; the one beneath dims and its words ease back. */
+.dz-stack > .dz-place {
+  position: sticky;
+  top: 0;
+  --cover: 0;
+}
+.dz-stack > .dz-place + .dz-place {
+  box-shadow: 0 -1.5rem 3rem rgb(8 20 28 / 0.35);
+}
+.dz-stack > .dz-place::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: rgb(8 20 28);
+  opacity: calc(var(--cover) * 0.6);
+}
+.dz-stack .dz-in,
+.dz-stack .dz-count {
+  opacity: calc(1 - var(--cover) * 0.6);
+}
+.dz-stack .dz-in {
+  transform: translateY(calc(var(--cover) * -2.5rem));
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dz-stack .dz-in {
+    transform: none;
+  }
+}
 .dz-shade {
   position: absolute;
   inset: 0;

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import '@/components/home/home.css';
 import '@/components/destinations/destinations.css';
 import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal';
+import { PlaceStack } from '@/components/destinations/PlaceStack';
 import { StatusTag } from '@/components/ui/StatusTag';
 import { journeyTagStatus } from '@/components/pages/journeyStatus';
 import { getDestinations, pageMetadata, type Destination } from '@/lib/content';
@@ -126,9 +127,11 @@ export default async function DestinationsPage() {
 
       {/* Each country full bleed: its photograph, its name set large, and its
           journeys as cards over the picture. */}
-      {places.map((place, i) => (
-        <Country key={place.slug} place={place} index={i} total={places.length} />
-      ))}
+      <PlaceStack>
+        {places.map((place, i) => (
+          <Country key={place.slug} place={place} index={i} total={places.length} />
+        ))}
+      </PlaceStack>
 
       {/* 04 — The closing invitation, over a photograph. */}
       <section className="hc-circle dz-close" aria-labelledby="dz-close-title" data-fab-away>
