@@ -80,9 +80,8 @@ const nextConfig = {
   async redirects() {
     return legacyRedirects.map((r) => ({ ...r, statusCode: 301 }));
   },
-  /* The Journey Book: a stand-alone page-turning preview kept in
-     public/journey-book, outside the site's header and footer. Not linked from
-     the navigation or the sitemap, and marked noindex in its own head. */
+  /* The Journey Book: the stand-alone, page-turning coming-soon page kept in
+     public/journey-book, outside the site's header and footer. */
   async rewrites() {
     return [{ source: '/journey-book', destination: '/journey-book/index.html' }];
   },
