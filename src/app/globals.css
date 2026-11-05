@@ -1360,7 +1360,7 @@ html[data-js] [data-ground][data-inview]::before {
   }
 }
 @supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
+  @media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
     main
       section:not([data-hero])
       > :not([aria-hidden='true']):not([data-no-settle]):not(script):not(style),
@@ -1443,5 +1443,18 @@ html.lenis {
       stroke;
     transition-duration: 0.3s;
     transition-timing-function: cubic-bezier(0.2, 0.6, 0.2, 1);
+  }
+}
+
+/* Phones and tablets: scrolling stays on the compositor. Frosted glass
+   (backdrop blur) is re-rendered on every scrolled frame and is the costliest
+   effect on a phone's GPU, so touch screens get the plain tinted panel
+   beneath it instead; the scroll-linked slide-ins above are desktop only. */
+@media (hover: none), (pointer: coarse), (max-width: 900px) {
+  *,
+  *::before,
+  *::after {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
   }
 }

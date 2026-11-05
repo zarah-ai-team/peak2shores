@@ -14,6 +14,14 @@ export const posterOf = (src: string) =>
   getImageProps({ src, alt: '', width: 960, height: 540 }).props.src;
 
 /**
+ * The film to load on this screen: on a phone or small tablet, its 720px cut
+ * (`name-m.mp4`, a fraction of the bytes and of the decoding), otherwise the
+ * full one. Browser only; the server renders no film source.
+ */
+export const forScreen = (src: string) =>
+  window.matchMedia('(max-width: 900px)').matches ? src.replace(/\.mp4$/, '-m.mp4') : src;
+
+/**
  * A full-bleed still, with Marc's film over it when there is one. The film is
  * muted, loops, and plays only while it is on screen (and `active`, when the
  * caller hides it behind another layer); under reduced motion the still holds.
@@ -37,7 +45,8 @@ export function HomeMedia({
 
   useEffect(() => {
     const el = video.current;
-    if (!el) return;
+    if (!el || !visual.video) return;
+    if (!el.getAttribute('src')) el.src = forScreen(visual.video);
     const sync = () => {
       if (visible.current && active && !reduced) el.play().catch(() => {});
       else el.pause();
@@ -49,7 +58,7 @@ export function HomeMedia({
     observer.observe(el);
     sync();
     return () => observer.disconnect();
-  }, [active, reduced]);
+  }, [active, reduced, visual.video]);
 
   return (
     <>
@@ -66,7 +75,6 @@ export function HomeMedia({
           ref={video}
           className={className}
           poster={posterOf(visual.img)}
-          src={visual.video}
           muted
           loop
           playsInline
@@ -100,19 +108,19 @@ export function Film({
   useEffect(() => {
     const el = video.current;
     if (!el) return;
+    if (!el.getAttribute('src')) el.src = `${forScreen(src)}#t=0.1`;
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && !reduced) el.play().catch(() => {});
       else el.pause();
     });
     observer.observe(el);
     return () => observer.disconnect();
-  }, [reduced]);
+  }, [reduced, src]);
 
   return (
     <video
       ref={video}
       className={className}
-      src={`${src}#t=0.1`}
       muted
       loop
       playsInline

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import Image, { getImageProps } from 'next/image';
 import { useReducedMotion } from 'motion/react';
+import { forScreen } from '@/components/home/HomeMedia';
 
 export type FilmVisual = {
   /** The still, and the film's poster. */
@@ -41,7 +42,8 @@ export function Film({
 
   useEffect(() => {
     const el = video.current;
-    if (!el) return;
+    if (!el || !visual.video) return;
+    if (!el.getAttribute('src')) el.src = forScreen(visual.video);
     const sync = () => {
       if (visible.current && active && !reduced) el.play().catch(() => {});
       else el.pause();
@@ -53,7 +55,7 @@ export function Film({
     observer.observe(el);
     sync();
     return () => observer.disconnect();
-  }, [active, reduced]);
+  }, [active, reduced, visual.video]);
 
   return (
     <>
@@ -70,7 +72,6 @@ export function Film({
           ref={video}
           className={`${className} photo-grade`}
           poster={posterOf(visual.img)}
-          src={visual.video}
           muted
           loop
           playsInline

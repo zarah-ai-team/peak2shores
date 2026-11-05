@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useReducedMotion } from 'motion/react';
 import type { ReelClip } from '@/lib/data/home';
-import { posterOf } from './HomeMedia';
+import { forScreen, posterOf } from './HomeMedia';
 
 /**
  * 01 — The opening: a reel of four clips in Marc's order (safari, Switzerland,
@@ -103,7 +103,7 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
               className="fill"
               style={{ filter: clip.grade }}
               poster={posterOf(clip.img)}
-              src={armed ? clip.video : undefined}
+              src={armed ? forScreen(clip.video) : undefined}
               muted
               playsInline
               // Only the clip on screen loads; each of the others waits for its

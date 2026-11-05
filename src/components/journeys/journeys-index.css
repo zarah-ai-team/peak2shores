@@ -267,6 +267,9 @@
   stroke-width: 1.6;
 }
 .jxh-cards {
+  /* Its own containing block, so nothing inside (a screen-reader label) can
+     reach past the rail and widen the page on a phone. */
+  position: relative;
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: calc((100% - 2 * 1.25rem) / 3);
@@ -825,4 +828,11 @@
 }
 .jxb-ctas {
   flex: none;
+}
+
+/* Phone: the banner's buttons take their own line and wrap. */
+@media (max-width: 760px) {
+  .jxb-ctas {
+    flex: 1 1 100%;
+  }
 }

@@ -301,6 +301,10 @@ export function HeroCarousel({ journeys, label }: { journeys: HeroJourney[]; lab
         return lens[Math.min(at24, lens.length - 1)] <= upto + 0.5;
       };
       const spots = journey.stops.map((s) => ({ s, xy: p(s.at) ?? [0, 0] }));
+      type Box = [number, number, number, number];
+      const labels: Box[] = [];
+      // Every stop's dot is kept clear too.
+      for (const { xy } of spots) labels.push([xy[0] - 9, xy[1] - 9, xy[0] + 9, xy[1] + 9]);
       for (const { s, xy } of spots) {
         if (!reached(s.at)) continue;
         const [x, y] = xy;
@@ -316,18 +320,47 @@ export function HeroCarousel({ journeys, label }: { journeys: HeroJourney[]; lab
         ctx.fill();
         ctx.stroke();
 
-        const tx = x + (left ? -17 : 17);
-        ctx.textAlign = left ? 'right' : 'left';
+        // Labels never sit on one another: a label tries its side, then the
+        // other, then drops its nights, and on a crowded small map is left
+        // off (the dot stays; the card below names every stop).
+        const nameFont = `400 ${w < 700 ? 15 : 19}px ${serif}`;
+        const nightsFont = `600 ${w < 700 ? 9.5 : 11}px ${sans}`;
+        const nt = `${s.nights} ${s.nights === 1 ? 'NIGHT' : 'NIGHTS'}`;
+        ctx.font = nameFont;
+        const nameW = ctx.measureText(s.name).width;
+        ctx.font = nightsFont;
+        const nightsW = s.nights > 0 ? ctx.measureText(nt).width + nt.length * 2 : 0;
+        const boxFor = (onLeft: boolean, nights: boolean): Box => {
+          const bw = nights ? Math.max(nameW, nightsW) : nameW;
+          const x0 = onLeft ? x - 17 - bw : x + 17;
+          return [x0, y - 18, x0 + bw, y + (nights ? 20 : 4)];
+        };
+        const clashes = (b: Box) =>
+          b[0] < 4 ||
+          b[2] > w - 4 ||
+          labels.some((q) => b[0] < q[2] && b[2] > q[0] && b[1] < q[3] && b[3] > q[1]);
+        const tries: [boolean, boolean][] = [
+          [left, s.nights > 0],
+          [!left, s.nights > 0],
+          [left, false],
+          [!left, false],
+        ];
+        const fit = tries.find(([l, n]) => !clashes(boxFor(l, n)));
+        if (!fit) continue;
+        const [onLeft, withNights] = fit;
+        labels.push(boxFor(onLeft, withNights));
+
+        const tx = x + (onLeft ? -17 : 17);
+        ctx.textAlign = onLeft ? 'right' : 'left';
         ctx.lineJoin = 'round';
         ctx.strokeStyle = 'rgb(255 255 255 / 0.92)';
-        ctx.font = `400 ${w < 700 ? 15 : 19}px ${serif}`;
+        ctx.font = nameFont;
         ctx.lineWidth = 4;
         ctx.strokeText(s.name, tx, y - 2);
         ctx.fillStyle = '#141d24';
         ctx.fillText(s.name, tx, y - 2);
-        if (s.nights > 0) {
-          const nt = `${s.nights} ${s.nights === 1 ? 'NIGHT' : 'NIGHTS'}`;
-          ctx.font = `600 ${w < 700 ? 9.5 : 11}px ${sans}`;
+        if (withNights) {
+          ctx.font = nightsFont;
           if ('letterSpacing' in ctx) (ctx as { letterSpacing: string }).letterSpacing = '2px';
           ctx.lineWidth = 3;
           ctx.strokeText(nt, tx, y + 15);

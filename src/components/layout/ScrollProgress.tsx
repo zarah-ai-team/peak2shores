@@ -23,10 +23,14 @@ export function ScrollProgress() {
     if (!el) return;
 
     let frame = 0;
+    // The page height is measured when it changes, not on every scrolled
+    // frame: reading it there can force a layout mid-scroll on a phone.
+    let scrollable = 0;
+    const measure = () => {
+      scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    };
     const update = () => {
       frame = 0;
-      const doc = document.documentElement;
-      const scrollable = doc.scrollHeight - window.innerHeight;
       const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
       el.style.transform = `scaleX(${Math.min(1, Math.max(0, progress))})`;
     };
@@ -35,12 +39,20 @@ export function ScrollProgress() {
       if (!frame) frame = window.requestAnimationFrame(update);
     };
 
+    const onResize = () => {
+      measure();
+      onScroll();
+    };
+    const sized = new ResizeObserver(onResize);
+    sized.observe(document.body);
+    measure();
     update();
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
+    window.addEventListener('resize', onResize, { passive: true });
     return () => {
+      sized.disconnect();
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      window.removeEventListener('resize', onResize);
       if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);

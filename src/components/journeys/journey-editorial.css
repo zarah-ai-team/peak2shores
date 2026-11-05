@@ -1367,3 +1367,37 @@
 .jy .rate .price {
   font-variant-numeric: tabular-nums;
 }
+
+/* Phone: the extension's route as a grid of stops, like the hero's, so its
+   six places never run off the screen. */
+@media (max-width: 800px) {
+  .jy .xroute {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem 0.75rem;
+  }
+  .jy .xroute::before {
+    display: none;
+  }
+  .jy .xroute li:last-child {
+    text-align: left;
+  }
+  .jy .xroute li:last-child::before {
+    left: 0;
+    right: auto;
+  }
+}
+
+/* Phone: the hero's words sit over the middle of the photograph, so the shade
+   covers it evenly and deepens toward the facts. */
+@media (max-width: 800px) {
+  .jy .hero-shade {
+    background: linear-gradient(
+      180deg,
+      rgb(8 20 28 / 0.55) 0%,
+      rgb(8 20 28 / 0.42) 30%,
+      rgb(8 20 28 / 0.62) 60%,
+      rgb(8 20 28 / 0.88) 100%
+    );
+  }
+}

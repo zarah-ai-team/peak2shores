@@ -829,3 +829,19 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Phone: the sort switch fits the width (its three options share it). */
+@media (max-width: 760px) {
+  .jx .sort {
+    flex: 1 1 100%;
+    gap: 0.625rem;
+  }
+  .jx .seg {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .jx .seg button {
+    flex: 1 1 0;
+    padding-inline: 0.5rem;
+  }
+}
