@@ -1,4 +1,4 @@
-<!doctype html><html><head><base href="/journey-book/"><meta name="robots" content="noindex, nofollow"><link rel="icon" href="/favicon.ico"><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><base href="/journey-book/"><link rel="icon" href="/favicon.ico"><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <meta charset="utf-8">
 <title>The Journey Book · Peaks2Shores</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -18,13 +18,6 @@ body { margin:0; background: var(--cream); color: var(--ink); font-family: var(-
 .app { max-width: 1180px; margin: 0 auto; padding-block: 18px 28px; display: flex; flex-direction: column; gap: 16px; }
 .bar { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap: wrap; }
 .bar img { width:104px; height:auto; display:block; }
-.bar .out { display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
-.bar .out a { font-size:11px; font-weight:500; letter-spacing:.18em; text-transform:uppercase; color: var(--brand-text); text-decoration:none; }
-.bar .out a:hover { text-decoration: underline; }
-.bar .out a.pill { padding: 11px 18px; border-radius:999px; background: var(--brand); color:#fff; transition: background .3s; }
-.bar .out a.pill:hover { background: var(--brand-deep); text-decoration:none; }
-.bar .out a:focus-visible, .bar .home:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
-@media (max-width: 760px) { .bar p { display:none; } .bar .out a:not(.pill) { display:none; } }
 .bar p { margin:0; font-size:11px; font-weight:500; letter-spacing:.26em; text-transform:uppercase; color: var(--lake); }
 .cols { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 28px; align-items:start; }
 @media (max-width: 760px) { .cols { grid-template-columns: minmax(0,1fr); gap: 34px; } }
@@ -42,7 +35,6 @@ body { margin:0; background: var(--cream); color: var(--ink); font-family: var(-
 .btn:focus-visible, .copy:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
 .where { min-width: 132px; text-align:center; font-size: 12px; font-weight:500; letter-spacing:.18em; text-transform:uppercase; color: var(--muted); }
 .hint { margin:0; text-align:center; font-size: 12px; color: var(--muted); }
-.hint a { color: var(--brand-text); }
 
 /* ---- pages: drawn on a 540-unit-wide grid; height follows the book (675 on wide screens, 900 on phones) ---- */
 .page { background: var(--night); overflow:hidden; container-type: inline-size; }
@@ -363,7 +355,7 @@ body { margin:0; background: var(--cream); color: var(--ink); font-family: var(-
 @media (prefers-reduced-motion: reduce) { .btn { transition:none; } }
 </style>
 <div class="app">
-  <header class="bar"><a class="home" href="/" aria-label="Peaks2Shores home"><img src="img/logo_blue.png" alt="Peaks2Shores"></a><p>The Journey Book</p><nav class="out" aria-label="Into the website"><a href="/journeys">View all journeys</a><a class="pill" href="/plan#contact">Connect with our team</a></nav></header>
+  <header class="bar"><img src="img/logo_blue.png" alt="Peaks2Shores"><p>The Journey Book</p></header>
   <div class="book-wrap"><div class="book" id="book">
 <div class="page dark" data-density="hard"><div class="pc mag">
   <img class="wrapimg front" src="img/oeschinen.jpg" alt="A mountain path above a turquoise alpine lake in the Swiss Alps">
@@ -511,16 +503,16 @@ body { margin:0; background: var(--cream); color: var(--ink); font-family: var(-
   <h3 class="bh ink hztitle" style="--bs:30">More extraordinary journeys<br>on the horizon</h3>
   <div class="tags"><div class="ltag" style="--r:-4deg"><span class="hole"></span><span class="lk">Coming soon</span><span class="lv">Egypt</span></div><div class="ltag" style="--r:3deg"><span class="hole"></span><span class="lk">Coming soon</span><span class="lv">Peru</span></div><div class="ltag" style="--r:-2deg"><span class="hole"></span><span class="lk">Coming soon</span><span class="lv">Thailand</span></div></div></div></div>
 <div class="page dark"><div class="pc"><img class="ph" src="img/egypt.jpg" alt="A traveller in a flowing dress among the giant columns of Karnak Temple, Luxor" style="object-position:34% 45%"><div class="tunsh"></div>
-  <p class="eb">Now on peaks2shores.com</p><p class="pg">30</p>
-  <div class="tunedb"><h2 class="bh wh" style="--bs:44">Explore further</h2>
-  <div class="notif light"><span class="nic"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg></span><span class="ntx"><b>Every journey in full</b><span>Itineraries, dates and where we stay</span></span><span class="ntime">now</span></div>
-  <div class="notif light"><span class="nic"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg></span><span class="ntx"><b>Request details</b><span>Tell us which journey speaks to you</span></span><span class="ntime">now</span></div></div>
+  <p class="eb">Until the website launches</p><p class="pg">30</p>
+  <div class="tunedb"><h2 class="bh wh" style="--bs:44">Stay tuned</h2>
+  <div class="notif light"><span class="nic"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg></span><span class="ntx"><b>peaks2shores.com</b><span>Our new website is on its way</span></span><span class="ntime">soon</span></div>
+  <div class="notif light"><span class="nic"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg></span><span class="ntx"><b>Every journey in full</b><span>Until then, we would love to hear from you</span></span><span class="ntime">soon</span></div></div>
   <p class="loc"><svg viewBox="0 0 14 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M7 17s6-5.6 6-10A6 6 0 0 0 1 7c0 4.4 6 10 6 10z"/><circle cx="7" cy="7" r="2.2"/></svg>Luxor · Egypt</p></div></div>
 <div class="page"><div class="pc paper"><div class="stk stkc">
   <p class="eb dk">Get in touch</p><p class="pg dk">31</p>
   <h2 class="st">Connect<br>with<br><em>our</em><br><em>team</em></h2>
   <div class="ccard"><p class="cq">Dreaming of a journey?<br>We’d love to hear from you.</p>
-  <a class="cbtn" href="/plan#contact">Connect with our team<svg viewBox="0 0 22 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M1 6h19"/><path d="M15 1l5 5-5 5"/></svg></a></div>
+  <a class="cbtn mailto" href="mailto:welcome@peaks2shores.com?subject=Journey%20Book%20enquiry&body=Hi%20Peaks2Shores%20team%2C%0A%0AI%20came%20across%20your%20Journey%20Book%20and%20would%20love%20to%20hear%20more%20about%20your%20journeys.%0A%0AName%3A%0ATravelling%20from%3A%0ADestinations%20I%27m%20interested%20in%3A%0AWhen%20I%27d%20like%20to%20travel%3A%0ANumber%20of%20travellers%3A%0A%0AKind%20regards%2C%0A" target="_blank" rel="noopener">Plan with us<svg viewBox="0 0 22 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M1 6h19"/><path d="M15 1l5 5-5 5"/></svg></a></div>
   <div class="cbelow"><a class="mailto" href="mailto:welcome@peaks2shores.com?subject=Journey%20Book%20enquiry&body=Hi%20Peaks2Shores%20team%2C%0A%0AI%20came%20across%20your%20Journey%20Book%20and%20would%20love%20to%20hear%20more%20about%20your%20journeys.%0A%0AName%3A%0ATravelling%20from%3A%0ADestinations%20I%27m%20interested%20in%3A%0AWhen%20I%27d%20like%20to%20travel%3A%0ANumber%20of%20travellers%3A%0A%0AKind%20regards%2C%0A" target="_blank" rel="noopener">welcome@peaks2shores.com</a><a href="https://www.instagram.com/peaks2shores/" target="_blank" rel="noopener"><svg class="igic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg>@peaks2shores</a></div>
   </div></div></div>
 <div class="page"><div class="pc paper"><div class="qrwrap">
@@ -540,12 +532,12 @@ body { margin:0; background: var(--cream); color: var(--ink); font-family: var(-
     <span class="where" id="where" aria-live="polite">Cover</span>
     <button class="btn" id="next" type="button" aria-label="Next page"><svg width="22" height="12" viewBox="0 0 22 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 6h19"/><path d="M15 1l5 5-5 5"/></svg></button>
   </nav>
-  <p class="hint">Swipe, drag a corner or use the arrows to turn the pages. Every journey is also on <a href="/journeys">the website</a>.</p>
+  <p class="hint">Swipe, drag a corner or use the arrows to turn the pages.</p>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.js"></script>
 <script>
 (function () {
-  document.querySelectorAll('.magqr, .cbtn, .cbelow a, .bar a').forEach(function (a) {
+  document.querySelectorAll('.magqr, .cbtn, .cbelow a').forEach(function (a) {
     ['mousedown', 'touchstart', 'pointerdown'].forEach(function (ev) { a.addEventListener(ev, function (e) { e.stopPropagation(); }, { passive: true }); });
   });
   // mail links: open the email app in a new window (embedded viewers block in-frame mailto); copy the address as a backup
