@@ -57,10 +57,12 @@ export type ReelClip = {
  */
 export const reel: (ReelClip & { fallback?: ReelClip })[] = [
   {
+    // Warmer, higher-contrast safari film in place of the muted giraffe clip
+    // (5 Nov). Pexels 5214180, free licence; the steady wide section only.
     place: 'On safari',
-    alt: 'A giraffe in open grassland on safari, seen through the bush, hills and mountains behind',
-    video: '/video/home/reel-safari.mp4',
-    img: '/images/home/reel-safari.jpg',
+    alt: 'Two giraffes on golden grassland in the afternoon sun, mountains beyond',
+    video: '/video/home/reel-safari-giraffes.mp4',
+    img: '/images/home/reel-safari-giraffes.jpg',
   },
   {
     place: 'Switzerland, by rail',
@@ -99,7 +101,14 @@ export const reel: (ReelClip & { fallback?: ReelClip })[] = [
 
 /* 02 — Ways to experience. Photographs only: the opening reel is the
    homepage's one film (client, 30 Oct). */
-export const ways: (HomeVisual & { title: string; line: string; href: string; lead?: boolean })[] =
+export const ways: (HomeVisual & {
+  title: string;
+  line: string;
+  href: string;
+  lead?: boolean;
+  /** Where the upright tile crops the landscape frame (CSS object-position). */
+  pos?: string;
+})[] =
   [
     {
       title: 'Small Luxury Group Journeys',
@@ -116,7 +125,9 @@ export const ways: (HomeVisual & { title: string; line: string; href: string; le
       line: 'Bespoke destinations, exceptional stays and authentic experiences — exclusively designed around you and the way you love to travel.',
       href: '/plan#private',
       img: '/images/home/way-private-venice.jpg',
-      alt: 'A spritz on a terrace above the Grand Canal in Venice, the Salute dome beyond',
+      alt: 'Two spritzes on a terrace above the Grand Canal in Venice, the Salute dome beyond',
+      // Cropped to the right, so both glasses stand in the upright tile (5 Nov).
+      pos: '84% 50%',
     },
     {
       title: 'Safari',
@@ -155,11 +166,12 @@ export const statement = {
   before: 'The journeys we remember most aren’t measured by how much we see, but by how ',
   emphasis: 'deeply',
   after: ' we experience the moments along the way.',
-  /* Behind it, a sandstone headland above the sea, a sea stack offshore.
-     A photograph: only the opening reel plays film on the homepage. */
+  /* Behind it, the client's own film (pause.mp4, 30 Oct): Positano from the
+     air, played muted on a loop (5 Nov: "make sure the video is played"). */
   film: {
-    img: '/images/home/pause-dune.jpg',
-    alt: 'A sandstone headland above the sea, a sea stack offshore',
+    img: '/images/home/quote-positano.jpg',
+    alt: 'Positano on the Amalfi Coast from the air, boats at anchor in the bay',
+    video: '/video/home/quote-positano.mp4',
   } satisfies HomeVisual,
 };
 
@@ -248,6 +260,8 @@ export const hotels: (HomeVisual & {
     nearby:
       'Explore Lucerne’s charming Old Town, discover the “Queen of the Mountains,” or cruise across the lake into the heart of the Swiss Alps.',
     ...still('client-hotel-lucerne'),
+    back: '/images/drive/switzerland-lake-lucerne-balcony-view.jpg',
+    backAlt: 'Lake Lucerne and Mount Pilatus from a balcony above the lakeside promenade, Lucerne',
   },
   {
     place: 'Stresa | Italy',
@@ -257,9 +271,9 @@ export const hotels: (HomeVisual & {
     nearby:
       'Explore the enchanting Borromean Islands, stroll through Stresa’s charming lakeside streets, or venture into the surrounding mountains for spectacular panoramic views.',
     ...still('client-hotel-stresa'),
-    back: '/images/drive/italy-stresa-sky-bar.jpg',
+    back: '/images/drive/italy-stresa-la-palma-lounge.jpg',
     backAlt:
-      'The rooftop terrace at Hotel La Palma, Stresa, looking across Lake Maggiore to the mountains',
+      'The lakeside lounge at Hotel La Palma, Stresa, looking across Lake Maggiore to the mountains',
   },
   {
     place: 'Victoria Falls | Zimbabwe',

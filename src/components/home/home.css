@@ -220,7 +220,7 @@
     transform: scale(1);
   }
   to {
-    transform: scale(1.08);
+    transform: scale(1);
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -481,7 +481,7 @@
 }
 .hc-ways .wt:hover video,
 .hc-ways .wt:hover img {
-  transform: scale(1.05);
+  transform: none;
 }
 .hc-ways .ws {
   position: absolute;

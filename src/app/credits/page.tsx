@@ -34,7 +34,7 @@ export default function CreditsPage() {
     <>
       <PageTitle kicker="Credits" title="Photography." variant="stacked">
         The photographs on this site are used under the licenses listed below. Each links to its
-        source on Unsplash or Wikimedia Commons, where the license text and the author’s full
+        source on Unsplash, Pexels or Wikimedia Commons, where the license text and the author’s full
         attribution can be found.
       </PageTitle>
 

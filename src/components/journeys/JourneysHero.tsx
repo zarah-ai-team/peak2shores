@@ -46,13 +46,11 @@ export function JourneysHero({ journeys }: { journeys: Journey[] }) {
   return (
     <section className="jxh" aria-labelledby="jxh-h1">
       <div className="jxh-head">
-        <div>
-          <p className="jxh-lab">Journeys</p>
-          <h1 id="jxh-h1">Small Luxury Group Journeys</h1>
-          <p className="jxh-line">
-            Extraordinary destinations. Intimate groups. Thoughtfully curated experiences.
-          </p>
-        </div>
+        <p className="jxh-lab">Journeys</p>
+        <h1 id="jxh-h1">Small Luxury Group Journeys</h1>
+        <p className="jxh-line">
+          Extraordinary destinations. Intimate groups. Thoughtfully curated experiences.
+        </p>
         <div className="jxh-say">
           <p>
             Intimate journeys shared with a small circle of fellow travelers, bringing together

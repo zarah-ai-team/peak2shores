@@ -8,7 +8,7 @@ import { getJourneyBySlug, getJourneySummaries, pageMetadata, type Journey } fro
 import { journeysFaq } from '@/lib/data/faq';
 import { flipbook, journeyRank, journeyTint, statusLabel } from '@/lib/data/flipbook';
 import { DATES_TBA } from '@/lib/journeys';
-import { getMedia, type MediaKey } from '@/lib/media';
+import { placePhotos } from '@/components/journeys/placePhotos';
 import { site } from '@/lib/site';
 
 /* Rebuilt hourly, so a journey scheduled with `publishAt` appears on time. */
@@ -21,12 +21,29 @@ export const metadata = pageMetadata({
   path: '/journeys',
 });
 
-/* The homepage's frame for each journey leads its card here too. */
-const leadFrames: Record<string, MediaKey> = {
-  'swiss-elegance': 'home-jr-swiss',
-  'the-italian-experience': 'home-jr-italy',
-  'adriatic-collection': 'ac-hero',
+/* Each card's photographs (notes of 5 November 2026): real photographs of
+   places the journey visits, the client's own first where we have them. */
+const cardPhotos: Record<string, { src: string; alt: string }[]> = {
+  'swiss-elegance': ['Lucerne', 'Zermatt', 'Grindelwald', 'Montreux', 'Stresa'].map(
+    (p) => placePhotos[p],
+  ),
+  'the-italian-experience': [
+    {
+      src: '/images/ie-hero.jpg',
+      alt: 'The Scaliger Castle at Sirmione rising from the clear water of Lake Garda',
+    },
+    ...['Venice', 'Bologna', 'Verona', 'Motor Valley'].map((p) => placePhotos[p]),
+  ],
+  'adriatic-collection': ['Dubrovnik', 'Hvar', 'Rovinj', 'Split', 'Venice'].map(
+    (p) => placePhotos[p],
+  ),
 };
+
+/** A departure's month, "June 2027", or the dates line until Marc sets them. */
+const monthOf = (iso: string | undefined, fallback: string) =>
+  iso
+    ? new Date(iso).toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' })
+    : fallback;
 
 /**
  * The Journeys page, after Ishika's notes of 3 November 2026:
@@ -40,8 +57,7 @@ const leadFrames: Record<string, MediaKey> = {
  * 6. Good to know: the questions, with "Connect with our team" beside them.
  *
  * Only the journeys with a page are shown (Marc's three, for launch); the
- * flipbook's coming journeys wait until he confirms them. The globe returns
- * later as the Collection's Map view.
+ * flipbook's coming journeys wait until he confirms them.
  */
 export default async function JourneysPage() {
   // Summaries only for the cards: the itineraries never need to cross to the browser.
@@ -55,18 +71,14 @@ export default async function JourneysPage() {
 
   const cards: CollectionCard[] = journeys.map((j) => {
     const book = flipbook[j.slug];
-    // Every distinct photograph the journey has, its lead frame first.
-    const keys = [leadFrames[j.slug], j.listMedia, j.cardMedia, j.promoMedia].filter(
-      (k): k is MediaKey => Boolean(k),
-    );
-    const imgs = Array.from(
-      new Map(
-        keys
-          .map((k) => getMedia(k))
-          .filter((m) => m.src)
-          .map((m) => [m.src as string, { src: m.src as string, alt: m.alt ?? m.label }]),
-      ).values(),
-    );
+    const whole = full.find((f) => f.slug === j.slug);
+    const imgs = (cardPhotos[j.slug] ?? []).filter(Boolean);
+    // The travel style, read from the journey itself.
+    const style = [
+      j.country.includes('&') ? 'Multi-country' : 'Single country',
+      ...(whole?.route?.some((s) => s.by === 'boat') ? ['Includes boat travel'] : []),
+      ...(whole?.flyer?.extension ? ['Can be combined with another journey'] : []),
+    ];
     return {
       slug: j.slug,
       title: book?.title ?? j.title,
@@ -76,6 +88,8 @@ export default async function JourneysPage() {
       dest: j.country.split(' & '),
       inspire: j.inspire,
       days: j.days,
+      when: monthOf(j.departureISO, j.departure),
+      style,
       facts: [
         `${j.days} days`,
         site.groupSize,

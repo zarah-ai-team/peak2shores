@@ -416,10 +416,10 @@ export const media = {
   'client-hotel-lucerne': {
     label: 'Stay · Mandarin Oriental Palace, Lucerne',
     brief:
-      'Drive — Mandarin Oriental Palace, Lucerne. Upright crop. The earlier still showed another hotel on the lake; until a photograph of the Palace itself arrives, the view over the lake from the promenade stands in.',
-    tone: '#5d7a78',
-    src: '/images/drive/switzerland-lake-lucerne-balcony-view.jpg',
-    alt: 'Lake Lucerne and Mount Pilatus from a balcony above the lakeside promenade, Lucerne',
+      'Drive › Hotels — "Lucerne Mandarin Oriental Terrace View" (Marc, 24 Oct): the Palace itself, its terrace at dusk over the lake. Upright crop.',
+    tone: '#5d6a7a',
+    src: '/images/drive/switzerland-lucerne-mandarin-oriental-terrace.jpg',
+    alt: 'A terrace table at Mandarin Oriental Palace, Lucerne, at dusk, Lake Lucerne and Mount Pilatus beyond',
   },
   'client-hotel-stresa': {
     label: 'Stay · Hotel La Palma, Stresa',
@@ -430,10 +430,11 @@ export const media = {
   },
   'client-hotel-victoria-falls': {
     label: 'Stay · The Palm River Hotel, Victoria Falls',
-    brief: 'Drive — The Palm River Hotel, Victoria Falls. Upright crop.',
-    tone: '#6b5f4a',
-    src: '/images/drive/zimbabwe-palm-river-hotel-interior.jpg',
-    alt: 'The colonial dining room of The Palm River Hotel on the Zambezi',
+    brief:
+      'Drive › Hotel - Palm River — "Palm River by night" (Marc, 24 Oct): the hotel and its lit pool among the trees. Upright crop.',
+    tone: '#2a2f45',
+    src: '/images/drive/zimbabwe-palm-river-hotel-night.jpg',
+    alt: 'The Palm River Hotel at night, its lit pool and terraces among the riverside trees, Victoria Falls',
   },
   'client-hotel-rovinj': {
     label: 'Stay · Grand Park Hotel Rovinj',
@@ -460,10 +461,11 @@ export const media = {
   },
   'home-jr-italy': {
     label: 'Home slider · Italy Uncovered',
-    brief: 'A Bologna salumeria, a tray of local antipasti and a spritz. Wide.',
-    tone: '#8a5a3a',
-    src: '/images/home/jr-italy-bologna-salumeria.jpg',
-    alt: 'A traveller in a Bologna food shop holding a tray of prosciutto, cheeses and a spritz',
+    brief:
+      'Drive › Italy — "Verona" (Marc, 25 Oct): the Roman Arena on Piazza Bra, a stop on the journey. Replaces the posed salumeria still (5 Nov). Wide.',
+    tone: '#a0583a',
+    src: '/images/home/jr-italy-verona-arena.jpg',
+    alt: 'The Roman Arena of Verona at dawn, the pastel houses of Piazza Bra beside it',
   },
   'home-xp-photo': {
     label: 'Home · The Peaks2Shores Experience',

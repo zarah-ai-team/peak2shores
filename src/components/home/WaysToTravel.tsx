@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useReducedMotion } from 'motion/react';
 import { ways } from '@/lib/data/home';
-import { Arrow } from '@/components/ui/Button';
 import { Chevron, posterOf } from './HomeMedia';
 import { useDragScroll } from '@/components/ui/useDrag';
 
@@ -114,17 +113,10 @@ export function WaysToTravel() {
     <section ref={section} className="hc-ways" id="ways" aria-labelledby="ways-title">
       <div className="head dk">
         <div>
-          {/* "Ways to explore", so it no longer clashes with the Experiences page. */}
-          <h2 id="ways-title">Ways to Explore</h2>
+          {/* "The Art of Travel" (2 Nov notes): the six ways to travel with us.
+              No call to action up here; the floating button covers it. */}
+          <h2 id="ways-title">The Art of Travel</h2>
           <p className="sub-h">Experience the world your way.</p>
-        </div>
-        {/* The way to a designer sits up here, clear of the floating button
-            in the bottom corner; the slider's arrows sit beneath the cards. */}
-        <div className="ctarow">
-          <span className="hint">Not sure which suits you?</span>
-          <Link className="btn btn-ink" href="/plan#contact">
-            Speak to a travel designer <Arrow />
-          </Link>
         </div>
       </div>
 
@@ -157,6 +149,7 @@ export function WaysToTravel() {
               fill
               sizes="(max-width: 900px) 80vw, 460px"
               className="fill"
+              style={way.pos ? { objectPosition: way.pos } : undefined}
             />
             {way.video && (
               <video

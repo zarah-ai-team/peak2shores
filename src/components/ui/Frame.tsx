@@ -85,9 +85,9 @@ const curtainVariants: Variants = {
   },
 };
 
-/** The picture settles from 1.04 → 1 behind the curtain. */
+/** The picture stays still behind the curtain: no zoom anywhere (2 Nov notes). */
 const settleVariants: Variants = {
-  hidden: { scale: 1.04 },
+  hidden: { scale: 1 },
   visible: { scale: 1, transition: { duration: 1.6, ease: ease.reveal } },
 };
 

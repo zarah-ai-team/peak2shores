@@ -18,7 +18,6 @@ export type RouteStep = {
   tagline: string;
   text: string;
   moment?: string;
-  hotel?: { name: string; url?: string };
   img?: string;
   alt: string;
   /** The part of the journey this stay begins. */
@@ -361,23 +360,6 @@ export function RouteLive({
                             {x.moment}
                           </p>
                         )}
-                        {x.hotel &&
-                          (x.hotel.url ? (
-                            <a
-                              className="ht"
-                              href={x.hotel.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <Bed />
-                              <span>{x.hotel.name}</span>
-                            </a>
-                          ) : (
-                            <span className="ht">
-                              <Bed />
-                              <span>{x.hotel.name}</span>
-                            </span>
-                          ))}
                       </div>
                       {x.img && (
                         <span className="ph">
@@ -399,16 +381,5 @@ export function RouteLive({
         {after}
       </div>
     </section>
-  );
-}
-
-function Bed() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden>
-      <path d="M3 18V7" />
-      <path d="M3 13h18v5" />
-      <path d="M21 13v-1.5a2.5 2.5 0 0 0-2.5-2.5H11v4" />
-      <circle cx="7" cy="10.5" r="1.6" />
-    </svg>
   );
 }

@@ -58,6 +58,8 @@ const icons: Record<(typeof included)[number]['icon'], React.ReactNode> = {
  * from the homepage to the Journeys page (Ishika, 3 November 2026), Marc's
  * copy unchanged: the label, heading and line on the left, the six signature
  * touches in a 3 × 2 grid on the right. No photograph, no link onward.
+ * Since 5 November 2026: a ruled table on white, each touch with a large serif
+ * numeral and its line icon in the brand blue.
  */
 export function DetailsDifference() {
   return (
@@ -68,21 +70,24 @@ export function DetailsDifference() {
         <p>Each journey’s page sets out exactly what it includes.</p>
       </div>
       <ul className="xpd-grid">
-        {included.map((b) => (
+        {included.map((b, i) => (
           <li key={b.title}>
-            <span className="ico" aria-hidden>
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                focusable="false"
-              >
-                {icons[b.icon]}
-              </svg>
-            </span>
+            <div className="xpd-top" aria-hidden>
+              <span className="no">{String(i + 1).padStart(2, '0')}</span>
+              <span className="ico">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  focusable="false"
+                >
+                  {icons[b.icon]}
+                </svg>
+              </span>
+            </div>
             <h3>{b.title}</h3>
             <p>{b.body}</p>
           </li>

@@ -6,6 +6,8 @@ import { flipbook, statusLabel } from '@/lib/data/flipbook';
 import { RATES_TBA } from '@/lib/journeys';
 import { getMedia } from '@/lib/media';
 import { site } from '@/lib/site';
+import { HeroStage, type HeroPlace } from './HeroStage';
+import { placePhotos } from './placePhotos';
 import './journey-editorial.css';
 
 /*
@@ -27,6 +29,34 @@ const nightsOf = (j: Journey) =>
   (j.flyer?.parts.flatMap((p) => p.stays).reduce((t, s) => t + (s.nights ?? 0), 0) ?? 0) ||
   j.days - 1;
 
+/** Does a stay ("Stresa & Lake Maggiore") name a stop on the route ("Stresa")? */
+const names = (a: string, b: string) => {
+  const [x, y] = [a.toLowerCase(), b.toLowerCase()];
+  return x.includes(y) || y.includes(x);
+};
+
+/** Each place on the route once, with its nights and its photograph. */
+function placesOf(j: Journey): HeroPlace[] {
+  const stays = j.flyer?.parts.flatMap((p) => p.stays) ?? [];
+  const seen = new Set<string>();
+  return (j.route ?? []).flatMap((stop) => {
+    if (seen.has(stop.name)) return [];
+    seen.add(stop.name);
+    const n = stays
+      .filter((s) => names(s.place, stop.name))
+      .reduce((t, s) => t + (s.nights ?? 0), 0);
+    const photo = placePhotos[stop.name];
+    return [
+      {
+        name: stop.name,
+        stay: n ? `${n} ${n === 1 ? 'night' : 'nights'}` : 'Along the way',
+        img: photo?.src,
+        alt: photo?.alt ?? stop.name,
+      },
+    ];
+  });
+}
+
 /** Where "Request details" goes: the inquiry form, this journey already named. */
 export const requestHref = (j: { slug: string }) =>
   `/plan?journey=${encodeURIComponent(j.slug)}#contact`;
@@ -41,7 +71,6 @@ export function statusOf(journey: Journey) {
 
 export function JyHero({ journey }: { journey: Journey }) {
   const media = getMedia(journey.detail?.heroMedia ?? journey.heroMedia ?? journey.listMedia);
-  const stops = Array.from(new Set((journey.route ?? []).map((s) => s.name)));
 
   const facts: { k: string; v: string; live?: boolean; tba?: boolean }[] = [
     { k: 'Length', v: `${journey.days} days · ${nightsOf(journey)} nights` },
@@ -58,19 +87,7 @@ export function JyHero({ journey }: { journey: Journey }) {
 
   return (
     <section className="jy hero" data-hero aria-labelledby="jy-h1">
-      {media.src && (
-        <Image
-          className="fill"
-          src={media.src}
-          alt={media.alt ?? ''}
-          fill
-          priority
-          sizes="100vw"
-          quality={85}
-        />
-      )}
-      <div className="hero-shade" aria-hidden />
-      <div className="hero-c">
+      <HeroStage media={media} places={placesOf(journey)}>
         <p className="crumb lab">
           <Link href="/journeys">Journeys</Link>
           <i aria-hidden />
@@ -78,14 +95,7 @@ export function JyHero({ journey }: { journey: Journey }) {
         </p>
         <h1 id="jy-h1">{titleOf(journey)}</h1>
         <p className="tag">{journey.lead}</p>
-        {stops.length > 1 && (
-          <ol className="hroute" aria-label="The route">
-            {stops.map((s) => (
-              <li key={s}>{s}</li>
-            ))}
-          </ol>
-        )}
-      </div>
+      </HeroStage>
       <dl className="facts">
         {facts.map((f) => (
           <div key={f.k}>
@@ -108,43 +118,43 @@ export function JyIntro({ journey, flyer }: { journey: Journey; flyer: JourneyFl
   const tagline = flipbook[journey.slug]?.tagline ?? journey.lead;
   const highlights = flyer.highlights ?? [];
   const note = flyer.marcNote;
+  const nums: [number, string][] = [
+    [journey.days, 'Days'],
+    [stays.filter((s) => s.nights).length, 'Places'],
+    [nightsOf(journey), 'Nights'],
+    [journey.country.split(/\s*&\s*/).length, 'Countries'],
+  ];
 
   return (
     <section className="jy intro" id="overview" aria-labelledby="jy-intro-h">
-      <p className="lab">The journey · {journey.lead}</p>
-      <h2 id="jy-intro-h">{tagline}</h2>
-      <p className="it">{journey.blurb}</p>
-      <div className="side">
-        <ul className="nums">
-          <li>
-            <b>{journey.days}</b>
-            <span>Days</span>
-          </li>
-          <li>
-            <b>{stays.filter((s) => s.nights).length}</b>
-            <span>Places</span>
-          </li>
-          <li>
-            <b>{nightsOf(journey)}</b>
-            <span>Nights</span>
-          </li>
-          <li>
-            <b>{journey.country.split(/\s*&\s*/).length}</b>
-            <span>Countries</span>
-          </li>
-        </ul>
-        <div className="row">
-          <a className="btn btn-ink" href="#itinerary">
-            The places <Arrow />
-          </a>
-          <a className="tlink" href={requestHref(journey)}>
-            Request details →
-          </a>
+      <div className="ov-head">
+        <p className="lab">The journey · {journey.lead}</p>
+        <h2 id="jy-intro-h">{tagline}</h2>
+      </div>
+      <div className="ov-body">
+        <p className="it">{journey.blurb}</p>
+        <div className="side">
+          <dl className="nums">
+            {nums.map(([n, k]) => (
+              <div key={k}>
+                <dt>{k}</dt>
+                <dd>{n}</dd>
+              </div>
+            ))}
+          </dl>
+          <div className="row">
+            <a className="btn btn-ink" href="#itinerary">
+              The places <Arrow />
+            </a>
+            <a className="tlink" href={requestHref(journey)}>
+              Request details →
+            </a>
+          </div>
         </div>
       </div>
 
       {(highlights.length > 0 || note) && (
-        <div className="ov-more">
+        <div className={`ov-more${highlights.length > 0 && note ? '' : ' solo'}`}>
           {highlights.length > 0 && (
             <div className="hl">
               <p className="lab">Overview</p>
@@ -152,7 +162,7 @@ export function JyIntro({ journey, flyer }: { journey: Journey; flyer: JourneyFl
                 {highlights.map((h) => (
                   <li key={h}>
                     <Star />
-                    {h}
+                    <span>{h}</span>
                   </li>
                 ))}
               </ul>
@@ -160,16 +170,20 @@ export function JyIntro({ journey, flyer }: { journey: Journey; flyer: JourneyFl
           )}
           {note && (
             <figure className="note">
-              <span className="pic">
-                <Image src="/brand/marc.webp" alt="" width={1150} height={1400} sizes="64px" />
+              <p className="lab">A note from Marc</p>
+              <span className="qm" aria-hidden>
+                “
               </span>
-              <div>
-                <p className="lab">A note from Marc</p>
-                <blockquote>“{note.quote}”</blockquote>
-                <figcaption>
-                  {site.founder.name} · {site.founder.role}, {site.name}
-                </figcaption>
-              </div>
+              <blockquote>{note.quote}</blockquote>
+              <figcaption>
+                <span className="pic">
+                  <Image src="/brand/marc.webp" alt="" width={1150} height={1400} sizes="56px" />
+                </span>
+                <span>
+                  <b>{site.founder.name}</b>
+                  {site.founder.role}, {site.name}
+                </span>
+              </figcaption>
             </figure>
           )}
         </div>
@@ -178,10 +192,11 @@ export function JyIntro({ journey, flyer }: { journey: Journey; flyer: JourneyFl
   );
 }
 
+/** A highlight's mark: a fine star, drawn in line like the site's other icons. */
 function Star() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden>
-      <path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z" />
+      <path d="M12 3.5l2.5 5.4 5.9.7-4.4 4 1.2 5.9L12 16.6l-5.2 2.9 1.2-5.9-4.4-4 5.9-.7z" />
     </svg>
   );
 }

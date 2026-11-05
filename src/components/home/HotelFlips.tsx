@@ -158,7 +158,7 @@ export function HotelFlips() {
         </div>
       </div>
       <div className="ctarow left">
-        <Link className="btn btn-light" href="/destinations">
+        <Link className="btn btn-light" href="/where-we-stay">
           Where we stay
         </Link>
       </div>

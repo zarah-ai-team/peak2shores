@@ -14,8 +14,8 @@ source page itself. None of it was shot for Peaks2Shores; see
   attribution required (credited here and on `/credits` anyway). The licence
   does not allow selling the photos unaltered or compiling them into a
   competing image service.
-- **2** frames remain from Wikimedia Commons.
-  2 of them are CC BY / CC BY-SA and **require visible
+- **7** frames remain from Wikimedia Commons.
+  6 of them are CC BY / CC BY-SA and **require visible
   attribution** while in use (the `/credits` page provides it).
 
 ## Before launch
@@ -112,6 +112,11 @@ source page itself. None of it was shot for Peaks2Shores; see
 | `jn-2` | jn-2.jpg | [Unsplash](https://unsplash.com/photos/landscape-photo-of-village-houses-near-ocean-kAE6Kd7W2UA) | silvia trigo | Unsplash License |
 | `jn-3` | jn-3.jpg | [Unsplash](https://unsplash.com/photos/a-table-set-up-for-a-formal-dinner-under-a-tree-vOx6oJFCb9w) | Jennifer Yung | Unsplash License |
 | `jn-4` | jn-4.jpg | [Unsplash](https://unsplash.com/photos/wooden-chairs-on-seaside-terrace-V-znk3SS474) | Taras Terletskyy | Unsplash License |
+| `jy-montreux-chillon` | journeys/jy-montreux-chillon.jpg | [Commons](https://commons.wikimedia.org/wiki/File:Ch%C3%A2teau_de_Chillon(Chillon_Castle)_on_the_Lake_Geneva_Shore_(Ank_Kumar)_05.jpg) | Ank Kumar | CC BY-SA 4.0 |
+| `jy-motor-valley-ferrari` | journeys/jy-motor-valley-ferrari.jpg | [Commons](https://commons.wikimedia.org/wiki/File:Ferrari-Museum_Maranello_8.JPG) | Wistula | CC BY-SA 3.0 |
+| `jy-rovinj` | journeys/jy-rovinj.jpg | [Commons](https://commons.wikimedia.org/wiki/File:Rovinj-drone-2022.jpg) | Tom Salmon | CC BY-SA 4.0 |
+| `jy-stresa-isola-bella` | journeys/jy-stresa-isola-bella.jpg | [Commons](https://commons.wikimedia.org/wiki/File:Isola_Bella_(Stresa)_-_DSC03945.JPG) | Daderot | Public domain |
+| `jy-verona-arena` | journeys/jy-verona-arena.jpg | [Commons](https://commons.wikimedia.org/wiki/File:The_Arena,_Piazza_Bra,_Verona_(4809401837).jpg) | Elliott Brown from Birmingham, United Kingdom | CC BY 2.0 |
 | `ma-1` | ma-1.jpg | [Unsplash](https://unsplash.com/photos/a-view-of-the-mountains-from-a-high-point-of-view-hiabrcnKUJ0) | Muzykalne Podróże | Unsplash License |
 | `ma-2` | ma-2.jpg | [Unsplash](https://unsplash.com/photos/a-picturesque-village-nestled-amidst-majestic-mountains-F6JYz0q_hKE) | Raymond Petrik | Unsplash License |
 | `ma-3` | ma-3.jpg | [Unsplash](https://unsplash.com/photos/green-trees-near-blue-sea-under-blue-sky-and-white-clouds-during-daytime-ncca-EipewU) | Carlos Coronado | Unsplash License |
@@ -137,3 +142,4 @@ source page itself. None of it was shot for Peaks2Shores; see
 | `tr-2` | tr-2.jpg | [Unsplash](https://unsplash.com/photos/snow-capped-mountains-reflected-in-lake-o75824r-9HE) | Martin Leitgeb | Unsplash License |
 | `tr-3` | tr-3.jpg | [Unsplash](https://unsplash.com/photos/green-trees-on-brown-mountain-near-body-of-water-during-daytime-kJ2_a03Bp-M) | Henrique Ferreira | Unsplash License |
 | `tr-4` | tr-4.jpg | [Unsplash](https://unsplash.com/photos/silhouette-of-palm-trees-near-body-of-water-during-sunset-FQjUaIMQF3Q) | Denys Kostyuchenko | Unsplash License |
+| `home-reel-safari` | reel-safari-giraffes.mp4 | [Pexels](https://www.pexels.com/video/giraffe-s-standing-on-a-grass-field-5214180/) | Taryn Elliott | Pexels License |

@@ -17,6 +17,10 @@ export type CollectionCard = {
   dest: string[];
   inspire: string[];
   days?: number;
+  /** The departure’s month, "June 2027", or "Dates to be announced". */
+  when: string;
+  /** How the journey travels: "Multi-country", "Includes boat travel"… */
+  style: string[];
   /** The length, "Small group" and, once set, the departure. */
   facts: string[];
   priceFrom?: string;
@@ -39,40 +43,67 @@ const shows: [Show, string][] = [
   ['now', 'Now booking'],
   ['soon', 'Coming soon'],
 ];
+/** Lengths, by days. Only the ones some journey falls in are offered. */
+const lengths: [string, (d: number) => boolean][] = [
+  ['Up to 9 days', (d) => d <= 9],
+  ['10 to 12 days', (d) => d >= 10 && d <= 12],
+  ['13 days or more', (d) => d >= 13],
+];
+
+type Filters = {
+  dest: string;
+  show: Show;
+  insp: string[];
+  len: string;
+  when: string;
+  style: string[];
+};
+const none: Filters = { dest: 'All', show: 'all', insp: [], len: 'All', when: 'All', style: [] };
+
+/** What a several-choice dropdown shows as chosen. */
+const chosen = (v: string[]) =>
+  v.length === 0 ? 'All' : v.length === 1 ? v[0] : `${v.length} chosen`;
+const toggle = (v: string[], x: string) => (v.includes(x) ? v.filter((y) => y !== x) : [...v, x]);
 
 /**
- * The Collection, after Ishika's notes of 3 November 2026: the label and
- * heading with the sort beside them, then one white panel holding the three
- * filters as dropdowns in a row (Destination · Availability · What inspires
- * you), each option counting its journeys and greyed when it has none, a
- * Clear link while any filter is on, and at the row's end the count and a
- * List / Map switch (Map comes in a later phase). Then the journeys as tall
- * product cards.
+ * The Collection: the label and heading with the sort beside them, then one
+ * white panel of filters as dropdowns in a row (Destination · Length ·
+ * Departure · Travel style · What inspires you · Availability), each option
+ * counting its journeys and greyed when it has none, a Clear link while any
+ * filter is on, and the count at the row's end. Every option is read from the
+ * journeys themselves. Then the journeys as tall product cards.
  */
 export function JourneyCollection({ cards }: { cards: CollectionCard[] }) {
-  const [dest, setDest] = useState('All');
-  const [show, setShow] = useState<Show>('all');
-  const [insp, setInsp] = useState<string[]>([]);
+  const [f, setF] = useState<Filters>(none);
   const [sort, setSort] = useState<Sort>('featured');
+  const set = (patch: Partial<Filters>) => setF((cur) => ({ ...cur, ...patch }));
 
-  const dests = useMemo(() => ['All', ...new Set(cards.flatMap((c) => c.dest))], [cards]);
-  const inspirations = useMemo(
-    () => Array.from(new Set(cards.flatMap((c) => c.inspire))).sort(),
-    [cards],
-  );
+  const opts = useMemo(() => {
+    const uniq = (xs: string[]) => Array.from(new Set(xs));
+    return {
+      dests: uniq(cards.flatMap((c) => c.dest)),
+      lens: lengths.filter(([, fits]) => cards.some((c) => c.days && fits(c.days))).map(([l]) => l),
+      whens: uniq(cards.map((c) => c.when)),
+      styles: uniq(cards.flatMap((c) => c.style)),
+      insps: uniq(cards.flatMap((c) => c.inspire)).sort(),
+    };
+  }, [cards]);
 
-  /* Whether a card passes the filters, leaving one of them out (so each menu
-     counts what choosing an option would show). */
-  const pass = (c: CollectionCard, f: { dest?: string; show?: Show; insp?: string[] } = {}) => {
-    const d = f.dest ?? dest;
-    const s = f.show ?? show;
-    const i = f.insp ?? insp;
+  /* Whether a card passes the filters, with some of them swapped (so each
+     menu counts what choosing an option would show). */
+  const pass = (c: CollectionCard, over: Partial<Filters> = {}) => {
+    const x = { ...f, ...over };
+    const fits = lengths.find(([l]) => l === x.len)?.[1];
     return (
-      (d === 'All' || c.dest.includes(d)) &&
-      (s === 'all' || (s === 'soon') === Boolean(c.soon)) &&
-      i.every((x) => c.inspire.includes(x))
+      (x.dest === 'All' || c.dest.includes(x.dest)) &&
+      (x.show === 'all' || (x.show === 'soon') === Boolean(c.soon)) &&
+      (x.len === 'All' || (!!c.days && !!fits?.(c.days))) &&
+      (x.when === 'All' || c.when === x.when) &&
+      x.style.every((y) => c.style.includes(y)) &&
+      x.insp.every((y) => c.inspire.includes(y))
     );
   };
+  const count = (over: Partial<Filters>) => cards.filter((c) => pass(c, over)).length;
 
   const shown = useMemo(() => {
     const list = cards.filter((c) => pass(c));
@@ -80,14 +111,33 @@ export function JourneyCollection({ cards }: { cards: CollectionCard[] }) {
     const len = (c: CollectionCard) => c.days ?? (sort === 'shortest' ? 999 : -1);
     return [...list].sort((a, b) => (sort === 'shortest' ? len(a) - len(b) : len(b) - len(a)));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cards, dest, show, insp, sort]);
+  }, [cards, f, sort]);
 
-  const anyOn = dest !== 'All' || show !== 'all' || insp.length > 0;
-  const clearAll = () => {
-    setDest('All');
-    setShow('all');
-    setInsp([]);
-  };
+  const anyOn =
+    f.dest !== 'All' ||
+    f.show !== 'all' ||
+    f.len !== 'All' ||
+    f.when !== 'All' ||
+    f.insp.length > 0 ||
+    f.style.length > 0;
+  const clearAll = () => setF(none);
+
+  /** A single-choice menu: "All", then the options. */
+  const one = (key: 'dest' | 'len' | 'when', list: string[]) =>
+    ['All', ...list].map((o) => ({
+      key: o,
+      label: o,
+      count: count({ [key]: o }),
+      on: f[key] === o,
+    }));
+  /** A several-choice menu: each option counted as if added to the others. */
+  const many = (key: 'insp' | 'style', list: string[]) =>
+    list.map((o) => ({
+      key: o,
+      label: o,
+      count: count({ [key]: f[key].includes(o) ? f[key] : [...f[key], o] }),
+      on: f[key].includes(o),
+    }));
 
   return (
     <div className="jx">
@@ -118,46 +168,53 @@ export function JourneyCollection({ cards }: { cards: CollectionCard[] }) {
         <div className="fbar" role="group" aria-label="Filter journeys">
           <Menu
             label="Destination"
-            value={dest === 'All' ? 'All' : dest}
-            options={dests.map((d) => ({
-              key: d,
-              label: d,
-              count: cards.filter((c) => pass(c, { dest: d })).length,
-              on: d === dest,
-            }))}
-            onPick={(d) => setDest(d)}
+            value={f.dest}
+            options={one('dest', opts.dests)}
+            onPick={(dest) => set({ dest })}
           />
+          {opts.lens.length > 0 && (
+            <Menu
+              label="Length"
+              value={f.len}
+              options={one('len', opts.lens)}
+              onPick={(len) => set({ len })}
+            />
+          )}
           <Menu
-            label="Availability"
-            value={shows.find(([k]) => k === show)?.[1] ?? 'All'}
-            options={shows.map(([k, t]) => ({
-              key: k,
-              label: t,
-              count: cards.filter((c) => pass(c, { show: k })).length,
-              on: k === show,
-            }))}
-            onPick={(k) => setShow(k as Show)}
+            label="Departure"
+            value={f.when}
+            options={one('when', opts.whens)}
+            onPick={(when) => set({ when })}
           />
-          {inspirations.length > 0 && (
+          {opts.styles.length > 0 && (
+            <Menu
+              label="Travel style"
+              multi
+              value={chosen(f.style)}
+              options={many('style', opts.styles)}
+              onPick={(x) => set({ style: toggle(f.style, x) })}
+            />
+          )}
+          {opts.insps.length > 0 && (
             <Menu
               label="What inspires you"
               multi
-              value={
-                insp.length === 0 ? 'All' : insp.length === 1 ? insp[0] : `${insp.length} chosen`
-              }
-              options={inspirations.map((i) => ({
-                key: i,
-                label: i,
-                count: cards.filter((c) =>
-                  pass(c, { insp: insp.includes(i) ? insp : [...insp, i] }),
-                ).length,
-                on: insp.includes(i),
-              }))}
-              onPick={(i) =>
-                setInsp((cur) => (cur.includes(i) ? cur.filter((x) => x !== i) : [...cur, i]))
-              }
+              value={chosen(f.insp)}
+              options={many('insp', opts.insps)}
+              onPick={(x) => set({ insp: toggle(f.insp, x) })}
             />
           )}
+          <Menu
+            label="Availability"
+            value={shows.find(([k]) => k === f.show)?.[1] ?? 'All'}
+            options={shows.map(([k, t]) => ({
+              key: k,
+              label: t,
+              count: count({ show: k }),
+              on: k === f.show,
+            }))}
+            onPick={(k) => set({ show: k as Show })}
+          />
           {anyOn && (
             <button type="button" className="fclear" onClick={clearAll}>
               Clear
@@ -167,14 +224,6 @@ export function JourneyCollection({ cards }: { cards: CollectionCard[] }) {
             <span role="status" aria-live="polite">
               Showing {shown.length} of {cards.length} journeys
             </span>
-            <div className="seg view" role="group" aria-label="View">
-              <button type="button" className="on" aria-pressed>
-                List
-              </button>
-              <button type="button" disabled title="The map view is coming soon">
-                Map
-              </button>
-            </div>
           </div>
         </div>
 
@@ -302,8 +351,8 @@ function ProductCard({ card: c, priority }: { card: CollectionCard; priority: bo
             priority={priority && i === 0}
           />
         ))}
+        <div className="pcg" aria-hidden />
       </div>
-      <div className="pcg" aria-hidden />
       <div className="pctop">
         <span>{c.region}</span>
         <span className={`st${c.soon ? ' soon' : ''}`}>

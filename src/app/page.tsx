@@ -7,7 +7,6 @@ import { WaysToTravel } from '@/components/home/WaysToTravel';
 import { FeaturedJourneys } from '@/components/home/FeaturedJourneys';
 import { HowWeTravel } from '@/components/home/HowWeTravel';
 import { HotelFlips } from '@/components/home/HotelFlips';
-import { ExperienceWords } from '@/components/home/ExperienceWords';
 import { CircleBand, FounderStory, Intro, Statement } from '@/components/home/HomeSections';
 import { getJourneySummaries, pageMetadata } from '@/lib/content';
 import { reel, type ReelClip } from '@/lib/data/home';
@@ -44,7 +43,7 @@ export const revalidate = 3600;
  * out A&K-style (every departure as a card):
  *
  * the reel → who we are → ways to travel → the group journeys →
- * Marc's line → how we travel → the founder → where we stay → what you do
+ * Marc's line → how we travel → the founder → where we stay
  * → the circle. "Connect with our team" stays in reach throughout (site-wide, from the layout).
  *
  * Grounds: film → paper → paper → paper → paper (ruled) → paper (ruled) →
@@ -63,7 +62,6 @@ export default async function HomePage() {
       <HowWeTravel />
       <FounderStory />
       <HotelFlips />
-      <ExperienceWords />
       <CircleBand />
     </div>
   );

@@ -106,67 +106,77 @@
   --p2s-sky: #7accfd;
 }
 .hc-jr .pts-wrap {
-  position: relative;
-  margin: clamp(0.5rem, 1vw, 1rem) 0 clamp(2.5rem, 4.17vw, 3.75rem);
+  margin: clamp(1.25rem, 2vw, 2rem) 0 clamp(2.5rem, 4.17vw, 3.75rem);
 }
-.hc-jr .ridge {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 4rem;
-  overflow: visible;
-}
-.hc-jr .ridge path {
-  fill: none;
-  stroke: var(--p2s-blue);
-  stroke-width: 1.5;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-}
+/* One ruled strip: a fine rule above and below, hairlines between. */
 .hc-jr .pts {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid rgb(20 29 36 / 0.14);
+  border-bottom: 1px solid rgb(20 29 36 / 0.14);
 }
 .hc-jr .pts li {
   position: relative;
-  padding: 4.75rem clamp(1.5rem, 3.33vw, 3rem) 0 0;
+  padding: clamp(1.75rem, 2.5vw, 2.5rem) clamp(1.5rem, 3vw, 3rem);
+  transition: background-color 0.5s var(--ease);
 }
-/* Pinned where the line crosses y = 40 at each column's left edge. */
-.hc-jr .pts .dot {
-  position: absolute;
-  top: calc(2.5rem - 0.5625rem);
-  left: -0.5625rem;
-  width: 1.125rem;
-  height: 1.125rem;
-  border-radius: 50%;
-  background: #fff;
-  border: 1.5px solid var(--p2s-blue);
-  transition:
-    background-color 0.5s var(--ease),
-    box-shadow 0.5s var(--ease);
+.hc-jr .pts li + li {
+  border-left: 1px solid rgb(20 29 36 / 0.14);
 }
-.hc-jr .pts .dot::after {
+.hc-jr .pts li:first-child {
+  padding-left: 0;
+}
+.hc-jr .pts li:last-child {
+  padding-right: 0;
+}
+/* A short blue rule draws in along the top edge under the pointer. */
+.hc-jr .pts li::before {
   content: '';
   position: absolute;
-  inset: 0.25rem;
-  border-radius: 50%;
-  background: var(--p2s-blue);
-}
-.hc-jr .pts li:first-child .dot {
+  top: -1px;
   left: 0;
+  width: 3rem;
+  height: 2px;
+  background: var(--p2s-blue);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease);
 }
-.hc-jr .pts li:hover .dot {
-  box-shadow: 0 0 0 0.5rem rgb(122 204 253 / 0.35);
+.hc-jr .pts li + li::before {
+  left: clamp(1.5rem, 3vw, 3rem);
+}
+.hc-jr .pts li:hover::before {
+  transform: scaleX(1);
+}
+.hc-jr .pts .pt-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: clamp(1.25rem, 1.8vw, 1.75rem);
+}
+.hc-jr .pts .ico {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  border: 1px solid rgb(1 143 201 / 0.35);
+  color: var(--p2s-blue);
+}
+.hc-jr .pts .ico svg {
+  width: 1.75rem;
+  height: 1.75rem;
 }
 .hc-jr .pts .lab {
-  display: block;
-  color: var(--ink);
-  margin-bottom: 0.875rem;
+  font-family: var(--serif);
+  font-size: clamp(1.75rem, 2.4vw, 2.5rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--p2s-blue);
+  opacity: 0.55;
 }
 .hc-jr .pts h3 {
   font-family: var(--serif);
@@ -176,7 +186,6 @@
   letter-spacing: -0.02em;
   color: var(--ink);
   margin: 0 0 0.75rem;
-  max-width: 16ch;
 }
 .hc-jr .pts p {
   font-family: var(--sans);
@@ -185,7 +194,7 @@
   line-height: 1.7;
   color: #3a434a;
   margin: 0;
-  max-width: 34ch;
+  max-width: 36ch;
 }
 
 /* -- The slider ----------------------------------------------------------- */
@@ -713,7 +722,7 @@
   box-shadow: 0 30px 60px rgb(0 0 0 / 0.45);
 }
 .hc-jr .card:hover img {
-  transform: scale(1.08);
+  transform: none;
 }
 .hc-jr .card .num,
 .hc-jr .card .cap,
@@ -886,23 +895,21 @@
 
 /* -- Tablet and phone: the words, then the controls, under the picture --- */
 @media (max-width: 900px) {
-  /* Stacked, the line stands upright: a rule down the left with the dots on it. */
-  .hc-jr .ridge {
-    display: none;
-  }
+  /* Stacked, the strip keeps its rules: one between each promise. */
   .hc-jr .pts {
     grid-template-columns: minmax(0, 1fr);
-    gap: 2.25rem;
-    border-left: 1.5px solid var(--p2s-blue);
-    margin-left: 0.5625rem;
   }
-  .hc-jr .pts li {
-    padding: 0 0 0 1.75rem;
+  .hc-jr .pts li,
+  .hc-jr .pts li:first-child,
+  .hc-jr .pts li:last-child {
+    padding: 1.75rem 0;
   }
-  .hc-jr .pts .dot,
-  .hc-jr .pts li:first-child .dot {
-    top: 0.125rem;
-    left: calc(-0.5625rem - 0.75px);
+  .hc-jr .pts li + li {
+    border-left: 0;
+    border-top: 1px solid rgb(20 29 36 / 0.14);
+  }
+  .hc-jr .pts li + li::before {
+    left: 0;
   }
   .hc-jr .pts h3,
   .hc-jr .pts p {

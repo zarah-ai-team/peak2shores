@@ -392,11 +392,19 @@
   gap: clamp(1.25rem, 1.94vw, 1.75rem);
 }
 .jx .grid > li {
+  display: flex;
   min-width: 0;
 }
+/* The card, after the notes of 5 November 2026: the photograph at the top
+   and the words under it in the card's own flow, so a long name is never cut
+   off or pushed up over the photograph, and every card in a row starts its
+   name at the same height and ends on its button. */
 .jx .pc {
   position: relative;
-  height: clamp(36rem, 41vw, 41.25rem);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100%;
   overflow: hidden;
   border-radius: 2rem;
   background: var(--tint);
@@ -412,11 +420,10 @@
   box-shadow: 0 2.5rem 5rem rgb(20 29 36 / 0.24);
 }
 .jx .pcm {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 62%;
+  position: relative;
+  flex: none;
+  aspect-ratio: 5 / 4;
+  overflow: hidden;
 }
 /* The next photograph wipes in over the last, which holds until it is covered. */
 .jx .pcm img {
@@ -434,22 +441,23 @@
   clip-path: inset(0);
   transition: clip-path 0.9s cubic-bezier(0.77, 0, 0.18, 1);
 }
-/* The photograph settling into the colour of the place. */
+/* The foot of the photograph settling into the colour of the place. */
 .jx .pcg {
   position: absolute;
   inset: 0;
+  z-index: 2;
   pointer-events: none;
   background: linear-gradient(
     180deg,
-    rgb(0 0 0 / 0.18) 0%,
-    transparent 18%,
-    transparent 34%,
-    var(--tint) 60%,
+    rgb(0 0 0 / 0.2) 0%,
+    transparent 22%,
+    transparent 70%,
     var(--tint) 100%
   );
 }
 .jx .pctop {
   position: absolute;
+  z-index: 3;
   left: 1.25rem;
   right: 1.25rem;
   top: 1.25rem;
@@ -464,18 +472,16 @@
   gap: 0.4375rem;
   padding: 0.4375rem 0.8125rem;
   border-radius: 999px;
-  background: rgb(255 255 255 / 0.9);
+  background: rgb(255 255 255 / 0.92);
   color: var(--ink);
   font-family: var(--sans);
   font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
 }
 .jx .pctop .st {
-  background: rgb(8 20 28 / 0.5);
+  background: rgb(8 20 28 / 0.62);
   color: #fff;
   font-weight: 600;
 }
@@ -483,17 +489,22 @@
   width: 0.4375rem;
   height: 0.4375rem;
   border-radius: 50%;
-  background: #4ade80;
+  background: var(--sky);
 }
 .jx .pctop .st.soon i {
   background: var(--sky);
 }
 .jx .pcb {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin-top: -2.75rem;
   padding: 0 1.625rem 1.625rem;
+}
+.jx .pcb .pbtn {
+  margin-top: auto;
 }
 .jx .dots {
   display: flex;

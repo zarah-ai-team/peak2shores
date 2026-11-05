@@ -98,6 +98,12 @@ function frame(route: LonLat[], w: number, h: number): View {
   return { lon, lat, k: Math.max(1, Math.min(fit, near)) };
 }
 
+/* Natural map colours: sea, land, the chosen journey's countries, the route. */
+const SEA = '#aad3df';
+const LAND = '#ece8d8';
+const LAND_LIT = '#d3e0b9';
+const BRAND = '#1190cb';
+
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 
 /**
@@ -143,14 +149,15 @@ export function HeroCarousel({ journeys, label }: { journeys: HeroJourney[]; lab
     let raf = 0;
     let last = 0;
 
-    /* The earth itself: sea, land, the countries of the chosen journey a shade
-       lighter, a thin atmosphere, and their names once close enough to read. */
+    /* The earth itself, in natural map colours (notes of 5 November 2026): a
+       clear sea blue, land in soft sage and sand, the countries of the chosen
+       journey a little greener, fine borders, and their names once close
+       enough to read. No glow, no dark ground. */
     const paintBase = (hi: boolean) => {
       // The fine coastlines only once close in; the whole earth needs no more than the coarse ones.
       const land = (hi && view.k > 2 && atlas.hi) || atlas.lo;
       const p = project(view, w, h);
       const path = geoPath(p, bctx);
-      const [cx, cy] = p.translate();
       const r = p.scale();
       bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       bctx.clearRect(0, 0, w, h);
@@ -169,20 +176,9 @@ export function HeroCarousel({ journeys, label }: { journeys: HeroJourney[]; lab
         );
       };
 
-      if (r < Math.hypot(w, h)) {
-        const halo = bctx.createRadialGradient(cx, cy, r * 0.98, cx, cy, r * 1.12);
-        halo.addColorStop(0, 'rgb(122 204 253 / 0.28)');
-        halo.addColorStop(1, 'rgb(122 204 253 / 0)');
-        bctx.fillStyle = halo;
-        bctx.fillRect(0, 0, w, h);
-      }
-      const sea = bctx.createRadialGradient(cx - r * 0.3, cy - r * 0.35, r * 0.05, cx, cy, r);
-      sea.addColorStop(0, '#174c6c');
-      sea.addColorStop(0.6, '#0c2f46');
-      sea.addColorStop(1, '#071b29');
       bctx.beginPath();
       path({ type: 'Sphere' });
-      bctx.fillStyle = sea;
+      bctx.fillStyle = SEA;
       bctx.fill();
 
       if (land) {
@@ -196,19 +192,17 @@ export function HeroCarousel({ journeys, label }: { journeys: HeroJourney[]; lab
           bctx.lineWidth = 0.7;
           bctx.stroke();
         };
-        layer((c) => !lit.has(c.properties.name), '#2b4c42', 'rgb(255 255 255 / 0.14)');
-        if (lit.size) layer((c) => lit.has(c.properties.name), '#3f6d58', 'rgb(255 255 255 / 0.4)');
+        layer((c) => !lit.has(c.properties.name), LAND, 'rgb(122 112 92 / 0.45)');
+        if (lit.size) layer((c) => lit.has(c.properties.name), LAND_LIT, 'rgb(86 104 66 / 0.75)');
       }
 
-      // A soft shadow toward the rim, so the earth reads as a sphere.
-      if (r < Math.hypot(w, h)) {
-        const rim = bctx.createRadialGradient(cx, cy, r * 0.62, cx, cy, r);
-        rim.addColorStop(0, 'rgb(4 14 22 / 0)');
-        rim.addColorStop(1, 'rgb(4 14 22 / 0.5)');
+      // The earth's edge, as a fine line, while the whole of it is in view.
+      if (r < Math.hypot(w, h) / 2) {
         bctx.beginPath();
         path({ type: 'Sphere' });
-        bctx.fillStyle = rim;
-        bctx.fill();
+        bctx.strokeStyle = 'rgb(20 29 36 / 0.18)';
+        bctx.lineWidth = 1;
+        bctx.stroke();
       }
 
       const show = Math.min(1, Math.max(0, (view.k - 6) / 6));
@@ -216,7 +210,7 @@ export function HeroCarousel({ journeys, label }: { journeys: HeroJourney[]; lab
         bctx.font = `500 12px ${sans}`;
         bctx.textAlign = 'center';
         if ('letterSpacing' in bctx) (bctx as { letterSpacing: string }).letterSpacing = '5px';
-        bctx.fillStyle = `rgb(255 255 255 / ${0.45 * show})`;
+        bctx.fillStyle = `rgb(92 84 66 / ${0.75 * show})`;
         const centre: LonLat = [view.lon, view.lat];
         // Names give way to the route: none where a stop and its label would be.
         const taken = (journey?.stops ?? []).map((s) => p(s.at) ?? [-999, -999]);
@@ -231,8 +225,9 @@ export function HeroCarousel({ journeys, label }: { journeys: HeroJourney[]; lab
       }
     };
 
-    /* The route over the earth: drawn leg by leg as `progress` runs to 1, with
-       a glow, a bright head while it travels, and each stop as it is reached. */
+    /* The route over the earth, drawn leg by leg as `progress` runs to 1: a
+       brand-blue line on a white casing, as on a printed map, a small head
+       while it travels, and each stop as it is reached. */
     const paintRoute = () => {
       if (!journey || progress <= 0) return;
       const p = project(view, w, h);
@@ -281,31 +276,22 @@ export function HeroCarousel({ journeys, label }: { journeys: HeroJourney[]; lab
       };
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
-      ctx.save();
-      ctx.shadowColor = 'rgb(122 204 253 / 0.9)';
-      ctx.shadowBlur = 16;
-      ctx.strokeStyle = 'rgb(122 204 253 / 0.55)';
-      ctx.lineWidth = 7;
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 6;
       trace();
       ctx.stroke();
-      ctx.restore();
-      ctx.strokeStyle = '#7accfd';
+      ctx.strokeStyle = BRAND;
       ctx.lineWidth = 3;
       const head = trace();
       ctx.stroke();
-      ctx.strokeStyle = 'rgb(255 255 255 / 0.85)';
-      ctx.lineWidth = 1;
-      trace();
-      ctx.stroke();
       if (progress < 1) {
-        ctx.save();
-        ctx.shadowColor = '#fff';
-        ctx.shadowBlur = 14;
-        ctx.fillStyle = '#fff';
+        ctx.fillStyle = BRAND;
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.arc(head[0], head[1], 4, 0, Math.PI * 2);
+        ctx.arc(head[0], head[1], 4.5, 0, Math.PI * 2);
         ctx.fill();
-        ctx.restore();
+        ctx.stroke();
       }
 
       // Stops: each appears once the line has reached it.
@@ -322,12 +308,8 @@ export function HeroCarousel({ journeys, label }: { journeys: HeroJourney[]; lab
           spots.some(
             (o) => o.s !== s && o.xy[0] > x && o.xy[0] - x < 170 && Math.abs(o.xy[1] - y) < 34,
           ) || x > w * 0.86;
-        ctx.fillStyle = 'rgb(122 204 253 / 0.22)';
-        ctx.beginPath();
-        ctx.arc(x, y, 13, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#7accfd';
-        ctx.strokeStyle = '#fff';
+        ctx.fillStyle = '#fff';
+        ctx.strokeStyle = BRAND;
         ctx.lineWidth = 2.5;
         ctx.beginPath();
         ctx.arc(x, y, 6.5, 0, Math.PI * 2);
@@ -337,11 +319,11 @@ export function HeroCarousel({ journeys, label }: { journeys: HeroJourney[]; lab
         const tx = x + (left ? -17 : 17);
         ctx.textAlign = left ? 'right' : 'left';
         ctx.lineJoin = 'round';
-        ctx.strokeStyle = 'rgb(8 29 43 / 0.85)';
+        ctx.strokeStyle = 'rgb(255 255 255 / 0.92)';
         ctx.font = `400 ${w < 700 ? 15 : 19}px ${serif}`;
         ctx.lineWidth = 4;
         ctx.strokeText(s.name, tx, y - 2);
-        ctx.fillStyle = '#fff';
+        ctx.fillStyle = '#141d24';
         ctx.fillText(s.name, tx, y - 2);
         if (s.nights > 0) {
           const nt = `${s.nights} ${s.nights === 1 ? 'NIGHT' : 'NIGHTS'}`;
@@ -349,7 +331,7 @@ export function HeroCarousel({ journeys, label }: { journeys: HeroJourney[]; lab
           if ('letterSpacing' in ctx) (ctx as { letterSpacing: string }).letterSpacing = '2px';
           ctx.lineWidth = 3;
           ctx.strokeText(nt, tx, y + 15);
-          ctx.fillStyle = '#7accfd';
+          ctx.fillStyle = '#0b5c85';
           ctx.fillText(nt, tx, y + 15);
           if ('letterSpacing' in ctx) (ctx as { letterSpacing: string }).letterSpacing = '0px';
         }

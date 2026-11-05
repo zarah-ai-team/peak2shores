@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { Arrow } from '@/components/ui/Button';
 import type { JourneySummary } from '@/lib/content';
 import { DATES_TBA } from '@/lib/journeys';
-import { site } from '@/lib/site';
 import { comingSoon, flipbook, journeyRank, statusLabel } from '@/lib/data/flipbook';
 import { getMedia, type MediaKey } from '@/lib/media';
 import { JourneySlider, type JourneySlide } from './JourneySlider';
@@ -25,7 +24,7 @@ const comingSlides: JourneySlide[] = comingSoon.map((c) => ({
   short: c.short,
   places: c.places,
   lead: c.tagline,
-  facts: ['Small group'],
+  facts: [],
   soon: true,
   photo: c.photo,
 }));
@@ -38,24 +37,57 @@ const promises = [
   {
     title: 'Intimate by Design',
     line: 'Small groups of like-minded travelers, creating a more personal and connected travel experience.',
+    icon: 'group',
   },
   {
     title: 'Expertly Curated',
     line: 'Exceptional destinations, handpicked hotels, and authentic experiences shaped by local expertise.',
+    icon: 'compass',
   },
   {
     title: 'Thoughtfully Paced',
     line: 'A beautiful balance of discovery, memorable experiences, and time to enjoy each destination.',
+    icon: 'time',
   },
-];
+] as const;
 
-/* The logo's own line, drawn once across the three: peaks at the left, a
-   lake's easy curve between, and waves at the right. It sits on y = 40 at
-   x = 0, 400 and 800, where each point's dot is pinned. */
-const RIDGE =
-  'M0 40 L52 16 L84 30 L132 6 L186 32 L224 20 L272 40 L400 40 ' +
-  'C470 40 520 28 600 28 S730 40 800 40 ' +
-  'Q825 30 850 40 T900 40 T950 40 T1000 40 T1050 40 T1100 40 T1150 40 T1200 40';
+/** A fine line icon for each promise, drawn in the brand blue. */
+function PromiseIcon({ kind }: { kind: (typeof promises)[number]['icon'] }) {
+  return (
+    <svg
+      viewBox="0 0 32 32"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      focusable="false"
+    >
+      {kind === 'group' && (
+        <>
+          <circle cx="11" cy="11.5" r="3.5" />
+          <circle cx="21.5" cy="12.5" r="3" />
+          <path d="M4.5 25c.6-4.2 3.2-6.5 6.5-6.5s5.9 2.3 6.5 6.5" />
+          <path d="M18.6 19.3c.9-.5 1.9-.8 2.9-.8 2.9 0 5.1 2 5.6 5.8" />
+        </>
+      )}
+      {kind === 'compass' && (
+        <>
+          <circle cx="16" cy="16" r="11" />
+          <path d="M20.5 11.5l-2.6 6.4-6.4 2.6 2.6-6.4z" />
+          <path d="M16 5v2M16 25v2M5 16h2M25 16h2" />
+        </>
+      )}
+      {kind === 'time' && (
+        <>
+          <path d="M10 5h12M10 27h12" />
+          <path d="M11 5c0 5.5 5 7.5 5 11s-5 5.5-5 11M21 5c0 5.5-5 7.5-5 11s5 5.5 5 11" />
+          <path d="M13.5 24.5c.8-1.6 1.6-2.3 2.5-2.3s1.7.7 2.5 2.3" />
+        </>
+      )}
+    </svg>
+  );
+}
 
 /* The words in each title that name where it goes, set in blue on the slider
    in place of a separate country label. A journey not listed here falls back
@@ -102,8 +134,6 @@ export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
       places: titlePlaces[j.slug] ?? j.country.split(/\s*(?:&|,|\band\b)\s*/).filter(Boolean),
       lead: book?.tagline ?? j.lead,
       facts: [
-        `${j.days} days`,
-        site.groupSize,
         ...(j.departure && j.departure !== DATES_TBA ? [j.departure] : []),
         ...(j.priceFrom ? [`From ${j.priceFrom}`] : []),
       ],
@@ -127,21 +157,18 @@ export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
           </Link>
         </div>
 
+        {/* The three promises as one ruled editorial strip: a fine line above
+            and below, hairlines between, a blue line icon and numeral on each. */}
         <div className="pts-wrap">
-          <svg
-            className="ridge"
-            viewBox="0 0 1200 64"
-            preserveAspectRatio="none"
-            aria-hidden
-            focusable="false"
-          >
-            <path d={RIDGE} />
-          </svg>
           <ol className="pts" aria-label="What every journey shares">
             {promises.map((p, i) => (
               <li key={p.title}>
-                <span className="dot" aria-hidden />
-                <span className="lab">{String(i + 1).padStart(2, '0')}</span>
+                <div className="pt-top" aria-hidden>
+                  <span className="ico">
+                    <PromiseIcon kind={p.icon} />
+                  </span>
+                  <span className="lab">{String(i + 1).padStart(2, '0')}</span>
+                </div>
                 <h3>{p.title}</h3>
                 <p>{p.line}</p>
               </li>

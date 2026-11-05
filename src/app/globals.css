@@ -797,7 +797,7 @@
   @media (hover: hover) and (pointer: fine) {
     .group:hover .frame-zoom,
     .group:focus-visible .frame-zoom {
-      transform: scale(1.035);
+      transform: none;
     }
   }
 
@@ -1136,7 +1136,7 @@ html[data-preload] body::after {
     transform: scale(1);
   }
   to {
-    transform: scale(1.07);
+    transform: scale(1);
   }
 }
 

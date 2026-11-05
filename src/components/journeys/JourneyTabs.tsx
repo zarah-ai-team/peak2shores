@@ -68,7 +68,7 @@ export function JourneyTabs({
       aria-label={label}
       data-journey-tabs
       data-pin-header
-      className="sticky top-[var(--nav-h-compact)] z-20 border-b border-line bg-ivory/95 backdrop-blur-[0.875rem]"
+      className="sticky top-[var(--nav-h-compact)] z-20 border-b border-line bg-ivory"
     >
       <div className="container-site flex items-center justify-between gap-6">
         <ul className="-mx-1 m-0 flex list-none gap-1 overflow-x-auto p-0 [scrollbar-width:none] md:gap-4">

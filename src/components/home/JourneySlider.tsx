@@ -241,19 +241,17 @@ export function JourneySlider({
               aria-hidden={!on}
               inert={!on}
             >
-              {/* Said first, so a slide reads as a journey to book, not a picture. */}
-              <p className={`badge${s.soon ? ' soon' : ''}`}>
-                <i aria-hidden />
-                Small-group journey
-                <b>{s.soon ? 'Coming soon' : s.status}</b>
-              </p>
+              {/* No status pill or length/group line on the slide (5 Nov): the
+                  Now booking / Coming soon switch above already says it. */}
               <h3>{marked(s.title, s.places)}</h3>
               <p className="lead">{s.lead}</p>
-              <p className="facts">
-                {s.facts.map((f) => (
-                  <span key={f}>{f}</span>
-                ))}
-              </p>
+              {s.facts.length > 0 && (
+                <p className="facts">
+                  {s.facts.map((f) => (
+                    <span key={f}>{f}</span>
+                  ))}
+                </p>
+              )}
               {s.soon ? (
                 <div className="acts">
                   <Link

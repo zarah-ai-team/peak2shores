@@ -36,8 +36,8 @@ const names = (a: string, b: string) => {
 /**
  * The itinerary, stay by stay, after the design sample "Itinerary": a dark
  * map of the region held beside the stays while they scroll, and the stays
- * themselves, each opening to what you will do there, the hotel and a
- * photograph. The map follows the stays (RouteLive).
+ * themselves, each opening to what you will do there and a photograph (the
+ * hotels are named under "Where you'll stay", not here). The map follows the stays (RouteLive).
  *
  * Drawn here, on the server: the land, the route's legs and the places, in
  * the order the journey travels. Each stay is matched to its stop on the
@@ -117,7 +117,6 @@ export function JyItinerary({
       day += n;
     }
     const m = stay.media ? getMedia(stay.media) : undefined;
-    const hotel = flyer.hotels.find((h) => names(stay.place, h.place));
     const part = flyer.parts[p];
     return {
       at: i >= 0 ? markerOf[i] : -1,
@@ -129,7 +128,6 @@ export function JyItinerary({
       tagline: stay.tagline,
       text: stay.doing.join(' '),
       moment: stay.moment,
-      hotel: hotel && { name: hotel.name, url: hotel.url },
       img: m?.src ?? undefined,
       alt: m?.alt ?? stay.place,
       part:

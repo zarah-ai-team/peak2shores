@@ -32,6 +32,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/plan', priority: 0.9 },
     { path: '/destinations', priority: 0.8 },
     { path: '/experiences', priority: 0.8 },
+    { path: '/where-we-stay', priority: 0.7 },
     { path: '/our-story', priority: 0.7 },
     ...(articles.length ? [{ path: '/journal', priority: 0.6 }] : []),
     { path: '/privacy', priority: 0.3 },
