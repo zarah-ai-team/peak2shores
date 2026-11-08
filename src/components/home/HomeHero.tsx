@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useReducedMotion } from 'motion/react';
@@ -80,7 +80,14 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
       {reel.map((clip, i) => (
         <div
           key={clip.video ?? clip.img}
-          className={`hv fill ${i === current ? 'on' : ''} ${playing ? '' : 'held'}`}
+          className={`hv fill ${i === current ? 'on' : ''} ${playing ? '' : 'held'} ${clip.flip ? 'flip' : ''}`}
+          // Each clip's own crop, so its subject stays in frame (home-fixes.css).
+          style={
+            {
+              '--pos': clip.pos ?? 'center',
+              '--pos-m': clip.posM ?? clip.pos ?? 'center',
+            } as CSSProperties
+          }
           aria-hidden
         >
           <Image

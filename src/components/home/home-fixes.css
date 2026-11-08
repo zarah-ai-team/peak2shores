@@ -60,6 +60,67 @@
     linear-gradient(180deg, rgb(8 20 28 / 0.45) 0%, rgb(8 20 28 / 0) 22%);
 }
 
+/* Each clip crops on its own subject (the lion's face sits right of centre and
+   low in the frame), with a second crop for an upright screen (8 Nov). */
+.hc .hc-hero .hv .fill {
+  object-position: var(--pos, center);
+}
+.hc .hc-hero .hv.flip .fill {
+  transform: scaleX(-1);
+}
+@media (max-aspect-ratio: 1/1) {
+  .hc .hc-hero .hv .fill {
+    object-position: var(--pos-m, var(--pos, center));
+  }
+}
+
+/* On a phone or an upright tablet the words no longer sit on the film's
+   subject: the film fills the top of the screen and fades into the night, and
+   the copy sits beneath it, its headline just overlapping the fade (8 Nov).
+   The copy ends 5.25rem up, clear of "Connect with our team"; the film ends
+   about 2.5rem below the copy's top (it is ~20rem tall on a phone, where the
+   buttons stack, and ~16rem on a tablet). */
+@media (max-width: 900px) and (orientation: portrait) {
+  .hc .hc-hero {
+    --film-end: calc(100% - 19rem);
+  }
+  .hc .hc-hero .hv {
+    inset: 0 0 auto;
+    height: max(45%, var(--film-end));
+  }
+  .hc .hc-hero .shade {
+    background: linear-gradient(
+      180deg,
+      rgb(8 20 28 / 0.5) 0%,
+      rgb(8 20 28 / 0) 7.5rem,
+      rgb(8 20 28 / 0) calc(max(45%, var(--film-end)) - 6rem),
+      var(--night) max(45%, var(--film-end))
+    );
+  }
+  .hc .hc-hero .copy.left {
+    inset: auto var(--gut) 5.25rem;
+    width: auto;
+  }
+  /* The film's controls move up under the header, clear of the buttons. */
+  .hc .hc-hero .vctl {
+    bottom: auto;
+    top: calc(var(--nav-h) + 0.75rem);
+  }
+}
+@media (max-width: 600px) {
+  .hc .hc-hero {
+    --film-end: calc(100% - 22rem);
+  }
+  .hc .hc-hero .copy.left h1 {
+    font-size: clamp(2.5rem, 11vw, 2.875rem);
+    margin-bottom: 1rem;
+  }
+  .hc .hc-hero .copy.left .standfirst {
+    font-size: 1.0625rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
 /* -- 02 Philosophy: centered between two short blue rules ----------------- */
 /* One full screen under the solid header, the statement at its centre. */
 .hc .hc-intro {

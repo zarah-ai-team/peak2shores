@@ -44,6 +44,12 @@ export type ReelClip = {
   hold?: number;
   /** A colour grade (a CSS filter) for a clip that reads flat. */
   grade?: string;
+  /** Where a landscape screen crops the frame (CSS object-position). */
+  pos?: string;
+  /** Where a portrait screen (a phone, an upright tablet) crops the frame. */
+  posM?: string;
+  /** Mirror the clip, to turn its subject away from the headline. */
+  flip?: boolean;
 };
 
 /**
@@ -65,6 +71,15 @@ export const reel: (ReelClip & { fallback?: ReelClip })[] = [
     alt: 'A male lion with a full golden mane turning his head in the sun',
     video: '/video/home/reel-safari-lion.mp4',
     img: '/images/home/reel-safari-lion.jpg',
+    // He turns from profile to face the camera, his face settling left of
+    // centre, under the headline. Mirrored and started at 3s (the poster is
+    // that frame), he looks out from the right, clear of the words, and the
+    // phone crop holds his whole face (8 Nov). The crop is in the source's
+    // own coordinates, before the mirror: 32% is 68% on screen.
+    start: 3,
+    flip: true,
+    pos: '50% 45%',
+    posM: '32% 50%',
     fallback: {
       place: 'On safari',
       alt: 'Two giraffes on golden grassland in the afternoon sun, mountains beyond',
@@ -77,6 +92,7 @@ export const reel: (ReelClip & { fallback?: ReelClip })[] = [
     alt: 'A red mountain train crossing an alpine meadow above the lakes of the Bernese Oberland',
     video: '/video/home/reel-swiss-rail.mp4',
     img: '/images/home/reel-swiss-rail.jpg',
+    posM: '68% 50%',
     fallback: {
       place: 'Switzerland, by rail',
       alt: 'A red train curving along an alpine lake beneath low cloud in the Swiss Alps',
@@ -90,6 +106,7 @@ export const reel: (ReelClip & { fallback?: ReelClip })[] = [
     // Pexels 12315324 (Boris Ivas), from 0:14; colour lifted in the cut.
     video: '/video/home/reel-amalfi-coast.mp4',
     img: '/images/home/reel-amalfi-coast.jpg',
+    posM: '86% 50%',
     fallback: {
       place: 'Amalfi Coast, Italy',
       alt: 'A sailing boat at anchor off the Amalfi Coast, a cliffside town and the coast fading into haze behind',
@@ -103,6 +120,7 @@ export const reel: (ReelClip & { fallback?: ReelClip })[] = [
     // Pexels 16114872 (8 Nov), slowed a touch to the reel's calm pace.
     video: '/video/home/reel-hvar-harbour.mp4',
     img: '/images/home/reel-hvar-harbour.jpg',
+    posM: '41% 50%',
     fallback: {
       place: 'The Adriatic',
       alt: 'Sveti Stefan, a walled island village on the Adriatic coast of Montenegro, a catamaran at anchor',
