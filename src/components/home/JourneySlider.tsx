@@ -21,7 +21,8 @@ export type JourneySlide = {
   status?: string;
   /** In the flipbook, not yet released: register interest instead of reserve. */
   soon?: boolean;
-  photo: { src?: string; alt: string; tone: string };
+  /** `pos`: where the wide crop centres (CSS object-position). */
+  photo: { src?: string; alt: string; tone: string; pos?: string };
 };
 
 /** How long a slide stays before the next, while the slider plays. */
@@ -183,6 +184,7 @@ export function JourneySlider({
               sizes="(min-width: 900px) 92vw, 100vw"
               quality={85}
               className="photo-grade"
+              style={s.photo.pos ? { objectPosition: s.photo.pos } : undefined}
             />
           )}
         </div>

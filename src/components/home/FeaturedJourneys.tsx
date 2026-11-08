@@ -99,13 +99,24 @@ const titlePlaces: Record<string, string[]> = {
   'adriatic-collection': ['Adriatic'],
 };
 
+/* Where a wide crop of the frame centres, when the middle would cut a face. */
+const homePos: Record<string, string> = {
+  // The traveler's face sits high in the frame (8 Nov: it was cut in half).
+  'the-italian-experience': '50% 4%',
+};
+
 /** The journey's photograph: the first of its frames that has a file. */
 function slidePhoto(journey: JourneySummary): JourneySlide['photo'] {
   const keys = [homeFrames[journey.slug], journey.listMedia, journey.cardMedia].filter(
     (k): k is MediaKey => Boolean(k),
   );
   const slot = getMedia(keys.find((k) => getMedia(k).src) ?? keys[0]);
-  return { src: slot.src, alt: slot.alt ?? slot.label, tone: slot.tone };
+  return {
+    src: slot.src,
+    alt: slot.alt ?? slot.label,
+    tone: slot.tone,
+    pos: homePos[journey.slug],
+  };
 }
 
 /**
