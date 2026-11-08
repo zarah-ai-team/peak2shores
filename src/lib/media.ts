@@ -462,10 +462,18 @@ export const media = {
   'home-jr-italy': {
     label: 'Home slider · Italy Uncovered',
     brief:
-      'Drive › Italy — "Verona" (Marc, 25 Oct): the Roman Arena on Piazza Bra, a stop on the journey. Replaces the posed salumeria still (5 Nov). Wide.',
+      'The salumeria frame again (8 Nov), from the client: a traveler with a board of prosciutto and an aperitivo in an Italian food hall. Wide.',
     tone: '#a0583a',
-    src: '/images/home/jr-italy-verona-arena.jpg',
-    alt: 'The Roman Arena of Verona at dawn, the pastel houses of Piazza Bra beside it',
+    src: '/images/home/italian-experience.jpg',
+    alt: 'A smiling traveler holding a board of prosciutto and an aperitivo in an Italian food hall',
+  },
+  'home-jr-adriatic': {
+    label: 'Home slider · The Adriatic Collection',
+    brief:
+      'Pexels 16908309 (8 Nov): Dubrovnik’s walls and Lovrijenac above the sea, golden light. Wide.',
+    tone: '#3f6f80',
+    src: '/images/home/jr-adriatic-dubrovnik-walls.jpg',
+    alt: 'Dubrovnik’s old town walls and the Lovrijenac fortress above the Adriatic in golden light',
   },
   'home-xp-photo': {
     label: 'Home · The Peaks2Shores Experience',

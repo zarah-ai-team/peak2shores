@@ -154,9 +154,10 @@ export const beliefs: Belief[] = [
     label: 'Every detail',
     title: 'Seamless by Nature.',
     body: 'From exceptional accommodations to thoughtfully coordinated experiences, every detail is carefully considered so you can simply enjoy the journey.',
-    img: '/images/drive/switzerland-zermatt-grand-hotel.jpg',
-    alt: 'A horse-drawn carriage waiting at the entrance of the Grand Hotel Zermatterhof, Zermatt',
-    pos: '45% 62%',
+    // Pexels 32740215 (8 Nov).
+    img: '/images/home/hw-seamless-dolomites-hotel.jpg',
+    alt: 'A grand hotel on the shore of a still mountain lake beneath the Dolomites',
+    pos: '52% 50%',
   },
   {
     label: 'Your journey',

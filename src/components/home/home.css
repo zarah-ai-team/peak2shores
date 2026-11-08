@@ -200,7 +200,8 @@
 }
 .hc-hero .hv {
   opacity: 0;
-  transition: opacity 1.2s var(--ease);
+  /* A slow dissolve between clips, for a calm pace (8 Nov). */
+  transition: opacity 2s ease-in-out;
 }
 .hc-hero .hv.on {
   opacity: 1;

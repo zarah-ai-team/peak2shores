@@ -15,6 +15,8 @@ export type HomeVisual = {
   alt: string;
   /** Silent clip, played muted. */
   video?: string;
+  /** Where a tight crop centres on the still (CSS object-position). */
+  pos?: string;
 };
 
 const still = (key: Parameters<typeof getMedia>[0]): Pick<HomeVisual, 'img' | 'alt'> => {
@@ -47,36 +49,47 @@ export type ReelClip = {
 /**
  * 01 — The reel, in Marc's order: safari, Switzerland, Positano, Hvar.
  *
- * Positano and Hvar are licensed Shutterstock clips (4088645319 from 0:27,
- * 4150349679 from 0:02), saved as reel-positano.mp4 / reel-hvar.mp4 with a
- * poster frame beside them in public/images/home. Until a file is there the
- * page resolves the clip to `fallback` (HomePage, on the server), so the reel
- * never points at a missing file. Positano's stand-in is a still, a sailing
- * boat at anchor off the Amalfi Coast, easing slowly in: the Capri harbor
- * flight was too busy for the opening.
+ * Marc's final selection (8 Nov): a lion in place of the giraffes, the Swiss
+ * rail line above the lakes, a new Positano flight and Hvar. Each is cut to
+ * about eight calm seconds at natural speed, with a light colour lift (from
+ * the source files beside them: Kenya-Masai-Mara-Hero 0:02.5, switzerland-hero
+ * 0:10, Amalfi is Pexels 12315324 from 0:14; Hvar is Pexels 16114872 whole, slowed to 85%), so the reel runs at an
+ * unhurried pace, with a 720px `-m` cut for phones and a poster frame
+ * in public/images/home. If a film or poster is missing the page resolves the
+ * clip to `fallback` (HomePage, on the server), so the reel never points at a
+ * missing file.
  */
 export const reel: (ReelClip & { fallback?: ReelClip })[] = [
   {
-    // Warmer, higher-contrast safari film in place of the muted giraffe clip
-    // (5 Nov). Pexels 5214180, free licence; the steady wide section only.
     place: 'On safari',
-    alt: 'Two giraffes on golden grassland in the afternoon sun, mountains beyond',
-    video: '/video/home/reel-safari-giraffes.mp4',
-    img: '/images/home/reel-safari-giraffes.jpg',
+    alt: 'A male lion with a full golden mane turning his head in the sun',
+    video: '/video/home/reel-safari-lion.mp4',
+    img: '/images/home/reel-safari-lion.jpg',
+    fallback: {
+      place: 'On safari',
+      alt: 'Two giraffes on golden grassland in the afternoon sun, mountains beyond',
+      video: '/video/home/reel-safari-giraffes.mp4',
+      img: '/images/home/reel-safari-giraffes.jpg',
+    },
   },
   {
     place: 'Switzerland, by rail',
-    alt: 'A red train curving along an alpine lake beneath low cloud in the Swiss Alps',
-    video: '/video/home/reel-rail.mp4',
-    img: '/images/home/reel-rail.jpg',
+    alt: 'A red mountain train crossing an alpine meadow above the lakes of the Bernese Oberland',
+    video: '/video/home/reel-swiss-rail.mp4',
+    img: '/images/home/reel-swiss-rail.jpg',
+    fallback: {
+      place: 'Switzerland, by rail',
+      alt: 'A red train curving along an alpine lake beneath low cloud in the Swiss Alps',
+      video: '/video/home/reel-rail.mp4',
+      img: '/images/home/reel-rail.jpg',
+    },
   },
   {
-    place: 'Positano, Italy',
-    alt: 'Positano on the Amalfi Coast, Italy, from the sea',
-    video: '/video/home/reel-positano.mp4',
-    img: '/images/home/reel-positano.jpg',
-    // The clip reads grey and faded (client, 31 Oct): more colour in the sea.
-    grade: 'saturate(1.4) contrast(1.1) brightness(1.04)',
+    place: 'Amalfi Coast, Italy',
+    alt: 'The Amalfi Coast from the air, turquoise water below cliffside hotels and the town of Amalfi',
+    // Pexels 12315324 (Boris Ivas), from 0:14; colour lifted in the cut.
+    video: '/video/home/reel-amalfi-coast.mp4',
+    img: '/images/home/reel-amalfi-coast.jpg',
     fallback: {
       place: 'Amalfi Coast, Italy',
       alt: 'A sailing boat at anchor off the Amalfi Coast, a cliffside town and the coast fading into haze behind',
@@ -86,10 +99,10 @@ export const reel: (ReelClip & { fallback?: ReelClip })[] = [
   },
   {
     place: 'Hvar, Croatia',
-    alt: 'Hvar on the Dalmatian Coast, Croatia, from the sea',
-    video: '/video/home/reel-hvar.mp4',
-    img: '/images/home/reel-hvar.jpg',
-    start: 2,
+    alt: 'Hvar harbour from the air, yachts along the palm-lined quay and the old town climbing to the fortress',
+    // Pexels 16114872 (8 Nov), slowed a touch to the reel's calm pace.
+    video: '/video/home/reel-hvar-harbour.mp4',
+    img: '/images/home/reel-hvar-harbour.jpg',
     fallback: {
       place: 'The Adriatic',
       alt: 'Sveti Stefan, a walled island village on the Adriatic coast of Montenegro, a catamaran at anchor',
@@ -108,58 +121,58 @@ export const ways: (HomeVisual & {
   lead?: boolean;
   /** Where the upright tile crops the landscape frame (CSS object-position). */
   pos?: string;
-})[] =
-  [
-    {
-      title: 'Small Luxury Group Journeys',
-      line: 'Intimate journeys shared with a small circle of fellow travelers, bringing together exceptional places, meaningful experiences and the joy of discovering the world together.',
-      href: '/journeys',
-      // Marc's own Lucerne frame at full resolution (30 Oct); Private Travel and
-      // Safari use the design reference's photographs (29 Oct).
-      img: '/images/home/way-group-lucerne-tower.jpg',
-      alt: 'The Water Tower and Chapel Bridge on the clear Reuss, Lucerne',
-      lead: true,
-    },
-    {
-      title: 'Private Travel',
-      line: 'Bespoke destinations, exceptional stays and authentic experiences — exclusively designed around you and the way you love to travel.',
-      href: '/plan#private',
-      img: '/images/home/way-private-venice.jpg',
-      alt: 'Two spritzes on a terrace above the Grand Canal in Venice, the Salute dome beyond',
-      // Cropped to the right, so both glasses stand in the upright tile (5 Nov).
-      pos: '84% 50%',
-    },
-    {
-      title: 'Safari',
-      line: 'Extraordinary wildlife, remarkable landscapes and intimate lodges — bringing you closer to the wild in unforgettable ways.',
-      href: '/plan#private',
-      img: '/images/drive/botswana-chobe-elephant-river.jpg',
-      alt: 'An elephant drinking at the water’s edge on the Chobe River, Botswana',
-    },
-    {
-      title: 'Cruises',
-      line: 'Discover extraordinary destinations aboard handpicked luxury yachts, intimate cruises and elegant river voyages, with exceptional experiences both onboard and ashore.',
-      href: '/plan#private',
-      // Cruises, Sports & Events and Private Villas: the client's photographs (30 Oct).
-      img: '/images/home/way-cruises-ship.jpg',
-      alt: 'A cruise ship from above at sunset, its decks and pools over a dark sea',
-    },
-    {
-      title: 'Sports & Events',
-      line: 'Iconic sporting events, extraordinary cultural celebrations and exceptional travel experiences — thoughtfully brought together in one unforgettable journey.',
-      href: '/plan#private',
-      img: '/images/home/way-sports-monaco.jpg',
-      alt: 'A race car rounding the Monaco circuit beneath terraces of white umbrellas',
-    },
-    {
-      title: 'Private Villas',
-      line: 'Handpicked villas in extraordinary settings — where privacy, personalized service and unforgettable moments come together.',
-      href: '/plan#private',
-      // Sharper than the pool villa, which read blurry at 1280px (client, 31 Oct).
-      img: '/images/home/way-villas-como.jpg',
-      alt: 'A lakeside villa and its gardens on Lake Como, a motor launch passing',
-    },
-  ];
+})[] = [
+  {
+    title: 'Small Luxury Group Journeys',
+    line: 'Intimate journeys shared with a small circle of fellow travelers, bringing together exceptional places, meaningful experiences and the joy of discovering the world together.',
+    href: '/journeys',
+    // Marc's own Lucerne frame at full resolution (30 Oct); Private Travel and
+    // Safari use the design reference's photographs (29 Oct).
+    img: '/images/home/way-group-lucerne-tower.jpg',
+    alt: 'The Water Tower and Chapel Bridge on the clear Reuss, Lucerne',
+    lead: true,
+  },
+  {
+    title: 'Private Travel',
+    line: 'Bespoke destinations, exceptional stays and authentic experiences — exclusively designed around you and the way you love to travel.',
+    href: '/plan#private',
+    img: '/images/home/way-private-venice.jpg',
+    alt: 'Two spritzes on a terrace above the Grand Canal in Venice, the Salute dome beyond',
+    // Cropped to the right, so both glasses stand in the upright tile (5 Nov).
+    pos: '84% 50%',
+  },
+  {
+    title: 'Safari',
+    line: 'Extraordinary wildlife, remarkable landscapes and intimate lodges — bringing you closer to the wild in unforgettable ways.',
+    href: '/plan#private',
+    img: '/images/drive/botswana-chobe-elephant-river.jpg',
+    alt: 'An elephant drinking at the water’s edge on the Chobe River, Botswana',
+  },
+  {
+    title: 'Cruises',
+    line: 'Discover extraordinary destinations aboard handpicked luxury yachts, intimate cruises and elegant river voyages, with exceptional experiences both onboard and ashore.',
+    href: '/plan#private',
+    // Cruises, Sports & Events and Private Villas: the client's photographs (30 Oct).
+    img: '/images/home/way-cruises-ship.jpg',
+    alt: 'A cruise ship from above at sunset, its decks and pools over a dark sea',
+  },
+  {
+    title: 'Sports & Events',
+    line: 'Iconic sporting events, extraordinary cultural celebrations and exceptional travel experiences — thoughtfully brought together in one unforgettable journey.',
+    href: '/plan#private',
+    img: '/images/home/way-sports-monaco.jpg',
+    alt: 'A race car rounding the Monaco circuit beneath terraces of white umbrellas',
+  },
+  {
+    title: 'Private Villas',
+    line: 'Handpicked villas in extraordinary settings — where privacy, personalized service and unforgettable moments come together.',
+    href: '/plan#private',
+    // Pexels 24807132 (8 Nov): a private infinity pool at sunset.
+    img: '/images/home/way-villas-sunset-pool.jpg',
+    alt: 'Loungers beside a private infinity pool above the sea at sunset',
+    pos: '70% 50%',
+  },
+];
 
 /* 05 — The founder's line. */
 export const statement = {
@@ -251,6 +264,8 @@ export const hotels: (HomeVisual & {
   /** A second view of the place, on the turned-over side. Falls back to the front. */
   back?: string;
   backAlt?: string;
+  /** Where the turned side's crop centres (CSS object-position). */
+  backPos?: string;
 })[] = [
   {
     place: 'Lucerne | Switzerland',
@@ -293,10 +308,15 @@ export const hotels: (HomeVisual & {
       'Contemporary Mediterranean elegance overlooking Rovinj’s picturesque Old Town, where breathtaking Adriatic views meet exceptional design and understated luxury.',
     nearby:
       'Wander Rovinj’s charming cobblestone streets, explore the beautiful Istrian countryside with its vineyards and truffle treasures, or sail along the Adriatic coast.',
-    ...still('client-hotel-rovinj'),
-    back: '/images/drive/croatia-rovinj-grand-park-room.jpg',
+    // The pool frame read as two bare legs in the upright crop (8 Nov): the
+    // room and its Old Town view on the front, the pool's guests on the back.
+    img: '/images/drive/croatia-rovinj-grand-park-room.jpg',
+    alt: 'A guest room at Grand Park Hotel Rovinj, Croatia, with a view of the Old Town and its bell tower',
+    pos: '22% 50%',
+    back: '/images/drive/croatia-rovinj-grand-park-pool.jpg',
     backAlt:
-      'A guest room at Grand Park Hotel Rovinj, Croatia, with a view of the Old Town and its bell tower',
+      'Guests on loungers by the pool at Grand Park Hotel Rovinj, the Old Town across the water',
+    backPos: '86% 40%',
   },
   {
     place: 'Vipingo | Kenya',
@@ -305,9 +325,12 @@ export const hotels: (HomeVisual & {
       'An intimate coastal hideaway overlooking the Indian Ocean, where Swahili-inspired elegance, barefoot luxury and warm Kenyan hospitality create a truly personal escape.',
     nearby:
       'Discover pristine beaches and turquoise waters, explore the vibrant Swahili culture of the Kenyan coast, or sail the Indian Ocean aboard a traditional dhow.',
-    ...still('client-hotel-vipingo'),
-    back: '/images/home/hotel-cardamom-entrance.jpg',
-    backAlt: 'The carved Swahili archway and pink urns at the entrance of Cardamom House, Vipingo',
+    // Marc's Drive frame at full resolution on the front (8 Nov); the
+    // thatched terrace on the back.
+    img: '/images/home/hotel-cardamom-entrance-hd.jpg',
+    alt: 'The carved Swahili archway and pink urns at the entrance of Cardamom House, Vipingo',
+    back: '/images/home/hotel-cardamom.jpg',
+    backAlt: 'Cardamom House, a thatched white villa among trees and bougainvillea',
   },
 ];
 

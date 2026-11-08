@@ -29,8 +29,6 @@ const DWELL = 7000;
 /** The most "up next" cards shown at once. */
 const CARDS = 3;
 
-const pad = (n: number) => String(n).padStart(2, '0');
-
 /** A title with its place words picked out in blue. */
 function marked(text: string, places: string[]) {
   if (!places.length) return text;
@@ -209,10 +207,10 @@ export function JourneySlider({
         <div className="views" role="group" aria-label="Show journeys">
           {(
             [
-              ['now', 'Now booking', now.length],
-              ['soon', 'Coming soon', soon.length],
+              ['now', 'Now booking'],
+              ['soon', 'Coming soon'],
             ] as const
-          ).map(([v, label, count]) => (
+          ).map(([v, label]) => (
             <button
               key={v}
               type="button"
@@ -222,7 +220,6 @@ export function JourneySlider({
             >
               <i aria-hidden className={v} />
               {label}
-              <span className="ct">{count}</span>
             </button>
           ))}
         </div>
@@ -368,9 +365,6 @@ export function JourneySlider({
                       </svg>
                     </span>
                   )}
-                  <span className="num" aria-hidden>
-                    {pad(k + 1)}
-                  </span>
                   <span className="cap" aria-hidden>
                     {s && <span className="st">{s.soon ? 'Coming soon' : s.status}</span>}
                     <span className="t">
@@ -426,13 +420,9 @@ export function JourneySlider({
             </svg>
             <span className="pt">{playing ? 'Pause' : 'Play'}</span>
           </button>
-          {/* Announced when a visitor moves the slider, not on every turn. */}
-          <p className="count" aria-live={running ? 'off' : 'polite'} aria-atomic>
-            <span className="sr-only">Slide </span>
-            {pad(index + 1)}
-            <small>
-              <span className="sr-only"> of</span> / {pad(n)}
-            </small>
+          {/* No slide numbers (8 Nov): the count is for screen readers only. */}
+          <p className="sr-only" aria-live={running ? 'off' : 'polite'} aria-atomic>
+            Slide {index + 1} of {n}
           </p>
         </div>
       </div>

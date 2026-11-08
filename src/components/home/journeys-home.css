@@ -243,6 +243,8 @@
 .hc-jr .bg img {
   left: -4% !important;
   width: 108% !important;
+  /* The reset caps images at their box; this one is meant to overhang it. */
+  max-width: none !important;
   transform: translateX(4%);
   transition: transform 0s 1.2s;
 }
@@ -1012,5 +1014,277 @@
   .hc-jr .card:hover,
   .hc-jr .card:hover img {
     transform: none;
+  }
+}
+
+/* -- The promises, tighter (8 Nov): less air around and inside each card,
+      the icon sitting beside the title rather than in a row of its own. */
+.hc-jr .pts-wrap {
+  margin: clamp(0.75rem, 1.2vw, 1.25rem) 0 clamp(1.75rem, 2.8vw, 2.5rem);
+}
+.hc-jr .pts li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 1rem;
+  align-items: center;
+  padding: clamp(1.125rem, 1.6vw, 1.5rem) clamp(1.25rem, 2.2vw, 2.25rem);
+}
+.hc-jr .pts li + li::before {
+  left: clamp(1.25rem, 2.2vw, 2.25rem);
+}
+.hc-jr .pts .pt-top {
+  margin: 0;
+}
+.hc-jr .pts .ico {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+.hc-jr .pts .ico svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.hc-jr .pts h3 {
+  margin: 0;
+}
+.hc-jr .pts p {
+  grid-column: 1 / -1;
+  margin-top: 0.625rem;
+}
+@media (max-width: 900px) {
+  .hc-jr .pts li,
+  .hc-jr .pts li:first-child,
+  .hc-jr .pts li:last-child {
+    padding: 1.125rem 0;
+  }
+}
+
+/* -- The promises as cards (8 Nov) ----------------------------------------
+      Three white cards with a hairline edge and the logo blue as the accent:
+      a solid blue icon disc beside the title, a blue line down the left edge
+      that grows under the pointer. Close together, little air inside. On a
+      desktop they rise in turn as the section arrives; on a phone they become
+      a row that swipes and snaps card by card, with dots beneath. */
+.hc-jr .pc-rail {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.75rem, 1.1vw, 1rem);
+}
+.hc-jr .pc-card {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(1rem, 1.4vw, 1.375rem) clamp(1.125rem, 1.6vw, 1.5rem);
+  background: #fff;
+  border: 1px solid rgb(20 29 36 / 0.1);
+  border-radius: 0.875rem;
+  box-shadow: 0 1px 2px rgb(20 29 36 / 0.04);
+  transition:
+    transform 0.6s var(--ease),
+    box-shadow 0.6s var(--ease),
+    border-color 0.6s var(--ease),
+    opacity 0.8s var(--ease);
+}
+/* The accent line down the left edge. */
+.hc-jr .pc-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--p2s-blue);
+  transform: scaleY(0.35);
+  transform-origin: top;
+  transition: transform 0.7s var(--ease);
+}
+.hc-jr .pc-card:hover {
+  transform: translateY(-4px);
+  border-color: rgb(1 143 201 / 0.35);
+  box-shadow: 0 18px 36px -18px rgb(1 70 110 / 0.35);
+}
+.hc-jr .pc-card:hover::before {
+  transform: scaleY(1);
+}
+.hc-jr .pc-top {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin-bottom: 0.625rem;
+}
+.hc-jr .pc-ico {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--p2s-blue);
+  color: #fff;
+  transition: transform 0.6s var(--ease);
+}
+.hc-jr .pc-card:hover .pc-ico {
+  transform: rotate(-8deg) scale(1.06);
+}
+.hc-jr .pc-ico svg {
+  width: 1.375rem;
+  height: 1.375rem;
+}
+.hc-jr .pc-card h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(1.25rem, 1.6vw, 1.5625rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.hc-jr .pc-card p {
+  margin: 0;
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: clamp(0.875rem, 0.97vw, 0.9375rem);
+  line-height: 1.6;
+  color: #3a434a;
+}
+.hc-jr .pc-dots {
+  display: none;
+}
+
+/* Rising in, one after another, once the cards come on screen. */
+@media (prefers-reduced-motion: no-preference) {
+  .hc-jr .pc:not(.in) .pc-card {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+  .hc-jr .pc.in .pc-card {
+    transition-delay: calc(var(--i) * 0.12s);
+  }
+  .hc-jr .pc.in .pc-card:hover {
+    transition-delay: 0s;
+  }
+}
+
+/* A phone: one card at a time, swiped, snapping, the next peeking in. */
+@media (max-width: 900px) {
+  .hc-jr .pc-rail {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 0;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 0.25rem 0 0.75rem;
+  }
+  .hc-jr .pc-rail::-webkit-scrollbar {
+    display: none;
+  }
+  .hc-jr .pc-card {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+    opacity: 0.55;
+    transform: scale(0.96);
+    transform-origin: left center;
+  }
+  .hc-jr .pc-card.on {
+    opacity: 1;
+    transform: none;
+    border-color: rgb(1 143 201 / 0.35);
+    box-shadow: 0 14px 30px -18px rgb(1 70 110 / 0.35);
+  }
+  .hc-jr .pc-card.on::before {
+    transform: scaleY(1);
+  }
+  .hc-jr .pc-card:hover {
+    transform: none;
+  }
+  .hc-jr .pc-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+  }
+  .hc-jr .pc-dots button {
+    position: relative;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+  .hc-jr .pc-dots button::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin: -0.25rem 0 0 -0.25rem;
+    border-radius: 999px;
+    background: rgb(1 143 201 / 0.3);
+    transition:
+      width 0.5s var(--ease),
+      margin 0.5s var(--ease),
+      background-color 0.5s var(--ease);
+  }
+  .hc-jr .pc-dots button.on::after {
+    width: 1.5rem;
+    margin-left: -0.75rem;
+    background: var(--p2s-blue);
+  }
+}
+
+/* -- The finale, "More journeys are taking shape" (8 Nov) ---------------
+      The photograph covers the whole frame, the traveler kept in view on the
+      right; the words sit on the left, over a soft shade from that side only,
+      so the picture itself stays clear. */
+.hc-jr .hzbg.photo img {
+  object-position: 72% 50%;
+}
+.hc-jr .hzbg.photo::after {
+  background:
+    linear-gradient(90deg, rgb(8 20 28 / 0.72) 0%, rgb(8 20 28 / 0.42) 34%, rgb(8 20 28 / 0) 62%),
+    linear-gradient(to top, rgb(8 20 28 / 0.4) 0%, rgb(8 20 28 / 0) 30%);
+}
+.hc-jr .copy.finale {
+  align-self: center;
+  justify-self: start;
+  width: min(32rem, 42%);
+  align-items: flex-start;
+  text-align: left;
+  padding: 3.5rem 0 0;
+}
+.hc-jr .finale h3 {
+  max-width: 11ch;
+  font-size: clamp(2.25rem, 4.2vw, 4rem);
+  line-height: 1.02;
+}
+.hc-jr .finale .acts {
+  justify-content: flex-start;
+}
+@media (max-width: 900px) {
+  .hc-jr .hzbg.photo img {
+    object-position: 62% 50%;
+  }
+  .hc-jr .hzbg.photo::after {
+    background: linear-gradient(
+      to top,
+      rgb(8 20 28 / 0.85) 0%,
+      rgb(8 20 28 / 0.35) 50%,
+      rgb(8 20 28 / 0) 75%
+    );
+  }
+  .hc-jr .copy.finale {
+    align-self: end;
+    width: auto;
+    padding: 0;
+  }
+  .hc-jr .finale h3 {
+    max-width: none;
+    font-size: clamp(2rem, 9vw, 2.75rem);
   }
 }

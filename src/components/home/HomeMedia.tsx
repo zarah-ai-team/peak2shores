@@ -69,6 +69,7 @@ export function HomeMedia({
         sizes={sizes}
         priority={priority}
         className={className}
+        style={visual.pos ? { objectPosition: visual.pos } : undefined}
       />
       {visual.video && (
         <video

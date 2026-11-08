@@ -5,6 +5,7 @@ import { DATES_TBA } from '@/lib/journeys';
 import { comingSoon, flipbook, journeyRank, statusLabel } from '@/lib/data/flipbook';
 import { getMedia, type MediaKey } from '@/lib/media';
 import { JourneySlider, type JourneySlide } from './JourneySlider';
+import { PromiseCards } from './PromiseCards';
 import './journeys-home.css';
 
 /* One bright frame per journey of its own, so no photograph on the homepage
@@ -13,8 +14,8 @@ import './journeys-home.css';
 const homeFrames: Record<string, MediaKey> = {
   'swiss-elegance': 'home-jr-swiss',
   'the-italian-experience': 'home-jr-italy',
-  // Dubrovnik, the journey's finale (client, 31 Oct).
-  'adriatic-collection': 'ac-hero',
+  // Dubrovnik, the journey's finale, in golden light (8 Nov).
+  'adriatic-collection': 'home-jr-adriatic',
 };
 
 /* The flipbook's journeys still to come, as slides. */
@@ -157,23 +158,15 @@ export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
           </Link>
         </div>
 
-        {/* The three promises as one ruled editorial strip: a fine line above
-            and below, hairlines between, a blue line icon and numeral on each. */}
+        {/* The three promises as white cards with a blue accent (8 Nov). */}
         <div className="pts-wrap">
-          <ol className="pts" aria-label="What every journey shares">
-            {promises.map((p, i) => (
-              <li key={p.title}>
-                <div className="pt-top" aria-hidden>
-                  <span className="ico">
-                    <PromiseIcon kind={p.icon} />
-                  </span>
-                  <span className="lab">{String(i + 1).padStart(2, '0')}</span>
-                </div>
-                <h3>{p.title}</h3>
-                <p>{p.line}</p>
-              </li>
-            ))}
-          </ol>
+          <PromiseCards
+            items={promises.map((p) => ({
+              title: p.title,
+              line: p.line,
+              icon: <PromiseIcon kind={p.icon} />,
+            }))}
+          />
         </div>
 
         <JourneySlider slides={slides} soon={comingSlides} horizon={getMedia('home-jr-horizon')} />

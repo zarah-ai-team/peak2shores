@@ -111,6 +111,7 @@ export function HotelFlips() {
                       fill
                       sizes="(max-width: 1699px) 360px, 20vw"
                       className="fill"
+                      style={h.backPos ? { objectPosition: h.backPos } : undefined}
                     />
                   </span>
                   {/* The name again, for the eye only: it is already the button's name. */}
