@@ -5,7 +5,7 @@ import { Reveal } from '@/components/motion/Reveal';
 import { Button, ButtonLink } from '@/components/ui/Button';
 import { SectionLabel, Tick } from '@/components/ui/Editorial';
 import { site } from '@/lib/site';
-import { failureMessage } from '@/lib/forms';
+import { failureMessage, postForm } from '@/lib/forms';
 import { track } from '@/lib/analytics';
 import { readFirstTouch } from '@/lib/attribution';
 
@@ -121,25 +121,21 @@ export function EnquiryForm({
     setStatus('sending');
 
     try {
-      const res = await fetch('/api/enquiry', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: data.get('name'),
-          email: data.get('email'),
-          phone: data.get('phone'),
-          guests: data.get('guests'),
-          travelWindow: data.get('travelWindow'),
-          heardFrom: data.get('heardFrom'),
-          notes: data.get('notes'),
-          party,
-          journey,
-          // Where this visitor first came from — stored with the enquiry.
-          source: readFirstTouch(),
-          // Honeypot: a field no person sees or fills. The server drops
-          // submissions where it has a value.
-          website: data.get('website'),
-        }),
+      const res = await postForm('/api/enquiry', {
+        name: data.get('name'),
+        email: data.get('email'),
+        phone: data.get('phone'),
+        guests: data.get('guests'),
+        travelWindow: data.get('travelWindow'),
+        heardFrom: data.get('heardFrom'),
+        notes: data.get('notes'),
+        party,
+        journey,
+        // Where this visitor first came from — stored with the enquiry.
+        source: readFirstTouch(),
+        // Honeypot: a field no person sees or fills. The server drops
+        // submissions where it has a value.
+        website: data.get('website'),
       });
       if (res.ok) {
         let delivered = false;

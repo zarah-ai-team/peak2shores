@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from 'react';
 import { site } from '@/lib/site';
-import { failureMessage } from '@/lib/forms';
+import { failureMessage, postForm } from '@/lib/forms';
 import { track } from '@/lib/analytics';
 import { readFirstTouch } from '@/lib/attribution';
 
@@ -61,10 +61,10 @@ export function NewsletterForm({
     if (status === 'sending') return;
     setStatus('sending');
     try {
-      const res = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, website, source: readFirstTouch() }),
+      const res = await postForm('/api/subscribe', {
+        email,
+        website,
+        source: readFirstTouch(),
       });
       if (res.ok) {
         const data = (await res.json().catch(() => ({}))) as { delivered?: boolean };

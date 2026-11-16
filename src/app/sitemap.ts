@@ -24,7 +24,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     getJourneys(),
     getPublishedArticles(),
   ]);
-  const url = (path: string) => `${site.url}${path}`;
+  // The static build serves each page as a folder, so its addresses (and the
+  // canonical URLs Next writes) end in a slash; the sitemap must match them.
+  const slash = process.env.NEXT_PUBLIC_STATIC_EXPORT === '1' ? '/' : '';
+  const url = (path: string) => `${site.url}${path}${slash}`;
 
   const staticRoutes = [
     { path: '', priority: 1 },

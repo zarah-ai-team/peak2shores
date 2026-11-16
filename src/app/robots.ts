@@ -21,6 +21,9 @@ const searchAgents = [
 /** Crawlers that collect text to train AI models. Governed by one switch. */
 const trainingAgents = ['GPTBot', 'ClaudeBot', 'Google-Extended', 'Applebot-Extended', 'CCBot'];
 
+/* The same for every visitor, and required by the static build. */
+export const dynamic = 'force-static';
+
 export default function robots(): MetadataRoute.Robots {
   // Practice copies (deploy previews, staging) are closed to every crawler.
   if (!isProduction) {

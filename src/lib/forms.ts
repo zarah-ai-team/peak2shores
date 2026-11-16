@@ -18,3 +18,25 @@ export async function failureMessage(res: Response): Promise<string> {
   }
   return '';
 }
+
+/**
+ * Send a form to its endpoint.
+ *
+ * The static build has no endpoints, so there it answers as the server does
+ * when nothing is wired to receive the form (`delivered: false`): the form
+ * then shows what was entered and offers it as a ready-written email, rather
+ * than claiming something was sent.
+ */
+export async function postForm(path: string, body: unknown): Promise<Response> {
+  if (process.env.NEXT_PUBLIC_STATIC_EXPORT === '1') {
+    return new Response(JSON.stringify({ ok: true, delivered: false }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+  return fetch(path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+}

@@ -27,7 +27,7 @@ const securityHeaders = [
  * existing links carry over. /destinations and /experiences keep their names.
  * Point the three destinations at their own pages once those exist.
  */
-const legacyRedirects = [
+export const legacyRedirects = [
   { source: '/home', destination: '/' },
   { source: '/why-us', destination: '/our-story' },
   { source: '/start-exploring', destination: '/plan' },
@@ -98,11 +98,40 @@ const nextConfig = {
 };
 
 /*
+ * The static build (`npm run build:static`, scripts/build-static.mjs) for a
+ * host with no server, such as a DigitalOcean static site. Plain files only:
+ * photographs are resized ahead of time (src/lib/staticImageLoader.ts), each
+ * page is a folder with an index.html, and the headers, redirects and rewrites
+ * above, which need a server, are left out. The script writes the old-site
+ * redirects as small pages instead.
+ */
+export const staticImageWidths = {
+  deviceSizes: [640, 1080, 1600, 2560],
+  imageSizes: [128, 256, 420],
+};
+const isStatic = process.env.NEXT_PUBLIC_STATIC_EXPORT === '1';
+const staticConfig = {
+  reactStrictMode: true,
+  poweredByHeader: false,
+  output: 'export',
+  trailingSlash: true,
+  // Its own type check, so the dev server's leftover route types (which still
+  // list the form endpoints) cannot fail it.
+  typescript: { tsconfigPath: 'tsconfig.static.json' },
+  images: {
+    loader: 'custom',
+    loaderFile: './src/lib/staticImageLoader.ts',
+    ...staticImageWidths,
+  },
+};
+
+/*
  * `next dev` writes to .next-dev, `next build` / `next start` to .next. Sharing
  * one folder, a build run while the dev server was up overwrote the dev
  * server's files and the dev server overwrote the build's: pages then failed
  * with missing stylesheets, 404s and crashed workers on the local build.
  */
 export default function config(phase) {
+  if (isStatic) return staticConfig;
   return phase === PHASE_DEVELOPMENT_SERVER ? { ...nextConfig, distDir: '.next-dev' } : nextConfig;
 }
