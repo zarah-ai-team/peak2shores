@@ -98,7 +98,7 @@ const nextConfig = {
 };
 
 /*
- * The static build (`npm run build:static`, scripts/build-static.mjs) for a
+ * The static build (`npm run build:full-static`, scripts/build-static.mjs) for a
  * host with no server, such as a DigitalOcean static site. Plain files only:
  * photographs are resized ahead of time (src/lib/staticImageLoader.ts), each
  * page is a folder with an index.html, and the headers, redirects and rewrites

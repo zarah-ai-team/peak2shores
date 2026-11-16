@@ -1,7 +1,7 @@
 /**
  * Build the site as plain files for a static host (no server).
  *
- *   npm run build:static     →  ./out
+ *   npm run build:full-static     →  ./out
  *
  * What a static host cannot do, and what this does instead:
  *

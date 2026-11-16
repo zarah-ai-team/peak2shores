@@ -1,5 +1,5 @@
 /**
- * next/image loader for the static build (`npm run build:static`).
+ * next/image loader for the static build (`npm run build:full-static`).
  *
  * A static host has no server to resize photographs on request, so
  * scripts/build-static.mjs writes every size ahead of time to

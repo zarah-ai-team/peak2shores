@@ -4,11 +4,12 @@
 # Create the app from this file (Apps → Create App → "Import from app spec"),
 # or with the CLI:  doctl apps create --spec .do/app.yaml
 #
-# For now the site is only the Journey Book (scripts/build-flipbook.mjs), with
-# every other address falling back to it. To launch the full site as static
-# files instead, change two lines below:
-#   build_command: npm run build:static
-#   error_document: 404.html        (in place of catchall_document)
+# The host runs `npm run build:static`, which package.json points at whatever
+# is published right now. For now that is only the Journey Book
+# (scripts/build-flipbook.mjs), with every other address falling back to it.
+# To launch the full site as static files: point "build:static" in
+# package.json at "npm run build:full-static", and here use
+# `error_document: 404.html` in place of catchall_document.
 name: peaks2shores
 region: nyc
 
@@ -25,7 +26,7 @@ static_sites:
       repo: zarah-ai-team/peak2shores
       branch: main
       deploy_on_push: true
-    build_command: npm run build:flipbook
+    build_command: npm run build:static
     output_dir: out
     index_document: index.html
     catchall_document: index.html
