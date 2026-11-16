@@ -78,7 +78,17 @@ const nextConfig = {
     ];
   },
   async redirects() {
-    return legacyRedirects.map((r) => ({ ...r, statusCode: 301 }));
+    return [
+      // One address for the site: www answers, then sends people to the bare
+      // domain that every canonical URL uses.
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.peaks2shores.com' }],
+        destination: 'https://peaks2shores.com/:path*',
+        statusCode: 301,
+      },
+      ...legacyRedirects.map((r) => ({ ...r, statusCode: 301 })),
+    ];
   },
   /* The Journey Book: the stand-alone, page-turning coming-soon page kept in
      public/journey-book, outside the site's header and footer. */
