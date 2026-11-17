@@ -122,11 +122,14 @@ const published = await getPublishedArticles(); // [] until a piece is written
 const forthcoming = await getForthcomingArticles(); // teasers: render "In preparation", NO link
 ```
 
-Navigation (Header/MobileMenu/Footer are client or shared components — fetch in
-the layout and pass down, or keep reading `@/lib/site` until they are moved):
+Navigation (Header/SiteMenu/Footer are client or shared components — fetch in
+the layout and pass down, or keep reading `@/lib/site` until they are moved).
+The menu behind the header's three-line button also takes `getSiteMenu()`: the
+journeys, countries and ways to travel as plain data (only what a row prints):
 
 ```ts
 const { primary, cta, footer, legal } = await getNavigation();
+const menu = await getSiteMenu(); // { journeys, datesNote, destinations, ways }
 ```
 
 ### Legacy imports still work
@@ -313,6 +316,22 @@ Env vars (server only, set in Netlify UI, scope Functions):
 | `SUBSCRIBE_WEBHOOK_URL` | https endpoint receiving `{ type: 'subscription', submittedAt, data }` |
 | `FORMS_WEBHOOK_SECRET` | optional; adds `X-Peaks2Shores-Signature: sha256=<HMAC-SHA256(body)>` |
 
+`.env.example` at the repo root lists the three.
+
+A subscription's `data` is `{ email, source, page, consent }`: `source` is the
+first-touch record (`src/lib/attribution.ts`), `page` the path of the page
+whose form was used, and `consent` the line shown under the field with the
+policy it names (`{ statement, policy }`, from `circleConsent` in
+`src/lib/forms.ts`). With `submittedAt` that is the list's record of consent;
+map the fields onto the provider's contact fields.
+
+**The Circle's mailing provider (not chosen yet).** The form's confirmation
+reads "Welcome to The Circle. Please check your inbox to confirm your
+subscription.", so the list behind `SUBSCRIBE_WEBHOOK_URL` must run double
+opt-in. The confirmation and welcome emails, the sender's domain records (SPF,
+DKIM, DMARC) and the unsubscribe link in every email are set up in the
+provider; the site needs no unsubscribe page of its own.
+
 The webhook can be Zapier/Make/n8n, a CRM's inbound endpoint, or a small
 function in front of an email/mailing API. To call a provider's API directly,
 add a `DeliveryProvider` in `delivery.ts` (fetch only, no SDK) and select it in
@@ -363,4 +382,4 @@ in production. Until then every enquiry is lost.
 6. Shared rate-limit store or Netlify rule.
 7. Production origin confirmation in `site.url`.
 8. Footer still hard-codes its legal links (copy in `src/lib/data/navigation.ts`);
-   Header/MobileMenu/Footer should take `getNavigation()` data via props.
+   Header/SiteMenu/Footer should take `getNavigation()` data via props.

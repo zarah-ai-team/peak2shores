@@ -75,6 +75,8 @@ export function HomeMedia({
         <video
           ref={video}
           className={className}
+          // The film crops where its still does, so the two never jump apart.
+          style={visual.pos ? { objectPosition: visual.pos } : undefined}
           poster={posterOf(visual.img)}
           muted
           loop
@@ -85,49 +87,6 @@ export function HomeMedia({
         />
       )}
     </>
-  );
-}
-
-/**
- * A film on its own, with no still beneath: its first frame stands as the
- * poster (the `#t=` fragment with metadata preloaded), so nothing else shows
- * first. Muted, looping, playing only while on screen; under reduced motion
- * it holds on that first frame.
- */
-export function Film({
-  src,
-  label,
-  className = 'fill',
-}: {
-  src: string;
-  label: string;
-  className?: string;
-}) {
-  const video = useRef<HTMLVideoElement>(null);
-  const reduced = useReducedMotion();
-
-  useEffect(() => {
-    const el = video.current;
-    if (!el) return;
-    if (!el.getAttribute('src')) el.src = `${forScreen(src)}#t=0.1`;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !reduced) el.play().catch(() => {});
-      else el.pause();
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [reduced, src]);
-
-  return (
-    <video
-      ref={video}
-      className={className}
-      muted
-      loop
-      playsInline
-      preload="metadata"
-      aria-label={label}
-    />
   );
 }
 

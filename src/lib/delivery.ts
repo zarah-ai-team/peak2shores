@@ -16,6 +16,8 @@
  *   FORMS_WEBHOOK_SECRET   optional; when set, each request carries
  *                          `X-Peaks2Shores-Signature: sha256=<hex HMAC of the body>`
  *
+ * `.env.example` at the repo root lists the three.
+ *
  * To use a provider's own API instead (e.g. a transactional email service, or
  * a mailing list with double opt-in), add a `DeliveryProvider` below that calls
  * it with `fetch` and pick it in `providerFor()`. Nothing else changes.
@@ -39,6 +41,15 @@ export type EnquiryPayload = {
 export type SubscriptionPayload = {
   email: string;
   source: Partial<Record<string, string>>;
+  /** The page whose form was used: `/` for the homepage band, `/journal`, or
+      the page whose footer carried the form. */
+  page?: string;
+  /**
+   * The consent line that stood under the field, in the words the visitor
+   * read, and the policy it names. With the envelope's `submittedAt` this is
+   * the list's record of consent; absent only if a form showed no such line.
+   */
+  consent?: { statement: string; policy: string };
 };
 
 export type DeliveryKind = 'enquiry' | 'subscription';

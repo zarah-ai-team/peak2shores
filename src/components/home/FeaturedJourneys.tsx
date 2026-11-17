@@ -5,7 +5,6 @@ import { DATES_TBA } from '@/lib/journeys';
 import { comingSoon, flipbook, journeyRank, statusLabel } from '@/lib/data/flipbook';
 import { getMedia, type MediaKey } from '@/lib/media';
 import { JourneySlider, type JourneySlide } from './JourneySlider';
-import { PromiseCards } from './PromiseCards';
 import './journeys-home.css';
 
 /* One bright frame per journey of its own, so no photograph on the homepage
@@ -52,7 +51,7 @@ const promises = [
   },
 ] as const;
 
-/** A fine line icon for each promise, drawn in the brand blue. */
+/** A fine line icon for each promise, drawn in the Peaks2Shores blue. */
 function PromiseIcon({ kind }: { kind: (typeof promises)[number]['icon'] }) {
   return (
     <svg
@@ -121,9 +120,9 @@ function slidePhoto(journey: JourneySummary): JourneySlide['photo'] {
 
 /**
  * 04 — Small Luxury Group Journeys, on white: the section's name and line,
- * the three promises hung on a line drawn like the logo, then every upcoming journey as a
- * full-photograph slide in Marc's order — each plainly bookable, with its
- * status and a way to reserve — with a switch to the flipbook's journeys
+ * the three promises as three quiet columns under one hairline, then every
+ * upcoming journey as a full-photograph slide in Marc's order — each with one
+ * button, to that journey's own page — with a switch to the flipbook's journeys
  * still to come; each view closes on a "more journeys are taking shape" slide.
  */
 export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
@@ -164,21 +163,24 @@ export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
               Extraordinary destinations. Intimate groups. Thoughtfully curated experiences.
             </p>
           </div>
+          {/* The ink button, like every other button on the page's paper. */}
           <Link className="btn btn-ink" href="/journeys">
             View all journeys <Arrow />
           </Link>
         </div>
 
-        {/* The three promises as white cards with a blue accent (8 Nov). */}
-        <div className="pts-wrap">
-          <PromiseCards
-            items={promises.map((p) => ({
-              title: p.title,
-              line: p.line,
-              icon: <PromiseIcon kind={p.icon} />,
-            }))}
-          />
-        </div>
+        {/* The three promises: a fine icon, the title, its line. No boxes (17 Nov). */}
+        <ul className="pts" aria-label="What every journey shares">
+          {promises.map((p) => (
+            <li key={p.title}>
+              <span className="ico" aria-hidden>
+                <PromiseIcon kind={p.icon} />
+              </span>
+              <h3>{p.title}</h3>
+              <p>{p.line}</p>
+            </li>
+          ))}
+        </ul>
 
         <JourneySlider slides={slides} soon={comingSlides} horizon={getMedia('home-jr-horizon')} />
       </div>

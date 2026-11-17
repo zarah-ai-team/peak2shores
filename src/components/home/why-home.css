@@ -31,7 +31,7 @@
   font-weight: var(--title-weight);
   font-size: var(--h2);
   line-height: 1.04;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.01em;
   color: var(--lake);
   margin: 1rem 0 0;
   text-wrap: balance;
@@ -45,7 +45,8 @@
   letter-spacing: -0.01em;
   color: var(--muted);
   max-width: 32ch;
-  margin: 0.875rem 0 0;
+  /* Close under its heading, as every section's line sits (17 Nov). */
+  margin: 0.25rem 0 0;
 }
 /* Subtitles hold to one line wherever there is room for it. */
 @media (min-width: 1100px) {
@@ -95,10 +96,10 @@
   color: var(--ink);
 }
 .hc .hc-hw .hw-nav .circ.fwd {
-  background: var(--brand);
-  border-color: var(--brand);
+  background: var(--color-brand-deep);
+  border-color: var(--color-brand-deep);
   color: #fff;
-  box-shadow: 0 0.625rem 1.5rem -0.5rem rgb(17 144 203 / 0.55);
+  box-shadow: 0 0.625rem 1.5rem -0.5rem rgb(1 121 171 / 0.55);
 }
 .hc .hc-hw .hw-nav .circ:hover {
   background: var(--color-brand-deep, var(--brand));
@@ -163,7 +164,7 @@
   flex: 0 0 auto;
   width: clamp(16rem, var(--w), 25rem);
   /* Tall enough to hold its words and photograph, with no gap between. */
-  min-height: clamp(26rem, 31vw, 30rem);
+  min-height: clamp(24rem, 28vw, 27rem);
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
@@ -180,10 +181,14 @@
     transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.6s var(--ease);
 }
-/* Under the pointer a card rises, its line opens and its photograph leans in. */
-.hc-hw .card:is(:hover, :focus-within) {
-  transform: translateY(-0.5rem);
-  box-shadow: 0 2.25rem 4.5rem -1rem rgb(11 92 133 / 0.42);
+/* Under a mouse pointer or keyboard focus a card rises a little and its line
+   opens; the photograph stays still. Not on a touch screen, where a tapped
+   card would stay raised, out of line with the row, until the next tap. */
+@media (hover: hover) and (pointer: fine) {
+  .hc-hw .card:is(:hover, :focus-within) {
+    transform: translateY(-0.5rem);
+    box-shadow: 0 2.25rem 4.5rem -1rem rgb(11 92 133 / 0.42);
+  }
 }
 
 .hc-hw .body {
@@ -215,8 +220,10 @@
   background: #7accfd;
   transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.hc-hw .card:is(:hover, :focus-within) .rule {
-  width: 6rem;
+@media (hover: hover) and (pointer: fine) {
+  .hc-hw .card:is(:hover, :focus-within) .rule {
+    width: 6rem;
+  }
 }
 .hc-hw .note {
   font-family: var(--sans);
@@ -227,20 +234,22 @@
   margin: 0;
 }
 /* The photograph fills the foot of the card, edge to edge; the card's own
-   rounded corners finish it. */
+   rounded corners finish it. A square of the card's full width (9 Nov: Marc
+   asked to see more of the desert tea; 4:3 was tried on 17 Nov and cut the
+   pour, the fire and the musicians, so the square stays), a fixed ratio, so
+   the crop does not change with the screen. All five
+   photo cards share it, so the row stays one height. The width is spelled out
+   (the card's inner width plus its side padding) so the square never depends
+   on how a browser sizes a stretched flex item. The photograph stands still:
+   no zoom anywhere (2 Nov notes). */
 .hc-hw .ph {
   position: relative;
   flex: 0 0 auto;
-  height: clamp(15rem, 19vw, 19.5rem);
+  width: calc(100% + 3rem);
+  aspect-ratio: 1 / 1;
   margin: 0 -1.5rem;
   overflow: hidden;
   background: #0a5277;
-}
-.hc-hw .ph img {
-  transition: scale 1.2s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.hc-hw .card:is(:hover, :focus-within) .ph img {
-  scale: 1.07;
 }
 
 /* The closing card: the brighter brand blue, its words and the way on
@@ -259,7 +268,7 @@
   display: block;
   font-size: clamp(1.5rem, 2.08vw, 1.875rem);
   line-height: 1.12;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.008em;
   color: #fff;
 }
 .hc-hw .cta .note {
@@ -272,15 +281,15 @@
   display: inline-flex;
   align-items: center;
   gap: 0.875rem;
-  min-height: 3.25rem;
-  padding: 0 1.75rem;
+  min-height: var(--pill-h);
+  padding: 0 var(--pill-px);
   border-radius: 999px;
   background: #fff;
   color: var(--lake);
   font-family: var(--sans);
-  font-size: 0.75rem;
+  font-size: var(--pill-fs);
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   text-decoration: none;
   transition: background-color 0.5s var(--ease);
@@ -303,13 +312,11 @@
   outline-offset: 3px;
 }
 
-/* The blue line under the rail, and the bridge to what is included. */
+/* Under the rail: the arrows, the count and the blue line, at the left. Nothing
+   sits beside them (the link to what is included was removed, 13 Nov). */
 .hc-hw .hw-foot {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1.5rem;
   margin-top: 0.5rem;
 }
 .hc-hw .hw-prog {
@@ -325,42 +332,6 @@
   border-radius: 2px;
   background: var(--lake);
   transition: width 0.6s var(--ease);
-}
-.hc-hw .hw-next {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  min-height: 44px;
-  font-family: var(--serif);
-  font-size: clamp(1.0625rem, 1.39vw, 1.25rem);
-  color: var(--ink);
-  text-decoration: none;
-}
-.hc-hw .hw-next > span {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 999px;
-  border: 1px solid rgb(20 29 36 / 0.25);
-  transition:
-    background-color 0.4s,
-    color 0.4s,
-    border-color 0.4s,
-    transform 0.5s var(--ease);
-}
-.hc-hw .hw-next svg {
-  width: 1rem;
-  height: 1rem;
-  stroke-width: 1.5;
-}
-.hc-hw .hw-next:hover > span {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: #fff;
-  transform: translateY(3px);
 }
 
 /* -- The Peaks2Shores Experience: six boxes -------------------------------- */
@@ -615,7 +586,7 @@
   font-style: normal;
   font-size: clamp(3.75rem, 8.2vw, 7.375rem);
   line-height: 1.04;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.018em;
 }
 .hc-rh .rw.on em {
   font-style: italic;
@@ -798,10 +769,6 @@
     width: min(20rem, 80vw);
     min-height: 31rem;
   }
-  .hc-hw .hw-foot {
-    flex-direction: column;
-    align-items: flex-start;
-  }
   .hc-xpi .xpi-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.625rem;
@@ -836,7 +803,6 @@
     transition: none;
     transform: none;
   }
-  .hc-hw .card:is(:hover, :focus-within) .ph img,
   .hc-xpi .xpi-photo:hover img,
   .hc-rh .rbg .fill {
     scale: none;

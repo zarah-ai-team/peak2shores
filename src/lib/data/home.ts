@@ -15,7 +15,7 @@ export type HomeVisual = {
   alt: string;
   /** Silent clip, played muted. */
   video?: string;
-  /** Where a tight crop centres on the still (CSS object-position). */
+  /** Where a tight crop centres on the still and its film (CSS object-position). */
   pos?: string;
 };
 
@@ -53,33 +53,34 @@ export type ReelClip = {
 };
 
 /**
- * 01 — The reel, in Marc's order: safari, Switzerland, Positano, Hvar.
+ * 01 — The reel, in Marc's order: safari, Switzerland, Positano, Seville.
  *
- * Marc's final selection (8 Nov): a lion in place of the giraffes, the Swiss
- * rail line above the lakes, a new Positano flight and Hvar. Each is cut to
- * about eight calm seconds at natural speed, with a light colour lift (from
- * the source files beside them: Kenya-Masai-Mara-Hero 0:02.5, switzerland-hero
- * 0:10, Amalfi is Pexels 12315324 from 0:14; Hvar is Pexels 16114872 whole, slowed to 85%), so the reel runs at an
- * unhurried pace, with a 720px `-m` cut for phones and a poster frame
- * in public/images/home. If a film or poster is missing the page resolves the
- * clip to `fallback` (HomePage, on the server), so the reel never points at a
- * missing file.
+ * Marc's selection of 9 Nov, cut from the masters he bought on Shutterstock
+ * (kept in the Drive content library under website/video, never in the
+ * repo): the lion at full frame (4062868427), Positano from 0:27 (4088645319)
+ * and Seville from 0:13 (4107915811). The Swiss rail clip stays as it was
+ * ("perfect", 9 Nov; from switzerland-hero at 0:10). Each runs seven to nine
+ * calm seconds at natural speed (the lion with a light colour lift, Positano
+ * and Seville as shot), 1920×1080 with a 720p `-m` cut for phones and a
+ * poster frame in public/images/home. If a film or poster is missing the page
+ * resolves the clip to `fallback` (HomePage, on the server), an earlier clip
+ * for the same place in the reel, so the reel never points at a missing file.
  */
 export const reel: (ReelClip & { fallback?: ReelClip })[] = [
   {
     place: 'On safari',
-    alt: 'A male lion with a full golden mane turning his head in the sun',
-    video: '/video/home/reel-safari-lion.mp4',
-    img: '/images/home/reel-safari-lion.jpg',
-    // He turns from profile to face the camera, his face settling left of
-    // centre, under the headline. Mirrored and started at 3s (the poster is
-    // that frame), he looks out from the right, clear of the words, and the
-    // phone crop holds his whole face (8 Nov). The crop is in the source's
-    // own coordinates, before the mirror: 32% is 68% on screen.
-    start: 3,
-    flip: true,
-    pos: '50% 45%',
-    posM: '32% 50%',
+    alt: 'A male lion with a full dark mane looking out across tall grass, bush behind him',
+    // Shutterstock 4062868427, the master Marc bought (his note of 9 Nov):
+    // the whole frame, lion, grass and bush, from 0:05.5 to its end, once he
+    // has turned to look right (facing the lens, his face sits mid-frame,
+    // under the headline). Not mirrored and with no `start`: the poster is
+    // the cut's first frame. His nose travels between 76% and 87% of the
+    // width, so a landscape screen narrower than 16:9 trims more from the
+    // left than the right, and an upright one holds ear to nose.
+    video: '/video/home/reel-lion-savanna.mp4',
+    img: '/images/home/reel-lion-savanna.jpg',
+    pos: '60% 45%',
+    posM: '80% 50%',
     fallback: {
       place: 'On safari',
       alt: 'Two giraffes on golden grassland in the afternoon sun, mountains beyond',
@@ -101,31 +102,40 @@ export const reel: (ReelClip & { fallback?: ReelClip })[] = [
     },
   },
   {
-    place: 'Amalfi Coast, Italy',
-    alt: 'The Amalfi Coast from the air, turquoise water below cliffside hotels and the town of Amalfi',
-    // Pexels 12315324 (Boris Ivas), from 0:14; colour lifted in the cut.
-    video: '/video/home/reel-amalfi-coast.mp4',
-    img: '/images/home/reel-amalfi-coast.jpg',
-    posM: '86% 50%',
+    place: 'Positano, Italy',
+    alt: 'Positano from the air, pastel houses stepped up the green hillside above the beach and boats at anchor in the bay',
+    // Shutterstock 4088645319, the master Marc bought (his note of 9 Nov),
+    // from 0:27. Vivid as shot: no grade.
+    video: '/video/home/reel-positano-bay.mp4',
+    img: '/images/home/reel-positano-bay.jpg',
+    posM: '55% 50%',
+    // The clip it replaced: Pexels 12315324 (Boris Ivas), from 0:14.
     fallback: {
       place: 'Amalfi Coast, Italy',
-      alt: 'A sailing boat at anchor off the Amalfi Coast, a cliffside town and the coast fading into haze behind',
-      img: '/images/home-hero.jpg',
-      hold: 9,
+      alt: 'The Amalfi Coast from the air, turquoise water below cliffside hotels and the town of Amalfi',
+      video: '/video/home/reel-amalfi-coast.mp4',
+      img: '/images/home/reel-amalfi-coast.jpg',
+      posM: '86% 50%',
     },
   },
   {
-    place: 'Hvar, Croatia',
-    alt: 'Hvar harbour from the air, yachts along the palm-lined quay and the old town climbing to the fortress',
-    // Pexels 16114872 (8 Nov), slowed a touch to the reel's calm pace.
-    video: '/video/home/reel-hvar-harbour.mp4',
-    img: '/images/home/reel-hvar-harbour.jpg',
-    posM: '41% 50%',
+    place: 'Seville, Spain',
+    alt: 'Seville at golden hour from the air, the Giralda bell tower rising above the cathedral roofs and the white city beyond',
+    // Shutterstock 4107915811, the master Marc bought (his note of 9 Nov),
+    // from 0:13: in place of Hvar, for a balance of destinations and
+    // experiences. Cropped from the bottom, so the Giralda keeps its top on a
+    // wide screen.
+    video: '/video/home/reel-seville-cathedral.mp4',
+    img: '/images/home/reel-seville-cathedral.jpg',
+    pos: '50% 0%',
+    posM: '50% 50%',
+    // The clip it replaced: Pexels 16114872, slowed a touch (8 Nov).
     fallback: {
-      place: 'The Adriatic',
-      alt: 'Sveti Stefan, a walled island village on the Adriatic coast of Montenegro, a catamaran at anchor',
-      video: '/video/home/reel-adriatic.mp4',
-      img: '/images/home/reel-adriatic.jpg',
+      place: 'Hvar, Croatia',
+      alt: 'Hvar harbour from the air, yachts along the palm-lined quay and the old town climbing to the fortress',
+      video: '/video/home/reel-hvar-harbour.mp4',
+      img: '/images/home/reel-hvar-harbour.jpg',
+      posM: '41% 50%',
     },
   },
 ];
@@ -197,12 +207,16 @@ export const statement = {
   before: 'The journeys we remember most aren’t measured by how much we see, but by how ',
   emphasis: 'deeply',
   after: ' we experience the moments along the way.',
-  /* Behind it, the client's own film (pause.mp4, 30 Oct): Positano from the
-     air, played muted on a loop (5 Nov: "make sure the video is played"). */
+  /* Behind it, Cape Town from the air, Lion's Head above the Atlantic seaboard
+     (Marc's file of 9 Nov, shutterstock_3801312873.MOV in the Drive content
+     library), played muted on a loop (5 Nov: "make sure the video is
+     played"). The crop holds Lion's Head on a phone and its summit on a wide
+     screen. */
   film: {
-    img: '/images/home/quote-positano.jpg',
-    alt: 'Positano on the Amalfi Coast from the air, boats at anchor in the bay',
-    video: '/video/home/quote-positano.mp4',
+    img: '/images/home/quote-capetown.jpg',
+    alt: 'Lion’s Head above the Atlantic seaboard of Cape Town, houses stepping down to surf-washed rocks, the Table Mountain range beyond',
+    video: '/video/home/quote-capetown.mp4',
+    pos: '32% 0%',
   } satisfies HomeVisual,
 };
 
@@ -266,14 +280,24 @@ export const founderStory = {
     'Born and raised in Switzerland and based in Miami for more than 25 years, Peaks2Shores founder Marc Haeni has built an international career spanning three decades in travel and hospitality, including leadership roles with some of the world’s leading travel and cruise brands.',
     'His passion for extraordinary destinations, combined with decades of trusted industry relationships, forms the foundation of Peaks2Shores — bringing together vetted and carefully selected local experts and exceptional hospitality partners to create thoughtfully curated luxury journeys.',
   ],
-  /** Marc's own film from safari, in place of a portrait; portrait-format. */
-  film: {
-    src: '/video/home/story.mp4',
-    label: 'Marc Haeni laughing with a group of children beside a safari vehicle in Kenya',
+  /** Marc in Solothurn, his hometown: the photograph he sent on 9 Nov, a still
+      in place of the Kenya film (30 Oct). The whole frame, 3:4. */
+  portrait: {
+    img: '/images/home/story-marc-solothurn.jpg',
+    alt: 'Marc Haeni smiling in a cobbled square in the old town of Solothurn, Switzerland, his hometown, a painted clock face and flower-boxed houses behind him',
+    width: 1086,
+    height: 1448,
   },
 };
 
-/* 08 — Hotels, lodges & camps: five places Marc names, each in his words. */
+/*
+ * 08 — Hotels, lodges & camps: five places Marc names, each in his words, each
+ * with the two photographs he chose on 9 Nov: the hotel on the front, the place
+ * around it on the turned side. Every front is a landscape photograph in an
+ * upright card, which shows its full height and about half its width: `pos`
+ * says which part. /where-we-stay reads it too: where the hotel stands right
+ * of the middle, the second photograph overlaps the other corner of the first.
+ */
 export const hotels: (HomeVisual & {
   place: string;
   name: string;
@@ -282,7 +306,11 @@ export const hotels: (HomeVisual & {
   /** A second view of the place, on the turned-over side. Falls back to the front. */
   back?: string;
   backAlt?: string;
-  /** Where the turned side's crop centres (CSS object-position). */
+  /**
+   * Where the second view's crop centres (CSS object-position). The vertical
+   * part places the band on the turned card; the horizontal part places the
+   * upright frame on /where-we-stay.
+   */
   backPos?: string;
 })[] = [
   {
@@ -293,8 +321,12 @@ export const hotels: (HomeVisual & {
     nearby:
       'Explore Lucerne’s charming Old Town, discover the “Queen of the Mountains,” or cruise across the lake into the heart of the Swiss Alps.',
     ...still('client-hotel-lucerne'),
-    back: '/images/drive/switzerland-lake-lucerne-balcony-view.jpg',
-    backAlt: 'Lake Lucerne and Mount Pilatus from a balcony above the lakeside promenade, Lucerne',
+    // The flag and the corner tower, with a strip of the lake beside them.
+    pos: '5% 50%',
+    back: '/images/home/hotel-mandarin-lake-steamer.jpg',
+    backAlt:
+      'A lake boat at the quay in Lucerne, flying the Swiss flag, the old town along the shore',
+    backPos: '50% 56%',
   },
   {
     place: 'Stresa | Italy',
@@ -303,10 +335,12 @@ export const hotels: (HomeVisual & {
       'Contemporary lakeside elegance on the shores of Lake Maggiore, featuring a spectacular rooftop Sky Bar and infinity pool with breathtaking Alpine views.',
     nearby:
       'Explore the enchanting Borromean Islands, stroll through Stresa’s charming lakeside streets, or venture into the surrounding mountains for spectacular panoramic views.',
+    // No `pos`: Isola Bella sits in the middle of the frame, the sofas beneath it.
     ...still('client-hotel-stresa'),
-    back: '/images/drive/italy-stresa-la-palma-lounge.jpg',
+    back: '/images/home/hotel-lapalma-isola-bella.jpg',
     backAlt:
-      'The lakeside lounge at Hotel La Palma, Stresa, looking across Lake Maggiore to the mountains',
+      'Isola Bella and its terraced gardens on Lake Maggiore from the air, snow-capped Alps beyond',
+    backPos: '56% 62%',
   },
   {
     place: 'Victoria Falls | Zimbabwe',
@@ -316,8 +350,13 @@ export const hotels: (HomeVisual & {
     nearby:
       'Marvel at the thundering Victoria Falls, enjoy a sunset cruise along the Zambezi, or discover the wildlife of nearby Zambezi National Park.',
     ...still('client-hotel-victoria-falls'),
-    back: '/images/drive/zimbabwe-zambezi-sunset-cruise.jpg',
-    backAlt: 'Boats on the Zambezi River at sunset near Victoria Falls, Zimbabwe',
+    // Two buildings with a gap between them: the card holds the lit guest wing.
+    pos: '90% 50%',
+    // The falls, the gorge and the bridge fill the frame: its centre suits
+    // both the band and the upright frame, so no `backPos`.
+    back: '/images/home/hotel-palm-river-victoria-falls.jpg',
+    backAlt:
+      'Victoria Falls and the Victoria Falls Bridge from the air, spray rising from the gorge',
   },
   {
     place: 'Rovinj | Croatia',
@@ -326,15 +365,15 @@ export const hotels: (HomeVisual & {
       'Contemporary Mediterranean elegance overlooking Rovinj’s picturesque Old Town, where breathtaking Adriatic views meet exceptional design and understated luxury.',
     nearby:
       'Wander Rovinj’s charming cobblestone streets, explore the beautiful Istrian countryside with its vineyards and truffle treasures, or sail along the Adriatic coast.',
-    // The pool frame read as two bare legs in the upright crop (8 Nov): the
-    // room and its Old Town view on the front, the pool's guests on the back.
-    img: '/images/drive/croatia-rovinj-grand-park-room.jpg',
-    alt: 'A guest room at Grand Park Hotel Rovinj, Croatia, with a view of the Old Town and its bell tower',
-    pos: '22% 50%',
-    back: '/images/drive/croatia-rovinj-grand-park-pool.jpg',
+    // The hotel from outside and the Old Town from the air (9 Nov), in place
+    // of the room and the pool (8 Nov). The card holds the glass canopy and
+    // the garden terraces; the hotel fills only the lower half of this frame.
+    ...still('client-hotel-rovinj'),
+    pos: '72% 50%',
+    back: '/images/home/hotel-grand-park-rovinj-aerial.jpg',
     backAlt:
-      'Guests on loungers by the pool at Grand Park Hotel Rovinj, the Old Town across the water',
-    backPos: '86% 40%',
+      'The Old Town of Rovinj and the bell tower of St. Euphemia from the air, wooded islands in the Adriatic beyond',
+    backPos: '24% 75%',
   },
   {
     place: 'Vipingo | Kenya',
@@ -343,12 +382,15 @@ export const hotels: (HomeVisual & {
       'An intimate coastal hideaway overlooking the Indian Ocean, where Swahili-inspired elegance, barefoot luxury and warm Kenyan hospitality create a truly personal escape.',
     nearby:
       'Discover pristine beaches and turquoise waters, explore the vibrant Swahili culture of the Kenyan coast, or sail the Indian Ocean aboard a traditional dhow.',
-    // Marc's Drive frame at full resolution on the front (8 Nov); the
-    // thatched terrace on the back.
-    img: '/images/home/hotel-cardamom-entrance-hd.jpg',
-    alt: 'The carved Swahili archway and pink urns at the entrance of Cardamom House, Vipingo',
-    back: '/images/home/hotel-cardamom.jpg',
-    backAlt: 'Cardamom House, a thatched white villa among trees and bougainvillea',
+    // The pool, the bougainvillea and the two guests, cut from Marc's aerial of
+    // 9 Nov as the chat proposed; the house among its trees, from higher up,
+    // on the back. The card holds the guests, above the name.
+    ...still('client-hotel-vipingo'),
+    pos: '60% 50%',
+    back: '/images/home/hotel-cardamom-estate-aerial.jpg',
+    backAlt:
+      'Cardamom House from the air, its white roof terraces among the trees above the beach and the Indian Ocean, Vipingo',
+    backPos: '50% 60%',
   },
 ];
 
@@ -382,9 +424,11 @@ export const experiences: (HomeVisual & { word: string; line: string })[] = [
   },
 ];
 
-/* 09 — The circle. */
+/* 09 — The Circle. The photograph is the client's (9 Nov): elephants at the
+   Kipalo Hills waterhole, in place of the stock Positano frame. */
 export const circle = {
   headline: 'A World of Inspiration, Delivered.',
   body: 'Discover extraordinary destinations, inspiring travel stories, insider perspectives, and thoughtfully curated journeys. Join The Circle for a little inspiration from the world of Peaks2Shores, delivered to your inbox.',
-  ...still('home-circle'),
+  img: '/images/home/circle-kipalo-waterhole.jpg',
+  alt: 'A small herd of elephants gathered at a round waterhole on red earth in golden light, green bush and rocky hills beyond, at Kipalo Hills',
 };

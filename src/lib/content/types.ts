@@ -104,6 +104,72 @@ export type Navigation = {
   legal: NavItem[];
 };
 
+/* -- The site menu ------------------------------------------------------- */
+
+/**
+ * A photograph as the menu needs it. No alt text and no loading tone: every
+ * photograph in the menu is decorative (it sits beside the link that names
+ * it), and its frame waits on the sheet's own blue.
+ */
+export type MenuPhoto = {
+  src: string;
+  /** Where a tight crop centers (CSS object-position), when the source sets one. */
+  pos?: string;
+};
+
+export type MenuJourney = {
+  slug: string;
+  href: string;
+  /** The short name: the title up to its first comma or colon. */
+  name: string;
+  /** 'Lucerne to Milan' */
+  route: string;
+  days: number;
+  country: string;
+  /** 'Dates to be announced', until Marc sets the dates. */
+  departure: string;
+  /** 'New', 'Waitlist' or 'Sold out'; null for an open journey. */
+  label: string | null;
+  photo: MenuPhoto | null;
+};
+
+export type MenuDestination = {
+  slug: string;
+  href: string;
+  country: string;
+  /** The journeys that go there, by short name, in Marc's order. */
+  journeys: string[];
+  photo: MenuPhoto | null;
+};
+
+export type MenuWay = {
+  title: string;
+  href: string;
+  /**
+   * True when other ways lead to the same address (the private ways all open
+   * the bespoke travel section), so the menu can list them under one label.
+   */
+  shared: boolean;
+  photo: MenuPhoto | null;
+};
+
+/**
+ * Everything the header's menu shows beyond the navigation links, as plain
+ * data: it crosses from the server layout to a client component, so it holds
+ * only what a row prints.
+ */
+export type SiteMenu = {
+  journeys: MenuJourney[];
+  /**
+   * The departure text when every listed journey shares one ('Dates to be
+   * announced' today), shown once under the list; null once they differ, and
+   * each journey then carries its own.
+   */
+  datesNote: string | null;
+  destinations: MenuDestination[];
+  ways: MenuWay[];
+};
+
 /* -- Page copy ----------------------------------------------------------- */
 
 export type { Pillar };

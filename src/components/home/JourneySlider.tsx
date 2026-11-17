@@ -15,7 +15,7 @@ export type JourneySlide = {
   /** The place words in the title, set in blue — the slide's only country cue. */
   places: string[];
   lead: string;
-  /** Length, group, and dates or rate once Marc sets them, as pills. */
+  /** Dates and rate, once Marc sets them, as a quiet line under the tagline. */
   facts: string[];
   /** Where it stands for booking ("Now booking"), for a journey with a page. */
   status?: string;
@@ -25,10 +25,19 @@ export type JourneySlide = {
   photo: { src?: string; alt: string; tone: string; pos?: string };
 };
 
+type View = 'now' | 'soon';
+/** A slide asked for: which view, which slide in it, and the way it arrives. */
+type Target = { view: View; index: number; dir: 'next' | 'prev' };
+
 /** How long a slide stays before the next, while the slider plays. */
 const DWELL = 7000;
 /** The most "up next" cards shown at once. */
 const CARDS = 3;
+/** The longest a change of slide waits for its photograph before going ahead. */
+const PATIENCE = 8000;
+/** The finale's photograph, shared by both views. */
+const FINALE = 'finale';
+const NONE: JourneySlide[] = [];
 
 /** A title with its place words picked out in blue. */
 function marked(text: string, places: string[]) {
@@ -39,69 +48,195 @@ function marked(text: string, places: string[]) {
     .map((part, i) => (i % 2 ? <em key={i}>{part}</em> : part));
 }
 
+/** Whether an image has arrived (a broken one has a natural width of 0). */
+const arrived = (img: HTMLImageElement) => img.complete && img.naturalWidth > 0;
+
 /**
  * The journeys as one large rounded frame: each journey a full photograph
- * with its booking status, name, tagline, length and group, and the two ways
- * on — reserve, or the itinerary and dates; the others as
- * small cards on the right. A drawn finale ("More journeys are taking shape")
- * follows the last journey.
+ * with its name, its tagline, its dates and rate once they are set, and one
+ * button, to the journey's own page; the others as small cards on the right.
+ * A finale ("More journeys are taking shape") follows the last journey.
  *
  * It plays every 7 s only while it is on screen, and holds still under the
  * pointer, while a control has keyboard focus, when paused, in a background
  * tab, and — unless the visitor presses Play — under reduced motion. The
  * first slide is rendered on the server, so it reads without JavaScript.
+ *
+ * A slide never moves ahead of its photograph (17 Nov). The first slide's
+ * photograph is fetched with the page; the one after the slide on show is
+ * fetched while that slide plays; and a change of slide — by the clock, an
+ * arrow, a card, a swipe or the view switch — waits until the photograph it
+ * needs has loaded and decoded, so the wipe always opens on a finished
+ * picture. The ground behind is the night blue throughout.
  */
 export function JourneySlider({
   slides: now,
-  soon = [],
+  soon = NONE,
   horizon,
 }: {
   /** The journeys open for booking. */
   slides: JourneySlide[];
   /** The journeys still to come, shown when the visitor switches view. */
   soon?: JourneySlide[];
-  /** The finale's photograph; without one, the drawn horizon. */
+  /** The finale's photograph; without one, the plain night ground. */
   horizon?: { src?: string };
 }) {
   // Two views, switched at the top of the frame: what can be booked now, and
   // what is coming. Each plays on its own and ends on the finale.
-  const [view, setView] = useState<'now' | 'soon'>('now');
+  const [view, setView] = useState<View>('now');
   const slides = view === 'soon' && soon.length ? soon : now;
   const n = slides.length + 1; // the journeys, then the finale
   const fin = slides.length;
   const [index, setIndex] = useState(0);
   /* Which way the slides move, so the photograph wipes and the words slide from that side. */
   const [dir, setDir] = useState<'next' | 'prev'>('next');
-  const at = useRef(0);
-  at.current = index;
+  /* Set by the first change of slide: the slide the page opens on is simply there. */
+  const [moved, setMoved] = useState(false);
   const [playing, setPlaying] = useState(true);
   const [inView, setInView] = useState(false);
+  /* Within a screen of the viewport: time to fetch the photograph that follows. */
+  const [near, setNear] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const [hiddenTab, setHiddenTab] = useState(false);
+  /* Wide enough for the "up next" cards (hidden at 900px and below). */
+  const [cardsShown, setCardsShown] = useState(false);
   const frame = useRef<HTMLDivElement>(null);
+  /* The Next arrow: where keyboard focus goes when a card is chosen. */
+  const fwd = useRef<HTMLButtonElement>(null);
   /* Time already spent on the current slide, kept across pauses. Tagged with
      its view and slide so a change of either never inherits the last one's time. */
   const spent = useRef({ slide: 'now:0', ms: 0 });
 
-  const running = playing && inView && !hovered && !focused && !hiddenTab;
+  /* The photographs. `settled`: those loaded and decoded (or failed, so a
+     broken file never holds the slider); null until the first look, so the
+     server's markup shows every picture without JavaScript. `wanted`: those
+     to fetch now rather than when they scroll into view. `pending`: the slide
+     asked for, while its photograph is still on its way. */
+  const [settled, setSettled] = useState<ReadonlySet<string> | null>(null);
+  const [wanted, setWanted] = useState<ReadonlySet<string>>(() => new Set());
+  const [pending, setPending] = useState<Target | null>(null);
+
+  /** The photograph behind a slide: its name here, and its file if it has one. */
+  const photoOf = useCallback(
+    (v: View, i: number) => {
+      const s = (v === 'soon' && soon.length ? soon : now)[i];
+      return s ? { id: `${v}:${s.slug}`, src: s.photo.src } : { id: FINALE, src: horizon?.src };
+    },
+    [now, soon, horizon?.src],
+  );
+  const ready = useCallback(
+    (v: View, i: number) => {
+      const p = photoOf(v, i);
+      return !p.src || Boolean(settled?.has(p.id));
+    },
+    [photoOf, settled],
+  );
+  const settle = useCallback(
+    (id: string) => setSettled((had) => (had?.has(id) ? had : new Set(had ?? []).add(id))),
+    [],
+  );
+  const want = useCallback(
+    (id: string) => setWanted((had) => (had.has(id) ? had : new Set(had).add(id))),
+    [],
+  );
+
+  const shown = ready(view, index);
+  const running =
+    playing && inView && !hovered && !focused && !hiddenTab && shown && pending === null;
+
+  /** Puts a slide on show. */
+  const commit = useCallback((t: Target) => {
+    spent.current = { slide: `${t.view}:${t.index}`, ms: 0 };
+    setDir(t.dir);
+    setView(t.view);
+    setIndex(t.index);
+    setMoved(true);
+    setPending(null);
+  }, []);
+
+  /** Asks for a slide: shown at once if its photograph is in, otherwise when it is. */
+  const request = useCallback(
+    (t: Target) => {
+      if (t.view === view && t.index === index) setPending(null);
+      else if (ready(t.view, t.index)) commit(t);
+      else {
+        want(photoOf(t.view, t.index).id);
+        setPending(t);
+      }
+    },
+    [view, index, ready, commit, want, photoOf],
+  );
 
   const go = useCallback(
-    (k: number) => {
-      const next = (k + n) % n;
-      spent.current = { slide: `${view}:${next}`, ms: 0 };
-      setDir(k < at.current ? 'prev' : 'next');
-      setIndex(next);
-    },
-    [n, view],
+    (k: number) => request({ view, index: ((k % n) + n) % n, dir: k < index ? 'prev' : 'next' }),
+    [request, view, index, n],
   );
+
+  // A change of view starts that view's first journey afresh. The button of
+  // the view already on show does nothing, except to withdraw a change of view
+  // that is still waiting for its photograph.
+  const show = (v: View) => {
+    if (v === view) {
+      if (pending && pending.view !== view) setPending(null);
+      return;
+    }
+    request({ view: v, index: 0, dir: v === 'soon' ? 'next' : 'prev' });
+  };
+
+  // The photographs already in when the page wakes: seen at once, never faded.
+  // A file that fails counts as settled too, so it never holds the slider. (A
+  // listener here rather than next/image's `onError`, which sets the image's
+  // source again on every render to catch an early error, and so fetches it
+  // again. Error events do not bubble, hence the capture.)
+  useEffect(() => {
+    const el = frame.current;
+    if (!el) return;
+    const here: string[] = [];
+    el.querySelectorAll<HTMLImageElement>('.bg img[data-photo]').forEach((img) => {
+      if (arrived(img)) here.push(img.dataset.photo as string);
+    });
+    setSettled((had) => new Set([...(had ?? []), ...here]));
+    const onError = (e: Event) => {
+      const id = (e.target as HTMLElement).dataset?.photo;
+      if (id) settle(id);
+    };
+    el.addEventListener('error', onError, true);
+    return () => el.removeEventListener('error', onError, true);
+  }, [settle]);
+
+  // The slide asked for goes on show the moment its photograph is ready…
+  useEffect(() => {
+    if (pending && ready(pending.view, pending.index)) commit(pending);
+  }, [pending, ready, commit]);
+  // …or, on a connection too slow to wait for, after a patient pause: the
+  // words arrive on the night ground and the photograph fades in behind them.
+  useEffect(() => {
+    if (!pending) return;
+    const t = window.setTimeout(() => commit(pending), PATIENCE);
+    return () => window.clearTimeout(t);
+  }, [pending, commit]);
+
+  // While a slide shows, the photograph of the one after it is fetched.
+  useEffect(() => {
+    if (near && shown) want(photoOf(view, (index + 1) % n).id);
+  }, [near, shown, view, index, n, want, photoOf]);
 
   // Reduced motion: still, until asked.
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) setPlaying(false);
   }, []);
 
-  // On screen, and the tab in front.
+  // Whether the cards are on show at this width.
+  useEffect(() => {
+    const wide = window.matchMedia('(min-width: 901px)');
+    const read = () => setCardsShown(wide.matches);
+    read();
+    wide.addEventListener('change', read);
+    return () => wide.removeEventListener('change', read);
+  }, []);
+
+  // On screen (and nearly so), and the tab in front.
   useEffect(() => {
     const el = frame.current;
     if (!el) return;
@@ -109,10 +244,20 @@ export function JourneySlider({
       threshold: 0.35,
     });
     io.observe(el);
+    const close = new IntersectionObserver(
+      ([e]) => {
+        if (!e.isIntersecting) return;
+        setNear(true);
+        close.disconnect();
+      },
+      { rootMargin: '100% 0px' },
+    );
+    close.observe(el);
     const onVis = () => setHiddenTab(document.hidden);
     document.addEventListener('visibilitychange', onVis);
     return () => {
       io.disconnect();
+      close.disconnect();
       document.removeEventListener('visibilitychange', onVis);
     };
   }, []);
@@ -139,22 +284,45 @@ export function JourneySlider({
     else if (e.key === 'ArrowLeft') go(index - 1);
   };
 
-  // A change of view starts that view's first journey afresh.
-  const show = (v: 'now' | 'soon') => {
-    if (v === view) return;
-    spent.current = { slide: `${v}:0`, ms: 0 };
-    setIndex(0);
-    setView(v);
-  };
-
   const onFin = index === fin;
   const upNext = Array.from({ length: Math.min(CARDS, n - 1) }, (_, o) => (index + o + 1) % n);
+  /* The switch answers at once, even while its first photograph is on its way. */
+  const chosen = pending?.view ?? view;
+  /* Fetch a photograph as soon as the pointer or the keyboard reaches its control. */
+  const ahead = (v: View, i: number) => {
+    const id = photoOf(v, i).id;
+    return { onPointerEnter: () => want(id), onFocus: () => want(id) };
+  };
+
+  /** One slide's photograph, behind everything: fetched when wanted, shown when in. */
+  const backdrop = (id: string, src: string, first: boolean, pos?: string) => (
+    <Image
+      src={src}
+      alt=""
+      fill
+      // On a phone or tablet the frame is taller than it is wide, so the
+      // landscape photograph is cropped by height and needs a wider file.
+      sizes="(max-width: 600px) 150vw, (max-width: 900px) 125vw, 92vw"
+      quality={85}
+      // The slide the page opens on is fetched with the page; the rest when wanted.
+      loading={first || wanted.has(id) ? 'eager' : 'lazy'}
+      data-photo={id}
+      // next/image calls this once the picture has loaded and decoded.
+      onLoad={() => settle(id)}
+      className="photo-grade"
+      style={pos ? { objectPosition: pos } : undefined}
+    />
+  );
+  const waits = (id: string) => (settled && !settled.has(id) ? ' wait' : '');
 
   return (
     <div
       ref={frame}
       className={`frame${onFin ? ' fin' : ''}`}
       data-dir={dir}
+      data-moved={moved ? '' : undefined}
+      data-busy={pending ? '' : undefined}
+      aria-busy={pending ? true : undefined}
       role="region"
       aria-roledescription="carousel"
       aria-label="Journeys"
@@ -168,42 +336,40 @@ export function JourneySlider({
         if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocused(false);
       }}
     >
-      {/* The pictures: a photograph per journey, the drawn horizon last. */}
-      {slides.map((s, i) => (
-        <div
-          key={s.slug}
-          className={`bg${i === index ? ' on' : ''}`}
-          style={{ backgroundColor: s.photo.tone }}
-          aria-hidden
-        >
-          {s.photo.src && (
-            <Image
-              src={s.photo.src}
-              alt=""
-              fill
-              sizes="(min-width: 900px) 92vw, 100vw"
-              quality={85}
-              className="photo-grade"
-              style={s.photo.pos ? { objectPosition: s.photo.pos } : undefined}
-            />
-          )}
-        </div>
-      ))}
-      <div className={`bg hzbg${horizon?.src ? ' photo' : ''}${onFin ? ' on' : ''}`} aria-hidden>
-        {horizon?.src ? (
-          <Image
-            src={horizon.src}
-            alt=""
-            fill
-            sizes="(min-width: 900px) 92vw, 100vw"
-            quality={85}
-            className="photo-grade"
-          />
-        ) : (
-          <Horizon />
-        )}
+      {/* The pictures: a photograph per journey of either view, the finale's
+          last. Only the one on show is seen; the rest wait, clipped away. */}
+      {(['now', 'soon'] as const).flatMap((v) =>
+        (v === 'now' ? now : soon).map((s, i) => {
+          const id = `${v}:${s.slug}`;
+          return (
+            <div
+              key={id}
+              className={`bg${v === view && i === index ? ' on' : ''}${waits(id)}`}
+              aria-hidden
+            >
+              {s.photo.src && backdrop(id, s.photo.src, v === 'now' && i === 0, s.photo.pos)}
+            </div>
+          );
+        }),
+      )}
+      <div
+        className={`bg hzbg${horizon?.src ? ' photo' : ''}${onFin ? ' on' : ''}${waits(FINALE)}`}
+        aria-hidden
+      >
+        {horizon?.src && backdrop(FINALE, horizon.src, false)}
       </div>
       <div className="shade" aria-hidden />
+      {/* Every card's photograph, fetched ahead once the frame is near, so a
+          card never arrives empty while its slide is already moving. The same
+          file as the card's own, so the card reads it from the cache. */}
+      {near && cardsShown && (
+        <div className="pre" aria-hidden>
+          {[...now, ...soon].map(
+            (s, i) => s.photo.src && <Thumb key={`${i}:${s.slug}`} src={s.photo.src} eager />,
+          )}
+          {horizon?.src && <Thumb src={horizon.src} eager />}
+        </div>
+      )}
 
       {soon.length > 0 && (
         <div className="views" role="group" aria-label="Show journeys">
@@ -216,11 +382,11 @@ export function JourneySlider({
             <button
               key={v}
               type="button"
-              className={view === v ? 'on' : undefined}
-              aria-pressed={view === v}
+              className={chosen === v ? 'on' : undefined}
+              aria-pressed={chosen === v}
               onClick={() => show(v)}
+              {...ahead(v, 0)}
             >
-              <i aria-hidden className={v} />
               {label}
             </button>
           ))}
@@ -265,20 +431,15 @@ export function JourneySlider({
                   </Link>
                 </div>
               ) : (
+                // One button, to the journey's own page (13 Nov), in place of
+                // the pair "Request details" and "Itinerary & dates".
                 <div className="acts">
                   <Link
                     className="btn btn-accent"
-                    href={`/plan?journey=${s.slug}#contact`}
-                    aria-label={`Request details on ${s.title}`}
-                  >
-                    Request details <Arrow />
-                  </Link>
-                  <Link
-                    className="btn btn-light"
                     href={`/journeys/${s.slug}`}
-                    aria-label={`View the itinerary and dates for ${s.title}`}
+                    aria-label={`Explore journey: ${s.title}`}
                   >
-                    Itinerary &amp; dates
+                    Explore journey <Arrow />
                   </Link>
                 </div>
               )}
@@ -286,7 +447,7 @@ export function JourneySlider({
           );
         })}
 
-        {/* The finale: centred, large, on the drawn horizon. */}
+        {/* The finale: its words on the left, over the photograph. */}
         <div
           className={`copy finale${onFin ? ' on' : ''}`}
           role="group"
@@ -333,40 +494,21 @@ export function JourneySlider({
             // The finale's card shows its photograph too, when it has one.
             const photo = s ? s.photo.src : horizon?.src;
             return (
-              <li key={k}>
+              // Keyed by journey, so a card never shows the last one's picture.
+              <li key={photoOf(view, k).id}>
                 <button
                   type="button"
-                  className={`card${s ? '' : ' horizon'}`}
-                  onClick={() => go(k)}
+                  className="card"
+                  onClick={() => {
+                    go(k);
+                    // The card leaves with the change; focus moves to Next
+                    // rather than falling to the page.
+                    fwd.current?.focus({ preventScroll: true });
+                  }}
                   aria-label={`Show ${s ? s.title : 'More journeys coming'}`}
-                  style={s ? { backgroundColor: s.photo.tone } : undefined}
+                  {...ahead(view, k)}
                 >
-                  {photo && (
-                    <Image
-                      src={photo}
-                      alt=""
-                      fill
-                      sizes="14rem"
-                      quality={85}
-                      className="photo-grade"
-                    />
-                  )}
-                  {!photo && (
-                    <span className="mark" aria-hidden>
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.4"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        focusable="false"
-                      >
-                        <circle cx="12" cy="12" r="8.5" />
-                        <path d="M15.5 8.5l-2 5-5 2 2-5z" />
-                      </svg>
-                    </span>
-                  )}
+                  {photo && <Thumb src={photo} />}
                   <span className="cap" aria-hidden>
                     {s && <span className="st">{s.soon ? 'Coming soon' : s.status}</span>}
                     <span className="t">
@@ -379,22 +521,27 @@ export function JourneySlider({
           })}
         </ul>
 
-        <div className="ctrl">
+        {/* `data-fab-clear`: the floating "Connect" button steps aside rather
+            than sit over the arrows, the line and Pause. */}
+        <div className="ctrl" data-fab-clear>
           <button
             type="button"
             className="round"
             onClick={() => go(index - 1)}
             aria-label="Previous slide"
+            {...ahead(view, (index - 1 + n) % n)}
           >
             <svg viewBox="0 0 24 24" aria-hidden focusable="false">
               <path d="M15 5l-7 7 7 7" />
             </svg>
           </button>
           <button
+            ref={fwd}
             type="button"
             className="round fwd"
             onClick={() => go(index + 1)}
             aria-label="Next slide"
+            {...ahead(view, (index + 1) % n)}
           >
             <svg viewBox="0 0 24 24" aria-hidden focusable="false">
               <path d="M9 5l7 7-7 7" />
@@ -432,125 +579,38 @@ export function JourneySlider({
   );
 }
 
+/** The card photographs already loaded on this page: shown at once, never faded. */
+const loaded = new Set<string>();
+
 /**
- * The finale's picture, drawn rather than photographed: a night sky with
- * stars, a pale-blue sun rising between two ranges of peaks, its reflection on
- * the water, drifting waves, and a dotted blue route arcing over the words.
+ * A card's photograph. One that is still on its way when the card appears
+ * fades in once it has loaded and decoded, rather than popping in; one that
+ * is already there (and every one, without JavaScript) is simply shown. A
+ * file that fails stays out of sight, the card's night ground in its place.
+ * `eager`: fetched now rather than when it comes into view.
  */
-function Horizon() {
+function Thumb({ src, eager = false }: { src: string; eager?: boolean }) {
+  const img = useRef<HTMLImageElement>(null);
+  const [wait, setWait] = useState(false);
+  useEffect(() => {
+    if (img.current && !arrived(img.current) && !loaded.has(src)) setWait(true);
+  }, [src]);
   return (
-    <svg
-      className="hz"
-      viewBox="0 0 1264 760"
-      preserveAspectRatio="xMidYMid slice"
-      aria-hidden
-      focusable="false"
-    >
-      <defs>
-        <linearGradient id="jr-hz-sky" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#081620" />
-          <stop offset="0.5" stopColor="#0e2f42" />
-          <stop offset="1" stopColor="#22607e" />
-        </linearGradient>
-        <radialGradient id="jr-hz-glow" cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0" stopColor="#f6e3bc" stopOpacity="0.8" />
-          <stop offset="0.3" stopColor="#7accfd" stopOpacity="0.38" />
-          <stop offset="1" stopColor="#7accfd" stopOpacity="0" />
-        </radialGradient>
-        <linearGradient id="jr-hz-sun" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#fbefd3" />
-          <stop offset="1" stopColor="#7accfd" />
-        </linearGradient>
-        <linearGradient id="jr-hz-sea" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#14465f" />
-          <stop offset="1" stopColor="#081620" />
-        </linearGradient>
-      </defs>
-      <rect width="1264" height="600" fill="url(#jr-hz-sky)" />
-      {/* Stars; a few of them twinkle. */}
-      <g fill="#fff">
-        <circle className="tw" cx="120" cy="90" r="1.4" opacity="0.7" />
-        <circle cx="230" cy="190" r="1" opacity="0.45" />
-        <circle className="tw tw2" cx="330" cy="60" r="1.5" opacity="0.8" />
-        <circle cx="190" cy="300" r="1" opacity="0.4" />
-        <circle className="tw" cx="1150" cy="80" r="1.4" opacity="0.7" />
-        <circle cx="1040" cy="200" r="1" opacity="0.45" />
-        <circle className="tw tw2" cx="940" cy="56" r="1.5" opacity="0.8" />
-        <circle cx="1090" cy="310" r="1" opacity="0.4" />
-        <circle className="tw" cx="60" cy="230" r="1.1" opacity="0.5" />
-        <circle cx="1210" cy="240" r="1.1" opacity="0.5" />
-      </g>
-      {/* The route, arcing over the title to a point that pulses. */}
-      <path
-        className="route"
-        d="M250 300 C300 120 480 64 632 64 S964 120 1014 300"
-        fill="none"
-        stroke="#7accfd"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeDasharray="1 9"
-        opacity="0.8"
-      />
-      <circle cx="250" cy="300" r="4" fill="#7accfd" />
-      <circle cx="1014" cy="300" r="4" fill="#7accfd" />
-      <circle
-        className="ping"
-        cx="632"
-        cy="64"
-        r="11"
-        fill="none"
-        stroke="#7accfd"
-        strokeWidth="1.4"
-      />
-      <circle cx="632" cy="64" r="5" fill="#fbefd3" />
-      {/* The sun, rising in the gap between the ranges. */}
-      <g className="sunrise">
-        <circle className="glow" cx="632" cy="600" r="420" fill="url(#jr-hz-glow)" />
-        <path d="M532 600 A100 100 0 0 1 732 600 Z" fill="url(#jr-hz-sun)" />
-      </g>
-      {/* Peaks, left. */}
-      <path
-        d="M0 600 L0 420 L90 470 L200 330 L270 400 L340 360 L470 520 L560 600 Z"
-        fill="#1a4a63"
-        opacity="0.9"
-      />
-      <path
-        d="M200 330 L228 362 L214 364 L200 350 L184 368 L172 362 Z"
-        fill="#e9e3d6"
-        opacity="0.5"
-      />
-      <path d="M0 600 L0 500 L130 450 L240 520 L320 480 L470 600 Z" fill="#0e2f42" />
-      {/* Peaks, right. */}
-      <path
-        d="M1264 600 L1264 400 L1170 450 L1060 320 L990 400 L920 370 L790 520 L704 600 Z"
-        fill="#1a4a63"
-        opacity="0.9"
-      />
-      <path
-        d="M1060 320 L1088 352 L1074 354 L1060 340 L1044 358 L1032 352 Z"
-        fill="#e9e3d6"
-        opacity="0.5"
-      />
-      <path d="M1264 600 L1264 490 L1140 450 L1030 520 L950 480 L800 600 Z" fill="#0e2f42" />
-      {/* The water, the sun's reflection, and the waves. */}
-      <rect y="600" width="1264" height="160" fill="url(#jr-hz-sea)" />
-      <line x1="0" y1="600" x2="1264" y2="600" stroke="#7accfd" strokeOpacity="0.5" />
-      <g stroke="#7accfd" strokeLinecap="round">
-        <line x1="552" y1="618" x2="712" y2="618" strokeWidth="3" opacity="0.6" />
-        <line x1="577" y1="636" x2="687" y2="636" strokeWidth="2.5" opacity="0.45" />
-        <line x1="600" y1="654" x2="664" y2="654" strokeWidth="2" opacity="0.32" />
-        <line x1="618" y1="672" x2="646" y2="672" strokeWidth="2" opacity="0.2" />
-      </g>
-      <g className="drift" fill="none" stroke="#7accfd" strokeWidth="1.2">
-        <path
-          d="M-40 690 C20 678 80 678 140 690 S260 702 320 690 S440 678 500 690 S620 702 680 690 S800 678 860 690 S980 702 1040 690 S1160 678 1220 690 S1340 702 1400 690"
-          opacity="0.28"
-        />
-        <path
-          d="M-40 726 C20 714 80 714 140 726 S260 738 320 726 S440 714 500 726 S620 738 680 726 S800 714 860 726 S980 738 1040 726 S1160 714 1220 726 S1340 738 1400 726"
-          opacity="0.18"
-        />
-      </g>
-    </svg>
+    <Image
+      ref={img}
+      src={src}
+      alt=""
+      fill
+      // A card shows a portrait crop of a landscape photograph, so the file is
+      // about one and a half times the card's width (roughly 28vw).
+      sizes="(max-width: 900px) 1px, 28vw"
+      quality={85}
+      loading={eager ? 'eager' : 'lazy'}
+      className={`photo-grade${wait ? ' wait' : ''}`}
+      onLoad={() => {
+        loaded.add(src);
+        setWait(false);
+      }}
+    />
   );
 }

@@ -89,8 +89,8 @@ export function Rail({
 
   const button =
     tone === 'dark'
-      ? 'border-on-dark/60 text-on-dark hover:bg-brand hover:border-brand hover:text-white'
-      : 'border-ink/60 text-ink hover:bg-brand hover:border-brand hover:text-white';
+      ? 'border-on-dark/60 text-on-dark hover:bg-brand-deep hover:border-brand-deep hover:text-white'
+      : 'border-ink/60 text-ink hover:bg-brand-deep hover:border-brand-deep hover:text-white';
 
   const controlsBar = (
     <div

@@ -15,10 +15,21 @@ export const metadata = pageMetadata({
 });
 
 /**
+ * The second photograph overlaps a lower corner of the first. A hotel that
+ * stands on the right of its own photograph (the horizontal part of its `pos`
+ * is past the middle) would be hidden behind it, so that pair is mirrored.
+ */
+const standsRight = (pos?: string) => parseFloat(pos ?? '') > 50;
+
+/**
  * Where we stay (2 Nov notes): the homepage's "Where we stay" button opens
- * here. Each place Marc names, in his words, with both of its photographs:
- * the hotel's own frame and a second view of it. Hotel photographs are the
- * hotels' own; their credits live in the footer only.
+ * here. Each place Marc names, in his words, with both of its photographs
+ * (his selection of 9 Nov): the hotel itself, and beside it the place around
+ * it (the lake boat at Lucerne's quay, Isola Bella, Victoria Falls, Rovinj's
+ * Old Town, Cardamom House from the air). What is known of each picture's
+ * origin is recorded in reports/image-asset-plan.md; a picture gets an entry
+ * in public/images/credits.json, and a row on /credits, once its author and
+ * licence are confirmed.
  */
 export default function WhereWeStayPage() {
   return (
@@ -30,17 +41,23 @@ export default function WhereWeStayPage() {
       <ol className="wws container-site" aria-label="Hotels and lodges">
         {hotels.map((h, i) => (
           <Reveal as="li" key={h.name} className="wws-item">
-            <div className="wws-photos">
+            <div className={standsRight(h.pos) ? 'wws-photos mirrored' : 'wws-photos'}>
               <div className="wws-main">
                 <Image src={h.img} alt={h.alt} fill sizes="(max-width: 900px) 100vw, 40vw" />
               </div>
+              {/* The second view is a landscape photograph in an upright frame:
+                  it is drawn about twice as wide as the frame, which is the
+                  width `sizes` states, and `backPos` says which part of it
+                  shows. The main frame is nearly the photographs' own shape
+                  and stays centred. */}
               {h.back && (
                 <div className="wws-second">
                   <Image
                     src={h.back}
                     alt={h.backAlt ?? h.alt}
                     fill
-                    sizes="(max-width: 900px) 50vw, 18vw"
+                    sizes="(max-width: 900px) 72vw, 36vw"
+                    style={h.backPos ? { objectPosition: h.backPos } : undefined}
                   />
                 </div>
               )}

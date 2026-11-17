@@ -49,6 +49,16 @@
 .wws-second img {
   object-fit: cover;
 }
+/* The second view sits over the main frame's lower right corner. Where the
+   hotel stands on the right of its own photograph, that would hide it, so the
+   pair is mirrored: main frame to the right, second view over its lower left. */
+.wws-photos.mirrored .wws-main {
+  margin-left: auto;
+}
+.wws-photos.mirrored .wws-second {
+  right: auto;
+  left: 0;
+}
 
 .wws-num {
   margin: 0 0 1rem;

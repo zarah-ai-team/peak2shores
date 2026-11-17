@@ -8,7 +8,9 @@ import { jsonLd } from '@/lib/seo';
  * <details>, so it works without JavaScript and by keyboard — with the
  * FAQPage schema built from the same items, so the markup never says more
  * than the page shows. Styled as the itinerary's days. `aside` sits under the
- * heading (the Journeys page puts "Connect with our team" there).
+ * heading. No page uses it now: the Journeys page put "Connect with our team"
+ * there, removed after the chat notes of 9 November 2026 because it repeated
+ * the floating button.
  */
 export function Faq({
   items,

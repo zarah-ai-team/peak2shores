@@ -61,6 +61,14 @@ function placesOf(j: Journey): HeroPlace[] {
 export const requestHref = (j: { slug: string }) =>
   `/plan?journey=${encodeURIComponent(j.slug)}#contact`;
 
+/** What that button says: a full or waitlisted journey takes names instead. */
+const requestLabel = (j: { status?: Journey['status'] }) =>
+  j.status === 'sold-out' || j.status === 'waitlist' ? 'Join the waitlist' : 'Request details';
+
+/** Where "Learn more" about taking a journey privately goes: Bespoke Private
+    Travel on the Plan page, as every private-travel link on the site does. */
+const PRIVATE_HREF = '/plan#private';
+
 /** Where a journey stands, for its own page: until dates are set, "Coming soon". */
 export function statusOf(journey: Journey) {
   if (journey.status && journey.status !== 'open') return statusLabel[journey.status] ?? 'Departed';
@@ -87,7 +95,19 @@ export function JyHero({ journey }: { journey: Journey }) {
 
   return (
     <section className="jy hero" data-hero aria-labelledby="jy-h1">
-      <HeroStage media={media} places={placesOf(journey)}>
+      <HeroStage
+        media={media}
+        places={placesOf(journey)}
+        foot={
+          /* The client's line (chat notes of 9 November 2026), once per page. */
+          <p className="priv" data-fab-clear>
+            <span>Want to take this journey privately?</span>{' '}
+            <Link className="tlink" href={PRIVATE_HREF}>
+              Learn more<span className="sr-only"> about taking this journey privately</span>
+            </Link>
+          </p>
+        }
+      >
         <p className="crumb lab">
           <Link href="/journeys">Journeys</Link>
           <i aria-hidden />
@@ -96,7 +116,7 @@ export function JyHero({ journey }: { journey: Journey }) {
         <h1 id="jy-h1">{titleOf(journey)}</h1>
         <p className="tag">{journey.lead}</p>
       </HeroStage>
-      <dl className="facts">
+      <dl className="facts" data-fab-clear>
         {facts.map((f) => (
           <div key={f.k}>
             <dt>{f.k}</dt>
@@ -409,16 +429,18 @@ export function JyDates({ journey }: { journey: Journey }) {
             <p>{x.combo}: rates to be announced</p>
           </div>
         )}
+        {/* The page's inquiry button since the sticky bar lost its own (chat notes
+            of 9 November 2026); it carries the waitlist wording that bar had. */}
         <a className="btn btn-blue" href={requestHref(journey)}>
-          Request details <Arrow />
+          {requestLabel(journey)} <Arrow />
         </a>
         <a className="btn btn-line" href={`mailto:${site.email}`}>
           Connect with our team
         </a>
-        <p className="fine">
-          International flights are not included. Full inclusions and booking terms are listed
-          below.
-        </p>
+        {/* It also read "Full inclusions and booking terms are listed below", but
+            no list follows: each journey's inclusions are still to come from
+            Marc (note of 29 October). Put the pointer back with the list. */}
+        <p className="fine">International flights are not included.</p>
       </aside>
     </section>
   );

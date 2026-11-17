@@ -7,10 +7,14 @@ export type JourneyTab = { id: string; label: string };
 
 /**
  * The journey page's menu, after A&K: Overview │ Itinerary │ Stays │ Dates &
- * Rates, pinned under the header once the hero has passed, with the price and
- * the way to inquire always beside it. The tab whose section is under the bar
- * is marked current as the page scrolls. The tabs are plain anchor links, so
- * they work before hydration and every section keeps its own address.
+ * Rates, pinned under the header once the hero has passed. The tab whose
+ * section is under the bar is marked current as the page scrolls. The tabs
+ * are plain anchor links, so they work before hydration and every section
+ * keeps its own address.
+ *
+ * A button sits at the right of the bar only where `cta` is given. A journey's
+ * own page gives none: its "Request details" was removed at the client's
+ * request (chat notes of 9 November 2026). The Journeys page still gives one.
  *
  * `data-pin-header` keeps the header in place above the bar.
  */
@@ -21,7 +25,8 @@ export function JourneyTabs({
   label = 'This journey',
 }: {
   tabs: JourneyTab[];
-  cta: string;
+  /** The button's label. Leave it out and the bar carries the tabs alone. */
+  cta?: string;
   /** Where the button goes: the inquiry form on the Plan page by default. */
   ctaHref?: string;
   label?: string;
@@ -91,11 +96,13 @@ export function JourneyTabs({
             );
           })}
         </ul>
-        <div className="hidden shrink-0 items-center gap-6 md:flex">
-          <ButtonLink href={ctaHref} variant="navy" arrow className="!rounded-full !py-3.5">
-            {cta}
-          </ButtonLink>
-        </div>
+        {cta && (
+          <div className="hidden shrink-0 items-center gap-6 md:flex">
+            <ButtonLink href={ctaHref} variant="navy" arrow className="!rounded-full !py-3.5">
+              {cta}
+            </ButtonLink>
+          </div>
+        )}
       </div>
     </nav>
   );

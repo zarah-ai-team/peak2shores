@@ -39,11 +39,13 @@ const cardPhotos: Record<string, { src: string; alt: string }[]> = {
   ),
 };
 
-/** A departure's month, "June 2027", or the dates line until Marc sets them. */
-const monthOf = (iso: string | undefined, fallback: string) =>
-  iso
-    ? new Date(iso).toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' })
-    : fallback;
+/** A departure month, '2027-06', as the Departure filter names it: "June 2027". */
+const monthLabel = (ym: string) =>
+  new Date(`${ym}-01T00:00:00Z`).toLocaleDateString('en-US', {
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
 
 /**
  * The Journeys page, after Ishika's notes of 3 November 2026:
@@ -54,7 +56,8 @@ const monthOf = (iso: string | undefined, fallback: string) =>
  * 3. The details that make the difference (moved here from the homepage).
  * 4. The Collection: dropdown filters and the journey cards.
  * 5. Bespoke Private Travel: one slim navy banner.
- * 6. Good to know: the questions, with "Connect with our team" beside them.
+ * 6. Good to know: the questions. No button of its own since the chat notes
+ *    of 9 November 2026: it repeated the floating "Connect with our team".
  *
  * Only the journeys with a page are shown (Marc's three, for launch); the
  * flipbook's coming journeys wait until he confirms them.
@@ -79,6 +82,14 @@ export default async function JourneysPage() {
       ...(whole?.route?.some((s) => s.by === 'boat') ? ['Includes boat travel'] : []),
       ...(whole?.flyer?.extension ? ['Can be combined with another journey'] : []),
     ];
+    // The months it departs in: the ones Marc lists, else the first departure's.
+    const months = whole?.departureMonths?.length
+      ? whole.departureMonths
+      : j.departureISO
+        ? [j.departureISO.slice(0, 7)]
+        : [];
+    // Each place on the route once, in the order the journey reaches it.
+    const stops = Array.from(new Set((whole?.route ?? []).map((s) => s.name)));
     return {
       slug: j.slug,
       title: book?.title ?? j.title,
@@ -88,14 +99,19 @@ export default async function JourneysPage() {
       dest: j.country.split(' & '),
       inspire: j.inspire,
       days: j.days,
-      when: monthOf(j.departureISO, j.departure),
+      when: Array.from(new Set(months))
+        .filter((ym) => /^\d{4}-(0[1-9]|1[0-2])$/.test(ym))
+        .sort()
+        .map((ym) => ({ ym, label: monthLabel(ym) })),
       style,
+      stops,
+      // The tags (chat notes of 9 November 2026): the days, then the rate and
+      // the departure (a date or just a year) once Marc sets them. Nothing else.
       facts: [
         `${j.days} days`,
-        site.groupSize,
+        ...(j.priceFrom ? [`From ${j.priceFrom}`] : []),
         ...(j.departure && j.departure !== DATES_TBA ? [j.departure] : []),
       ],
-      priceFrom: j.priceFrom,
       status: statusLabel[j.status ?? 'open'] ?? 'Now booking',
       tint: journeyTint[j.slug] ?? '#1d4a66',
       imgs,
@@ -117,7 +133,7 @@ export default async function JourneysPage() {
         ctaHref="/plan#contact"
       />
       <DetailsDifference />
-      <JourneyCollection cards={cards} />
+      <JourneyCollection cards={cards} tba={DATES_TBA} />
 
       <section className="jxb" id="private" aria-labelledby="jxb-h">
         <div className="jxb-in">
@@ -145,11 +161,6 @@ export default async function JourneysPage() {
         label="Good to know"
         title="Frequently asked questions"
         className="pt-section-sm"
-        aside={
-          <a className="jxb-connect" href={`mailto:${site.email}`}>
-            Connect with our team <span aria-hidden>→</span>
-          </a>
-        }
       />
     </>
   );

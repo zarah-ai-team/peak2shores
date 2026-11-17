@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { site, whatsappHref } from '@/lib/site';
 import './connect.css';
@@ -10,19 +11,24 @@ import './connect.css';
  * WhatsApp and the scheduling link appear only once they are set in site.ts;
  * until a scheduling link exists, "Book a call" opens the inquiry form.
  */
+/** The height of the strip at the foot of the screen that the button occupies. */
+const STRIP = 104;
+
 export function ConnectButton() {
   const [open, setOpen] = useState(false);
   const [away, setAway] = useState(false);
   const box = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   // The circle and the footer already offer every way to reach us,
   // and the button would sit over their fields and links: it steps aside
-  // while either is on screen.
+  // while either is on screen (`data-fab-away`). It also steps aside for a
+  // row of controls it would cover, such as the journeys slider's arrows and
+  // Pause (`data-fab-clear`), while that row is in the strip of the screen
+  // where the button sits. Looked up again on every page.
   useEffect(() => {
-    const targets = [...document.querySelectorAll('[data-fab-away], footer')];
-    if (!targets.length) return;
     const showing = new Set<Element>();
-    const observer = new IntersectionObserver((entries) => {
+    const update = (entries: IntersectionObserverEntry[]) => {
       for (const entry of entries) {
         if (entry.isIntersecting) showing.add(entry.target);
         else showing.delete(entry.target);
@@ -30,10 +36,31 @@ export function ConnectButton() {
       const hidden = showing.size > 0;
       setAway(hidden);
       if (hidden) setOpen(false);
-    });
-    targets.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
+    };
+    const whole = new IntersectionObserver(update);
+    document.querySelectorAll('[data-fab-away], footer').forEach((el) => whole.observe(el));
+
+    // The strip: the foot of the screen, as tall as the button and its margin.
+    const rows = [...document.querySelectorAll('[data-fab-clear]')];
+    let strip: IntersectionObserver | null = null;
+    const watch = () => {
+      strip?.disconnect();
+      rows.forEach((el) => showing.delete(el));
+      const above = Math.max(0, window.innerHeight - STRIP);
+      strip = new IntersectionObserver(update, { rootMargin: `-${above}px 0px 0px 0px` });
+      rows.forEach((el) => strip?.observe(el));
+    };
+    if (rows.length) {
+      watch();
+      window.addEventListener('resize', watch);
+    }
+    return () => {
+      whole.disconnect();
+      strip?.disconnect();
+      window.removeEventListener('resize', watch);
+      setAway(false);
+    };
+  }, [pathname]);
 
   useEffect(() => {
     if (!open) return;

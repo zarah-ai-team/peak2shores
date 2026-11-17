@@ -18,15 +18,15 @@ const line = 'px-[calc(var(--btn-px)-2px)] py-[calc(var(--btn-py)-1px)]';
 
 const variants: Record<ButtonVariant, string> = {
   /* On paper. */
-  ink: `bg-ink text-ivory ${fill} hover:bg-brand`,
+  ink: `bg-ink text-ivory ${fill} hover:bg-brand-deep`,
   /* On paper — the primary CTA ("Plan your journey"). */
-  navy: `bg-navy text-ivory ${fill} hover:bg-brand`,
+  navy: `bg-navy text-ivory ${fill} hover:bg-brand-deep`,
   /* On a photograph or a dark ground. */
-  light: `bg-ivory text-ink ${fill} hover:bg-brand hover:text-white`,
+  light: `bg-ivory text-ink ${fill} hover:bg-brand-deep hover:text-white`,
   /* On paper; fills with the brand blue. Inherits color, so it also works in the header. */
-  outline: `btn--flat border border-current ${line} text-current hover:bg-brand hover:text-white hover:border-brand`,
+  outline: `btn--flat border border-current ${line} text-current hover:bg-brand-deep hover:text-white hover:border-brand-deep`,
   /* On a dark ground; fills with the brand blue. */
-  'outline-dark': `btn--flat border border-on-dark/70 ${line} text-on-dark hover:bg-brand hover:text-white hover:border-brand`,
+  'outline-dark': `btn--flat border border-on-dark/70 ${line} text-on-dark hover:bg-brand-deep hover:text-white hover:border-brand-deep`,
   /* The blue hairline link. Picks dark colors automatically inside a
      dark ground ([data-tone="dark"], .bg-navy…, [data-hero]). */
   rule: 'link-rule',

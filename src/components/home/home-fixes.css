@@ -34,20 +34,28 @@
 }
 .hc .hc-hero .copy.left h1 {
   white-space: normal;
-  font-size: clamp(2.75rem, 6.9vw, 6.25rem);
-  line-height: 0.98;
-  margin: 0 0 1.5rem;
-  text-shadow: 0 2px 30px rgb(8 20 28 / 0.25);
+  /* A step smaller (17 Nov): 72px on a laptop, so the film stays the subject. */
+  font-size: clamp(2.5rem, 5.5vw, 5rem);
+  line-height: 1;
+  margin: 0 0 1.25rem;
+  /* A tight shadow for the edges and a soft one behind, as on the founder's
+     quote: on a laptop the end of the headline crosses Positano's white
+     houses, where the left shade is thin (9 Nov). */
+  text-shadow:
+    0 1px 2px rgb(8 20 28 / 0.22),
+    0 2px 30px rgb(8 20 28 / 0.25);
 }
 .hc .hc-hero .copy.left .standfirst {
   font-family: var(--serif);
   font-style: italic;
   font-weight: 400;
-  font-size: clamp(1.125rem, 1.67vw, 1.5rem);
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
   line-height: 1.45;
   max-width: 38ch;
-  margin: 0 0 2.25rem;
-  color: var(--hero-blue);
+  margin: 0 0 2rem;
+  /* The water-blue (17 Nov review): the brighter cyan fell to 3.4:1 over
+     the Seville clip. */
+  color: var(--sky);
   text-shadow: 0 1px 16px rgb(8 20 28 / 0.55);
 }
 .hc .hc-hero .copy.left .ctas {
@@ -82,7 +90,7 @@
    buttons stack, and ~16rem on a tablet). */
 @media (max-width: 900px) and (orientation: portrait) {
   .hc .hc-hero {
-    --film-end: calc(100% - 19rem);
+    --film-end: calc(100% - 17rem);
   }
   .hc .hc-hero .hv {
     inset: 0 0 auto;
@@ -109,14 +117,14 @@
 }
 @media (max-width: 600px) {
   .hc .hc-hero {
-    --film-end: calc(100% - 22rem);
+    --film-end: calc(100% - 19rem);
   }
   .hc .hc-hero .copy.left h1 {
-    font-size: clamp(2.5rem, 11vw, 2.875rem);
+    font-size: clamp(2.125rem, 9.5vw, 2.5rem);
     margin-bottom: 1rem;
   }
   .hc .hc-hero .copy.left .standfirst {
-    font-size: 1.0625rem;
+    font-size: 1rem;
     margin-bottom: 1.5rem;
   }
 }
@@ -154,10 +162,10 @@
   color: var(--lake);
   font-weight: var(--title-weight);
   font-size: clamp(2.375rem, 3.2vw, 3.75rem);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.008em;
 }
 .hc .hc-ways .head p.sub-h {
-  margin-top: 0.75rem;
+  margin-top: 0.25rem;
   font-style: italic;
   opacity: 0.8;
 }
@@ -170,14 +178,12 @@
   color: #fff;
   font-style: normal;
 }
-/* The signature pill in the house blue, frosted, with a fine light edge. */
+/* The signature label: a solid pill in the brand blue a step deeper (white on
+   it is 4.9:1), with no glass and no edge, so it reads on any photograph. */
 .hc .hc-ways .badge {
   border-radius: 999px;
   padding: 0.4375rem 0.875rem;
-  background: rgb(17 144 203 / 0.88);
-  border: 1px solid rgb(255 255 255 / 0.35);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+  background: var(--color-brand-deep);
   color: #fff;
   font-weight: 500;
   font-style: normal;
@@ -204,8 +210,8 @@
   gap: 1.25rem;
 }
 .hc .hc-ways .head .btn:hover {
-  background: var(--lake);
-  border-color: var(--lake);
+  background: var(--color-brand-deep);
+  border-color: var(--color-brand-deep);
 }
 @media (max-width: 760px) {
   .hc .hc-ways .head .ctarow {
@@ -213,118 +219,95 @@
   }
 }
 
-/* -- 05 The founder's remark, framed and read word by word ---------------- */
-.hc .hc-pause.framed {
-  padding: clamp(7.5rem, 11vw, 10rem) clamp(1.5rem, 11vw, 10rem);
+/* -- 05 The founder's remark over the Cape Town film (17 Nov) --------------
+      Nothing is drawn around the words. The mark, the quote, his name and the
+      way on stand on one centre axis, each the same step (--q-step) below the
+      last. The film keeps its own colors under one even, neutral shade: at
+      56% black the brightest thing it can show (surf, a white wall) still
+      leaves white text at 4.9:1, so the small lines hold wherever the camera
+      is. */
+.hc .hc-pause {
+  --q-step: clamp(2rem, 2.9vw, 2.75rem);
+  padding: clamp(5.5rem, 8.6vw, 8.5rem) var(--gut);
 }
-.hc .hc-pause.framed .bg::after {
+.hc .hc-pause .bg::after {
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(70% 62% at 50% 50%, rgb(8 20 28 / 0.45) 0%, rgb(8 20 28 / 0) 100%),
-    rgb(8 20 28 / 0.5);
+  background: rgb(0 0 0 / 0.56);
 }
-.hc .hc-pause .frame {
-  position: absolute;
-  inset: clamp(1rem, 3.3vw, 3rem);
-  z-index: 1;
-  border: 1px solid rgb(255 255 255 / 0.28);
-  border-radius: clamp(1.25rem, 2.2vw, 2rem);
-  pointer-events: none;
+.hc .hc-pause .in {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--q-step);
 }
-/* The quote mark sits in the frame's top edge. */
-.hc .hc-pause.framed .mark {
-  position: absolute;
-  z-index: 2;
-  left: 50%;
-  top: clamp(-0.25rem, 1vw, 0.875rem);
-  transform: translateX(-50%);
+/* The words and what follows them are the column's own items. */
+.hc .hc-pause .qw {
+  display: contents;
+}
+/* The mark, white. Its box is cut to the glyph (which hangs in the top 0.28em
+   of the line), so the step beneath it is measured from the ink. */
+.hc .hc-pause .mark {
+  display: block;
+  height: 0.28em;
   margin: 0;
-  padding: 0 1.375rem;
   font-family: var(--serif);
-  font-size: clamp(5rem, 8.3vw, 7.5rem);
-  line-height: 0.82;
-  color: var(--blue-lt);
-  text-shadow: 0 0 24px rgb(8 20 28 / 0.6);
+  font-size: clamp(5.5rem, 8.4vw, 8rem);
+  font-weight: 400;
+  line-height: 1;
+  color: #fff;
 }
 .hc .hc-pause .qw blockquote {
-  max-width: 17em;
-  margin: 0 auto;
-  font-size: clamp(2rem, 4.45vw, 4rem);
-  line-height: 1.14;
-  letter-spacing: -0.022em;
+  max-width: 12.5em;
+  margin: 0;
+  font-size: clamp(1.875rem, 3.4vw, 3.25rem);
+  line-height: 1.16;
+  letter-spacing: -0.009em;
+  text-wrap: balance;
 }
 .hc .hc-pause .qw em {
   color: var(--sky);
 }
-.hc .hc-pause .qw .w {
-  transition:
-    opacity 0.7s var(--ease),
-    filter 0.7s var(--ease);
-}
-.hc .hc-pause .qw.waiting .w {
-  opacity: 0.22;
-  filter: blur(2px);
-}
-.hc .hc-pause .qw.reading .w {
-  animation: qw-word 0.7s var(--ease) both;
-  animation-delay: calc(0.3s + var(--i) * 0.12s);
-}
-@keyframes qw-word {
-  from {
-    opacity: 0.22;
-    filter: blur(2px);
-  }
-  to {
-    opacity: 1;
-    filter: blur(0);
-  }
-}
 .hc .hc-pause .credit {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.25rem;
-  margin: 3.25rem 0 0;
+  margin: 0;
   font-family: var(--sans);
-  font-size: 0.75rem;
+  font-size: max(0.75rem, 11.5px);
   font-weight: 500;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-}
-.hc .hc-pause .credit b {
-  color: var(--blue-lt);
-  font-weight: 500;
-}
-.hc .hc-pause .credit i {
-  display: block;
-  width: 4.5rem;
-  height: 1px;
-  background: var(--blue-lt);
-}
-.hc .hc-pause .qw.waiting .credit,
-.hc .hc-pause .qw.waiting .qlink {
-  opacity: 0;
-}
-.hc .hc-pause .qw.reading .credit,
-.hc .hc-pause .qw.reading .qlink {
-  animation: qw-word 1s var(--ease) both;
-  animation-delay: calc(0.6s + var(--n) * 0.12s);
-}
-.hc .hc-pause .qlink {
-  display: inline-flex;
-  gap: 0.75rem;
-  margin-top: 2.75rem;
-  padding: 0.75rem 0 0.375rem;
-  font-family: var(--sans);
-  font-size: 0.75rem;
-  font-weight: 500;
+  line-height: 1.5;
   letter-spacing: 0.24em;
   text-transform: uppercase;
   color: #fff;
+}
+.hc .hc-pause .credit b {
+  margin: 0 0.5em;
+  font-weight: 500;
+}
+/* The way on: a line in the Peaks2Shores blue beneath it (17 Nov), the paler
+   water-blue when the pointer or the keyboard reaches it. */
+.hc .hc-pause .qlink {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  padding: 0 0 0.5rem;
+  font-family: var(--sans);
+  font-size: max(0.75rem, 11.5px);
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #fff;
   text-decoration: none;
-  border-bottom: 1px solid var(--blue-lt);
+  border-bottom: 2px solid var(--brand);
+  transition: border-color 0.4s var(--ease);
+}
+.hc .hc-pause .qlink:hover,
+.hc .hc-pause .qlink:focus-visible {
+  border-bottom-color: var(--sky);
+}
+.hc .hc-pause .qlink:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 0.5rem;
 }
 .hc .hc-pause .qlink span {
   transition: transform 0.6s var(--ease);
@@ -332,19 +315,49 @@
 .hc .hc-pause .qlink:hover span {
   transform: translateX(6px);
 }
-@media (max-width: 600px) {
-  .hc .hc-pause .credit {
-    gap: 0.75rem;
-    letter-spacing: 0.18em;
+/* Under a finger the link is 44px tall; the height it gains stands above the
+   words, inside the step, so the rhythm does not move. */
+@media (pointer: coarse) {
+  .hc .hc-pause .qlink {
+    min-height: 2.75rem;
+    margin-top: -1.0625rem;
   }
-  .hc .hc-pause .credit i {
-    width: 1.5rem;
+}
+@media (max-width: 600px) {
+  .hc .hc-pause {
+    --q-step: 2rem;
+    padding-block: 5.5rem;
+  }
+  .hc .hc-pause .qw blockquote {
+    max-width: 10.5em;
+    font-size: clamp(1.75rem, 7.6vw, 2.125rem);
+  }
+  /* His name on one line and what he is on the next, never a chance break. */
+  .hc .hc-pause .credit {
+    letter-spacing: 0.2em;
+  }
+  .hc .hc-pause .credit span {
+    display: block;
+  }
+  .hc .hc-pause .credit b {
+    display: none;
+  }
+  .hc .hc-pause .qlink {
+    letter-spacing: 0.14em;
+  }
+}
+/* The narrowest phones: the way on still holds one line. */
+@media (max-width: 340px) {
+  .hc .hc-pause .qlink {
+    gap: 0.5rem;
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
   }
 }
 
 /* -- 07 The Peaks2Shores story -------------------------------------------- */
-/* Compact and editorial: the film in about a third of the width, its caption
-   a quiet line beneath, the story beside it. */
+/* Compact and editorial: the photograph in about a third of the width, its
+   caption a quiet line beneath, the story beside it. */
 .hc .hc-fd.story {
   grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
   gap: clamp(2.5rem, 5.5vw, 6.5rem);
@@ -358,14 +371,14 @@
   overflow: visible;
   background: none;
 }
-.hc .hc-fd.story .img video {
-  position: relative;
+/* Marc in Solothurn (9 Nov), the whole frame: the photograph is 3:4 and so is
+   its box, so the clock and the town's name on the wall both stay in. */
+.hc .hc-fd.story .img img {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 3 / 4;
   object-fit: cover;
-  object-position: 50% 45%;
   border-radius: 1.125rem;
   background: var(--color-stone);
   box-shadow: 0 1.75rem 3.5rem -1.75rem rgb(11 92 133 / 0.45);
@@ -391,11 +404,12 @@
   margin: 0;
 }
 .hc .hc-fd.story h2 {
-  margin: 0 0 0.5rem;
+  /* No extra room under the headline (17 Nov): the column's own step. */
+  margin: 0;
   max-width: 18em;
   font-size: var(--h2);
   line-height: 1.06;
-  letter-spacing: -0.028em;
+  letter-spacing: -0.011em;
   color: var(--lake);
 }
 .hc .hc-fd.story .body {
@@ -413,8 +427,8 @@
   gap: 0.875rem;
 }
 .hc .hc-fd.story .btn:hover {
-  background: var(--lake);
-  border-color: var(--lake);
+  background: var(--color-brand-deep);
+  border-color: var(--color-brand-deep);
 }
 @media (max-width: 900px) {
   .hc .hc-fd.story {
@@ -445,73 +459,177 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .hc .hc-pause .qw .w,
-  .hc .hc-pause .qw.reading .w,
-  .hc .hc-pause .qw.reading .credit,
-  .hc .hc-pause .qw.reading .qlink,
-  .hc .hc-fd.story .img video {
-    animation: none;
-    transition: none;
-  }
+/* -- 09 The Circle, centred over the waterhole (17 Nov) --------------------
+      The photograph is the client's: elephants at the Kipalo Hills waterhole.
+      It fills the band under one even, neutral shade, and the invitation
+      stands in the middle of it as one column: the name, its line, the
+      paragraph, the field with its button, the small print, each the same
+      step (--c-step) below the last. Every rule is scoped to `.invite`: the
+      closing band of /destinations (`.hc-circle.dz-close`) keeps the rules in
+      home.css. */
+.hc .hc-circle.invite {
+  --c-step: clamp(1.5rem, 2.1vw, 2rem);
+  /* At least 1080px tall (17 Nov), so the herd and the waterhole show round
+     the invitation; the column stands in the middle of the band. */
+  min-height: 1080px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(5rem, 8.3vw, 8.5rem) var(--gut);
 }
-
-/* -- 05 The quote, tall and narrow (8 Nov) --------------------------------
-      The frame draws in to a narrow, upright card in the middle of the film,
-      and the words set in a narrow column inside it, so the quote reads tall
-      rather than wide — on a phone as on a desktop. */
-.hc .hc-pause.framed {
-  --qw-card: min(46rem, 100% - 2rem);
-  padding-block: clamp(8rem, 12vw, 11rem);
+/* The frame at its own width and brightness; the shade above it does the
+   darkening. Wider than the photograph is tall, the band shows the slice 82%
+   down the frame: the herd and the whole waterhole. */
+.hc .hc-circle.invite .bg img {
+  filter: none;
+  transform: none;
+  object-position: 50% 82%;
 }
-.hc .hc-pause.framed .frame {
-  left: 50%;
-  right: auto;
-  width: var(--qw-card);
-  transform: translateX(-50%);
+/* A lighter shade (17 Nov: the photograph should be seen): 28% over the
+   whole frame, deepening in an oval behind the words so they stay clear. */
+.hc .hc-circle.invite::after {
+  background:
+    radial-gradient(
+      ellipse 40% 34% at 50% 50%,
+      rgb(0 0 0 / 0.4) 0%,
+      rgb(0 0 0 / 0.3) 55%,
+      rgb(0 0 0 / 0) 100%
+    ),
+    rgb(0 0 0 / 0.28);
 }
-.hc .hc-pause .qw blockquote {
-  max-width: 12.5em;
-  font-size: clamp(1.875rem, 3.4vw, 3.25rem);
-  line-height: 1.16;
-}
-.hc .hc-pause.framed .in {
-  max-width: calc(var(--qw-card) - 4rem);
+.hc .hc-circle.invite .in {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--c-step);
+  max-width: 38rem;
   margin-inline: auto;
 }
-@media (max-width: 600px) {
-  .hc .hc-pause.framed {
-    --qw-card: calc(100% - 3rem);
-    padding: 7rem 2.75rem 6.5rem;
+.hc .hc-circle.invite h2 {
+  max-width: none;
+  margin: 0;
+  line-height: 1;
+}
+.hc .hc-circle.invite .in > p {
+  margin: 0;
+  text-shadow: none;
+}
+.hc .hc-circle.invite .in > p.sub-h {
+  font-size: clamp(1.375rem, 1.95vw, 1.875rem);
+  line-height: 1.2;
+  /* Close under the name, as every section's line now sits (17 Nov). */
+  margin-top: calc(0.25rem - var(--c-step));
+}
+.hc .hc-circle.invite .in > p:not(.sub-h) {
+  max-width: 34rem;
+  font-size: clamp(1rem, 1.18vw, 1.125rem);
+  line-height: 1.7;
+  /* Lines of one length, so the paragraph never ends on a stray word or two. */
+  text-wrap: balance;
+}
+.hc .hc-circle.invite .form {
+  width: 100%;
+  max-width: 30rem;
+  margin: 0;
+}
+/* The small print stands the same step below the field as the field does
+   below the paragraph. */
+.hc .hc-circle.invite .form form + p {
+  margin-top: var(--c-step);
+}
+/* The line that reports a failed send stays in the page for screen readers;
+   while it has nothing to say it takes no room, so the band is as deep below
+   the small print as it is above the name. */
+.hc .hc-circle.invite .form [role='alert']:empty {
+  margin: 0;
+}
+/* What the form says in place of the field once it has been sent: the
+   welcome in the serif, a size above the paragraph; the fallback, with the
+   address to write to, in the paragraph's own setting. */
+.hc .hc-circle.invite .form [role='status'] {
+  margin: 0;
+  color: #fff;
+  text-wrap: balance;
+}
+.hc .hc-circle.invite .form .h5[role='status'] {
+  font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+  line-height: 1.3;
+}
+.hc .hc-circle.invite .form .prose-body[role='status'] {
+  font-size: clamp(1rem, 1.18vw, 1.125rem);
+  line-height: 1.7;
+}
+/* Over the photograph a link's focus ring is white, like the field's and the
+   button's; and the address to write to keeps a white rule, in and out of
+   the pointer. */
+.hc .hc-circle.invite .form a:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+.hc .hc-circle.invite .form .prose-link,
+.hc .hc-circle.invite .form .prose-link:hover {
+  color: #fff;
+  text-decoration-color: currentColor;
+}
+/* A phone (Marc, 29 Oct: "the photograph must crop beautifully"): the whole
+   photograph first, at its own proportions and unshaded, then the invitation
+   beneath it on the night ground, as on 13 Nov. The 1080px band over the
+   photograph is for wider screens; on an upright phone it showed only a
+   narrow slice, the herd behind the field. */
+@media (max-width: 700px) {
+  .hc .hc-circle.invite {
+    min-height: 0;
+    display: block;
+    padding: 0 0 clamp(3.5rem, 14vw, 4.5rem);
   }
-  .hc .hc-pause .qw blockquote {
-    max-width: 10.5em;
-    font-size: clamp(1.75rem, 7.6vw, 2.125rem);
+  .hc .hc-circle.invite .bg {
+    position: relative;
+    inset: auto;
+    aspect-ratio: 2400 / 1918;
+    margin-bottom: clamp(2.5rem, 10vw, 3.25rem);
   }
-  .hc .hc-pause.framed .in {
-    max-width: none;
+  .hc .hc-circle.invite .bg img {
+    object-position: 50% 50%;
+  }
+  .hc .hc-circle.invite::after {
+    display: none;
+  }
+  .hc .hc-circle.invite .in {
+    padding-inline: var(--gut);
+  }
+  .hc .hc-circle.invite .in > :is(h2, p),
+  .hc .hc-circle.invite .form form + p {
+    text-shadow: none;
   }
 }
 
 /* -- 02 Philosophy, as a slim band (8 Nov) ---------------------------------
-      No longer a full screen: a quiet band about a quarter of the screen high,
-      the statement in two or three wide lines between the blue rules, on a
-      phone as on a desktop. */
+      No longer a full screen: a quiet band, the statement in two or three
+      wide lines between the blue rules, on a phone as on a desktop. Room
+      above and below (9 Nov: at a quarter of the screen it read cramped
+      between the hero and The Art of Travel): the page's own section space,
+      which makes the band about a third of the screen. The type keeps its
+      8 Nov size; the full-screen version read too big. */
 .hc .hc-intro {
   /* Sized by its words, never clipped; at least a fifth of the screen. */
   min-height: 20svh;
-  gap: clamp(0.75rem, 1.1vw, 1.125rem);
-  padding: clamp(1.5rem, 2.6vw, 2.5rem) var(--gut);
+  gap: clamp(1rem, 1.38vw, 1.5rem);
+  padding: clamp(4rem, 5.56vw, 6.5rem) var(--gut);
 }
 .hc .hc-intro p {
-  max-width: 64rem;
+  /* Three lines at every desktop width (17 Nov). The measure is in em, so it
+     grows and shrinks with the type rather than holding one width (at 1280px
+     a fixed 64rem let the statement fall to two lines); balanced, so no line
+     ends on a word or two. */
+  max-width: 34em;
   font-size: clamp(1.25rem, 1.9vw, 1.875rem);
   line-height: 1.38;
+  text-wrap: balance;
 }
 @media (max-width: 600px) {
   .hc .hc-intro {
-    padding: 1.75rem 1.25rem;
-    gap: 0.75rem;
+    padding: 3.5rem 1.25rem;
+    gap: 1rem;
   }
   .hc .hc-intro p {
     font-size: 1.0625rem;
@@ -520,4 +638,19 @@
   .hc .hc-intro .rule {
     width: 2.5rem;
   }
+}
+
+/* The Circle's words over the lighter shade: a soft dark glow behind each
+   line keeps them clear where the photograph is bright. */
+.hc .hc-circle.invite .in > :is(h2, p),
+.hc .hc-circle.invite .form form + p {
+  text-shadow:
+    0 0 1.25rem rgb(0 0 0 / 0.45),
+    0 1px 0.25rem rgb(0 0 0 / 0.35);
+}
+/* A browser's own autofill colours would break the field's dark glass. */
+.hc .hc-circle.invite input:-webkit-autofill {
+  -webkit-text-fill-color: #fff;
+  caret-color: #fff;
+  box-shadow: inset 0 0 0 100rem rgb(8 20 28 / 0.9);
 }

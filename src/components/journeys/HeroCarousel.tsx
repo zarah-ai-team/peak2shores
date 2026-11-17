@@ -1,7 +1,8 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState, type PointerEvent } from 'react';
 import {
   geoBounds,
   geoDistance,
@@ -16,13 +17,22 @@ import type { GeometryCollection, Topology } from 'topojson-specification';
 
 type LonLat = [number, number];
 
+/** A card's photograph: the file, its words, the tone its frame waits on. */
+export type CardPhoto = {
+  src?: string;
+  alt: string;
+  tone: string;
+  /** Where the 3:2 crop centres (CSS object-position). */
+  pos?: string;
+};
+
 export type HeroJourney = {
   slug: string;
   title: string;
   country: string;
-  lead: string;
-  /** "13 days · 12 nights · Small group" */
-  facts: string;
+  /** One line under the name, point by point: "13 days", "Lucerne to Milan". */
+  facts: string[];
+  photo: CardPhoto;
   /** The globe's caption: "Swiss Elegance · Lucerne to Milan". */
   label: string;
   /** The route in order, stop by stop (a stop may come twice). */
@@ -31,7 +41,29 @@ export type HeroJourney = {
   stops: { name: string; at: LonLat; nights: number }[];
 };
 
-const pad = (n: number) => String(n).padStart(2, '0');
+/** The card's photograph, 3:2 on every card, in the frame that holds its tone. */
+function Photo({ photo }: { photo: CardPhoto }) {
+  return (
+    <div className="ph" style={{ backgroundColor: photo.tone }}>
+      {photo.src && (
+        <Image
+          src={photo.src}
+          alt={photo.alt}
+          fill
+          sizes="(min-width: 1101px) 31vw, (min-width: 761px) 42vw, 82vw"
+          style={photo.pos ? { objectPosition: photo.pos } : undefined}
+        />
+      )}
+    </div>
+  );
+}
+
+/** The fine arrow that closes a card's link. */
+const arrow = (
+  <svg viewBox="0 0 14 10" aria-hidden focusable="false">
+    <path d="M0 5h13M9 1l4 4-4 4" />
+  </svg>
+);
 
 /** Where the globe is looking: its centre and its zoom (1 = the whole earth). */
 type View = { lon: number; lat: number; k: number };
@@ -102,7 +134,7 @@ function frame(route: LonLat[], w: number, h: number): View {
 const SEA = '#aad3df';
 const LAND = '#ece8d8';
 const LAND_LIT = '#d3e0b9';
-const BRAND = '#1190cb';
+const BRAND = '#018fc9';
 
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 
@@ -111,13 +143,32 @@ const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2
  * its region and closes in, then draws the route bright with its stops and
  * nights. The last card, "Stay tuned", draws back to the whole earth, turning
  * slowly. With reduced motion every change is immediate.
+ *
+ * Each card is its photograph, its name and one link that covers the whole of
+ * it, so a click opens the journey. The globe is chosen by the dots and the
+ * arrows, by resting the pointer on a card or reaching it with the keyboard,
+ * and on a touch screen by the card the rail is swiped to.
  */
-export function HeroCarousel({ journeys, label }: { journeys: HeroJourney[]; label: string }) {
+export function HeroCarousel({
+  journeys,
+  label,
+  soonPhoto,
+}: {
+  journeys: HeroJourney[];
+  label: string;
+  /** The photograph on the last card, "Stay tuned". */
+  soonPhoto: CardPhoto;
+}) {
   const [active, setActive] = useState(0);
   const [ready, setReady] = useState(false);
   const track = useRef<HTMLUListElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const goTo = useRef<(k: number) => void>(() => {});
+  /* The card in view, for the swipe to read without re-binding its listener. */
+  const shown = useRef(0);
+  /* True while the rail is being scrolled by the arrows or the dots. */
+  const led = useRef(false);
+  const rest = useRef(0);
 
   const n = journeys.length + 1; // + "Stay tuned"
   const soon = active === journeys.length;
@@ -131,7 +182,7 @@ export function HeroCarousel({ journeys, label }: { journeys: HeroJourney[]; lab
     const bctx = base.getContext('2d')!;
     const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const css = getComputedStyle(el);
-    const serif = css.getPropertyValue('--font-display').trim() || 'Georgia, serif';
+    const serif = css.getPropertyValue('--font-display').trim() || 'Newsreader, Georgia, serif';
     const sans = css.getPropertyValue('--font-ui').trim() || 'system-ui, sans-serif';
 
     let w = 0;
@@ -492,9 +543,61 @@ export function HeroCarousel({ journeys, label }: { journeys: HeroJourney[]; lab
     };
   }, [journeys]);
 
+  /* `journeys` too: when the page's data is refreshed the globe above is set
+     up again from the whole earth, and must be turned back to the chosen
+     journey rather than left there under its caption. */
   useEffect(() => {
     if (ready) goTo.current(active);
-  }, [active, ready]);
+  }, [active, ready, journeys]);
+
+  useEffect(() => {
+    shown.current = active;
+  }, [active]);
+
+  /* On a touch screen there is no pointer to rest on a card and a tap opens
+     the journey, so the globe follows the rail: once a swipe settles, the
+     first card wholly in view is the chosen one (unless the chosen one still
+     is). The rail is the cards' offset parent, so offsetLeft is a card's
+     place in it. */
+  useEffect(() => {
+    const box = track.current;
+    if (!box) return;
+    let timer = 0;
+    const settle = () => {
+      if (led.current) {
+        led.current = false;
+        return;
+      }
+      if (!window.matchMedia('(hover: none)').matches) return;
+      const edge = parseFloat(getComputedStyle(box).paddingLeft) || 0;
+      const from = box.scrollLeft + edge - 2;
+      const to = box.scrollLeft + box.clientWidth - edge + 2;
+      const whole = Array.from(box.children).flatMap((c, k) => {
+        const el = c as HTMLElement;
+        return el.offsetLeft >= from && el.offsetLeft + el.offsetWidth <= to ? [k] : [];
+      });
+      if (whole.length && !whole.includes(shown.current)) setActive(whole[0]);
+    };
+    const onScroll = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(settle, 140);
+    };
+    box.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      box.removeEventListener('scroll', onScroll);
+      window.clearTimeout(timer);
+      window.clearTimeout(rest.current);
+    };
+  }, []);
+
+  /* A pointer that comes to rest on a card chooses it; one only passing over
+     on its way down the page does not. */
+  const point = (e: PointerEvent, k: number) => {
+    if (e.pointerType !== 'mouse') return;
+    window.clearTimeout(rest.current);
+    rest.current = window.setTimeout(() => setActive(k), 160);
+  };
+  const unpoint = () => window.clearTimeout(rest.current);
 
   const go = (k: number) => {
     const next = (k + n) % n;
@@ -502,9 +605,19 @@ export function HeroCarousel({ journeys, label }: { journeys: HeroJourney[]; lab
     const el = track.current?.children[next] as HTMLElement | undefined;
     const box = track.current;
     if (el && box) {
-      const left = el.offsetLeft - box.offsetLeft;
-      if (left < box.scrollLeft || left + el.offsetWidth > box.scrollLeft + box.clientWidth) {
-        box.scrollTo({ left: Math.max(0, left - 4), behavior: 'smooth' });
+      const edge = parseFloat(getComputedStyle(box).paddingLeft) || 0;
+      const left = el.offsetLeft;
+      if (
+        left < box.scrollLeft + edge - 1 ||
+        left + el.offsetWidth > box.scrollLeft + box.clientWidth - edge + 1
+      ) {
+        const to = Math.max(0, Math.min(left - edge, box.scrollWidth - box.clientWidth));
+        if (Math.abs(to - box.scrollLeft) > 1) {
+          // The swipe listener leaves this scroll alone: the choice is made.
+          led.current = true;
+          const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          box.scrollTo({ left: to, behavior: still ? 'auto' : 'smooth' });
+        }
       }
     }
   };
@@ -572,20 +685,26 @@ export function HeroCarousel({ journeys, label }: { journeys: HeroJourney[]; lab
           <li key={x.slug}>
             <article
               className={`jxh-card${k === active ? ' on' : ''}`}
-              onClick={() => setActive(k)}
+              onPointerEnter={(e) => point(e, k)}
+              onPointerLeave={unpoint}
               aria-labelledby={`jxh-c-${x.slug}`}
             >
-              <p className="top">
-                <b>{pad(k + 1)}</b>
-                {x.country}
-              </p>
+              <Photo photo={x.photo} />
+              <p className="top">{x.country}</p>
               <h2 id={`jxh-c-${x.slug}`}>{x.title}</h2>
-              <p className="lead">{x.lead}</p>
+              <p className="facts">
+                {x.facts.map((fact, i) => (
+                  <Fragment key={fact}>
+                    {i > 0 && <span className="dot"> · </span>}
+                    {fact}
+                  </Fragment>
+                ))}
+              </p>
               <p className="foot">
-                <span>{x.facts}</span>
                 <Link href={`/journeys/${x.slug}`} onFocus={() => setActive(k)}>
-                  Explore <span aria-hidden>→</span>
-                  <span className="sr-only"> {x.title}</span>
+                  View journey
+                  <span className="sr-only">: {x.title}</span>
+                  {arrow}
                 </Link>
               </p>
             </article>
@@ -593,19 +712,19 @@ export function HeroCarousel({ journeys, label }: { journeys: HeroJourney[]; lab
         ))}
         <li>
           <article
-            className={`jxh-card soon${soon ? ' on' : ''}`}
-            onClick={() => setActive(journeys.length)}
+            className={`jxh-card${soon ? ' on' : ''}`}
+            onPointerEnter={(e) => point(e, journeys.length)}
+            onPointerLeave={unpoint}
+            aria-labelledby="jxh-c-soon"
           >
-            <p className="top">
-              <b>{pad(n)}</b>
-              Stay tuned
-            </p>
-            <h2>More journeys are on the way</h2>
-            <p className="lead">New destinations are being prepared now.</p>
+            <Photo photo={soonPhoto} />
+            <p className="top">Stay tuned</p>
+            <h2 id="jxh-c-soon">More journeys are on the way</h2>
+            <p className="facts">New destinations are being prepared now.</p>
             <p className="foot">
-              <span>Be the first to hear</span>
-              <Link href="/#circle">
-                Join The Circle <span aria-hidden>→</span>
+              <Link href="/#circle" onFocus={() => setActive(journeys.length)}>
+                Join The Circle
+                {arrow}
               </Link>
             </p>
           </article>

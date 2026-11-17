@@ -201,7 +201,7 @@ export function EnquiryForm({
             <span className="kicker-sm">Prefer to talk?</span>
             <a
               href={`mailto:${site.email}`}
-              className="inline-flex items-center gap-3 self-start font-ui text-[0.9375rem] text-ink transition-colors hover:text-brand"
+              className="inline-flex items-center gap-3 self-start font-ui text-[0.9375rem] text-ink transition-colors hover:text-brand-deep"
             >
               <ContactIcon kind="email" />
               {site.email}
@@ -209,7 +209,7 @@ export function EnquiryForm({
             {site.phone && site.phoneHref && (
               <a
                 href={`tel:${site.phoneHref}`}
-                className="inline-flex items-center gap-3 self-start font-ui text-[0.9375rem] text-ink transition-colors hover:text-brand"
+                className="inline-flex items-center gap-3 self-start font-ui text-[0.9375rem] text-ink transition-colors hover:text-brand-deep"
               >
                 <ContactIcon kind="phone" />
                 {site.phone}
@@ -326,7 +326,7 @@ export function EnquiryForm({
                               className={`h-11 rounded-[0.25rem] border px-5 font-ui text-[0.875rem] transition-colors duration-200 ${
                                 on
                                   ? 'border-navy bg-navy text-white'
-                                  : 'border-[rgb(20_29_36/0.16)] bg-white text-body hover:border-brand hover:text-brand'
+                                  : 'border-[rgb(20_29_36/0.16)] bg-white text-body hover:border-brand-deep hover:text-brand-deep'
                               }`}
                             >
                               {option}

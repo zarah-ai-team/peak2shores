@@ -314,7 +314,7 @@
     "licenceUrl": "https://unsplash.com/license",
     "width": 4000,
     "height": 6000,
-    "file": "ce-hero.jpg",
+    "file": "ce-list.jpg",
     "bytes": 1611586,
     "fileWidth": 2560,
     "fileHeight": 3840
@@ -1019,25 +1019,6 @@
     "fileWidth": 3840,
     "fileHeight": 2880
   },
-  "home-circle": {
-    "slot": "home-circle",
-    "source": "unsplash",
-    "title": "A view of a beach with boats in the water",
-    "caption": "a view of a beach with boats in the water",
-    "description": "a view of a beach with boats in the water",
-    "location": null,
-    "pageUrl": "https://unsplash.com/photos/a-view-of-a-beach-with-boats-in-the-water-F88j1nmoHLk",
-    "downloadUrl": "https://images.unsplash.com/photo-1633321088560-e0363185e03c?w=3840&q=85&fm=jpg",
-    "author": "Simon Nham",
-    "licence": "Unsplash License",
-    "licenceUrl": "https://unsplash.com/license",
-    "width": 6000,
-    "height": 4000,
-    "file": "home-circle.jpg",
-    "bytes": 1367860,
-    "fileWidth": 3840,
-    "fileHeight": 2560
-  },
   "home-cove": {
     "slot": "home-cove",
     "source": "unsplash",
@@ -1725,7 +1706,7 @@
     "licenceUrl": "https://unsplash.com/license",
     "width": 6000,
     "height": 8000,
-    "file": "ma-hero.jpg",
+    "file": "ma-list.jpg",
     "bytes": 1676367,
     "fileWidth": 2880,
     "fileHeight": 3840
@@ -2108,19 +2089,5 @@
     "licence": "Pexels License",
     "licenceUrl": "https://www.pexels.com/license/",
     "file": "home/jr-adriatic-dubrovnik-walls.jpg"
-  },
-  "home-hw-seamless": {
-    "slot": "home-hw-seamless",
-    "source": "pexels",
-    "title": "Majestic mountain view with alpine hotel",
-    "caption": "Majestic mountain view with alpine hotel",
-    "description": "Majestic mountain view with alpine hotel",
-    "location": "",
-    "pageUrl": "https://www.pexels.com/photo/majestic-mountain-view-with-alpine-hotel-32740215/",
-    "downloadUrl": "",
-    "author": "",
-    "licence": "Pexels License",
-    "licenceUrl": "https://www.pexels.com/license/",
-    "file": "home/hw-seamless-dolomites-hotel.jpg"
   }
 }

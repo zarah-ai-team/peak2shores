@@ -9,7 +9,7 @@ import { forScreen, posterOf } from './HomeMedia';
 
 /**
  * 01 — The opening: a reel of four clips in Marc's order (safari, Switzerland,
- * Positano, Hvar), resolved on the server so only files that exist are named.
+ * Positano, Seville), resolved on the server so only files that exist are named.
  * Only the clip on screen plays, from its `start`; when it ends the next
  * fades in. The dashes pick a clip, the button pauses. Under reduced motion
  * the first clip's still holds until the reader presses play. The reel rests
@@ -31,7 +31,21 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
   // The reader's motion setting is only known in the browser, so it applies
   // from the moment the films arm — the first render matches the server's.
   const paused = choice === 'pause' || (choice === 'auto' && armed && !!reduced);
-  const playing = !paused && visible;
+  // The open menu covers the film (all of it on a phone): it rests meanwhile,
+  // and leaves the device to the menu's own movement.
+  const [covered, setCovered] = useState(false);
+  const playing = !paused && visible && !covered;
+
+  useEffect(() => {
+    const cover = () => setCovered(true);
+    const uncover = () => setCovered(false);
+    window.addEventListener('p2s:scroll-lock', cover);
+    window.addEventListener('p2s:scroll-unlock', uncover);
+    return () => {
+      window.removeEventListener('p2s:scroll-lock', cover);
+      window.removeEventListener('p2s:scroll-unlock', uncover);
+    };
+  }, []);
 
   useEffect(() => {
     const arm = () => setArmed(true);

@@ -340,12 +340,6 @@ export const media = {
     tone: '#2f7f8f',
     alt: 'A white motor yacht at anchor in a turquoise cove below pine-covered cliffs',
   },
-  'home-circle': {
-    label: 'The circle',
-    brief: 'A bright, wide Mediterranean coastline — room for type over it.',
-    tone: '#3f7f93',
-    alt: 'Positano on the Amalfi Coast, Italy, houses stacked on the cliffs above boats on the sea',
-  },
 
   /* ---- Home, Marc's update of 23 October 2026 ----------------------------
      Marc's own photographs, from the shared Google Drive. Save each one as
@@ -416,39 +410,42 @@ export const media = {
   'client-hotel-lucerne': {
     label: 'Stay · Mandarin Oriental Palace, Lucerne',
     brief:
-      'Drive › Hotels — "Lucerne Mandarin Oriental Terrace View" (Marc, 24 Oct): the Palace itself, its terrace at dusk over the lake. Upright crop.',
+      'Drive — "MOLZN EXT 01 AIR FINAL 01X" (Marc, 9 Nov): the Palace from the air, its corner tower above the lake. Upright crop holds the flag and the tower.',
     tone: '#5d6a7a',
-    src: '/images/drive/switzerland-lucerne-mandarin-oriental-terrace.jpg',
-    alt: 'A terrace table at Mandarin Oriental Palace, Lucerne, at dusk, Lake Lucerne and Mount Pilatus beyond',
+    src: '/images/home/hotel-mandarin-palace-exterior.jpg',
+    alt: 'Mandarin Oriental Palace, Lucerne, from the air: its corner tower and green copper dome above Lake Lucerne, the Alps beyond',
   },
   'client-hotel-stresa': {
     label: 'Stay · Hotel La Palma, Stresa',
-    brief: 'Drive — Hotel La Palma, Stresa. Upright crop.',
+    brief:
+      'Drive — "Stresa La Palma Sky Bar_1" (Marc, 9 Nov): the rooftop Sky Bar and its view of Isola Bella. Upright crop, centred on the island.',
     tone: '#4f7f95',
-    src: '/images/drive/italy-stresa-sky-pool.jpg',
-    alt: 'The rooftop infinity pool of Hotel La Palma above Lake Maggiore',
+    src: '/images/home/hotel-lapalma-sky-bar.jpg',
+    alt: 'The rooftop Sky Bar at Hotel La Palma, Stresa, its sofas looking across Lake Maggiore to Isola Bella and the Alps',
   },
   'client-hotel-victoria-falls': {
     label: 'Stay · The Palm River Hotel, Victoria Falls',
     brief:
-      'Drive › Hotel - Palm River — "Palm River by night" (Marc, 24 Oct): the hotel and its lit pool among the trees. Upright crop.',
+      'Drive — "Palm River Pool" (Marc, 9 Nov): the hotel at dusk across its pool. Upright crop holds the guest wing on the right. The hotel’s HD pictures (Dropbox) may replace it later.',
     tone: '#2a2f45',
-    src: '/images/drive/zimbabwe-palm-river-hotel-night.jpg',
-    alt: 'The Palm River Hotel at night, its lit pool and terraces among the riverside trees, Victoria Falls',
+    src: '/images/home/hotel-palm-river-pool.jpg',
+    alt: 'The Palm River Hotel at dusk, its lit balconies and terraces behind the pool, Victoria Falls',
   },
   'client-hotel-rovinj': {
     label: 'Stay · Grand Park Hotel Rovinj',
-    brief: 'Drive — Grand Park Hotel Rovinj. Upright crop.',
+    brief:
+      'Drive — "Grand Park exterior" (Marc, 9 Nov): the hotel and its garden terraces above the marina at sunset. Upright crop holds the terraces.',
     tone: '#4f7f95',
-    src: '/images/drive/croatia-rovinj-grand-park-pool.jpg',
-    alt: 'Poolside loungers at Grand Park Hotel Rovinj, the old town across the water',
+    src: '/images/home/hotel-grand-park-exterior.jpg',
+    alt: 'Grand Park Hotel Rovinj at sunset, its garden terraces stepping down to the marina, the Old Town across the harbor',
   },
   'client-hotel-vipingo': {
     label: 'Stay · Cardamom House, Vipingo',
-    brief: 'Drive — Cardamom House, Vipingo. Upright crop.',
+    brief:
+      'Drive — "Cardamom_House_2023_Area_View_Manda_Toto_with_pool" (Marc, 9 Nov), cropped to the pool and the bougainvillea as proposed in the chat forwarded on 13 Nov. Upright crop holds the two guests.',
     tone: '#a59a82',
-    src: '/images/home/hotel-cardamom.jpg',
-    alt: 'Cardamom House, a thatched white villa among trees and bougainvillea',
+    src: '/images/home/hotel-cardamom-pool.jpg',
+    alt: 'The pool at Cardamom House, Vipingo, beneath a pergola of pink bougainvillea, two guests at the water’s edge',
   },
 
   /* ---- Home, the journeys slider: the client's photographs (30 Oct) ---- */
@@ -760,7 +757,7 @@ export const media = {
     alt: 'A sailing boat at anchor off the Amalfi Coast, a cliffside town and the coast fading into haze behind',
   },
   'plan-private': {
-    label: 'Private & custom travel',
+    label: 'Bespoke private travel',
     brief: 'Guests on their own journey, somewhere memorable. Upright.',
     tone: '#a09a8c',
     src: '/images/drive/switzerland-guests-jungfraujoch.jpg',

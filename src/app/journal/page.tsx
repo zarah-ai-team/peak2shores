@@ -1,6 +1,6 @@
 import { Frame } from '@/components/ui/Frame';
 import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal';
-import { FactList, PageTitle, SectionLabel } from '@/components/ui/Editorial';
+import { PageTitle, SectionLabel } from '@/components/ui/Editorial';
 import { Section } from '@/components/ui/Section';
 import { StatusTag } from '@/components/ui/StatusTag';
 import { NewsletterForm } from '@/components/ui/NewsletterForm';
@@ -50,9 +50,8 @@ export default async function JournalPage() {
 
   return (
     <>
-      <PageTitle kicker="Journal" title="Notes, not newsletters.">
-        A place we love. A hotel worth the trip. A table worth booking. Written by Marc, sent to the
-        circle first.
+      <PageTitle kicker="Journal" title={'Notes, not\u00a0newsletters.'}>
+        A place we love. A hotel worth the trip. A table worth booking.
       </PageTitle>
 
       {/* A list, not a nav: these are the journal's sections, not yet links. */}
@@ -119,15 +118,14 @@ export default async function JournalPage() {
       <Section ground="panel" aria-labelledby="circle-title">
         <div className="grid-site gap-y-block">
           <div className="col-span-4 md:col-span-8 lg:col-span-7">
-            <SectionLabel className="mb-stack">The circle</SectionLabel>
+            <SectionLabel className="mb-stack">The Circle</SectionLabel>
             <Reveal variant="mask">
               <h2 id="circle-title" className="h2 mb-stack max-w-[20ch]">
                 {circle.headline}
               </h2>
             </Reveal>
             <Reveal delay={0.1}>
-              <p className="prose-body measure mb-block">{circle.body}</p>
-              <FactList labelWidth={130} rows={circle.notes} />
+              <p className="prose-body measure">{circle.body}</p>
             </Reveal>
           </div>
           <Reveal

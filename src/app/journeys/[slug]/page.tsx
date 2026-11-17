@@ -24,7 +24,6 @@ import {
   JyHero,
   JyIntro,
   JyStays,
-  requestHref,
 } from '@/components/journeys/JourneyEditorial';
 import {
   getJourneyBySlug,
@@ -163,14 +162,12 @@ export default async function JourneyPage({ params }: Params) {
 
   const detail = journey.detail;
   const flyer = journey.flyer;
-  const cta =
-    journey.status === 'sold-out' || journey.status === 'waitlist'
-      ? 'Join the waitlist'
-      : 'Request details';
 
   /* The A&K menu: Overview │ Itinerary │ (extension) │ Stays │ Dates & Rates.
      A tab whose section has nothing to show yet is left out rather than
-     linking nowhere. */
+     linking nowhere. The bar carries no button of its own (chat notes of
+     9 November 2026): "Request details" stays on the page itself, in the
+     Overview and under Dates & Rates. */
   const hasStays =
     !!flyer || !!detail || !!journey.itinerary?.some((d) => d.stay && d.stay !== '—');
   const tabs: JourneyTab[] = [
@@ -190,7 +187,7 @@ export default async function JourneyPage({ params }: Params) {
       />
 
       <JyHero journey={journey} />
-      <JourneyTabs tabs={tabs} cta={cta} ctaHref={requestHref(journey)} />
+      <JourneyTabs tabs={tabs} />
 
       {flyer ? (
         <>

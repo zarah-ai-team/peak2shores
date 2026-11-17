@@ -34,6 +34,25 @@ export const duration = {
   signature: 1.2,
 } as const;
 
+/**
+ * The menu behind the three-line button, in seconds. It opens unhurried (the
+ * sheet travels for 560ms, its contents settle behind it and all is still by
+ * about 900ms) and closes faster than it opened, as one piece. The contents'
+ * own delays are `ENTRY` in `components/layout/menu/MenuParts.tsx`; the
+ * stylesheet beside it reads each as `--d`.
+ */
+export const menuTiming = {
+  sheetIn: 0.56,
+  sheetOut: 0.38,
+  scrimIn: 0.4,
+  scrimOut: 0.32,
+  paneIn: 0.44,
+  paneOut: 0.24,
+  /** Reduced motion: the sheet and its panes cross-fade in place. */
+  fadeIn: 0.2,
+  fadeOut: 0.15,
+} as const;
+
 /** How far a block travels as it reveals, in px. A settle, not a slide. */
 export const DEFAULT_DISTANCE = 16;
 

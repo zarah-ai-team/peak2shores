@@ -61,7 +61,7 @@ export default async function ExperiencesPage() {
           <h1 id="xp-title">The things worth your time.</h1>
           <p className="intro">Five kinds of experience shape every journey.</p>
         </div>
-        <nav className="xp-index" aria-label="Experiences on this page">
+        <nav className="xp-index" aria-label="Experiences on this page" data-fab-clear>
           {experiences.map((x, i) => (
             <a key={x.slug} href={`#${x.slug}`}>
               <span>{pad(i + 1)}</span>

@@ -1,23 +1,27 @@
 /*
- * 04 — Small Luxury Group Journeys (FeaturedJourneys + JourneySlider).
- * A deep-blue panel risen over the paper: heading, the three promises as
- * a line drawn like the logo, then the journeys as one large rounded slider. Sizes are
- * drawn at 1440px and scale with the viewport on a desktop, with floors that
- * keep text legible and targets at least 44px. Scoped to `.hc-jr`.
+ * 04 — Our Signature Journeys (FeaturedJourneys + JourneySlider), on white:
+ * the heading, the three promises as three quiet columns under one hairline,
+ * then the journeys as one large rounded slider. Sizes are drawn at 1440px
+ * and scale with the viewport on a desktop, with floors that keep text
+ * legible and targets at least 44px on a touch screen. Scoped to `.hc-jr`.
+ *
+ * Solid fills only, no frosted glass (17 Nov). Rounded buttons, as on the
+ * rest of the home page: on a photograph the blue pill for the first action
+ * and the outline pill for the second; the sky blue for the place words.
  */
 
 .hc-jr {
-  /* The carousel's accent: the bright house blue the hero uses over its film,
-     and the sky blue for words set large on a photograph. */
-  --accent: #2ab4f2;
-  --accent-hi: #7accfd;
-  --mist: #c9d6de;
-  --sand: #e9e3d6;
   /* Section titles on white: the lake blue, as elsewhere on the page. */
   --title: var(--lake);
-  --tint: #eef6fb;
+  --rule: rgb(20 29 36 / 0.12);
+  /* The cards' corner. */
+  --corner: 1.125rem;
   --inset: clamp(0.5rem, 1.67vw, 1.5rem);
   --pad: clamp(1.25rem, 4.44vw, 4rem);
+  /* One margin inside the frame, on every side: the view switch from the top
+     and the left, the words from the left and the foot, the cards and the
+     controls from the right and the foot. */
+  --edge: clamp(1.25rem, 3.89vw, 3.5rem);
   background: #fff;
   padding: clamp(1rem, 1.67vw, 1.5rem) var(--inset) clamp(3.5rem, 5vw, 5.5rem);
 }
@@ -28,15 +32,6 @@
   background: #fff;
   color: var(--ink);
   padding: clamp(3.5rem, 6.11vw, 5.5rem) var(--pad) var(--pad);
-}
-/* The slider's horizon art. */
-.hc-jr .drift {
-  animation: jr-drift 9s ease-in-out infinite;
-}
-@keyframes jr-drift {
-  50% {
-    transform: translateX(-18px);
-  }
 }
 
 /* -- Heading ------------------------------------------------------------- */
@@ -53,7 +48,7 @@
   font-weight: var(--title-weight);
   font-size: var(--h2);
   line-height: 1.04;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.012em;
   margin: 0;
 }
 .hc-jr .head p.sub-h {
@@ -69,132 +64,82 @@
   }
 }
 
-/* Buttons on the photographs: white or blue, and blue or white on hover. */
+/* -- Buttons --------------------------------------------------------------
+      The page's rounded button (home.css gives it its size, label and shape).
+      On a photograph the first button is the blue pill with a white label,
+      the lake blue under the pointer, and the second the outline pill
+      (`.btn-line`); on the paper it is the page's ink button. */
 .hc-jr .btn {
   white-space: nowrap;
 }
-.hc-jr .btn-light:hover {
-  background: var(--brand);
-  border-color: var(--brand);
-  color: #fff;
-}
-.hc-jr .btn-line:hover {
-  background: #fff;
-  border-color: #fff;
-  color: var(--ink);
-}
 .hc-jr .btn-accent {
-  background: var(--brand);
-  border: 1px solid var(--brand);
+  background: var(--color-brand-deep);
+  border: 1px solid var(--color-brand-deep);
   color: #fff;
-  font-weight: 600;
 }
 .hc-jr .btn-accent:hover {
-  background: #fff;
-  border-color: #fff;
-  color: var(--ink);
+  background: var(--lake);
+  border-color: var(--lake);
+  color: #fff;
 }
 
-/* -- The three promises, on the logo's own line ---------------------------
-      The brand guideline's two blues, taken from the logo itself: the
-      Peaks2Shores blue #018FC9 and the sky #7ACCFD. One line runs across the
-      three, drawn like the mark: peaks at the left, a lake's curve between,
-      waves at the right. Each promise hangs from a dot on it. Words stay in
-      ink, since the logo blue is a colour for marks, not small text. */
-.hc-jr {
-  --p2s-blue: #018fc9;
-  --p2s-sky: #7accfd;
-}
-.hc-jr .pts-wrap {
-  margin: clamp(1.25rem, 2vw, 2rem) 0 clamp(2.5rem, 4.17vw, 3.75rem);
-}
-/* One ruled strip: a fine rule above and below, hairlines between. */
+/* -- The three promises ---------------------------------------------------
+      Three quiet columns under one hairline: a fine line icon in the
+      Peaks2Shores blue, the title in the heading face, its line beneath.
+      No boxes, no accents; white space keeps them apart. */
 .hc-jr .pts {
   list-style: none;
-  margin: 0;
-  padding: 0;
+  margin: 0 0 clamp(2rem, 3.33vw, 3rem);
+  padding: clamp(1.5rem, 2.22vw, 2rem) 0 0;
+  border-top: 1px solid var(--rule);
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  border-top: 1px solid rgb(20 29 36 / 0.14);
-  border-bottom: 1px solid rgb(20 29 36 / 0.14);
+  column-gap: clamp(1.75rem, 4.44vw, 4rem);
 }
 .hc-jr .pts li {
-  position: relative;
-  padding: clamp(1.75rem, 2.5vw, 2.5rem) clamp(1.5rem, 3vw, 3rem);
-  transition: background-color 0.5s var(--ease);
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 1rem;
+  align-items: start;
+  /* Rows at their own height from the top, so the three paragraphs start on
+     one line whatever their length. */
+  align-content: start;
 }
-.hc-jr .pts li + li {
-  border-left: 1px solid rgb(20 29 36 / 0.14);
-}
-.hc-jr .pts li:first-child {
-  padding-left: 0;
-}
-.hc-jr .pts li:last-child {
-  padding-right: 0;
-}
-/* A short blue rule draws in along the top edge under the pointer. */
-.hc-jr .pts li::before {
-  content: '';
-  position: absolute;
-  top: -1px;
-  left: 0;
-  width: 3rem;
-  height: 2px;
-  background: var(--p2s-blue);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.6s var(--ease);
-}
-.hc-jr .pts li + li::before {
-  left: clamp(1.5rem, 3vw, 3rem);
-}
-.hc-jr .pts li:hover::before {
-  transform: scaleX(1);
-}
-.hc-jr .pts .pt-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: clamp(1.25rem, 1.8vw, 1.75rem);
-}
+/* Each icon on a round ground in the Peaks2Shores blue (17 Nov), its line
+   drawing white (3.6:1, enough for a symbol beside its title). */
 .hc-jr .pts .ico {
+  grid-row: 1 / span 2;
   display: grid;
   place-items: center;
-  width: 3.25rem;
-  height: 3.25rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  /* Centred on the title's first line. */
+  margin-top: -0.375rem;
   border-radius: 50%;
-  border: 1px solid rgb(1 143 201 / 0.35);
-  color: var(--p2s-blue);
+  background: var(--brand);
+  color: #fff;
 }
 .hc-jr .pts .ico svg {
-  width: 1.75rem;
-  height: 1.75rem;
-}
-.hc-jr .pts .lab {
-  font-family: var(--serif);
-  font-size: clamp(1.75rem, 2.4vw, 2.5rem);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: var(--p2s-blue);
-  opacity: 0.55;
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
 }
 .hc-jr .pts h3 {
+  margin: 0;
   font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(1.5rem, 1.94vw, 1.875rem);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  font-weight: var(--title-weight);
+  font-size: clamp(1.3125rem, 1.6vw, 1.5625rem);
+  line-height: 1.2;
+  letter-spacing: -0.006em;
   color: var(--ink);
-  margin: 0 0 0.75rem;
 }
 .hc-jr .pts p {
+  margin: 0.5rem 0 0;
+  max-width: 38ch;
   font-family: var(--sans);
-  font-weight: 300;
   font-size: clamp(0.9375rem, 1.04vw, 1rem);
-  line-height: 1.7;
-  color: #3a434a;
-  margin: 0;
-  max-width: 36ch;
+  line-height: 1.6;
+  color: var(--muted);
 }
 
 /* -- The slider ----------------------------------------------------------- */
@@ -204,142 +149,120 @@
   overflow: hidden;
   /* The whole screen under the header, less a margin all round, so a journey
      fills the view and shows whole with the header in place or not. */
-  height: max(34rem, 100vh - var(--nav-h-compact) - 2 * var(--inset));
-  height: max(34rem, 100svh - var(--nav-h-compact) - 2 * var(--inset));
+  /* The floor keeps a three-line title clear of the view switch in a short
+     window (a 1280x720 screen less the browser's own bars). */
+  height: max(38rem, 100vh - var(--nav-h-compact) - 2 * var(--inset));
+  height: max(38rem, 100svh - var(--nav-h-compact) - 2 * var(--inset));
   scroll-margin-top: calc(var(--nav-h-compact) + var(--inset));
   border-radius: clamp(1.25rem, 2.22vw, 2rem);
+  /* The ground behind every photograph, and all that shows until one is in. */
   background: var(--night);
   /* White words on the photographs, whatever the page around them. */
   color: #fff;
-  box-shadow: 0 2.5rem 5.625rem rgb(0 0 0 / 0.35);
+  box-shadow: 0 1.75rem 3.5rem -1.75rem rgb(11 26 36 / 0.45);
 }
-/* A slide arrives as a wipe from the side it is coming from, over the one
-   leaving, which holds still beneath until the wipe is done. No zoom. */
+/* On a photograph the focus ring is white. */
+.hc-jr .frame :focus-visible {
+  outline-color: #fff;
+}
+
+/* The photographs. Each fills the frame exactly, edge to edge, cropped by
+   `object-fit: cover` and never stretched; only the one on show is seen. The
+   rest wait clipped away to nothing, which also keeps the browser from
+   fetching them before the slider asks (JourneySlider sets `loading`). */
 .hc-jr .bg {
   position: absolute;
   inset: 0;
   z-index: -3;
+  background: var(--night);
   opacity: 0;
   clip-path: inset(0 0 0 100%);
+  /* The slide leaving holds still beneath the one arriving until its wipe is done. */
   transition:
     opacity 0s 1.2s,
     clip-path 0s 1.2s;
-}
-.hc-jr [data-dir='prev'] .bg:not(.on) {
-  clip-path: inset(0 100% 0 0);
 }
 .hc-jr .bg.on {
   z-index: -2;
   opacity: 1;
   clip-path: inset(0);
-  transition: clip-path 1.2s cubic-bezier(0.77, 0, 0.18, 1);
+  transition: none;
 }
-/* Every photograph fills its frame or card, cropped, never stretched. */
 .hc-jr .frame img {
   object-fit: cover;
 }
-/* The photograph drifts in sideways behind the wipe, a little wider than its
-   frame so no edge ever shows. */
-.hc-jr .bg img {
-  left: -4% !important;
-  width: 108% !important;
-  /* The reset caps images at their box; this one is meant to overhang it. */
-  max-width: none !important;
-  transform: translateX(4%);
-  transition: transform 0s 1.2s;
-}
-.hc-jr [data-dir='prev'] .bg img {
-  transform: translateX(-4%);
-}
-.hc-jr .bg.on img {
-  transform: none;
-  transition: transform 1.8s cubic-bezier(0.22, 0.61, 0.36, 1);
-}
-.hc-jr .hzbg {
-  background: var(--night);
-}
-/* The finale on a photograph: a soft shade at the centre, where the words sit. */
-.hc-jr .hzbg.photo::after {
-  content: '';
+/* The cards' photographs, fetched ahead of their cards: out of sight. */
+.hc-jr .pre {
   position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 55% 65% at 50% 50%, rgb(8 20 28 / 0.62) 0%, rgb(8 20 28 / 0.2) 100%),
-    linear-gradient(to top, rgb(8 20 28 / 0.55) 0%, rgb(8 20 28 / 0) 45%);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  pointer-events: none;
 }
-.hc-jr .hz {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
+/* A slide arrives as a wipe from the side it is coming from, its photograph
+   settling a little way sideways behind the wipe. Keyframes, so the wipe
+   always starts from the right side whichever way the last one went; and
+   only after the first change, so the slide the page opens on is simply
+   there. The photograph is scaled a touch while it moves, so its box never
+   has to be wider than the frame and no edge ever shows. */
+.hc-jr .frame[data-moved] .bg.on {
+  animation: jr-wipe-next 1.2s cubic-bezier(0.77, 0, 0.18, 1) backwards;
 }
-/* The finale's picture moves gently: stars, the route, the sun, the waves. */
-.hc-jr .hz .tw {
-  animation: jr-tw 3.5s ease-in-out infinite;
+.hc-jr .frame[data-moved][data-dir='prev'] .bg.on {
+  animation-name: jr-wipe-prev;
 }
-.hc-jr .hz .tw2 {
-  animation-delay: 1.6s;
+.hc-jr .frame[data-moved] .bg.on img {
+  animation: jr-settle-next 1.8s cubic-bezier(0.22, 0.61, 0.36, 1) backwards;
 }
-.hc-jr .hz .route {
-  animation: jr-march 4s linear infinite;
+.hc-jr .frame[data-moved][data-dir='prev'] .bg.on img {
+  animation-name: jr-settle-prev;
 }
-.hc-jr .hz .ping {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: jr-ping 2.4s var(--ease) infinite;
-}
-.hc-jr .hz .glow {
-  animation: jr-glow 6s ease-in-out infinite;
-}
-.hc-jr .hz .sunrise {
-  transform: translateY(90px);
-  transition: transform 2.4s var(--ease) 0.2s;
-}
-.hc-jr .hzbg.on .sunrise {
-  transform: none;
-}
-@keyframes jr-tw {
-  0%,
-  100% {
-    opacity: 0.25;
-  }
-  50% {
-    opacity: 0.9;
+@keyframes jr-wipe-next {
+  from {
+    clip-path: inset(0 0 0 100%);
   }
 }
-@keyframes jr-march {
-  to {
-    stroke-dashoffset: -100;
+@keyframes jr-wipe-prev {
+  from {
+    clip-path: inset(0 100% 0 0);
   }
 }
-@keyframes jr-ping {
-  0% {
-    transform: scale(0.6);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(2.4);
-    opacity: 0;
+@keyframes jr-settle-next {
+  from {
+    transform: translateX(2%) scale(1.04);
   }
 }
-@keyframes jr-glow {
-  0%,
-  100% {
-    opacity: 0.85;
+@keyframes jr-settle-prev {
+  from {
+    transform: translateX(-2%) scale(1.04);
   }
-  50% {
-    opacity: 1;
-  }
+}
+/* A photograph still on its way when its slide is on show (the first slide on
+   a slow connection) stays out of sight, the night ground in its place, and
+   fades in whole once it has loaded and decoded: never half-drawn. */
+.hc-jr .bg.on.wait img {
+  opacity: 0;
+}
+.hc-jr .bg.on:not(.wait) img {
+  transition: opacity 0.8s var(--ease);
 }
 
-/* Shade for the words over a photograph: from the left, and from below. */
+/* Shade for the words over a photograph: from the left, and from below; and
+   a soft one behind the cards, so "Up next" above them reads on a bright
+   picture too. */
 .hc-jr .shade {
   position: absolute;
   inset: 0;
   z-index: -1;
   pointer-events: none;
   background:
+    radial-gradient(
+      ellipse 50% 60% at 80% 80%,
+      rgb(8 20 28 / 0.5) 0%,
+      rgb(8 20 28 / 0.4) 55%,
+      rgb(8 20 28 / 0) 100%
+    ),
     linear-gradient(to top, rgb(8 20 28 / 0.72) 0%, rgb(8 20 28 / 0) 42%),
     linear-gradient(
       90deg,
@@ -359,13 +282,13 @@
   position: absolute;
   inset: 0;
   display: grid;
-  padding: 0 clamp(2rem, 3.89vw, 3.5rem) clamp(2.5rem, 5vw, 4.5rem);
+  padding: 0 var(--edge) var(--edge);
   pointer-events: none;
 }
 .hc-jr .copy {
   grid-area: 1 / 1;
   align-self: end;
-  width: min(34rem, 42%);
+  width: min(36rem, 42%);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -426,7 +349,7 @@
   font-weight: 400;
   font-size: clamp(2.5rem, 4.4vw, 4.25rem);
   line-height: 1.02;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.012em;
   color: #fff;
   text-wrap: balance;
   text-shadow: 0 2px 1.5rem rgb(8 20 28 / 0.35);
@@ -435,7 +358,7 @@
 .hc-jr .copy h3 em,
 .hc-jr .card .t em {
   font-style: italic;
-  color: var(--accent-hi);
+  color: var(--sky);
 }
 .hc-jr .copy .lead {
   font-family: var(--serif);
@@ -443,90 +366,63 @@
   font-size: clamp(1.1875rem, 1.67vw, 1.5rem);
   line-height: 1.35;
   color: rgb(255 255 255 / 0.9);
+  text-wrap: balance;
 }
-/* What the slide is: a small-group journey, and where it stands for booking —
-   a live dot and the status in bold, on a frosted pill. */
-.hc-jr .badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.625rem;
-  padding: 0.5rem 0.875rem 0.5rem 0.75rem;
-  border-radius: 999px;
-  background: rgb(8 20 28 / 0.42);
-  border: 1px solid rgb(255 255 255 / 0.22);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  font-family: var(--sans);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgb(255 255 255 / 0.85);
-}
-.hc-jr .badge i {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background: #4ade80;
-  box-shadow: 0 0 0 0 rgb(74 222 128 / 0.6);
-  animation: jr-live 2.4s ease-out infinite;
-}
-.hc-jr .badge.soon i {
-  background: var(--accent-hi);
-  animation: none;
-}
-.hc-jr .badge b {
-  font-weight: 600;
-  color: #fff;
-  padding-left: 0.625rem;
-  border-left: 1px solid rgb(255 255 255 / 0.3);
-}
-@keyframes jr-live {
-  70%,
-  100% {
-    box-shadow: 0 0 0 0.5rem rgb(74 222 128 / 0);
-  }
-}
-/* The facts as frosted pills. */
+/* The dates and the rate, once they are set: one quiet line, a hairline
+   between its parts. No pills. */
 .hc-jr .facts {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.375rem 1rem;
   font-family: var(--sans);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
+  font-size: max(0.75rem, 11.5px);
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #fff;
+  text-shadow: 0 1px 0.5rem rgb(8 20 28 / 0.6);
 }
-.hc-jr .facts span:not([aria-hidden]) {
-  padding: 0.5rem 0.875rem;
-  border-radius: 999px;
-  background: rgb(255 255 255 / 0.12);
-  border: 1px solid rgb(255 255 255 / 0.28);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-}
-.hc-jr .facts [aria-hidden] {
-  display: none;
+.hc-jr .facts span + span {
+  padding-left: 1rem;
+  border-left: 1px solid rgb(255 255 255 / 0.5);
 }
 .hc-jr .acts {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.875rem;
+  gap: 0.75rem;
   margin-top: 0.625rem !important;
 }
+/* Where two buttons no longer fit side by side they stack at one width,
+   rather than wrap at two. */
+@media (min-width: 901px) and (max-width: 1439px) {
+  .hc-jr .acts {
+    flex-direction: column;
+    align-items: stretch;
+    width: max-content;
+  }
+}
 
-/* The finale: centred, high on the frame, large. */
+/* The finale, "More journeys are taking shape": the photograph covers the
+   whole frame, the traveler kept in view on the right; the words sit on the
+   left, over a shade from that side only, so the picture stays clear. */
+.hc-jr .hzbg.photo img {
+  object-position: 72% 50%;
+}
+.hc-jr .hzbg.photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgb(8 20 28 / 0.72) 0%, rgb(8 20 28 / 0.42) 34%, rgb(8 20 28 / 0) 62%),
+    linear-gradient(to top, rgb(8 20 28 / 0.4) 0%, rgb(8 20 28 / 0) 30%);
+}
 .hc-jr .copy.finale {
-  align-self: start;
-  justify-self: stretch;
-  width: auto;
-  align-items: center;
-  text-align: center;
+  align-self: center;
+  justify-self: start;
+  width: min(32rem, 42%);
   gap: clamp(1rem, 1.53vw, 1.375rem);
-  padding: clamp(3.5rem, 7.78vw, 7rem) clamp(0rem, 4.44vw, 4rem) 0;
+  padding: 3.5rem 0 0;
 }
 .hc-jr .copy.finale.on > * {
   animation: jr-up 1s var(--ease) both;
@@ -544,98 +440,66 @@
   }
 }
 .hc-jr .finale h3 {
-  max-width: 15ch;
-  font-size: clamp(2.5rem, 6.67vw, 6rem);
-  line-height: 0.98;
-  letter-spacing: -0.035em;
+  max-width: 11ch;
+  font-size: clamp(2.25rem, 4.2vw, 4rem);
+  line-height: 1.02;
+  letter-spacing: -0.014em;
   text-shadow: 0 6px 40px rgb(8 22 32 / 0.5);
-}
-.hc-jr .finale h3 em {
-  font-style: italic;
-  color: var(--accent-hi);
 }
 .hc-jr .finale .lead {
   max-width: 34ch;
 }
-.hc-jr .finale .acts {
-  justify-content: center;
-}
 
-/* -- The view switch: Now booking / Coming soon, a frosted pill at the top
-      of the frame, the chosen view in solid white ------------------------ */
+/* -- The view switch: Now booking / Coming soon ---------------------------
+      Two solid pills at the top of the frame, a step smaller than the page's
+      buttons: the view on show in white with an ink label, the other in the
+      brand blue a step deeper with a white one. */
 .hc-jr .views {
   position: absolute;
   z-index: 3;
-  top: clamp(1.25rem, 2.5vw, 2.25rem);
-  left: clamp(2rem, 3.89vw, 3.5rem);
-  display: inline-flex;
-  gap: 0.25rem;
-  padding: 0.3125rem;
-  border-radius: 999px;
-  background: rgb(8 20 28 / 0.45);
-  border: 1px solid rgb(255 255 255 / 0.22);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  top: var(--edge);
+  left: var(--edge);
+  display: flex;
+  gap: 0.5rem;
 }
 .hc-jr .views button {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  min-height: 2.75rem;
-  padding: 0 1.125rem;
+  justify-content: center;
+  min-height: max(2.5rem, 36px);
+  padding: 0 1rem;
   border: 0;
   border-radius: 999px;
-  background: transparent;
-  color: rgb(255 255 255 / 0.8);
+  background: var(--color-brand-deep);
+  color: #fff;
   font-family: var(--sans);
-  font-size: 0.6875rem;
+  font-size: var(--pill-fs);
   font-weight: 600;
+  line-height: 1.2;
   letter-spacing: 0.16em;
   text-transform: uppercase;
+  white-space: nowrap;
   cursor: pointer;
   transition:
-    background-color 0.5s var(--ease),
-    color 0.5s var(--ease);
-}
-.hc-jr .views button:hover {
-  color: #fff;
-  background: rgb(255 255 255 / 0.1);
+    background-color 0.3s var(--ease),
+    color 0.3s var(--ease);
 }
 .hc-jr .views button.on {
   background: #fff;
   color: var(--ink);
 }
-.hc-jr .views i {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background: var(--accent-hi);
-}
-.hc-jr .views i.now {
-  background: #4ade80;
-}
-.hc-jr .views .ct {
-  min-width: 1.375rem;
-  height: 1.375rem;
-  padding: 0 0.375rem;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.625rem;
-  letter-spacing: 0;
-  background: rgb(255 255 255 / 0.16);
-}
-.hc-jr .views button.on .ct {
-  background: var(--brand);
-  color: #fff;
+/* Under a pointer only: on a touch screen a hover would stay after the tap. */
+@media (hover: hover) {
+  .hc-jr .views button:not(.on):hover {
+    background: var(--lake);
+  }
 }
 
 /* -- Up next, and the controls ------------------------------------------- */
 .hc-jr .side {
   position: absolute;
-  right: clamp(1.5rem, 3.33vw, 3rem);
-  bottom: clamp(2.5rem, 5vw, 4.5rem);
+  right: var(--edge);
+  bottom: var(--edge);
   width: min(40rem, 48%);
   display: flex;
   flex-direction: column;
@@ -649,12 +513,17 @@
   gap: 0.625rem;
   margin: 0 0 -0.25rem;
   font-family: var(--sans);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.24em;
+  font-size: max(0.75rem, 11px);
+  font-weight: 600;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: #fff;
-  text-shadow: 0 1px 0.5rem rgb(8 20 28 / 0.6);
+  /* On its own night ground: over a bright roofscape or sky the bare words
+     measured as low as 2.4:1. */
+  align-self: flex-end;
+  padding: 0.4375rem 0.625rem 0.4375rem 0.75rem;
+  border-radius: 999px;
+  background: var(--night);
   transition: opacity 0.9s var(--ease);
 }
 .hc-jr .nlab svg {
@@ -674,15 +543,16 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(var(--cards, 3), calc((100% - 2.5rem) / 3));
+  grid-template-columns: repeat(var(--cards, 3), calc((100% - 2rem) / 3));
   justify-content: end;
-  gap: 1.25rem;
+  gap: 1rem;
   transition: opacity 0.9s var(--ease);
 }
 .hc-jr .fin .next {
   opacity: 0;
   pointer-events: none;
 }
+/* A card: its photograph edge to edge, a shade under its name. No border. */
 .hc-jr .card {
   position: relative;
   display: block;
@@ -690,93 +560,65 @@
   aspect-ratio: 168 / 236;
   padding: 0;
   overflow: hidden;
-  border-radius: 1.125rem;
-  border: 1px solid rgb(255 255 255 / 0.28);
+  border: 0;
+  border-radius: var(--corner);
+  background: var(--night);
   color: #fff;
   font: inherit;
   text-align: left;
   cursor: pointer;
-  transition:
-    transform 0.8s var(--ease),
-    box-shadow 0.8s var(--ease),
-    border-color 0.6s var(--ease);
+  box-shadow: 0 0.75rem 1.5rem -0.75rem rgb(8 20 28 / 0.6);
+  transition: transform 0.6s var(--ease);
 }
-.hc-jr .card.horizon {
-  background: linear-gradient(160deg, #1190cb 0%, #0e2f42 62%, var(--night) 100%);
-}
+/* A card's photograph still on its way fades in once it is whole. */
 .hc-jr .card img {
-  transition: transform 1.4s var(--ease);
+  transition:
+    opacity 0.5s var(--ease),
+    transform 1.2s var(--ease);
+}
+.hc-jr .card img.wait {
+  opacity: 0;
 }
 .hc-jr .card::after {
   content: '';
   position: absolute;
   inset: 0;
+  /* Deep enough under the status and the name for 4.5:1 on any photograph. */
   background: linear-gradient(
     to top,
-    rgb(8 20 28 / 0.88) 0%,
-    rgb(8 20 28 / 0.2) 55%,
-    rgb(8 20 28 / 0) 100%
+    rgb(8 20 28 / 0.94) 0%,
+    rgb(8 20 28 / 0.82) 45%,
+    rgb(8 20 28 / 0) 85%
   );
 }
-.hc-jr .card:hover {
-  transform: translateY(-0.625rem);
-  border-color: rgb(42 180 242 / 0.8);
-  box-shadow: 0 30px 60px rgb(0 0 0 / 0.45);
+@media (hover: hover) {
+  .hc-jr .card:hover {
+    transform: translateY(-0.375rem);
+  }
+  .hc-jr .card:hover img {
+    transform: scale(1.04);
+  }
 }
-.hc-jr .card:hover img {
-  transform: none;
-}
-.hc-jr .card .num,
-.hc-jr .card .cap,
-.hc-jr .card .mark {
+/* A bright photograph still lets the name read. */
+.hc-jr .card .cap {
   position: absolute;
   z-index: 1;
-}
-/* A bright photograph still lets the number and name read. */
-.hc-jr .card .num,
-.hc-jr .card .cap {
-  text-shadow: 0 1px 0.5rem rgb(8 20 28 / 0.6);
-}
-.hc-jr .card .num {
-  left: 1.125rem;
-  top: 1rem;
-  font-family: var(--serif);
-  font-size: 1rem;
-  color: rgb(255 255 255 / 0.85);
-}
-.hc-jr .card .mark {
-  left: 50%;
-  top: 40%;
-  width: 3.5rem;
-  height: 3.5rem;
-  margin: -1.75rem 0 0 -1.75rem;
-  border-radius: 50%;
-  border: 1px solid rgb(42 180 242 / 0.8);
-  color: var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.hc-jr .card .mark svg {
-  width: 1.375rem;
-  height: 1.375rem;
-}
-.hc-jr .card .cap {
-  left: 1.125rem;
-  right: 1.125rem;
-  bottom: 1.125rem;
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.375rem;
+  text-shadow: 0 1px 0.5rem rgb(8 20 28 / 0.6);
 }
 /* The card's status, small, above its name. */
 .hc-jr .card .st {
   font-family: var(--sans);
-  font-size: 0.625rem;
+  font-size: max(0.6875rem, 11px);
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--accent-hi);
+  color: var(--sky);
 }
 .hc-jr .card .t {
   font-family: var(--serif);
@@ -787,42 +629,33 @@
 .hc-jr .ctrl {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
-/* The arrows: frosted, the forward one solid white, so the way on is clear. */
+/* The arrows: two solid white discs, round like every other arrow on the
+   site, the lake blue under the pointer; as large as on the live site
+   (Marc, 29 Oct: navigation that shows at once there is more to see), and
+   a step smaller on a phone. */
 .hc-jr .round {
   flex: 0 0 auto;
   width: 3.5rem;
   height: 3.5rem;
+  border: 0;
   border-radius: 50%;
-  border: 1px solid rgb(255 255 255 / 0.7);
-  background: rgb(255 255 255 / 0.14);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-  color: #fff;
+  background: #fff;
+  color: var(--ink);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition:
-    background-color 0.4s var(--ease),
-    color 0.4s var(--ease),
-    border-color 0.4s var(--ease);
+    background-color 0.3s var(--ease),
+    color 0.3s var(--ease);
 }
-.hc-jr .round:hover {
-  background: #fff;
-  border-color: #fff;
-  color: var(--ink);
-}
-.hc-jr .round.fwd {
-  background: #fff;
-  border-color: #fff;
-  color: var(--ink);
-}
-.hc-jr .round.fwd:hover {
-  background: var(--brand);
-  border-color: var(--brand);
-  color: #fff;
+@media (hover: hover) {
+  .hc-jr .round:hover {
+    background: var(--lake);
+    color: #fff;
+  }
 }
 .hc-jr .round svg {
   width: 1.25rem;
@@ -833,19 +666,20 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-/* The blue line fills over the 7 s a slide stays, and holds when paused. */
+/* The line fills over the 7 s a slide stays, and holds when paused. */
 .hc-jr .prog {
   position: relative;
   flex: 1 1 auto;
   min-width: 1.5rem;
   height: 2px;
   margin: 0 0.75rem;
+  overflow: hidden;
   background: rgb(255 255 255 / 0.3);
 }
 .hc-jr .prog i {
   position: absolute;
   inset: 0;
-  background: var(--accent);
+  background: #fff;
   transform-origin: left;
   animation: jr-fill 7s linear both paused;
 }
@@ -855,6 +689,27 @@
 @keyframes jr-fill {
   from {
     transform: scaleX(0);
+  }
+}
+/* While the next photograph is still on its way, the line says so: a short
+   stretch of it travels along the rule until the slide can change. */
+.hc-jr .frame[data-busy] .prog i {
+  opacity: 0.35;
+}
+.hc-jr .frame[data-busy] .prog::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 35%;
+  background: #fff;
+  animation: jr-busy 1.2s var(--ease) 0.25s infinite backwards;
+}
+@keyframes jr-busy {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(286%);
   }
 }
 .hc-jr .play {
@@ -869,9 +724,9 @@
   border: 0;
   color: #fff;
   font-family: var(--sans);
-  font-size: 0.625rem;
-  font-weight: 500;
-  letter-spacing: 0.24em;
+  font-size: max(0.6875rem, 11px);
+  font-weight: 600;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   cursor: pointer;
 }
@@ -880,44 +735,23 @@
   height: 0.75rem;
   fill: currentColor;
 }
-.hc-jr .count {
-  flex: 0 0 auto;
-  margin: 0 0 0 0.625rem;
-  font-family: var(--serif);
-  font-size: clamp(2rem, 3.06vw, 2.75rem);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  font-variant-numeric: lining-nums;
-}
-.hc-jr .count small {
-  margin-left: 0.375rem;
-  font-size: 0.9375rem;
-  color: rgb(255 255 255 / 0.55);
+
+/* A touch screen: every control at least 44px tall. */
+@media (pointer: coarse) {
+  .hc-jr .views button {
+    min-height: 44px;
+  }
+  .hc-jr .round {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .hc-jr .play {
+    min-width: 44px;
+    height: 44px;
+  }
 }
 
 /* -- Tablet and phone: the words, then the controls, under the picture --- */
-@media (max-width: 900px) {
-  /* Stacked, the strip keeps its rules: one between each promise. */
-  .hc-jr .pts {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .hc-jr .pts li,
-  .hc-jr .pts li:first-child,
-  .hc-jr .pts li:last-child {
-    padding: 1.75rem 0;
-  }
-  .hc-jr .pts li + li {
-    border-left: 0;
-    border-top: 1px solid rgb(20 29 36 / 0.14);
-  }
-  .hc-jr .pts li + li::before {
-    left: 0;
-  }
-  .hc-jr .pts h3,
-  .hc-jr .pts p {
-    max-width: none;
-  }
-}
 @media (max-width: 900px) {
   .hc-jr .frame {
     height: auto;
@@ -926,43 +760,121 @@
     flex-direction: column;
     justify-content: flex-end;
   }
+  /* From below for the words, and a little from above, so the view switch
+     reads on a bright sky as well. */
   .hc-jr .shade {
-    background: linear-gradient(
-      to top,
-      rgb(8 20 28 / 0.92) 0%,
-      rgb(8 20 28 / 0.6) 48%,
-      rgb(8 20 28 / 0.1) 80%
-    );
+    background:
+      linear-gradient(to bottom, rgb(8 20 28 / 0.55) 0%, rgb(8 20 28 / 0) 26%),
+      linear-gradient(
+        to top,
+        rgb(8 20 28 / 0.92) 0%,
+        rgb(8 20 28 / 0.6) 48%,
+        rgb(8 20 28 / 0.1) 80%
+      );
   }
   .hc-jr .stage {
     position: relative;
     flex: 1 1 auto;
-    padding: 5.5rem 1.25rem 1.5rem;
+    padding: 5.5rem var(--edge) 1.5rem;
   }
   .hc-jr .copy {
     width: auto;
-  }
-  .hc-jr .copy.finale {
-    align-self: center;
-    padding: 0;
   }
   .hc-jr .side {
     position: relative;
     inset: auto;
     width: auto;
-    padding: 0 1.25rem 1.25rem;
+    padding: 0 var(--edge) var(--edge);
   }
   .hc-jr .next,
   .hc-jr .nlab {
     display: none;
   }
+  .hc-jr .hzbg.photo img {
+    object-position: 62% 50%;
+  }
+  .hc-jr .hzbg.photo::after {
+    background: linear-gradient(
+      to top,
+      rgb(8 20 28 / 0.94) 0%,
+      rgb(8 20 28 / 0.8) 58%,
+      rgb(8 20 28 / 0) 88%
+    );
+  }
+  .hc-jr .copy.finale {
+    align-self: end;
+    width: auto;
+    padding: 0;
+  }
+  .hc-jr .finale h3 {
+    max-width: none;
+    font-size: clamp(2rem, 9vw, 2.75rem);
+  }
+}
+/* The promises, one under another, a hairline between them: on a tablet the
+   title and its line side by side, on a phone the line under the title. */
+@media (max-width: 900px) {
+  .hc-jr .pts {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 0;
+  }
+  .hc-jr .pts li {
+    grid-template-columns: auto minmax(0, 13rem) minmax(0, 1fr);
+    align-items: baseline;
+    padding: 1.25rem 0;
+  }
+  .hc-jr .pts li + li {
+    border-top: 1px solid var(--rule);
+  }
+  .hc-jr .pts li:last-child {
+    padding-bottom: 0;
+  }
+  .hc-jr .pts .ico {
+    grid-row: auto;
+    align-self: start;
+  }
+  .hc-jr .pts p {
+    margin: 0;
+    max-width: none;
+  }
+}
+/* A phone: the three in one row that is swiped and snaps one at a time, the
+   next peeking in, so the slider stays close under the heading (Marc, 29 Oct:
+   a more compact band; one swipeable row, as on 8 Nov). Still no boxes. */
+@media (max-width: 600px) {
+  .hc-jr .pts {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 84%;
+    column-gap: 1.5rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding-top: 1.25rem;
+  }
+  .hc-jr .pts::-webkit-scrollbar {
+    display: none;
+  }
+  .hc-jr .pts li {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    scroll-snap-align: start;
+    padding: 0;
+  }
+  .hc-jr .pts li + li {
+    border-top: 0;
+  }
+  .hc-jr .pts .ico {
+    grid-row: 1 / span 2;
+  }
+  .hc-jr .pts p {
+    margin-top: 0.375rem;
+  }
 }
 @media (max-width: 600px) {
   .hc-jr .head .btn {
     width: 100%;
-  }
-  .hc-jr .ctrl {
-    gap: 0.5rem;
   }
   .hc-jr .round {
     width: 2.75rem;
@@ -979,312 +891,44 @@
     clip: rect(0 0 0 0);
     white-space: nowrap;
   }
-  .hc-jr .count {
-    margin-left: 0.25rem;
+  /* On a phone the buttons run the width of the words, whether a slide has
+     one (a journey) or two (a journey still to come, the finale). */
+  .hc-jr .acts {
+    align-self: stretch;
   }
   .hc-jr .acts .btn {
     flex: 1 1 auto;
   }
+}
+
+/* A small phone: the two view buttons share the width inside the margins. */
+@media (max-width: 400px) {
   .hc-jr .views {
-    left: 1rem;
-    right: 1rem;
+    right: var(--edge);
   }
   .hc-jr .views button {
     flex: 1 1 0;
-    justify-content: center;
-    padding: 0 0.5rem;
-    letter-spacing: 0.1em;
+    padding: 0 0.75rem;
   }
 }
 
-/* -- Reduced motion: nothing drifts, rises or fills; slides simply change. */
+/* -- Reduced motion: nothing rises or fills; slides simply change. */
 @media (prefers-reduced-motion: reduce) {
-  .hc-jr .drift,
-  .hc-jr .badge i,
-  .hc-jr .hz *,
+  .hc-jr .frame[data-moved] .bg.on,
+  .hc-jr .frame[data-moved] .bg.on img,
   .hc-jr .copy.finale.on > *,
-  .hc-jr .prog i {
+  .hc-jr .prog i,
+  .hc-jr .frame[data-busy] .prog::after {
     animation: none !important;
   }
-  .hc-jr .bg img,
-  .hc-jr .bg.on img,
+  .hc-jr .frame[data-busy] .prog::after {
+    width: 100%;
+    opacity: 0.6;
+  }
   .hc-jr .copy,
   .hc-jr .copy > *,
-  .hc-jr .hz .sunrise,
   .hc-jr .card:hover,
   .hc-jr .card:hover img {
     transform: none;
-  }
-}
-
-/* -- The promises, tighter (8 Nov): less air around and inside each card,
-      the icon sitting beside the title rather than in a row of its own. */
-.hc-jr .pts-wrap {
-  margin: clamp(0.75rem, 1.2vw, 1.25rem) 0 clamp(1.75rem, 2.8vw, 2.5rem);
-}
-.hc-jr .pts li {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  column-gap: 1rem;
-  align-items: center;
-  padding: clamp(1.125rem, 1.6vw, 1.5rem) clamp(1.25rem, 2.2vw, 2.25rem);
-}
-.hc-jr .pts li + li::before {
-  left: clamp(1.25rem, 2.2vw, 2.25rem);
-}
-.hc-jr .pts .pt-top {
-  margin: 0;
-}
-.hc-jr .pts .ico {
-  width: 2.75rem;
-  height: 2.75rem;
-}
-.hc-jr .pts .ico svg {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-.hc-jr .pts h3 {
-  margin: 0;
-}
-.hc-jr .pts p {
-  grid-column: 1 / -1;
-  margin-top: 0.625rem;
-}
-@media (max-width: 900px) {
-  .hc-jr .pts li,
-  .hc-jr .pts li:first-child,
-  .hc-jr .pts li:last-child {
-    padding: 1.125rem 0;
-  }
-}
-
-/* -- The promises as cards (8 Nov) ----------------------------------------
-      Three white cards with a hairline edge and the logo blue as the accent:
-      a solid blue icon disc beside the title, a blue line down the left edge
-      that grows under the pointer. Close together, little air inside. On a
-      desktop they rise in turn as the section arrives; on a phone they become
-      a row that swipes and snaps card by card, with dots beneath. */
-.hc-jr .pc-rail {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(0.75rem, 1.1vw, 1rem);
-}
-.hc-jr .pc-card {
-  position: relative;
-  overflow: hidden;
-  padding: clamp(1rem, 1.4vw, 1.375rem) clamp(1.125rem, 1.6vw, 1.5rem);
-  background: #fff;
-  border: 1px solid rgb(20 29 36 / 0.1);
-  border-radius: 0.875rem;
-  box-shadow: 0 1px 2px rgb(20 29 36 / 0.04);
-  transition:
-    transform 0.6s var(--ease),
-    box-shadow 0.6s var(--ease),
-    border-color 0.6s var(--ease),
-    opacity 0.8s var(--ease);
-}
-/* The accent line down the left edge. */
-.hc-jr .pc-card::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: var(--p2s-blue);
-  transform: scaleY(0.35);
-  transform-origin: top;
-  transition: transform 0.7s var(--ease);
-}
-.hc-jr .pc-card:hover {
-  transform: translateY(-4px);
-  border-color: rgb(1 143 201 / 0.35);
-  box-shadow: 0 18px 36px -18px rgb(1 70 110 / 0.35);
-}
-.hc-jr .pc-card:hover::before {
-  transform: scaleY(1);
-}
-.hc-jr .pc-top {
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  margin-bottom: 0.625rem;
-}
-.hc-jr .pc-ico {
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  background: var(--p2s-blue);
-  color: #fff;
-  transition: transform 0.6s var(--ease);
-}
-.hc-jr .pc-card:hover .pc-ico {
-  transform: rotate(-8deg) scale(1.06);
-}
-.hc-jr .pc-ico svg {
-  width: 1.375rem;
-  height: 1.375rem;
-}
-.hc-jr .pc-card h3 {
-  margin: 0;
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(1.25rem, 1.6vw, 1.5625rem);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-}
-.hc-jr .pc-card p {
-  margin: 0;
-  font-family: var(--sans);
-  font-weight: 300;
-  font-size: clamp(0.875rem, 0.97vw, 0.9375rem);
-  line-height: 1.6;
-  color: #3a434a;
-}
-.hc-jr .pc-dots {
-  display: none;
-}
-
-/* Rising in, one after another, once the cards come on screen. */
-@media (prefers-reduced-motion: no-preference) {
-  .hc-jr .pc:not(.in) .pc-card {
-    opacity: 0;
-    transform: translateY(1.25rem);
-  }
-  .hc-jr .pc.in .pc-card {
-    transition-delay: calc(var(--i) * 0.12s);
-  }
-  .hc-jr .pc.in .pc-card:hover {
-    transition-delay: 0s;
-  }
-}
-
-/* A phone: one card at a time, swiped, snapping, the next peeking in. */
-@media (max-width: 900px) {
-  .hc-jr .pc-rail {
-    display: flex;
-    gap: 0.75rem;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: 0;
-    overscroll-behavior-x: contain;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding: 0.25rem 0 0.75rem;
-  }
-  .hc-jr .pc-rail::-webkit-scrollbar {
-    display: none;
-  }
-  .hc-jr .pc-card {
-    flex: 0 0 82%;
-    scroll-snap-align: start;
-    opacity: 0.55;
-    transform: scale(0.96);
-    transform-origin: left center;
-  }
-  .hc-jr .pc-card.on {
-    opacity: 1;
-    transform: none;
-    border-color: rgb(1 143 201 / 0.35);
-    box-shadow: 0 14px 30px -18px rgb(1 70 110 / 0.35);
-  }
-  .hc-jr .pc-card.on::before {
-    transform: scaleY(1);
-  }
-  .hc-jr .pc-card:hover {
-    transform: none;
-  }
-  .hc-jr .pc-dots {
-    display: flex;
-    justify-content: center;
-    gap: 0.25rem;
-    margin-top: 0.25rem;
-  }
-  .hc-jr .pc-dots button {
-    position: relative;
-    width: 2.75rem;
-    height: 2.75rem;
-    padding: 0;
-    border: 0;
-    background: none;
-    cursor: pointer;
-  }
-  .hc-jr .pc-dots button::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 0.5rem;
-    height: 0.5rem;
-    margin: -0.25rem 0 0 -0.25rem;
-    border-radius: 999px;
-    background: rgb(1 143 201 / 0.3);
-    transition:
-      width 0.5s var(--ease),
-      margin 0.5s var(--ease),
-      background-color 0.5s var(--ease);
-  }
-  .hc-jr .pc-dots button.on::after {
-    width: 1.5rem;
-    margin-left: -0.75rem;
-    background: var(--p2s-blue);
-  }
-}
-
-/* -- The finale, "More journeys are taking shape" (8 Nov) ---------------
-      The photograph covers the whole frame, the traveler kept in view on the
-      right; the words sit on the left, over a soft shade from that side only,
-      so the picture itself stays clear. */
-.hc-jr .hzbg.photo img {
-  object-position: 72% 50%;
-}
-.hc-jr .hzbg.photo::after {
-  background:
-    linear-gradient(90deg, rgb(8 20 28 / 0.72) 0%, rgb(8 20 28 / 0.42) 34%, rgb(8 20 28 / 0) 62%),
-    linear-gradient(to top, rgb(8 20 28 / 0.4) 0%, rgb(8 20 28 / 0) 30%);
-}
-.hc-jr .copy.finale {
-  align-self: center;
-  justify-self: start;
-  width: min(32rem, 42%);
-  align-items: flex-start;
-  text-align: left;
-  padding: 3.5rem 0 0;
-}
-.hc-jr .finale h3 {
-  max-width: 11ch;
-  font-size: clamp(2.25rem, 4.2vw, 4rem);
-  line-height: 1.02;
-}
-.hc-jr .finale .acts {
-  justify-content: flex-start;
-}
-@media (max-width: 900px) {
-  .hc-jr .hzbg.photo img {
-    object-position: 62% 50%;
-  }
-  .hc-jr .hzbg.photo::after {
-    background: linear-gradient(
-      to top,
-      rgb(8 20 28 / 0.85) 0%,
-      rgb(8 20 28 / 0.35) 50%,
-      rgb(8 20 28 / 0) 75%
-    );
-  }
-  .hc-jr .copy.finale {
-    align-self: end;
-    width: auto;
-    padding: 0;
-  }
-  .hc-jr .finale h3 {
-    max-width: none;
-    font-size: clamp(2rem, 9vw, 2.75rem);
   }
 }

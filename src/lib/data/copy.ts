@@ -146,18 +146,20 @@ export const beliefs: Belief[] = [
     label: 'Local connections',
     title: 'Access comes from people, not passes.',
     body: 'Our trusted network of carefully selected local experts and hospitality partners opens doors to authentic experiences and a deeper connection with each destination.',
+    // The file is the whole upright frame. The card's square shows it from the
+    // top of the turban down to the pour (9 Nov: show more of the picture).
     img: '/images/home/hw-local-desert-tea.jpg',
-    alt: 'A host in an orange turban pouring tea beside a fire at a desert camp at dusk',
-    pos: '50% 12%',
+    alt: 'A host in an orange turban pouring a drink into a stemmed glass beside a fire at a desert camp at dusk, with two musicians in red behind him',
+    pos: '50% 16%',
   },
   {
     label: 'Every detail',
     title: 'Seamless by Nature.',
     body: 'From exceptional accommodations to thoughtfully coordinated experiences, every detail is carefully considered so you can simply enjoy the journey.',
-    // Pexels 32740215 (8 Nov).
-    img: '/images/home/hw-seamless-dolomites-hotel.jpg',
-    alt: 'A grand hotel on the shore of a still mountain lake beneath the Dolomites',
-    pos: '52% 50%',
+    // Supplied by the client (9 Nov): the sundowner rock at Kipalo Hills.
+    img: '/images/home/hw-seamless-sundowner-rock.jpg',
+    alt: 'A guest in a straw hat with a glass of wine, seated on a red woven rug at the sundowner rock at Kipalo Hills, looking out over the bush',
+    pos: '50% 60%',
   },
   {
     label: 'Your journey',
@@ -421,19 +423,12 @@ export const founder = {
 
 /* -- The circle ---------------------------------------------------------- */
 
+/* The Journal page's invitation, in the words Marc approved for the homepage
+   band (29 Oct): The Circle speaks for Peaks2Shores, not as a letter from him,
+   and promises no early access. */
 export const circle = {
-  headline: 'Where are we going with Peaks2Shores next?',
-  body: 'Most guests travel with us again. New journeys are announced to them first, in a short letter from Marc — a place we love, a hotel worth the trip, a table worth booking. A small circle of people who travel the same way.',
-  notes: [
-    {
-      label: 'Next letter',
-      value: 'Autumn 2026 — the Engadin, and a lake we keep returning to.',
-    },
-    {
-      label: 'First access',
-      value: 'New departures open to the circle two weeks before anyone else.',
-    },
-  ],
+  headline: 'A World of Inspiration, Delivered.',
+  body: 'Discover extraordinary destinations, inspiring travel stories, insider perspectives, and thoughtfully curated journeys. Join The Circle for a little inspiration from the world of Peaks2Shores, delivered to your inbox.',
 };
 
 /* -- Journal ------------------------------------------------------------- */
@@ -467,8 +462,7 @@ export const journal: JournalEntry[] = [
     slug: 'the-engadin-in-autumn',
     category: 'Places we love',
     title: 'The Engadin, and a lake we keep returning to',
-    standfirst:
-      'The subject of the next letter to the circle: a high valley in larch-gold light, and why late autumn is the moment to be in it.',
+    standfirst: 'A high valley in larch-gold light, and why late autumn is the moment to be in it.',
     date: 'Autumn 2026',
     media: 'jn-1',
     draft: true,

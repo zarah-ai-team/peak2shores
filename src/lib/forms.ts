@@ -40,3 +40,18 @@ export async function postForm(path: string, body: unknown): Promise<Response> {
     body: JSON.stringify(body),
   });
 }
+
+/**
+ * The consent line under a Circle sign-up field, in the words the visitor
+ * reads. The form builds its line from these parts, and /api/subscribe sends
+ * the same sentence on with each sign-up, so the mailing list can hold what
+ * was agreed to. Change the wording here and both follow.
+ */
+export const circleConsent = {
+  before: 'By joining, you agree to our',
+  policy: { label: 'Privacy Policy', href: '/privacy' },
+  after: 'Unsubscribe at any time.',
+} as const;
+
+/** The same line as one sentence, for the sign-up's record. */
+export const circleConsentText = `${circleConsent.before} ${circleConsent.policy.label}. ${circleConsent.after}`;

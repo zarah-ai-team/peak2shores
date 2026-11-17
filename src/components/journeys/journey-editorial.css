@@ -8,11 +8,11 @@
   --paper: var(--color-ivory);
   --ink: #141d24;
   --muted: #5a646d;
-  --lake: #0b5c85;
+  --lake: var(--color-acqua-text);
   --brand: var(--color-brand);
-  --sky: #7accfd;
+  --sky: var(--color-acqua);
   --night: #0b1a24;
-  --deep: #0e2f42;
+  --deep: var(--color-navy);
   --line: rgb(255 255 255 / 0.18);
   --rule: rgb(20 29 36 / 0.14);
   --serif: var(--font-display);
@@ -47,7 +47,7 @@
   font-weight: var(--title-weight);
   font-size: var(--h2);
   line-height: 1.04;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.012em;
   margin: 1rem 0 0;
 }
 .jy .head {
@@ -66,21 +66,23 @@
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  min-height: 3.25rem;
-  padding: 0 1.75rem;
+  min-height: var(--pill-h);
+  padding: 0 var(--pill-px);
   border-radius: 999px;
   font-family: var(--sans);
-  font-size: 0.75rem;
+  font-size: var(--pill-fs);
   font-weight: 500;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
 }
+/* The main action on the navy: the blue pill, the brand blue a step deeper
+   so its white label reads (4.9:1); white under the pointer. */
 .jy .btn-blue {
-  background: var(--brand);
-  border: 1px solid var(--brand);
+  background: var(--color-brand-deep);
+  border: 1px solid var(--color-brand-deep);
   color: #fff;
   font-weight: 600;
 }
@@ -105,8 +107,8 @@
   color: #fff;
 }
 .jy .btn-ink:hover {
-  background: var(--brand);
-  border-color: var(--brand);
+  background: var(--color-brand-deep);
+  border-color: var(--color-brand-deep);
 }
 .jy .tlink {
   display: inline-block;
@@ -122,7 +124,7 @@
   transition: color 0.4s var(--ease);
 }
 .jy .tlink:hover {
-  color: var(--brand);
+  color: var(--color-brand-deep);
 }
 @keyframes jy-rise {
   from {
@@ -142,13 +144,13 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgb(8 20 28 / 0.62) 0%, rgb(8 20 28 / 0.2) 50%, rgb(8 20 28 / 0) 75%),
+    linear-gradient(90deg, rgb(8 20 28 / 0.68) 0%, rgb(8 20 28 / 0.54) 50%, rgb(8 20 28 / 0) 78%),
     linear-gradient(
       180deg,
       rgb(8 20 28 / 0.5) 0%,
       rgb(8 20 28 / 0) 24%,
-      rgb(8 20 28 / 0) 52%,
-      rgb(8 20 28 / 0.82) 100%
+      rgb(8 20 28 / 0) 44%,
+      rgb(8 20 28 / 0.88) 100%
     );
 }
 .jy .hero-c {
@@ -195,7 +197,7 @@
   font-weight: 400;
   font-size: clamp(3rem, 6.6vw, 7.5rem);
   line-height: 0.92;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.016em;
   text-shadow: 0 2px 2rem rgb(8 20 28 / 0.35);
 }
 .jy.hero h1 em {
@@ -208,7 +210,7 @@
   margin: 0 0 2.125rem;
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(1.25rem, 1.8vw, 1.625rem);
+  font-size: clamp(1.125rem, 1.5vw, 1.375rem);
   color: #f3f0ea;
 }
 .jy .hero-ctas {
@@ -325,11 +327,12 @@
   overflow-x: auto;
   scrollbar-width: none;
   border-radius: 999px;
-  border: 1.5px solid rgb(255 255 255 / 0.75);
+  /* A solid dark capsule: no outline, no frosted glass. */
+  background: rgb(8 20 28 / 0.72);
 }
 .jy .tabs button {
   flex: 0 0 auto;
-  min-height: 2.875rem;
+  min-height: 2.75rem;
   padding: 0 1.25rem;
   border: 0;
   border-radius: 999px;
@@ -347,8 +350,8 @@
   color: #fff;
 }
 .jy .tabs button.on {
-  background: rgb(255 255 255 / 0.28);
-  color: #fff;
+  background: #fff;
+  color: var(--ink);
   font-weight: 600;
 }
 .jy .deck {
@@ -406,7 +409,7 @@
   z-index: 1;
   padding: 0.4375rem 0.875rem;
   border-radius: 999px;
-  background: var(--brand);
+  background: var(--color-brand-deep);
   font-family: var(--sans);
   font-size: 0.75rem;
   font-weight: 600;
@@ -497,8 +500,8 @@
   color: var(--ink);
 }
 .jy .round:hover {
-  background: var(--brand);
-  border-color: var(--brand);
+  background: var(--color-brand-deep);
+  border-color: var(--color-brand-deep);
   color: #fff;
 }
 .jy .round svg {
@@ -530,9 +533,13 @@
    The title in one style, white; the lead line in italic in the house sky
    blue (her gold, in the house colour); the route as a dotted line of stops. */
 .jy.hero h1 {
-  max-width: 16ch;
-  font-size: clamp(2.75rem, 5.4vw, 6rem);
-  line-height: 0.98;
+  /* In em, so the same words share a line whatever the face's figure widths
+     (16ch left 'Flair' alone on a line in Newsreader). */
+  max-width: 11em;
+  /* A step smaller (17 Nov): 63px on a laptop, 34px on a phone, never larger
+     than the home page's headline. */
+  font-size: clamp(2.5rem, 4.4vw, 4.4rem);
+  line-height: 1;
 }
 .jy .tag {
   margin: 0 0 1.75rem;
@@ -651,6 +658,59 @@
   background: var(--sky);
   box-shadow: none;
   animation: none;
+}
+
+/* -- 1c. The private line (chat notes of 9 November 2026) ----------------------
+   "Want to take this journey privately? Learn more", after the reference the
+   client circled: a quiet line at the right gutter, level with the route, its
+   link to Bespoke Private Travel under it. The route and the line share a row
+   that wraps, so where the two do not fit side by side the line drops under
+   the route rather than onto it. */
+.jy .hero-c {
+  /* The row runs gutter to gutter; the title keeps its 16ch, the route 48rem. */
+  max-width: none;
+}
+.jy .hfoot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.25rem 2rem;
+}
+.jy .hfoot .hroute {
+  flex: 0 1 48rem;
+  min-width: 0;
+}
+.jy .priv {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* The route's stops end 0.25rem above its foot; the link's rule matches. */
+  margin: 0 0 0.25rem;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(0.9375rem, 1.1vw, 1.0625rem);
+  line-height: 1.4;
+  color: #f3f0ea;
+  text-shadow:
+    0 1px 2px rgb(8 20 28 / 0.5),
+    0 0 12px rgb(8 20 28 / 0.55);
+}
+.jy .priv .tlink {
+  padding-top: 0.5rem;
+  font-style: normal;
+}
+/* The brand blue is too dark over a photograph: the link lifts to sky blue. */
+.jy .priv .tlink:hover {
+  color: var(--sky);
+}
+/* A finger gets the full 44px, the words still sitting on their rule. */
+@media (pointer: coarse) {
+  .jy .priv .tlink {
+    display: inline-flex;
+    align-items: flex-end;
+    min-height: 44px;
+  }
 }
 
 /* -- 2. Overview, after the notes of 5 November 2026 --------------------------
@@ -1152,8 +1212,6 @@
   background: var(--brand);
 }
 .jy .btn-outline {
-  min-height: 2.75rem;
-  padding: 0 1.25rem;
   border: 1px solid var(--ink);
   color: var(--ink);
   background: transparent;
@@ -1240,20 +1298,14 @@
   .jy.dep {
     grid-template-columns: minmax(0, 1fr);
   }
-  .jy .facts {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .jy .facts > div:nth-child(3) {
-    border-right: 0;
-  }
-  .jy .facts > div:nth-child(n + 4) {
-    border-top: 1px solid var(--line);
-  }
-}
-@media (max-width: 800px) {
+  /* The facts make two rows from here down, taller than the room the hero's
+     words keep above its foot, and the private line sits under the route: so
+     the words stand in the flow above the facts (as they already did on a
+     phone) and the strip can never lie over the route or the link. A screen
+     too short for it all scrolls instead of crowding. */
   .jy.hero {
     height: auto;
-    min-height: 100svh;
+    min-height: max(40rem, 100svh);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -1267,6 +1319,32 @@
   }
   .jy .facts {
     position: relative;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .jy .facts > div:nth-child(3) {
+    border-right: 0;
+  }
+  .jy .facts > div:nth-child(n + 4) {
+    border-top: 1px solid var(--line);
+  }
+  /* The private line under the route: the question, then its link beside it,
+     or on a line of its own where the screen is too narrow for both. */
+  .jy .hfoot {
+    display: block;
+  }
+  .jy .priv {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 0.75rem;
+    margin-top: 1.25rem;
+  }
+}
+@media (max-width: 800px) {
+  .jy.hero {
+    min-height: 100svh;
+  }
+  .jy .facts {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .jy .facts > div {
@@ -1394,10 +1472,45 @@
   .jy .hero-shade {
     background: linear-gradient(
       180deg,
-      rgb(8 20 28 / 0.55) 0%,
-      rgb(8 20 28 / 0.42) 30%,
-      rgb(8 20 28 / 0.62) 60%,
+      rgb(8 20 28 / 0.6) 0%,
+      rgb(8 20 28 / 0.64) 12%,
+      rgb(8 20 28 / 0.68) 60%,
       rgb(8 20 28 / 0.88) 100%
     );
+  }
+}
+
+/* -- Review fixes, 17 Nov --------------------------------------------------- */
+/* Keyboard focus on the navy bands: the water-blue ring (7.9:1), not ink. */
+.jy.ext :focus-visible,
+.jy .rate :focus-visible {
+  outline-color: var(--sky);
+}
+/* The place names in the extension's collage, on small dark pills: a soft
+   shadow alone fell to 1.6:1 over a bright photograph. */
+.jy .collage li span {
+  left: 0.625rem;
+  bottom: 0.625rem;
+  padding: 0.3125rem 0.625rem;
+  border-radius: 999px;
+  background: rgb(8 20 28 / 0.6);
+  text-shadow: none;
+}
+@media (max-width: 800px) {
+  /* On a phone the line under the title is white: over the journeys' own
+     photographs the water-blue fell under 4.5:1 even on the deeper shade. */
+  .jy .tag {
+    color: #fff;
+  }
+}
+@media (max-width: 600px) {
+  .jy.hero h1 {
+    font-size: 2.125rem;
+  }
+}
+/* The route's place names keep apart on the narrowest phones. */
+@media (max-width: 360px) {
+  .jy .hroute .nm {
+    letter-spacing: 0.1em;
   }
 }

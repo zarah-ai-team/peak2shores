@@ -7,7 +7,7 @@
   --paper: var(--color-ivory);
   --ink: #141d24;
   --muted: #5a646d;
-  --lake: #0b5c85;
+  --lake: var(--color-acqua-text);
   --brand: var(--color-brand);
   --serif: var(--font-display);
   --sans: var(--font-ui);
@@ -171,4 +171,11 @@
   .hc-fab * {
     transition: none !important;
   }
+}
+
+/* Its focus ring inside the pill, white on the blue (4.9:1), so it shows over
+   any section the button floats above. */
+.hc-fab .fab-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -5px;
 }

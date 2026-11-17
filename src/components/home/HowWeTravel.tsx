@@ -13,8 +13,7 @@ import './why-home.css';
  * rail, standing still. Four show at a time on a desktop; the arrows sit
  * just under the cards beside the blue line, with a count, so it is plain
  * there are more. It is a plain scroller underneath, so it swipes on a phone
- * and scrolls without script. The last card closes the row with the way on,
- * and a bridge leads to what is included on every journey (on the Journeys page, /journeys#experience).
+ * and scrolls without script. The last card closes the row with the way on.
  */
 export function HowWeTravel() {
   const rail = useRef<HTMLDivElement>(null);
@@ -97,11 +96,15 @@ export function HowWeTravel() {
                 </div>
                 {b.img && (
                   <div className="ph">
+                    {/* The slot is a square of the card's width. A photograph
+                        wider than tall covers it by its height, so it is painted
+                        up to a third wider than the card: these sizes sit between
+                        the upright frames and the widest one. */}
                     <Image
                       src={b.img}
                       alt={b.alt ?? ''}
                       fill
-                      sizes="(max-width: 700px) 80vw, (max-width: 1100px) 40vw, 20vw"
+                      sizes="(max-width: 400px) 100vw, (max-width: 700px) 400px, (max-width: 1100px) 41vw, 27vw"
                       className="fill"
                       style={{ objectPosition: b.pos }}
                     />
@@ -144,14 +147,6 @@ export function HowWeTravel() {
             <span style={{ width: `${Math.round(bar * 100)}%` }} />
           </div>
         </div>
-        <Link className="hw-next" href="/journeys#experience">
-          And what that means on every journey
-          <span aria-hidden>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M12 5v14M6 13l6 6 6-6" />
-            </svg>
-          </span>
-        </Link>
       </div>
     </section>
   );

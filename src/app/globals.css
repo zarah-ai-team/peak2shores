@@ -14,8 +14,8 @@
 
 @theme {
   /* Paper */
-  --color-brand: #1190cb; /* Peaks2Shores blue — the primary; every button's hover */
-  --color-brand-deep: #0d77a9; /* a blue fill's own hover */
+  --color-brand: #018fc9; /* Peaks2Shores blue — the accent: a rule, a tick, a large word */
+  --color-brand-deep: #0179ab; /* the accent a step deeper: white text reads on it (4.9:1) */
   /* A near-white with a breath of the brand blue in it, so the blue accents
      sit on the page as its own; the panel is the same blue a step deeper. */
   --color-ivory: #fafcfe;
@@ -32,20 +32,21 @@
      on stone. Caps labels on stone use stone-text. */
   --color-muted: #5d6870;
 
-  /* Dark grounds — deep lake blues */
+  /* Dark grounds — the established Peaks2Shores navy, the deep lake blues.
+     (A brighter #0062a1 was tried on 17 Nov and taken back the same day.) */
   --color-navy: #0e2f42; /* Primary dark ground */
-  --color-navy-deep: #0a2232; /* Footer, mobile menu, globe band */
+  --color-navy-deep: #0a2232; /* Footer, globe band */
   --color-charcoal: #232422; /* Secondary dark ground. Never adjacent to navy */
 
   /* On dark */
-  --color-on-dark: #f4f1ea;
+  --color-on-dark: #ffffff;
   --color-on-dark-body: #c8d3da; /* 10:1 on navy-deep */
   --color-on-dark-muted: #9fb1bc; /* 7:1 on navy-deep */
 
   /* Brand accents — used sparingly */
   --color-acqua: #7accfd; /* water-blue; text-safe on dark (9:1 on navy-deep), not on light */
-  --color-acqua-deep: #1190cb; /* the brand blue as a hairline on light; NOT text (3.2:1) */
-  --color-acqua-text: #0b5c85; /* the only acqua as text on light — 6.4:1 ivory */
+  --color-acqua-deep: #018fc9; /* the brand blue as a hairline on light; NOT text (3.6:1) */
+  --color-acqua-text: #0b5c85; /* the lake blue, the acqua as text on light — 6.4:1 on ivory */
 
   /* Feedback */
   --color-error: #8a3b2e; /* 6.6:1 on ivory */
@@ -53,7 +54,7 @@
 
   /* Rules */
   --color-line: rgb(30 31 29 / 0.16);
-  --color-line-dark: rgb(244 241 234 / 0.18);
+  --color-line-dark: rgb(255 255 255 / 0.18);
 
   /* Photographic tones — the ground a photograph loads over */
   --color-tone-stone: #c9bea9;
@@ -61,8 +62,9 @@
   --color-tone-slate: #8c8f86;
 
   /* Type */
-  --font-display: Georgia, 'Times New Roman', serif;
-  --font-ui: var(--font-poppins), system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: var(--font-newsreader), 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --font-ui:
+    var(--font-instrument-sans), 'Helvetica Neue', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   /* Rhythm — usable as py-section, pt-section-sm, mb-block, gap-stack, px-gutter.
      Each reaches its full size at the 1888px canvas (see :root below);
@@ -103,7 +105,7 @@
     --nav-h: 4.25rem;
     /* Every section title on the site, one weight: change it here, never on
        a single heading. */
-    --title-weight: 700;
+    --title-weight: 600;
     /* Its height once the page moves. The header keeps one size on every
        page and at every scroll position, so this is the same value; it stays
        a token because every bar pinned beneath the header reads it. */
@@ -121,6 +123,12 @@
     --btn-h: 2.75rem;
     --btn-px: 1.75rem;
     --btn-py: 1.0625rem;
+    /* The rounded (pill) button of the pages' own sections (the home page, a
+       journey, the Journeys page): the live site's home buttons. 42px with an
+       11px label on a phone, 37.8px with 9.9px on a laptop, 44px to a finger. */
+    --pill-h: 2.625rem;
+    --pill-px: 1.5rem;
+    --pill-fs: 0.6875rem;
   }
   @media (min-width: 768px) {
     :root {
@@ -141,12 +149,16 @@
       --btn-h: clamp(2.5rem, 2.33vw, 2.75rem);
       --btn-px: clamp(1.25rem, 1.48vw, 1.75rem);
       --btn-py: clamp(0.8125rem, 0.9vw, 1.0625rem);
+      --pill-h: clamp(2.625rem, 2.54vw, 2.75rem);
+      --pill-px: clamp(1.375rem, 1.48vw, 1.75rem);
+      --pill-fs: clamp(0.6875rem, 0.636vw, 0.75rem);
     }
   }
   /* A finger needs the full target whatever the screen's width. */
   @media (pointer: coarse) {
     :root {
       --btn-h: 44px;
+      --pill-h: 44px;
     }
   }
 
@@ -196,7 +208,7 @@
   }
 
   ::selection {
-    background: rgb(17 144 203 / 0.2);
+    background: rgb(1 143 201 / 0.2);
   }
 
   /* Focus is a 2px ink ring on paper and a 2px water-blue ring on a dark ground
@@ -368,7 +380,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     Type (§2.3). Georgia carries the emotion; Poppins the interface.
+     Type (§2.3). Newsreader carries the emotion; Instrument Sans the interface.
      Every size reaches its maximum at the 1888px canvas; the minimum is the
      phone size, so a phone is unchanged.
      ------------------------------------------------------------------------ */
@@ -429,19 +441,19 @@
   .display {
     font-size: clamp(2.5rem, 4.87vw, 5.75rem);
     line-height: 0.94;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.01em;
   }
 
   .h1 {
     font-size: clamp(2.25rem, 4.24vw, 5rem);
     line-height: 0.96;
-    letter-spacing: -0.022em;
+    letter-spacing: -0.009em;
   }
 
   .page-title {
     font-size: clamp(2.125rem, 3.6vw, 4.25rem);
     line-height: 0.98;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.008em;
   }
 
   .h2 {
@@ -478,7 +490,7 @@
   .numeral {
     font-size: clamp(2.5rem, 3.6vw, 4.25rem);
     line-height: 0.9;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.012em;
     font-variant-numeric: lining-nums;
   }
 
@@ -665,7 +677,8 @@
     background: var(--color-acqua-deep);
   }
   .site-header[data-solid]:not([data-menu]) .nav-link:hover {
-    color: var(--color-brand);
+    /* The brand blue a step deeper, so small type keeps 4.5:1 on paper. */
+    color: var(--color-brand-deep);
   }
 
   /* Word-list toggles (journey filters, "traveling as"). Same hairline. */
@@ -870,7 +883,7 @@
    The header.
 
    Transparent over a photograph, frosted paper once the page is read, on-dark
-   over the open mobile menu. Compacts as soon as the page moves; steps out of
+   over the open menu. Compacts as soon as the page moves; steps out of
    the way on a long scroll down and returns the moment the reader scrolls up.
    -------------------------------------------------------------------------- */
 
@@ -889,12 +902,11 @@
 .site-header[data-compact] {
   height: var(--nav-h-compact);
 }
+/* Once the page is read the bar is plain paper: solid, not frosted. */
 .site-header[data-solid] {
   color: var(--color-ink);
-  background-color: rgb(250 252 254 / 0.9);
+  background-color: var(--color-ivory);
   border-bottom-color: var(--color-line);
-  -webkit-backdrop-filter: blur(0.875rem) saturate(1.2);
-  backdrop-filter: blur(0.875rem) saturate(1.2);
 }
 .site-header[data-menu] {
   color: var(--color-on-dark);
@@ -1031,9 +1043,206 @@
 /* The header CTA: an outline that fills on hover. */
 .site-header .header-cta:hover,
 .site-header[data-solid]:not([data-menu]) .header-cta:hover {
-  background-color: var(--color-brand);
-  border-color: var(--color-brand);
+  /* The brand blue a step deeper: a white label on the brand blue itself is
+     only 3.6:1. */
+  background-color: var(--color-brand-deep);
+  border-color: var(--color-brand-deep);
   color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   The three-line button, at the right end of the bar at every width.
+
+   Three 1px lines, 24px wide, in a 44px box (px, not rem: on a laptop the
+   root is 90% and the target must not shrink). They become a cross in two
+   beats: the outer lines meet in the middle as the middle one fades, then
+   turn. Closing runs it backwards. The sheet it opens is `SiteMenu`
+   (components/layout/menu/menu.css).
+   -------------------------------------------------------------------------- */
+
+.menu-toggle {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  min-width: 44px;
+  height: 44px;
+  /* The lines end on the page gutter; the box reaches 10px past it. */
+  margin-right: -10px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+@media (min-width: 64rem) {
+  .menu-toggle {
+    margin-left: clamp(12px, 1.27vw, 24px);
+  }
+}
+.menu-toggle-lines {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 44px;
+  height: 44px;
+}
+/* As written here the lines are returning: un-turn, part, and the middle one comes back. */
+.menu-toggle-lines i {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  width: 24px;
+  height: 1px;
+  margin-top: -0.5px;
+  background: currentColor;
+  transition:
+    rotate 220ms var(--ease-exit),
+    translate 220ms var(--ease-editorial) 180ms,
+    opacity 180ms linear 220ms,
+    scale 300ms var(--ease-editorial);
+}
+.menu-toggle-lines i:nth-child(1) {
+  translate: 0 -7px;
+}
+.menu-toggle-lines i:nth-child(2) {
+  transform-origin: right center;
+}
+.menu-toggle-lines i:nth-child(3) {
+  translate: 0 7px;
+}
+/* Opening: meet, then turn. Complete at 400ms. */
+.menu-toggle[aria-expanded='true'] .menu-toggle-lines i {
+  transition:
+    translate 180ms var(--ease-exit),
+    opacity 160ms var(--ease-exit),
+    rotate 240ms var(--ease-editorial) 160ms,
+    scale 300ms var(--ease-editorial);
+}
+.menu-toggle[aria-expanded='true'] .menu-toggle-lines i:nth-child(1) {
+  translate: 0 0;
+  rotate: 45deg;
+}
+.menu-toggle[aria-expanded='true'] .menu-toggle-lines i:nth-child(2) {
+  opacity: 0;
+}
+.menu-toggle[aria-expanded='true'] .menu-toggle-lines i:nth-child(3) {
+  translate: 0 0;
+  rotate: -45deg;
+}
+/* Under the pointer, closed: the middle line draws back a little. */
+@media (hover: hover) and (pointer: fine) {
+  .menu-toggle[aria-expanded='false']:hover .menu-toggle-lines i:nth-child(2) {
+    scale: 0.6 1;
+  }
+}
+/* "Menu" and "Close", one over the other so the button never changes width.
+   Shown only on a tablet, where the bar has no links of its own: beside five
+   caps links the word would read as a sixth. */
+.menu-toggle-word {
+  display: none;
+  margin-right: 2px;
+}
+.menu-toggle-word span {
+  grid-area: 1 / 1;
+  transition: opacity 250ms var(--ease-editorial);
+}
+.menu-toggle-word span:last-child,
+.menu-toggle[aria-expanded='true'] .menu-toggle-word span:first-child {
+  opacity: 0;
+}
+.menu-toggle[aria-expanded='true'] .menu-toggle-word span:last-child {
+  opacity: 1;
+}
+@media (min-width: 48rem) {
+  .menu-toggle-word {
+    display: grid;
+  }
+}
+@media (min-width: 64rem) {
+  .menu-toggle-word {
+    display: none;
+  }
+}
+
+/* While the menu is open the bar is the logo and the cross: the links and the
+   button fade as one piece and leave the tab order, then return as it closes. */
+.header-inline {
+  transition:
+    opacity 0.25s var(--ease-editorial) 0.15s,
+    visibility 0s linear 0s;
+}
+.site-header[data-menu] .header-inline {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.2s var(--ease-exit),
+    visibility 0s linear 0.2s;
+}
+/* The bar turns with the scrim on the way in. On the way out it waits: the
+   sheet is still under it for most of its 380ms, so the bar keeps its dark
+   state (and no frost, which would blur the sheet's edge) until the sheet has
+   nearly gone, then returns to the page's own ground as the sheet clears it.
+   The links come back last, for the same reason. */
+.site-header[data-menu],
+.site-header[data-menu] .site-logo img {
+  transition-duration: 0.4s;
+}
+.site-header[data-nav-closing],
+.site-header[data-nav-closing] .site-logo img {
+  transition-duration: 0.2s;
+  transition-delay: 0.18s;
+  transition-timing-function: var(--ease-exit);
+}
+.site-header[data-nav-closing] {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.site-header[data-nav-closing] .header-inline {
+  transition:
+    opacity 0.16s var(--ease-editorial) 0.24s,
+    visibility 0s linear 0s;
+}
+/* Over the open menu the bar is on a dark ground whatever the page beneath. */
+.site-header[data-menu] :focus-visible {
+  outline-color: var(--color-acqua);
+}
+/* A click on the empty bar goes through to the dimmed page and closes the menu. */
+.site-header[data-menu] {
+  pointer-events: none;
+}
+.site-header[data-menu] :is(.site-header-home, .menu-toggle) {
+  pointer-events: auto;
+}
+/* "Connect with our team" steps aside for the menu, as it does near the
+   footer, and returns once the sheet has gone. */
+.site-header:is([data-menu], [data-nav-closing]) ~ .hc-fab {
+  opacity: 0;
+  transform: translateY(1rem);
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.4s var(--ease),
+    transform 0.4s var(--ease),
+    visibility 0s linear 0.4s;
+}
+/* Forced colours (Windows high contrast) repaint backgrounds, which is all
+   the three lines are: they keep the text colour instead, so the button and
+   the cross that closes the menu can be seen. */
+@media (forced-colors: active) {
+  .menu-toggle-lines i {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
+}
+/* Reduced motion: the global rule ends every transition at once but leaves
+   its delay, and a delay alone would show the lines half-way for a moment. */
+@media (prefers-reduced-motion: reduce) {
+  .menu-toggle-lines i,
+  .header-inline,
+  .site-header[data-nav-closing],
+  .site-header[data-nav-closing] .site-logo img {
+    transition-delay: 0s !important;
+  }
 }
 
 /* The scroll progress rule sits above the header: water-blue over a photograph,
@@ -1283,10 +1492,8 @@ html[data-js] [data-ground][data-inview]::before {
     scroll-behavior: auto !important;
   }
 
-  [data-menu-item] {
-    transform: none !important;
-    opacity: 1 !important;
-  }
+  /* The menu's own reduced-motion rules are with it, in
+     components/layout/menu/menu.css. */
 }
 
 /* Carousels a mouse can drag (useDrag): a grab hand, and while held, no
@@ -1457,4 +1664,26 @@ html.lenis {
     -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
+}
+
+/* Over a film or a photograph the transparent header has a soft shade of its
+   own, so its links and button read on a bright sky too (17 Nov review: they
+   fell to 2.5:1 over the home film). It goes when the bar turns to paper or
+   the menu opens. */
+.site-header:not([data-solid]):not([data-menu])::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 -1.5rem;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgb(8 20 28 / 0.5) 0%,
+    rgb(8 20 28 / 0.3) 50%,
+    rgb(8 20 28 / 0) 100%
+  );
+}
+/* A focus ring there carries a dark halo, so it shows on a light sky as well. */
+.site-header:not([data-solid]):not([data-menu]) :focus-visible {
+  box-shadow: 0 0 0 6px rgb(10 34 50 / 0.55);
 }

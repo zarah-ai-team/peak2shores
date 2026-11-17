@@ -1,6 +1,6 @@
 import type { Journey } from '@/lib/content';
 import { flipbook } from '@/lib/data/flipbook';
-import { site } from '@/lib/site';
+import { getMedia, type MediaKey } from '@/lib/media';
 import { HeroCarousel, type HeroJourney } from './HeroCarousel';
 import './journeys-index.css';
 
@@ -8,6 +8,21 @@ import './journeys-index.css';
 const names = (a: string, b: string) => {
   const [x, y] = [a.toLowerCase(), b.toLowerCase()];
   return x.includes(y) || y.includes(x);
+};
+
+/* Where a card's 3:2 crop centres, when the middle of the photograph is not
+   its subject (CSS object-position). */
+const cardPos: Record<string, string> = {
+  // An upright frame: the castle and the waterfront sit in its lower half.
+  'the-italian-experience': '50% 73%',
+  // A wide frame: keep the harbor and the old tower, not the hillside.
+  'adriatic-collection': '42% 50%',
+};
+
+/** A registry photograph as a card shows it. */
+const cardPhoto = (key: MediaKey, pos?: string) => {
+  const slot = getMedia(key);
+  return { src: slot.src, alt: slot.alt ?? slot.label, tone: slot.tone, pos };
 };
 
 /**
@@ -30,13 +45,14 @@ export function JourneysHero({ journeys }: { journeys: Journey[] }) {
         .reduce((t, s) => t + (s.nights ?? 0), 0);
       return [{ name: stop.name, at: stop.coords, nights }];
     });
-    const nights = stays.reduce((t, s) => t + (s.nights ?? 0), 0) || j.days - 1;
     return {
       slug: j.slug,
       title: flipbook[j.slug]?.title ?? j.title,
       country: j.country,
-      lead: j.lead,
-      facts: `${j.days} days · ${nights} nights · ${site.groupSize}`,
+      // One line under the name: how long, and from where to where.
+      facts: [`${j.days} days`, j.region],
+      // The journey's own card photograph, as the menu shows it.
+      photo: cardPhoto(j.cardMedia, cardPos[j.slug]),
       label: `${flipbook[j.slug]?.title.split(',')[0] ?? j.title} · ${j.region}`,
       route: route.map((s) => s.coords),
       stops,
@@ -67,6 +83,9 @@ export function JourneysHero({ journeys }: { journeys: Journey[] }) {
       <HeroCarousel
         journeys={items}
         label="A globe showing the chosen journey’s route, its stops and nights"
+        // "Stay tuned" names no place, so its photograph promises none: a boat
+        // on open water, the coast fading behind it.
+        soonPhoto={cardPhoto('home-hero')}
       />
     </section>
   );

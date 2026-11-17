@@ -93,6 +93,48 @@ export const primaryNav: NavItem[] = [
 
 export const ctaNav: NavItem = { label: 'Plan your journey', href: '/plan' };
 
+/**
+ * The menu behind the three-line button: its three sections, the link at the
+ * head of each, and the pages listed beneath them. The rows inside a section
+ * (the journeys, the countries, the ways to travel) come from the content
+ * provider (`getSiteMenu`), so nothing is written twice. Every other page,
+ * Experiences among them, is a plain link that goes straight to it. Labels
+ * are sentence case; caps are a style.
+ */
+export const menuNav = {
+  chapters: {
+    journeys: {
+      label: 'Journeys',
+      heading: 'Small luxury group journeys',
+      all: { label: 'All journeys', href: '/journeys' },
+    },
+    destinations: {
+      label: 'Destinations',
+      heading: 'Destinations',
+      all: { label: 'All destinations', href: '/destinations' },
+    },
+    ways: {
+      label: 'Ways to travel',
+      heading: 'Ways to travel',
+      all: { label: 'The art of travel', href: '/#ways' },
+      /** The ways that share one address are listed under this. */
+      privateGroup: 'Bespoke private travel',
+    },
+  },
+  pages: [
+    { label: 'Experiences', href: '/experiences' },
+    { label: 'Our story', href: '/our-story' },
+    { label: 'Where we stay', href: '/where-we-stay' },
+    { label: 'Journal', href: '/journal' },
+    { label: 'The Circle', href: '/#circle' },
+  ],
+} as const;
+
+export type MenuChapterId = keyof typeof menuNav.chapters;
+
+/** The sections in the order the menu shows them. */
+export const menuChapters = Object.keys(menuNav.chapters) as MenuChapterId[];
+
 export const footerNav: { label: string; items: NavItem[] }[] = [
   {
     label: 'Explore',

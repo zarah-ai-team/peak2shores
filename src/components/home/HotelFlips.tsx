@@ -86,9 +86,15 @@ export function HotelFlips() {
             >
               <span className="fin">
                 <span className="face">
+                  {/* A landscape photograph covering an upright card is drawn
+                      about one and a half times the card's height wide (690 to
+                      810px). `sizes` states that width, not the card's: told
+                      the card's width, the browser fetches a file half the
+                      size it needs and stretches it. On a phone it says 640px,
+                      which keeps the file to 1920px. */}
                   <HomeMedia
                     visual={h}
-                    sizes="(max-width: 600px) 82vw, (max-width: 1699px) 360px, 20vw"
+                    sizes="(max-width: 600px) 640px, (max-width: 1699px) 720px, 810px"
                   />
                   <span className="fs" />
                   {/* The mark that says the card turns over. */}

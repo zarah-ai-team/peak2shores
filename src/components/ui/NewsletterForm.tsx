@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from 'react';
 import { site } from '@/lib/site';
-import { failureMessage, postForm } from '@/lib/forms';
+import { circleConsent, failureMessage, postForm } from '@/lib/forms';
 import { track } from '@/lib/analytics';
 import { readFirstTouch } from '@/lib/attribution';
 
@@ -18,11 +18,15 @@ export type NewsletterVariant = 'compact' | 'large' | 'dark' | 'invite';
  *   `.h5` size, with an ink submit.
  * - `dark`: for navy / navy-deep grounds (the footer) — on-dark rule,
  *   text and placeholder.
- * - `invite`: the homepage Circle over its photograph — a frosted pill with a
- *   clear field and a solid white button, stacking on a phone.
+ * - `invite`: the homepage Circle over its photograph — a white pill of a
+ *   field with a blue pill of a button beside it, the pair centred, stacking
+ *   on a phone.
  *
  * Every form but the compact one carries the consent line: the privacy
- * policy, and that one can leave at any time.
+ * policy, and that one can leave at any time. Its words live in lib/forms
+ * (`circleConsent`); the form tells the route that it showed them, and on
+ * which page, and the route sends that on with the address as the record of
+ * consent.
  *
  * Posts to /api/subscribe, which answers `{ ok, delivered }`. `delivered:
  * false` means no mailing provider is wired yet and nothing was stored, so the
@@ -65,6 +69,10 @@ export function NewsletterForm({
         email,
         website,
         source: readFirstTouch(),
+        // For the list's record of consent: the page this form stands on, and
+        // whether the consent line stood under the field.
+        page: window.location.pathname,
+        consent: variant !== 'compact',
       });
       if (res.ok) {
         const data = (await res.json().catch(() => ({}))) as { delivered?: boolean };
@@ -115,33 +123,46 @@ export function NewsletterForm({
     );
   }
 
+  // The band's field and the footer's are set at 1rem, not at the body size:
+  // that is 16px on a phone or tablet, the size below which iOS Safari zooms
+  // the whole page in when a field takes focus.
+  // The band's field is a pill of dark glass the height of its button (no blur:
+  // a translucent night ground with a white edge, so it sits in the photograph;
+  // 37.8px with a mouse on a laptop, 44px
+  // under a finger), its text 16px on every screen; the others are a
+  // transparent line of text over the form's rule, which is their focus
+  // indicator (`.field-rule`), so they drop the outline and it keeps one.
   const fieldText = invite
-    ? 'prose-body py-3.5 pl-5 text-white placeholder:text-white/75'
+    ? 'prose-body min-h-(--pill-h) rounded-full border border-white/60 bg-[rgb(8_20_28/0.42)] px-5 text-[16px] leading-[1.25] text-white caret-white outline-2 outline-offset-2 outline-transparent placeholder:text-white/80 focus:bg-[rgb(8_20_28/0.55)] focus:outline-white'
     : variant === 'large'
       ? 'font-display text-[clamp(1.375rem,1.48vw,1.75rem)] font-normal leading-[1.2] py-3 placeholder:text-muted'
       : variant === 'dark'
-        ? 'prose-body py-3 text-on-dark placeholder:text-on-dark-muted'
+        ? 'prose-body text-[1rem] py-3 text-on-dark placeholder:text-on-dark-muted'
         : 'prose-body-sm py-3 text-ink placeholder:text-muted';
 
+  // The band's button is a blue pill beside the white field, the brand blue a
+  // step deeper so its white label reads (4.9:1); white under the pointer.
+  // While it sends it keeps its width and stays solid: faded over a
+  // photograph, as the other forms fade on paper, "Sending" could not be read.
   const submit = invite
-    ? 'btn--flat shrink-0 rounded-full bg-white px-7 py-3.5 text-ink transition-colors duration-300 hover:bg-brand hover:text-white'
+    ? 'min-h-(--pill-h) shrink-0 rounded-full bg-brand-deep px-(--pill-px) text-(length:--pill-fs) font-medium tracking-[0.16em] text-white transition-colors duration-300 hover:bg-white hover:text-ink focus-visible:outline-white aria-disabled:cursor-progress aria-disabled:bg-brand-deep aria-disabled:text-white sm:min-w-[160px]'
     : variant === 'large'
-      ? 'btn ml-5 shrink-0 bg-ink px-[calc(var(--btn-px)-0.25rem)] py-[calc(var(--btn-py)-2px)] text-ivory hover:bg-brand'
+      ? 'btn ml-5 shrink-0 bg-ink px-[calc(var(--btn-px)-0.25rem)] py-[calc(var(--btn-py)-2px)] text-ivory hover:bg-brand-deep'
       : `shrink-0 py-3 pl-5 transition-colors duration-300 ${
           dark ? 'text-on-dark hover:text-acqua' : 'hover:text-brand'
         }`;
 
   return (
     <div
-      className={`w-full ${variant === 'compact' ? '' : invite ? 'max-w-[36rem]' : 'max-w-[32.5rem]'} ${className}`}
+      className={`w-full ${variant === 'compact' ? '' : invite ? 'mx-auto max-w-[30rem]' : 'max-w-[32.5rem]'} ${className}`}
     >
-      {/* `.field-rule` re-rules the line in water-blue while the field has focus. */}
+      {/* `.field-rule` re-rules the line in water-blue while the field has
+          focus; the invitation's field takes a white outline instead. */}
       <form
         onSubmit={onSubmit}
-
         className={
           invite
-            ? 'relative flex flex-col gap-2 rounded-[1.75rem] border border-white/45 bg-white/15 p-1.5 backdrop-blur-md sm:flex-row sm:items-center sm:rounded-full'
+            ? 'relative flex flex-col gap-2 sm:flex-row'
             : `field-rule relative flex items-center border-b ${
                 dark ? 'border-on-dark/40' : 'border-ink'
               } ${variant === 'large' ? 'pb-2' : ''}`
@@ -163,7 +184,7 @@ export function NewsletterForm({
           placeholder="Your email"
           aria-describedby={status === 'error' ? `${id}-error` : undefined}
           aria-invalid={status === 'error' ? true : undefined}
-          className={`min-w-0 flex-1 border-0 bg-transparent outline-none ${fieldText}`}
+          className={`min-w-0 ${invite ? 'sm:flex-1' : 'flex-1 border-0 bg-transparent outline-none'} ${fieldText}`}
         />
         {/* Honeypot: hidden from people, screen readers and page captures;
             bots reading the markup still fill it. */}
@@ -182,27 +203,41 @@ export function NewsletterForm({
         <button
           type="submit"
           aria-disabled={status === 'sending'}
-          className={`min-h-(--btn-h) font-ui text-(length:--type-button) font-medium uppercase leading-none tracking-[0.16em] aria-disabled:opacity-40 ${submit}`}
+          className={`font-ui uppercase leading-none ${
+            invite
+              ? ''
+              : 'min-h-(--btn-h) text-(length:--type-button) font-medium tracking-[0.16em] aria-disabled:opacity-40'
+          } ${submit}`}
         >
           {status === 'sending' ? 'Sending' : 'Join The Circle'}
         </button>
       </form>
       {variant !== 'compact' && (
         <p
-          className={`prose-body-sm mt-3 ${invite ? 'text-center text-white/85' : dark ? 'text-on-dark-muted' : 'text-muted'}`}
+          className={`prose-body-sm mt-3 ${invite ? 'text-center text-white' : dark ? 'text-on-dark-muted' : 'text-muted'}`}
         >
-          By joining, you agree to our{' '}
-          <a href="/privacy" className="underline underline-offset-2 hover:no-underline">
-            Privacy Policy
+          {circleConsent.before}{' '}
+          <a
+            href={circleConsent.policy.href}
+            className={`underline underline-offset-2 hover:no-underline${invite ? ' whitespace-nowrap' : ''}`}
+          >
+            {circleConsent.policy.label}
           </a>
-          . Unsubscribe at any time.
+          .{' '}
+          {/* Centred over the photograph, the line breaks between its two
+              sentences on a phone, never inside the link or the second one. */}
+          {invite ? (
+            <span className="whitespace-nowrap">{circleConsent.after}</span>
+          ) : (
+            circleConsent.after
+          )}
         </p>
       )}
       <p
         id={`${id}-error`}
         role="alert"
         aria-live="assertive"
-        className={`prose-body-sm mt-3 ${dark ? 'text-error-dark' : 'text-error'}`}
+        className={`prose-body-sm mt-3 ${invite ? 'text-white' : dark ? 'text-error-dark' : 'text-error'}`}
       >
         {status === 'error'
           ? errorText || `That didn’t send. Please try again, or email ${site.email}.`

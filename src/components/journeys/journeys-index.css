@@ -13,9 +13,9 @@
   --paper: var(--color-ivory);
   --ink: #141d24;
   --muted: #5a646d;
-  --lake: #0b5c85;
+  --lake: var(--color-acqua-text);
   --brand: var(--color-brand);
-  --sky: #7accfd;
+  --sky: var(--color-acqua);
   --deep: var(--color-navy);
   --rule: rgb(20 29 36 / 0.14);
   --serif: var(--font-display);
@@ -74,7 +74,7 @@
   font-weight: var(--title-weight);
   font-size: clamp(2rem, 3.3vw, 3.5rem);
   line-height: 1.05;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.01em;
   text-wrap: balance;
 }
 @media (min-width: 900px) {
@@ -117,6 +117,7 @@
   position: relative;
   aspect-ratio: 1400 / 560;
   overflow: hidden;
+  /* The same corner as the photographs under it. */
   border-radius: 1.5rem;
   border: 1px solid var(--rule);
   background: #f4f1ea;
@@ -201,6 +202,13 @@
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--muted);
+  text-wrap: balance;
+}
+/* A small phone: the line holds on one line beside the arrows. */
+@media (max-width: 380px) {
+  .jxh-count {
+    letter-spacing: 0.16em;
+  }
 }
 .jxh-nav {
   display: flex;
@@ -227,13 +235,14 @@
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 999px;
-  background: rgb(20 29 36 / 0.2);
+  /* 3.3:1 on the page: a control's own mark, so it must be seen. */
+  background: rgb(20 29 36 / 0.5);
   transition:
     width 0.4s var(--ease),
     background-color 0.4s;
 }
 .jxh-dots button:hover i {
-  background: rgb(20 29 36 / 0.45);
+  background: rgb(20 29 36 / 0.7);
 }
 .jxh-dots button.on i {
   width: 1.75rem;
@@ -254,10 +263,19 @@
     background-color 0.3s,
     color 0.3s;
 }
-.jxh-arrow:hover {
+/* Under a pointer only: on a touch screen a hover would stay on the arrow
+   after the tap, so there it fills while it is pressed. */
+.jxh-arrow:active {
   border-color: var(--ink);
   background: var(--ink);
   color: #fff;
+}
+@media (hover: hover) {
+  .jxh-arrow:hover {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: #fff;
+  }
 }
 .jxh-arrow svg {
   width: 1rem;
@@ -266,19 +284,41 @@
   stroke: currentColor;
   stroke-width: 1.6;
 }
+/* A touch screen at laptop width has the smaller root size: the dots and the
+   arrows keep 44px to the finger. */
+@media (pointer: coarse) {
+  .jxh-dots button {
+    height: 44px;
+  }
+  .jxh-arrow {
+    width: 44px;
+    height: 44px;
+  }
+}
+/* The cards: a photograph, the countries, the name, one line of facts and one
+   link that covers the whole card. No box around them: the photographs make
+   the row. Every card shares the rail's five rows (subgrid), so the names,
+   the facts and the closing rules line up across the row whatever the length
+   of a name. */
 .jxh-cards {
+  --gap: clamp(1rem, 2.2vw, 2rem);
+  /* Room for a focus ring inside the rail, which clips what leaves it; the
+     margin gives the room back, so the photographs still line up with the map. */
+  --ring: 0.5rem;
   /* Its own containing block, so nothing inside (a screen-reader label) can
      reach past the rail and widen the page on a phone. */
   position: relative;
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: calc((100% - 2 * 1.25rem) / 3);
-  gap: 1.25rem;
-  margin: 0;
-  padding: 0.25rem;
+  grid-auto-columns: calc((100% - 2 * var(--gap)) / 3);
+  grid-template-rows: repeat(5, auto);
+  gap: 0 var(--gap);
+  margin: calc(-1 * var(--ring));
+  padding: var(--ring);
   list-style: none;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--ring);
   scrollbar-width: none;
 }
 .jxh-cards::-webkit-scrollbar {
@@ -286,83 +326,146 @@
 }
 .jxh-cards > li {
   scroll-snap-align: start;
+  /* One card to a swipe, so the globe is never flung past a journey. */
+  scroll-snap-stop: always;
   min-width: 0;
 }
 .jxh-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 1.375rem 1.5rem 1.25rem;
-  border: 1px solid var(--rule);
-  border-radius: 1rem;
-  background: #fff;
-  cursor: pointer;
-  transition:
-    border-color 0.4s var(--ease),
-    box-shadow 0.4s var(--ease);
 }
-.jxh-card.on {
-  border-color: var(--brand);
-  box-shadow: inset 0 0 0 1px var(--brand);
+@supports (grid-template-rows: subgrid) {
+  .jxh-cards > li,
+  .jxh-card {
+    display: grid;
+    grid-row: span 5;
+    grid-template-rows: subgrid;
+    height: auto;
+  }
+}
+.jxh-card .ph {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+.jxh-card .ph img {
+  object-fit: cover;
+  transition: transform 1.2s var(--ease);
 }
 .jxh-card .top {
-  display: flex;
-  align-items: baseline;
-  gap: 0.625rem;
-  margin: 0 0 0.75rem;
-  font-size: 0.625rem;
+  margin: 1.125rem 0 0;
+  font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.2em;
+  line-height: 1.45;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--lake);
-}
-.jxh-card .top b {
-  font-family: var(--serif);
-  font-size: 1rem;
-  font-weight: 400;
-  letter-spacing: 0;
-  color: var(--brand);
-}
-.jxh-card h2 {
-  margin: 0;
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(1.125rem, 1.45vw, 1.375rem);
-  line-height: 1.22;
-}
-.jxh-card .lead {
-  margin: 0.5rem 0 1.25rem;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 0.9375rem;
   color: var(--muted);
 }
+.jxh-card h2 {
+  margin: 0.5rem 0 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  /* Sized so the longest name holds one line wherever three cards show. */
+  font-size: clamp(1.25rem, 1.45vw, 1.5rem);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+.jxh-card .facts {
+  margin: 0.5rem 0 1.125rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+/* The point between the days and the route, with air on both sides. */
+.jxh-card .facts .dot {
+  margin: 0 0.3125em;
+}
+/* The closing rule separates the journey from its link, and is where the
+   chosen card says so: the rule draws across in ink, as the chosen dot is ink. */
 .jxh-card .foot {
+  margin: auto 0 0;
+  border-top: 1px solid var(--rule);
+}
+/* In the flow, not placed: the link's own cover is what the card positions. */
+.jxh-card .foot::before {
+  content: '';
+  display: block;
+  height: 2px;
+  margin-top: -1px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.7s var(--ease);
+}
+.jxh-card.on .foot::before {
+  transform: scaleX(1);
+}
+.jxh-card .foot a {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  margin: auto 0 0;
-  padding-top: 0.875rem;
-  border-top: 1px solid var(--rule);
-  font-size: 0.8125rem;
-  color: var(--muted);
-}
-.jxh-card .foot a {
-  flex: none;
-  font-size: 0.6875rem;
+  padding: 0.875rem 0 0.25rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--lake);
   text-decoration: none;
 }
-.jxh-card .foot a:hover {
-  color: var(--brand);
+/* The link is the whole card. */
+.jxh-card .foot a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 1.125rem;
 }
-.jxh-card.soon {
-  background: var(--color-stone);
-  border-style: dashed;
+.jxh-card .foot a:focus-visible {
+  outline: none;
+}
+.jxh-card .foot a:focus-visible::after {
+  outline: 2px solid var(--ink);
+  outline-offset: 0.3125rem;
+}
+.jxh-card .foot svg {
+  flex: none;
+  width: 0.875rem;
+  height: 0.625rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2;
+  transition: transform 0.5s var(--ease);
+}
+@media (hover: hover) {
+  .jxh-card:hover .ph img {
+    transform: scale(1.03);
+  }
+  .jxh-card:hover .foot svg {
+    transform: translateX(0.25rem);
+  }
+}
+/* A phone shows one card at a time, so the shared rows would only leave
+   gaps under a short name for the sake of a long one out of sight: each card
+   sets its own rows there, its rule and link still at its foot. */
+@media (max-width: 760px) {
+  /* One row for the rail, a card to each column. */
+  .jxh-cards {
+    grid-template-rows: auto;
+  }
+  .jxh-cards > li {
+    display: flex;
+    grid-row: auto;
+  }
+  .jxh-card {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    grid-row: auto;
+    grid-template-rows: none;
+  }
 }
 
 /* -- 3. The details that make the difference ----------------------------------
@@ -393,7 +496,7 @@
   font-weight: var(--title-weight);
   font-size: var(--h2);
   line-height: 1.06;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.012em;
 }
 .xpd-head p {
   margin: 0;
@@ -454,7 +557,7 @@
   font-weight: 300;
   font-size: clamp(2.75rem, 3.6vw, 3.5rem);
   line-height: 0.9;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.008em;
   font-variant-numeric: lining-nums;
   color: var(--brand);
 }
@@ -480,9 +583,13 @@
   font-size: clamp(1.1875rem, 1.45vw, 1.375rem);
   line-height: 1.2;
 }
+/* The descriptions at the size the 30 October revision gave them when the
+   client found them very small (note of 29 October): 15px on a phone, about
+   13.7px on a laptop, 16px on a wide desktop, where 0.875rem gave 14, 12.6
+   and 14. */
 .xpd-grid p {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: clamp(0.9375rem, 0.95vw, 1rem);
   line-height: 1.65;
   color: var(--muted);
 }
@@ -549,7 +656,7 @@
   align-items: center;
   gap: 0.625rem;
   min-height: 2.75rem;
-  padding: 0 1rem;
+  padding: 0 1.375rem;
   border: 1px solid var(--rule);
   border-radius: 999px;
   background: #fff;
@@ -561,8 +668,10 @@
 }
 .jx .fbtn:hover,
 .jx .fmenu.open .fbtn {
-  border-color: var(--brand);
+  border-color: var(--ink);
 }
+/* What the menu filters, set as a button's label; the choice beside it reads
+   as a sentence would. */
 .jx .fbtn small {
   font-size: 0.625rem;
   font-weight: 500;
@@ -637,8 +746,8 @@
   border-radius: 0.25rem;
 }
 .jx .flist .on .box {
-  border-color: var(--brand);
-  background: var(--brand)
+  border-color: var(--lake);
+  background: var(--lake)
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E")
     center / 0.75rem no-repeat;
 }
@@ -690,31 +799,34 @@
   font-weight: var(--title-weight);
   font-size: clamp(1.625rem, 2.3vw, 2.375rem);
   line-height: 1.12;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.008em;
 }
 .jxb-in p:not(.jxb-lab) {
   max-width: 52ch;
   margin: 0;
   font-size: 0.9375rem;
   line-height: 1.6;
-  color: #d5e0e7;
+  color: var(--color-on-dark-body);
 }
 .jxb-ctas {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
 }
+/* The house button on the blue ground: the first is white with an ink label,
+   the second a white outline that fills on hover. */
 .jxb-btn {
   display: inline-flex;
   align-items: center;
-  min-height: 3.25rem;
-  padding: 0 1.75rem;
-  border: 1px solid rgb(255 255 255 / 0.6);
+  justify-content: center;
+  min-height: var(--pill-h);
+  padding: 0 var(--pill-px);
+  border: 1px solid rgb(255 255 255 / 0.7);
   border-radius: 999px;
   font-family: var(--sans);
-  font-size: 0.75rem;
+  font-size: var(--pill-fs);
   font-weight: 500;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: #fff;
   text-decoration: none;
@@ -730,8 +842,9 @@
   color: var(--ink);
 }
 .jxb-btn.solid {
-  background: var(--brand);
-  border-color: var(--brand);
+  background: var(--color-brand-deep);
+  border-color: var(--color-brand-deep);
+  color: #fff;
   font-weight: 600;
 }
 .jxb-btn.solid:hover {
@@ -739,26 +852,15 @@
   border-color: #fff;
   color: var(--ink);
 }
-.jxb-connect {
-  display: inline-flex;
-  gap: 0.5rem;
-  padding: 0.875rem 1.5rem;
-  border: 1px solid var(--color-ink);
-  border-radius: 999px;
-  font-family: var(--font-ui);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: var(--color-ink);
-  transition:
-    background-color 0.3s,
-    color 0.3s;
+/* An ink ring is lost on the blue: the pale sky is the one that shows. */
+.jxb-btn:focus-visible {
+  outline-color: var(--sky);
 }
-.jxb-connect:hover {
-  background: var(--color-ink);
-  color: #fff;
+@media (pointer: coarse) {
+  .jxb-btn,
+  .jx .fbtn {
+    min-height: 44px;
+  }
 }
 
 /* -- Tablet and phone ------------------------------------------------------------- */
@@ -766,8 +868,14 @@
   .xpd {
     grid-template-columns: minmax(0, 1fr);
   }
+  /* Two cards and the edge of a third, so the rail shows there is more; it
+     runs to the edges of the screen, and its first and last cards still stop
+     in line with the map. */
   .jxh-cards {
-    grid-auto-columns: calc((100% - 1.25rem) / 2);
+    grid-auto-columns: calc((100% - 2 * var(--gap)) / 2.25);
+    margin-inline: calc(-1 * var(--gut));
+    padding-inline: var(--gut);
+    scroll-padding-inline: var(--gut);
   }
 }
 @media (max-width: 760px) {
@@ -794,7 +902,7 @@
     display: inline;
   }
   .jxh-cards {
-    grid-auto-columns: 85%;
+    grid-auto-columns: 82%;
   }
   .jxh-dots {
     display: none;
@@ -819,8 +927,15 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .jxh-soon,
-  .jxh-dots i {
+  .jxh-dots i,
+  .jxh-card .ph img,
+  .jxh-card .foot::before,
+  .jxh-card .foot svg {
     transition: none;
+  }
+  .jxh-card:hover .ph img,
+  .jxh-card:hover .foot svg {
+    transform: none;
   }
 }
 .jxb-in > div:first-child {
@@ -830,9 +945,12 @@
   flex: none;
 }
 
-/* Phone: the banner's buttons take their own line and wrap. */
+/* Phone: the banner's buttons take their own line, each the full width. */
 @media (max-width: 760px) {
   .jxb-ctas {
     flex: 1 1 100%;
+  }
+  .jxb-btn {
+    flex: 1 1 auto;
   }
 }

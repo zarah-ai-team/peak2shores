@@ -44,6 +44,41 @@ cross-fade, `HotelsStrip` ledger, `ItineraryRail` marker, reduced-motion/no-JS s
 
 ## 2. Design system
 
+*Superseded in part, November 2026 (design refinement asked for by the site's owner).* What follows
+in §2.1, §2.2 and §2.6 is kept as the record of the earlier system; the values in force are in
+`src/app/globals.css` and are, in short:
+
+- **Type.** Headings are **Newsreader** (variable, with optical sizes; `--font-display`), text and
+  interface are **Instrument Sans** (variable; `--font-ui`), both through `next/font`. Section titles
+  are semibold (`--title-weight: 600`, raised from 500 at the owner's request on 17 Nov), and the
+  tight negative tracking that suited the earlier serif was eased to 40% of its values. A section's
+  line sits close under its heading (0.25rem), so the two read as one. The headlines over a
+  photograph were brought a step down on 17 Nov: the home page's to 72px on a laptop, a journey's
+  to 63px, Experiences' to 59px; on a phone none is larger than the home page's.
+- **Colour.** The established navy: **#0e2f42** (`--color-navy`, the pages' `--deep`) for dark
+  grounds and **#0a2232** (`--color-navy-deep`) for the footer; the lake blue **#0b5c85**
+  (`--color-acqua-text`, the pages' `--lake`) for titles and links on paper. A brighter #0062a1 was
+  tried on 17 Nov and taken back the same day: the client's notes treat the navy as the established
+  brand colour. The accent is **#018fc9** (`--color-brand`): rules, ticks, large words; never a
+  ground for small white text (3.6:1). A blue button is the accent a step deeper, **#0179ab**
+  (`--color-brand-deep`, white on it 4.9:1). On the navy the blue text is the water-blue
+  **#7accfd** (`--color-acqua`). Paper tones are unchanged, and there are no warm (sand, beige)
+  tints.
+- **Surfaces and buttons.** No frosted glass (`backdrop-filter`) and no decorative outlines. Buttons
+  are as on the live site: the pages' own buttons (the home page, a journey, the Journeys page) are
+  pills (`--pill-h`, `--pill-px`, `--pill-fs`: 37.8px with a 9.9px label on a laptop, 42px with an
+  11px label on a phone, 44px to a finger), their label medium at 0.16em; the shared `Button` and
+  the header's "Plan your journey" are plain rectangles, and the pinned "Request details" a pill. On
+  paper a button is ink and turns blue under the pointer; on a photograph the first is a blue or
+  white pill and the second an outline pill; on the navy the first is the blue pill. Tags, chips and
+  tab groups are pills; icon-only controls are round.
+- **Settled against the client's notes (17 Nov).** The How We Travel photographs are square (Marc,
+  9 Nov: see more of the desert tea; 4:3 was tried the same day and cut the pour, the fire and the
+  musicians). On a phone the journeys' three promises are one row that swipes, not a stack. The
+  Circle is a band at least 1080px tall over its photograph from 701px up; on a phone the whole
+  photograph comes first and the invitation beneath it on the dark ground. The footer's last line
+  carries "Powered by" and the Zarah AI logo at 32px, not a row of its own (Marc: a compact footer).
+
 ### 2.1 Colour tokens (`@theme` in `globals.css`)
 
 Existing names are kept so nothing breaks; values evolve. New tokens added.
@@ -187,6 +222,15 @@ Mobile (<1024): logo + 44px burger (two 1px lines → X). Menu = full-screen `fo
 sheet (change from ivory) with nav items in `.h3` serif, stacked, 1px `line-dark` between,
 staggered 60ms rise; below: CTA `light`, email, locations in `kicker-sm on-dark-muted`.
 Header over the open menu: on-dark colours. Focus trapped (existing behaviour kept).
+
+*Superseded, November 2026:* the two-line burger and its phone-only sheet gave way to a
+three-line button at every width and the menu it opens (`components/layout/SiteMenu.tsx`,
+`layout/menu/`). From 1024px it is a blue sidebar (the three sections, the other pages,
+the Plan button) with a light panel beside it for the chosen section's rows: the journeys,
+the countries, the ways to travel. Narrower, the blue index comes first and a section opens
+as a light pane of its own. Experiences and the other pages are plain links to their page.
+Its type is interface-sized (22px section names, 20px row titles, nothing under 11.5px) and
+its photographs are thumbnails; the sizes and the contrast pairs are noted in `menu.css`.
 
 ### 2.8 Footer
 

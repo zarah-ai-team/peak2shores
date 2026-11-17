@@ -28,6 +28,8 @@
 import { getMedia, media, type MediaKey } from '../media';
 import { isLive, isNew, journeyLabel, rankRelated, toSummary } from '../journeys';
 import { pageMetadata, jsonLd } from '../seo';
+import { journeyRank } from '../data/flipbook';
+import { ways } from '../data/home';
 import { source } from './source';
 import type {
   ContentQueryOptions,
@@ -38,9 +40,11 @@ import type {
   JournalCategory,
   Journey,
   JourneySummary,
+  MenuPhoto,
   Navigation,
   PageContentMap,
   PageKey,
+  SiteMenu,
   SiteSettings,
 } from './types';
 
@@ -233,6 +237,67 @@ export async function getSiteSettings(): Promise<SiteSettings> {
 
 export async function getNavigation(): Promise<Navigation> {
   return source.navigation();
+}
+
+/* -- The site menu ------------------------------------------------------- */
+
+function menuPhoto(key: MediaKey): MenuPhoto | null {
+  const slot = getMedia(key);
+  return slot.src ? { src: slot.src } : null;
+}
+
+/** A journey's short name, as on the homepage cards: its title up to the first comma or colon. */
+function shortName(title: string) {
+  return title.split(/[,:]/)[0].trim();
+}
+
+/**
+ * What the header's menu shows beyond the navigation links: the journeys with
+ * a photograph each, the countries they go to and the ways to travel. Built
+ * from the getters the pages use, so a journey that is not released yet is
+ * not in the menu either, and nothing here is written twice.
+ */
+export async function getSiteMenu(opts?: ContentQueryOptions): Promise<SiteMenu> {
+  const [allJourneys, destinations] = await Promise.all([getJourneys(opts), getDestinations(opts)]);
+  const inOrder = <T extends { slug: string }>(list: readonly T[]) =>
+    [...list].sort((a, b) => journeyRank(a.slug) - journeyRank(b.slug));
+
+  // Marc's order, as on the Journeys page; a departed journey keeps its page
+  // but is not offered here, neither in the list nor under its countries.
+  const journeys = inOrder(allJourneys.filter((journey) => journey.status !== 'past')).map(
+    (journey) => ({
+      slug: journey.slug,
+      href: `/journeys/${journey.slug}`,
+      name: shortName(journey.title),
+      route: journey.region,
+      days: journey.days,
+      country: journey.country,
+      departure: journey.departure,
+      label: journeyLabel({ status: journey.status, isNew: isNew(journey) }),
+      photo: menuPhoto(journey.cardMedia),
+    }),
+  );
+  const departures = new Set(journeys.map((journey) => journey.departure));
+
+  return {
+    journeys,
+    datesNote: journeys.length > 0 && departures.size === 1 ? journeys[0].departure : null,
+    destinations: destinations.map((place) => ({
+      slug: place.slug,
+      href: `/destinations#${place.slug}`,
+      country: place.country,
+      journeys: inOrder(place.journeys.filter((journey) => journey.status !== 'past')).map(
+        (journey) => shortName(journey.title),
+      ),
+      photo: menuPhoto(place.media),
+    })),
+    ways: ways.map((way) => ({
+      title: way.title,
+      href: way.href,
+      shared: ways.filter((other) => other.href === way.href).length > 1,
+      photo: way.img ? { src: way.img, ...(way.pos ? { pos: way.pos } : {}) } : null,
+    })),
+  };
 }
 
 /* -- Page copy ----------------------------------------------------------- */

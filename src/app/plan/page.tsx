@@ -38,7 +38,7 @@ export default async function PlanPage() {
 
   return (
     <>
-      <PageTitle kicker="Plan your journey" title="Start with a conversation.">
+      <PageTitle kicker="Plan your journey" title={'Start with a\u00a0conversation.'}>
         Join one of our upcoming departures, or design a private journey on your own dates. Either
         way it begins the same way — you tell us a little, and our team takes it from there.
       </PageTitle>
@@ -54,7 +54,7 @@ export default async function PlanPage() {
           <Reveal className="col-span-4 md:col-span-7 lg:col-span-6 lg:col-start-7">
             <SectionLabel tone="stone" className="mb-stack flex items-center gap-3.5">
               <Tick />
-              Private &amp; custom travel
+              Bespoke Private Travel
             </SectionLabel>
             <h2 id="private-title" className="h2 mb-stack max-w-[18ch]">
               A journey with only your names on the list.
@@ -135,7 +135,7 @@ function Ledger({ journeys }: { journeys: JourneySummary[] }) {
               <th scope="row" className="py-6 pr-6 text-left font-normal">
                 <Link
                   href={`/journeys/${journey.slug}`}
-                  className="h5 transition-colors duration-300 hover:text-brand"
+                  className="h5 transition-colors duration-300 hover:text-brand-deep"
                 >
                   {journey.title}
                 </Link>

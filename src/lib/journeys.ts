@@ -205,6 +205,12 @@ export type Journey = {
   departureWindow: string;
   /** First departure date. Absent until Marc sets the dates. */
   departureISO?: string;
+  /**
+   * The months it departs in, 'YYYY-MM' (['2027-06', '2027-09']), for the
+   * Departure filter on the Journeys page. Absent until Marc sets them; never
+   * enter a month he has not confirmed.
+   */
+  departureMonths?: string[];
   group: string;
   groupMax: number;
   /** e.g. '$12,400'. Absent until Marc sets the rate. */

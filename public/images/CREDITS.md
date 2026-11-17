@@ -9,11 +9,14 @@ calm light, no crowds, the right destination) and its provenance read from the
 source page itself. None of it was shot for Peaks2Shores; see
 `PHOTOGRAPHY-BRIEF.md` for what a commissioned shoot should replace first.
 
-- **102** frames from Unsplash under the
+- **100** frames from Unsplash under the
   [Unsplash License](https://unsplash.com/license): free for commercial use, no
   attribution required (credited here and on `/credits` anyway). The licence
   does not allow selling the photos unaltered or compiling them into a
   competing image service.
+- **5** frames and films from Pexels under the
+  [Pexels License](https://www.pexels.com/license/) (credited here and on
+  `/credits`).
 - **7** frames remain from Wikimedia Commons.
   6 of them are CC BY / CC BY-SA and **require visible
   attribution** while in use (the `/credits` page provides it).
@@ -23,8 +26,8 @@ source page itself. None of it was shot for Peaks2Shores; see
 1. **People.** A copyright licence is not a model release. Frames were chosen
    with people small, distant or from behind; re-check any face before a
    campaign use.
-2. **Hotels.** Hotel slots show generic regional property and terrace views. No
-   frame depicts, or implies a partnership with, a named hotel.
+2. **Hotels.** The stock hotel slots show generic regional property and terrace
+   views. No stock frame depicts, or implies a partnership with, a named hotel.
 3. **Locations.** Unsplash location tags are photographer-supplied and
    occasionally wrong; the `location` field in `credits.json` is recorded as
    published, not as verified.
@@ -49,7 +52,7 @@ source page itself. None of it was shot for Peaks2Shores; see
 | `ce-7` | ce-7.jpg | [Unsplash](https://unsplash.com/photos/a-close-up-of-a-pine-tree-with-yellow-leaves-ZgWALE6YGxY) | Pix Tresa | Unsplash License |
 | `ce-8` | ce-8.jpg | [Unsplash](https://unsplash.com/photos/a-lake-with-trees-and-mountains-in-the-background-UjNmwXiOvpY) | Perspective Nature | Unsplash License |
 | `ce-9` | ce-9.jpg | [Commons](https://commons.wikimedia.org/wiki/File:Soglio_by_night.jpg) | Kuhnmi | CC BY-SA 4.0 |
-| `ce-list` | ce-hero.jpg | [Unsplash](https://unsplash.com/photos/gI67EMO0i5w) | Kristaps Dokans | Unsplash License |
+| `ce-list` | ce-list.jpg | [Unsplash](https://unsplash.com/photos/gI67EMO0i5w) | Kristaps Dokans | Unsplash License |
 | `cp-1` | cp-1.jpg | [Unsplash](https://unsplash.com/photos/sandy-beach-at-sunset-L6EP96_w1Fc) | Brent Ninaber | Unsplash License |
 | `cp-10` | cp-10.jpg | [Unsplash](https://unsplash.com/photos/green-grass-during-sunrise-IpE-bIbCfBo) | Tim Johnson | Unsplash License |
 | `cp-11` | cp-11.jpg | [Unsplash](https://unsplash.com/photos/city-buildings-near-body-of-water-during-daytime-v59Et7cDz7A) | Sebastian Canaves | Unsplash License |
@@ -87,14 +90,17 @@ source page itself. None of it was shot for Peaks2Shores; see
 | `g3` | g3.jpg | [Unsplash](https://unsplash.com/photos/table-set-with-lemons-and-crystal-f6QoaTtdyGw) | Guillaume de Germain | Unsplash License |
 | `g4` | g4.jpg | [Unsplash](https://unsplash.com/photos/stone-arches-and-columns-in-a-cloister-with-greenery-DnwNr7GBeEA) | Ilia | Unsplash License |
 | `g5` | g5.jpg | [Unsplash](https://unsplash.com/photos/a-white-wall-with-a-chair-and-a-city-in-the-background-G56s81sNzIQ) | Theo | Unsplash License |
-| `home-circle` | home-circle.jpg | [Unsplash](https://unsplash.com/photos/a-view-of-a-beach-with-boats-in-the-water-F88j1nmoHLk) | Simon Nham | Unsplash License |
 | `home-cove` | home-cove.jpg | [Unsplash](https://unsplash.com/photos/a-white-boat-in-the-middle-of-a-body-of-water-2MbCS4--aSo) | Fadi Al Shami | Unsplash License |
 | `home-curated` | home-curated.jpg | [Unsplash](https://unsplash.com/photos/white-concrete-building-near-body-of-water-during-daytime-ZAPIBe5pbx0) | Lewis J Goetz | Unsplash License |
 | `home-hero` | home-hero.jpg | [Unsplash](https://unsplash.com/photos/sailing-boat-Fzp8kL9jAiM) | KaLisa Veer | Unsplash License |
 | `home-hero-2` | home-hero-2.jpg | [Unsplash](https://unsplash.com/photos/green-trees-near-lake-and-mountain-during-daytime-kokjC1WcD4M) | Susan Flynn | Unsplash License |
 | `home-hero-3` | home-hero-3.jpg | [Unsplash](https://unsplash.com/photos/mountains-in-body-of-water-F8ru8OvpRzA) | Adolfo Ruiz | Unsplash License |
+| `home-jr-adriatic` | home/jr-adriatic-dubrovnik-walls.jpg | [Pexels](https://www.pexels.com/photo/defensive-walls-and-the-old-town-of-dubrovnik-16908309/) | Diego F. Parra | Pexels License |
+| `home-reel-hvar` | video/home/reel-hvar-harbour.mp4 | [Pexels](https://www.pexels.com/video/16114872/) | Pexels contributor | Pexels License |
+| `home-reel-italy` | video/home/reel-amalfi-coast.mp4 | [Pexels](https://www.pexels.com/video/drone-footage-of-the-amalfi-coast-12315324/) | Boris Ivas | Pexels License |
+| `home-reel-safari` | video/home/reel-safari-giraffes.mp4 | [Pexels](https://www.pexels.com/video/giraffe-s-standing-on-a-grass-field-5214180/) | Taryn Elliott | Pexels License |
 | `home-way-cruises` | home-way-cruises.jpg | [Unsplash](https://unsplash.com/photos/a-boat-speeds-through-crystal-blue-waters-C0iBeLnhuLU) | Héctor Mavare | Unsplash License |
-| `home-way-villas` | home-way-villas.jpg | [Unsplash](https://unsplash.com/photos/a-pool-with-a-patio-and-chairs-Ti9XCg6QOn4) | Uzuri Safaris Tanzania | Unsplash License |
+| `home-way-villas` | home/way-villas-sunset-pool.jpg | [Pexels](https://www.pexels.com/photo/luxury-villa-with-private-pool-and-sea-view-24807132/) | Ahmet ÇÖTÜR | Pexels License |
 | `hotel-1` | hotel-1.jpg | [Unsplash](https://unsplash.com/photos/coastal-town-buildings-overlooking-a-vibrant-blue-sea-with-boats-GasM0nsuews) | Rafael Peier | Unsplash License |
 | `hotel-2` | hotel-2.jpg | [Unsplash](https://unsplash.com/photos/brown-and-white-concrete-building-beside-body-of-water-during-daytime-CNVYC8IR4tY) | Simon Schwyter | Unsplash License |
 | `hotel-3` | hotel-3.jpg | [Unsplash](https://unsplash.com/photos/a-courtyard-with-a-tree-in-the-middle-of-it-sjB6J6113l0) | Max Harlynking | Unsplash License |
@@ -124,7 +130,7 @@ source page itself. None of it was shot for Peaks2Shores; see
 | `ma-5` | ma-5.jpg | [Unsplash](https://unsplash.com/photos/boats-in-a-harbor-with-a-town-on-the-hill-jQdyA49RId0) | Alexis Presa | Unsplash License |
 | `ma-6` | ma-6.jpg | [Unsplash](https://unsplash.com/photos/a-house-with-a-pool-in-the-middle-of-it-Irn0tSJPPWY) | Max Harlynking | Unsplash License |
 | `ma-7` | ma-7.jpg | [Unsplash](https://unsplash.com/photos/palma-cathedral-reflected-in-calm-water-under-a-clear-sky-w1tXiQDe-Gg) | Lucas Klein | Unsplash License |
-| `ma-list` | ma-hero.jpg | [Unsplash](https://unsplash.com/photos/a-view-of-the-ocean-from-the-top-of-a-mountain--ng6LPq1Dg8) | Muzykalne Podróże | Unsplash License |
+| `ma-list` | ma-list.jpg | [Unsplash](https://unsplash.com/photos/a-view-of-the-ocean-from-the-top-of-a-mountain--ng6LPq1Dg8) | Muzykalne Podróże | Unsplash License |
 | `pillar-1` | pillar-1.jpg | [Unsplash](https://unsplash.com/photos/people-walking-down-a-narrow-street-towards-a-castle-m8uV_9gO9M0) | Domenico Adornato | Unsplash License |
 | `pillar-2` | pillar-2.jpg | [Unsplash](https://unsplash.com/photos/terraced-buildings-overlook-a-calm-blue-ocean-under-clear-skies-pDZpDy_KCeg) | Vasilis Caravitis | Unsplash License |
 | `pillar-3` | pillar-3.jpg | [Unsplash](https://unsplash.com/photos/orange-fruits-on-brown-wooden-crate-tDyPWf0PUwc) | Egor Myznik | Unsplash License |
@@ -142,4 +148,3 @@ source page itself. None of it was shot for Peaks2Shores; see
 | `tr-2` | tr-2.jpg | [Unsplash](https://unsplash.com/photos/snow-capped-mountains-reflected-in-lake-o75824r-9HE) | Martin Leitgeb | Unsplash License |
 | `tr-3` | tr-3.jpg | [Unsplash](https://unsplash.com/photos/green-trees-on-brown-mountain-near-body-of-water-during-daytime-kJ2_a03Bp-M) | Henrique Ferreira | Unsplash License |
 | `tr-4` | tr-4.jpg | [Unsplash](https://unsplash.com/photos/silhouette-of-palm-trees-near-body-of-water-during-sunset-FQjUaIMQF3Q) | Denys Kostyuchenko | Unsplash License |
-| `home-reel-safari` | reel-safari-giraffes.mp4 | [Pexels](https://www.pexels.com/video/giraffe-s-standing-on-a-grass-field-5214180/) | Taryn Elliott | Pexels License |

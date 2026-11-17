@@ -27,7 +27,6 @@ export const discovered: Record<string, { src: string }> = {
   'home-way-cruises': { src: '/images/home-way-cruises.jpg' },
   'home-way-villas': { src: '/images/home-way-villas.jpg' },
   'home-cove': { src: '/images/home-cove.jpg' },
-  'home-circle': { src: '/images/home-circle.jpg' },
   'dep-swiss-lakes': { src: '/images/dep-swiss-lakes.jpg' },
   'dep-amalfi': { src: '/images/dep-amalfi.jpg' },
   'dep-como': { src: '/images/dep-como.jpg' },

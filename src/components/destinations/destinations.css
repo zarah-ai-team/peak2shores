@@ -43,7 +43,7 @@
   font-weight: var(--title-weight);
   font-size: clamp(2rem, 3.3vw, 3.5rem);
   line-height: 1.05;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.01em;
   text-wrap: balance;
 }
 @media (min-width: 1024px) {
@@ -122,7 +122,7 @@
   padding: 0 clamp(1rem, 1.06vw, 1.25rem);
   border-radius: 999px;
   border: 1px solid rgb(255 255 255 / 0.4);
-  background: rgb(8 20 28 / 0.55);
+  background: rgb(8 20 28 / 0.72);
   color: #fff;
   font-family: var(--sans);
   font-size: 0.75rem;
@@ -134,6 +134,13 @@
   transition:
     background-color 0.4s var(--ease),
     border-color 0.4s var(--ease);
+}
+/* The country's name, white. Stated with the page's own class in front:
+   home.css sets `.hc a { color: inherit }` at the same weight as `.dz-index a`,
+   and whichever stylesheet the bundle places last would otherwise win (it
+   left the names in ink on the dark ground, where they could not be read). */
+.hc .dz-index a {
+  color: #fff;
 }
 .dz-index a span {
   color: var(--sky);
@@ -178,7 +185,7 @@
   font-weight: 400;
   font-size: clamp(2.5rem, 2.97vw, 3.5rem);
   line-height: 1;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.012em;
   color: var(--brand);
 }
 .dz-facts span {
@@ -196,9 +203,10 @@
   color: var(--ink);
   padding: 0 var(--dz-side) clamp(3rem, 4.24vw, 5rem);
 }
-/* One column for the heading and every country: the site gutter on a phone or
+/* One column for the opening and the heading: the site gutter on a phone or
    laptop, and on a wide screen a centred 1600px measure, so the words never
-   hug the far edges of a 1920px monitor. */
+   hug the far edges of a 1920px monitor. (The story of the countries sets its
+   own: full bleed, its words at the gutter, see .dz-story.) */
 .dz {
   --dz-side: max(var(--gut), calc((100% - 100rem) / 2));
 }
@@ -220,7 +228,7 @@
   font-weight: var(--title-weight);
   font-size: clamp(2.125rem, 3.18vw, 3.75rem);
   line-height: 1.02;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.012em;
   margin: 1rem 0 0;
   max-width: 20ch;
 }
@@ -233,207 +241,474 @@
   color: #3a434a;
 }
 
-/* Each country full bleed, in the sample's manner: the photograph across the
-   screen, darkened from the left so the words hold, the name set large in
-   capitals, and the journeys as glass cards over the picture. */
-.dz-place {
+/* -- The countries: one story, told by scrolling (PlaceStory) ------------- */
+/* One tall article per country, each holding a stage pinned under the
+   header; the next country's stage scrolls up with the one it replaces, a
+   hard edge between them. Inside a stage: the photograph, the country's name,
+   a cut-out of the photograph's foreground in front of the name, and the
+   details. PlaceStory moves the parts by transform and opacity; the sizes and
+   the length of every phase are set here. */
+.dz-story {
+  /* The stage: the screen under the header; the photograph fills it even
+     where a phone's toolbar has gone (lvh); what must be seen keeps to the
+     screen with the toolbar out (svh). */
+  --dz-h: calc(100vh - var(--nav-h-compact));
+  --dz-hs: calc(100vh - var(--nav-h-compact));
+  /* Each country's length, in stage heights: its name settles this far after
+     its photograph has, then holds; the details take this long to open, and
+     stay open this long before the next country (their row of photographs
+     drifts in between, for as long as the row needs: --dz-drift × --dz-k). */
+  --dz-rest: 0.2;
+  --dz-hold: 0.25;
+  --dz-reveal: 0.8;
+  --dz-dwell: 0.3;
+  --dz-k: 0.8;
+  /* The stage starts this far above its article, so the article's own top
+     reaches the scroll padding (the header and 1.5rem) just as the name
+     settles: that is where /destinations#italy lands. */
+  --dz-x: calc(var(--dz-h) * var(--dz-rest) + 1.5rem);
+  /* The details: the column of words, the row of photographs after it. */
+  --dz-side: var(--gut);
+  --dz-colw: clamp(17rem, 28vw, 34rem);
+  --dz-colgap: clamp(2rem, 4.5vw, 5.5rem);
+  --dz-cw: clamp(14.5rem, 21vw, 28rem);
+  --dz-gap: clamp(0.75rem, 1.06vw, 1.25rem);
+  --dz-x0: calc(var(--dz-side) + var(--dz-colw) + var(--dz-colgap));
+  /* The name's widest: clear of the progress line at the right. */
+  --dz-room: min(74vw, 100vw - 2 * var(--dz-side) - 4rem);
   position: relative;
-  min-height: min(max(40rem, 100svh), 61.25rem);
   display: flex;
-  align-items: center;
-  overflow: hidden;
-  isolation: isolate;
-  padding: clamp(5rem, 9vw, 7.5rem) var(--dz-side);
-  background: var(--deep);
+  flex-direction: column;
+  background: var(--night);
   color: #fff;
 }
-.dz-bg {
+@supports (height: 100lvh) {
+  .dz-story {
+    --dz-h: calc(100lvh - var(--nav-h-compact));
+    --dz-hs: calc(100svh - var(--nav-h-compact));
+  }
+}
+.dz-place {
+  /* How far the row of photographs travels to show its last card. */
+  --dz-drift: max(
+    0px,
+    calc(
+      var(--dz-x0) + var(--dz-n) * (var(--dz-cw) + var(--dz-gap)) - var(--dz-gap) - 100vw +
+        var(--dz-side)
+    )
+  );
+  --dz-len: calc(
+    var(--dz-h) * (1 + var(--dz-rest) + var(--dz-hold) + var(--dz-reveal) + var(--dz-dwell)) +
+      var(--dz-drift) * var(--dz-k)
+  );
+  /* Where the photograph's skyline falls on this screen (object-fit: cover),
+     and the name's size: as wide as the screen allows, no taller than a third
+     of it. Its letters are 0.71875em tall, so its line is set to exactly that. */
+  --dz-dh: max(calc(100vw * var(--dz-ar)), var(--dz-h));
+  --dz-sky-y: calc((var(--dz-h) - var(--dz-dh)) * var(--dz-py) + var(--dz-dh) * var(--dz-sky));
+  --dz-fs: min(
+    calc(var(--dz-hs) * 0.32 / 0.71875),
+    calc(26vw / 0.71875),
+    calc(var(--dz-room) / var(--dz-em))
+  );
+  --dz-cap: calc(var(--dz-fs) * 0.71875);
+  position: relative;
+  flex: none;
+  height: var(--dz-len);
+  padding-bottom: var(--dz-x);
+}
+/* The first country starts below the pull, the layer above taking its own
+   height back (see .dz-ui). */
+.dz-ui + .dz-place {
+  margin-top: calc(var(--dz-x) - var(--dz-hs));
+}
+.dz-place:last-of-type {
+  height: calc(var(--dz-len) - var(--dz-x));
+  padding-bottom: 0;
+}
+.dz-stage {
+  position: sticky;
+  top: var(--nav-h-compact);
+  height: var(--dz-h);
+  margin-top: calc(-1 * var(--dz-x));
+  /* Clipped, not hidden: a hidden box can still be scrolled sideways by the
+     browser to show a focused card beyond the edge, which would shift the
+     whole stage. A clipped one cannot. */
+  overflow: hidden;
+  overflow: clip;
+  isolation: isolate;
+  background: var(--night);
+}
+.dz-scene {
   position: absolute;
   inset: 0;
-  z-index: -2;
 }
-
-/* The countries stack: each holds while the next slides up over it
-   (PlaceStack sets `top` and `--cover`). The arriving card lifts with a soft
-   shadow on its top edge; the one beneath dims and its words ease back. */
-.dz-stack > .dz-place {
-  position: sticky;
-  top: 0;
-  --cover: 0;
+/* The photograph and its cut-out: the same fill, fit and position, and the
+   same drift, so the two always coincide. */
+.dz-media,
+.dz-fgw {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 45%;
+  will-change: transform;
 }
-.dz-stack > .dz-place + .dz-place {
-  box-shadow: 0 -1.5rem 3rem rgb(8 20 28 / 0.35);
+.dz-fgw {
+  z-index: 2;
+  will-change: transform, opacity;
 }
-.dz-stack > .dz-place::after {
+/* A breath of shade over the sky, so the white name holds against a white
+   cloud. (A shadow on the name itself would be redrawn at great cost each
+   time a name first comes into view.) */
+.dz-media::after {
   content: '';
   position: absolute;
   inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: rgb(8 20 28);
-  opacity: calc(var(--cover) * 0.6);
+  background: linear-gradient(
+    180deg,
+    rgb(11 26 36 / 0.26) 0%,
+    rgb(11 26 36 / 0.1) 38%,
+    rgb(11 26 36 / 0) 64%
+  );
 }
-.dz-stack .dz-in,
-.dz-stack .dz-count {
-  opacity: calc(1 - var(--cover) * 0.6);
+.dz-img {
+  object-fit: cover;
+  object-position: calc(var(--dz-px) * 100%) calc(var(--dz-py) * 100%);
 }
-.dz-stack .dz-in {
-  transform: translateY(calc(var(--cover) * -2.5rem));
-  will-change: transform;
-}
-@media (prefers-reduced-motion: reduce) {
-  .dz-stack .dz-in {
-    transform: none;
+@media (max-aspect-ratio: 1/1) {
+  .dz-img {
+    object-position: calc(var(--dz-pxn) * 100%) calc(var(--dz-py) * 100%);
   }
 }
-.dz-shade {
+/* The darkening the details open over: deepest under the column of words. */
+.dz-dim {
   position: absolute;
   inset: 0;
-  z-index: -1;
+  z-index: 1;
+  opacity: 0.001;
   background:
     linear-gradient(
       90deg,
-      rgb(8 20 28 / 0.74) 0%,
-      rgb(8 20 28 / 0.38) 45%,
-      rgb(8 20 28 / 0.08) 100%
+      rgb(11 26 36 / 0.86) 0%,
+      rgb(11 26 36 / 0.8) 30%,
+      rgb(11 26 36 / 0.58) 62%,
+      rgb(11 26 36 / 0.5) 100%
     ),
-    linear-gradient(
-      180deg,
-      rgb(8 20 28 / 0.3) 0%,
-      rgb(8 20 28 / 0) 22%,
-      rgb(8 20 28 / 0) 70%,
-      rgb(8 20 28 / 0.45) 100%
-    );
+    linear-gradient(180deg, rgb(11 26 36 / 0) 55%, rgb(11 26 36 / 0.3) 100%);
+  will-change: opacity;
 }
-/* The column is a size container, so the name is set to the room it has. */
-.dz-in {
-  width: 100%;
-  container-type: inline-size;
+/* The name, between the photograph and its cut-out, its foot set into the
+   skyline so the land covers its lower part. */
+.dz-name {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--dz-sky-y) - var(--dz-cap) * (1 - var(--dz-sink)));
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
 }
-.dz-no,
-.dz-tl,
-.dz-journeys {
-  max-width: 40rem;
-}
-.dz-no {
-  color: var(--ice);
-}
-/* Large, but never wider than the column: the longest name we carry,
-   SWITZERLAND, runs about 6.7em in this face, so 14cqi always fits it whole. */
-.dz-place h3 {
+.dz-name > span,
+.dz-h {
   font-family: var(--sans);
-  font-weight: 600;
-  font-size: min(7.5rem, 14cqi);
-  line-height: 0.9;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  font-stretch: 75%;
+  line-height: 0.71875;
+  letter-spacing: -0.01em;
   text-transform: uppercase;
-  margin: 0.875rem 0 1.125rem;
+  white-space: nowrap;
+  color: #fff;
 }
-.dz-tl {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(1.25rem, 1.4vw, 1.5rem);
-  line-height: 1.35;
-  margin: 0;
-  color: #f3f0ea;
+.dz-name > span {
+  display: block;
+  flex: none;
+  font-size: var(--dz-fs);
+  transform-origin: 0 0;
+  will-change: transform, opacity;
 }
 
-.dz-journeys {
-  list-style: none;
-  margin: clamp(1.75rem, 2.5vw, 2.25rem) 0 0;
-  padding: 0;
+/* The details: the heading where the name lands, the words, the journeys,
+   and the row of photographs bleeding off the right edge. */
+.dz-detail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 3;
+  height: var(--dz-hs);
   display: grid;
-  gap: 0.625rem;
+  grid-template-columns: var(--dz-colw) minmax(0, 1fr);
+  column-gap: var(--dz-colgap);
+  align-items: start;
+  align-content: center;
+  padding: clamp(2rem, 7vh, 5rem) 0 clamp(4.5rem, 12vh, 7.5rem) var(--dz-side);
+  pointer-events: none;
 }
-/* A journey: a glass card on the photograph. */
+.dz-copy {
+  min-width: 0;
+}
+.dz-h {
+  width: fit-content;
+  margin: 0;
+  font-size: clamp(2.125rem, 3.1vw, 3.75rem);
+  opacity: 0.001;
+}
+.dz-h:focus {
+  outline: none;
+}
+.dz-h:focus-visible {
+  outline: 2px solid var(--color-acqua);
+  outline-offset: 0.5rem;
+}
+.dz-copy-body {
+  opacity: 0.001;
+  will-change: transform, opacity;
+}
+.dz-tl {
+  margin: clamp(1.25rem, 2.2vh, 1.75rem) 0 0;
+  max-width: 24ch;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.25rem, 1.45vw, 1.625rem);
+  line-height: 1.35;
+  color: #fff;
+  text-wrap: balance;
+}
+.dz-js {
+  list-style: none;
+  margin: clamp(1.25rem, 3vh, 2.25rem) 0 0;
+  padding: 0;
+  border-bottom: 1px solid rgb(255 255 255 / 0.24);
+}
+/* A journey: a row set off by a hairline, the whole row one link. */
 .dz-j {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.25rem;
-  padding: 1rem 1.25rem;
-  border-radius: 1.125rem;
-  background: rgb(255 255 255 / 0.12);
-  border: 1px solid rgb(255 255 255 / 0.22);
-  backdrop-filter: blur(0.625rem);
-  -webkit-backdrop-filter: blur(0.625rem);
+  min-height: 2.75rem;
+  padding: 0.875rem 0;
+  border-top: 1px solid rgb(255 255 255 / 0.24);
   color: #fff;
   text-decoration: none;
-  transition:
-    background 0.5s var(--ease),
-    border-color 0.5s var(--ease);
 }
-.dz-j:hover {
-  background: rgb(255 255 255 / 0.24);
-  border-color: rgb(255 255 255 / 0.4);
-}
-.dz-j:focus-visible {
-  outline: 2px solid var(--sky);
-  outline-offset: 0.1875rem;
+.hc .dz-j {
+  color: #fff;
 }
 .dz-j-main {
   min-width: 0;
   display: grid;
-  gap: 0.25rem;
+  gap: 0.3125rem;
 }
 .dz-j-title {
   font-family: var(--serif);
-  font-size: clamp(1.25rem, 1.2vw, 1.375rem);
+  font-size: clamp(1.125rem, 1.15vw, 1.3125rem);
   line-height: 1.2;
+  transition: color 0.3s var(--ease);
+}
+.dz-j:hover .dz-j-title {
+  color: var(--sky);
 }
 .dz-j-facts {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
   gap: 0.125rem 0;
   font-family: var(--sans);
   font-size: 0.8125rem;
-  color: #e6edf1;
+  line-height: 1.45;
+  color: #dbe5eb;
 }
-/* The separator trails the fact before it, so when the line wraps it stays at
-   the end of a line and never opens one. */
-.dz-j-facts > span:has(+ span:not(.dz-j-tag))::after {
+/* The separator trails the fact before it, so a wrapped line never opens
+   with one. */
+.dz-j-facts > span:not(:last-child)::after {
   content: '·';
   margin: 0 0.5rem;
 }
-/* A journey's state (Sold out, Waitlist…) on its own line beneath the facts. */
-.dz-j-facts > .dz-j-tag {
-  flex-basis: 100%;
-  margin-top: 0.375rem;
+.dz-j-tag {
+  margin-top: 0.25rem;
 }
-.dz-j-go {
+.dz-arrow {
   flex: none;
+  transition: transform 0.5s var(--ease);
+}
+.dz-j:hover .dz-arrow,
+.dz-card-a:hover .dz-arrow {
+  transform: translateX(0.25rem);
+}
+
+/* The row of photographs. Cards leaving at its left edge fade (PlaceStory);
+   the edge itself is clipped, so no card ever passes under the words. */
+.dz-cards {
+  position: relative;
+  min-width: 0;
+  opacity: 0.001;
+  clip-path: inset(-1.5rem -100vw -2.5rem 0);
+  will-change: opacity;
+}
+.dz-row {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: var(--dz-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  will-change: transform;
+}
+.dz-card {
+  flex: none;
+  width: var(--dz-cw);
+  overflow: hidden;
+  border-radius: 0.625rem;
+  background: rgb(10 34 50 / 0.92);
+  /* Each card fades on its own as it leaves the row (PlaceStory); its own
+     layer keeps that from repainting the row. */
+  will-change: opacity;
+}
+.dz-card figure {
+  margin: 0;
+}
+.dz-card-img {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background: var(--deep);
+}
+.dz-card-img img {
+  object-fit: cover;
+}
+.dz-card-cap {
+  display: grid;
+  gap: 0.375rem;
+  padding: 0.875rem 1rem 1.0625rem;
+}
+.dz-card-k {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sky);
+}
+.dz-card-t {
+  font-family: var(--serif);
+  font-size: clamp(1.125rem, 1.2vw, 1.375rem);
+  line-height: 1.2;
+  color: #fff;
+}
+.dz-card-f {
+  font-family: var(--sans);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: #dbe5eb;
+}
+.dz-card-a {
+  display: block;
+  height: 100%;
+  color: #fff;
+  text-decoration: none;
+}
+.hc .dz-card-a {
+  color: #fff;
+}
+.dz-card-go {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  margin-top: 0.25rem;
   font-family: var(--sans);
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 500;
-  white-space: nowrap;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
-.dz-j-go svg {
-  transition: transform 0.5s var(--ease);
+.dz-card-a:hover .dz-card-t {
+  color: var(--sky);
 }
-.dz-j:hover .dz-j-go svg {
-  transform: translateX(0.25rem);
+.dz-card-a:focus-visible {
+  outline-offset: -0.25rem;
+  border-radius: 0.625rem;
 }
-/* Where this country sits in the run, at the middle right of the photograph —
-   clear of the header above and the expert button below. */
-.dz-count {
+/* Under the row, how far it has travelled. */
+.dz-bar {
+  position: relative;
+  display: block;
+  width: var(--dz-cw);
+  height: 2px;
+  margin-top: 1.25rem;
+  background: rgb(255 255 255 / 0.28);
+}
+.dz-bar > i {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+.dz-mark {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+  /* Never the node the browser keeps the page steady by: PlaceStory places
+     the marks after load, so a reload restored by a mark would land at the
+     top of its country, and a mark moved on a resize would move the page. */
+  overflow-anchor: none;
+}
+
+/* Over the whole story and still while the countries change: the pill and
+   the progress line. A sticky layer as tall as the screen under the header,
+   so it leaves with the last country; the first country is pulled up over
+   the room it takes in the flow. */
+.dz-ui {
+  position: sticky;
+  top: var(--nav-h-compact);
+  z-index: 4;
+  height: var(--dz-hs);
+  pointer-events: none;
+}
+.dz-ui-in {
+  position: relative;
+  height: 100%;
+}
+.hc .dz-see {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1.75rem, 6.5vh, 3.75rem);
+  min-width: 10rem;
+  translate: -50% 0;
+  pointer-events: auto;
+  box-shadow: 0 0.5rem 1.5rem rgb(11 26 36 / 0.18);
+  /* Its opacity follows the scroll, so it is never eased on its own. */
+  transition:
+    color 0.3s var(--ease),
+    background-color 0.3s var(--ease),
+    border-color 0.3s var(--ease);
+}
+.hc .dz-see:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 0.25rem;
+}
+.dz-rail {
   position: absolute;
   right: var(--dz-side);
-  top: 50%;
-  transform: translateY(-50%);
-  font-family: var(--sans);
-  font-size: 0.875rem;
-  letter-spacing: 0.24em;
+  top: 28%;
+  width: 1px;
+  height: 48%;
+  background: rgb(255 255 255 / 0.4);
 }
-.dz-count b {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(2rem, 2.6vw, 2.75rem);
-  letter-spacing: 0;
-  margin-right: 0.375rem;
+.dz-rail > i {
+  position: absolute;
+  left: -0.5px;
+  top: 0;
+  width: 2px;
+  height: calc(100% / var(--dz-count));
+  background: #fff;
+  will-change: transform;
 }
 
 /* -- 04 Closing ---------------------------------------------------------- */
@@ -443,15 +718,11 @@
 .dz-close .ctarow {
   margin-top: 0.5rem;
 }
+.dz-close :focus-visible {
+  outline-color: var(--color-acqua);
+}
 
 /* -- Smaller screens ----------------------------------------------------- */
-/* Below a laptop the label already carries the number, and the counter would
-   sit over the cards or the expert button. */
-@media (max-width: 1023px) {
-  .dz-count {
-    display: none;
-  }
-}
 @media (max-width: 900px) {
   .dz-open-head {
     grid-template-columns: minmax(0, 1fr);
@@ -466,23 +737,38 @@
   .dz-head p {
     justify-self: start;
   }
-  .dz-place {
-    min-height: 0;
-    align-items: flex-end;
-    padding-top: clamp(11rem, 45vw, 16rem);
-    padding-bottom: 4.5rem;
+}
+/* A tablet held upright and anything narrower: the words above, the row of
+   photographs beneath them, starting at the gutter. */
+@media (max-width: 899px), (max-aspect-ratio: 4/5) {
+  .dz-story {
+    --dz-x0: var(--dz-side);
+    --dz-cw: min(70vw, 21rem);
+    --dz-colw: auto;
   }
-  .dz-shade {
+  .dz-detail {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: clamp(1.5rem, 3.5vh, 2.5rem);
+    align-content: center;
+    padding: clamp(1.25rem, 4vh, 3rem) 0 clamp(1.25rem, 4vh, 3rem) var(--dz-side);
+  }
+  .dz-copy {
+    padding-right: var(--dz-side);
+  }
+  .dz-tl {
+    max-width: 30ch;
+  }
+  /* The words run the full width here: the darkening is even across it. */
+  .dz-dim {
     background: linear-gradient(
       180deg,
-      rgb(8 20 28 / 0.25) 0%,
-      rgb(8 20 28 / 0.55) 45%,
-      rgb(8 20 28 / 0.85) 100%
+      rgb(11 26 36 / 0.84) 0%,
+      rgb(11 26 36 / 0.8) 60%,
+      rgb(11 26 36 / 0.66) 100%
     );
   }
 }
 @media (max-width: 600px) {
-  /* On a phone the countries sit under the photograph, not over it. */
   .dz-frame {
     aspect-ratio: 4 / 3.4;
   }
@@ -506,43 +792,77 @@
     border-left: 0;
     border-top: 1px solid rgb(20 29 36 / 0.14);
   }
-  .dz-place {
-    padding-bottom: 3.5rem;
+  /* On a phone the journeys are the cards at the end of the row; the words
+     keep to the country's name and its line. The name takes the width, and
+     the progress line, which it would cross, is left out. */
+  .dz-js,
+  .dz-rail {
+    display: none;
+  }
+  .dz-story {
+    --dz-room: calc(100vw - 2 * var(--dz-side));
+  }
+  .dz-h {
+    font-size: 2.25rem;
   }
   .dz-tl {
-    font-size: 1.125rem;
-  }
-  .dz-journeys {
-    gap: 0.5rem;
-  }
-  .dz-j {
-    padding: 0.875rem 1rem;
-    gap: 0.75rem;
-    border-radius: 0.875rem;
-  }
-  .dz-j-title {
-    font-size: 1.125rem;
-  }
-  /* The price takes its own line, so no separator is ever left at a line start. */
-  .dz-j-price {
-    flex-basis: 100%;
-  }
-  .dz-j-facts > span:has(+ span.dz-j-price)::after {
-    content: none;
-  }
-  /* The arrow alone, at a comfortable tap size. */
-  .dz-j-go {
-    font-size: 0;
-    gap: 0;
-    width: 1.5rem;
-    justify-content: center;
+    font-size: 1.1875rem;
   }
 }
 
+/* -- Reduced motion ------------------------------------------------------ */
+/* Nothing pinned and nothing moving: each country is its photograph with its
+   name (the land still in front of it), then its details, in the flow. */
 @media (prefers-reduced-motion: reduce) {
   .dz-index a,
-  .dz-j,
-  .dz-j-go svg {
+  .dz-j-title,
+  .dz-arrow {
     transition: none;
+  }
+  .dz-ui,
+  .dz-mark,
+  .dz-bar {
+    display: none;
+  }
+  .dz-place,
+  .dz-place:last-of-type {
+    height: auto;
+    padding: 0;
+  }
+  .dz-ui + .dz-place {
+    margin-top: 0;
+  }
+  .dz-stage {
+    position: relative;
+    top: auto;
+    height: auto;
+    margin-top: 0;
+  }
+  .dz-scene {
+    position: relative;
+    height: var(--dz-hs);
+    overflow: hidden;
+    overflow: clip;
+  }
+  .dz-detail {
+    position: relative;
+    height: auto;
+    padding-top: clamp(2.5rem, 5vw, 4.5rem);
+    padding-bottom: clamp(3rem, 6vw, 5.5rem);
+    pointer-events: auto;
+  }
+  .dz-h,
+  .dz-copy-body,
+  .dz-cards {
+    opacity: 1;
+  }
+  .dz-cards {
+    clip-path: none;
+    overflow-x: auto;
+    padding-bottom: 0.75rem;
+    scroll-padding-inline: var(--dz-side);
+  }
+  .dz-row {
+    padding-right: var(--dz-side);
   }
 }

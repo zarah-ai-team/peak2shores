@@ -32,7 +32,7 @@ The binding spec is `docs/redesign/DESIGN-SPEC.md`. The component reference is
 | `--color-ink` / `body` | `#1e1f1d` / `#3a3b38` | Headlines / body copy on paper                                      |
 | `--color-muted`        | `#6f6a60`             | Kickers on ivory/panel only                                         |
 | `--color-forest`       | `#1d2a25`             | Primary dark ground                                                 |
-| `--color-forest-deep`  | `#151e1a`             | Footer, mobile menu, globe band                                     |
+| `--color-forest-deep`  | `#151e1a`             | Footer, the menu, globe band                                        |
 | `--color-charcoal`     | `#232422`             | Secondary dark ground (never next to forest)                        |
 | `--color-acqua`        | `#8cc2b8`             | Sea-glass: hairlines/hover on dark or photo; text-safe on dark only |
 | `--color-acqua-deep`   | `#5f948c`             | Hairlines on paper. Not text                                        |
@@ -103,9 +103,13 @@ scroll-jacking and no pinned horizontal scroll.
 
 **Reduced motion and no-JavaScript are handled by the stylesheet, never by
 rendering different markup.** Motion serialises each block's hidden start state
-into the server HTML. The `[data-reveal]`, `[data-curtain]`, `[data-parallax]` and
-`[data-menu-item]` rules in `globals.css` hand readers with reduced motion, and anyone
-whose bundle fails, the finished layout. The tree is identical for every reader.
+into the server HTML. The `[data-reveal]`, `[data-curtain]` and `[data-parallax]`
+rules in `globals.css` hand readers with reduced motion, and anyone whose bundle
+fails, the finished layout. The tree is identical for every reader. (The menu
+behind the three-line button exists only once it is opened, in the browser. Its
+sheet and panes cross-fade instead of travelling when `SiteMenu.tsx` and
+`menu/MenuDrill.tsx` read the reader's preference, and the arrivals inside it
+are removed by the rules in `src/components/layout/menu/menu.css`.)
 
 ## Photography
 
@@ -118,6 +122,15 @@ attribution required). The picks live in `scripts/photography-manifest.json`
 refuses anything not under the Unsplash License, and records provenance in
 `public/images/credits.json`, which generates `public/images/CREDITS.md` and the
 public **`/credits`** page linked from the footer.
+
+Films and photographs the client hands over are recorded in
+`reports/image-asset-plan.md`, with only what was stated about their origin and
+the questions still open for each. That record stays out of `public/`, where
+every file is served with the site. A client-supplied file gets an entry in
+`credits.json` (`source: "client"`), and so a row on `/credits`, only once its
+author and licence are confirmed; `CREDITS.md` lists the licensed stock only.
+After any edit to `credits.json`, run
+`node scripts/source-photography.mjs --credits` to regenerate `CREDITS.md`.
 
 Still to settle before launch:
 
@@ -175,8 +188,20 @@ per-IP rate limit (5 per minute). The limiter is right for a single
 `next start` instance; on a multi-instance or serverless host put a platform
 limiter in front. Logs record that a submission arrived, never who sent it.
 
-Delivery is the one thing left to wire: the `INTEGRATION POINT` comment in each
-route marks where the mailing provider and CRM go.
+Delivery lives in `src/lib/delivery.ts`. Each route hands its checked payload to
+`deliver()`, which posts it as JSON to the webhook named in an environment
+variable: `ENQUIRY_WEBHOOK_URL` for inquiries, `SUBSCRIBE_WEBHOOK_URL` for
+Circle sign-ups (`FORMS_WEBHOOK_SECRET`, optional, signs each request).
+`.env.example` lists them. While a variable is unset nothing is stored
+anywhere: the route answers `delivered: false`, and the form says so and offers
+the email address instead.
+
+A Circle sign-up carries its record of consent: the line shown under the field
+and the page the form stood on. The list itself, the confirmation and welcome
+emails and the unsubscribe link belong to the mailing provider behind the
+webhook, which must run double opt-in, because the form tells a new subscriber
+to confirm from their inbox. Choosing and connecting that provider is the one
+thing left to do; see `docs/redesign/ARCHITECTURE.md` §6.
 
 ## Security headers
 
@@ -222,4 +247,3 @@ Plus `not-found`, `error`, `sitemap.xml`, `robots.txt`, icons and share images.
   `next` 15.5. They concern build-time CSS tooling, not anything served, and
   the only fix is the Next 16 major. Revisit on the next framework upgrade.
 - The rate limiter is per process (see above).
-- `Footer`'s copyright year is baked at build time on static pages.

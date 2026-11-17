@@ -1,0 +1,897 @@
+/*
+ * The menu behind the three-line button (SiteMenu, and the parts beside this
+ * file). A sheet that travels in from the right, under the bar.
+ *
+ * Two grounds, so the two parts are told apart at a glance. The index is set
+ * on the site's navy (#0e2f42), with white type and no second blue on it: the
+ * sidebar, the band under the bar and, on a phone, the first level and the
+ * foot. What a section opens is a light panel, read as dark text on paper.
+ *
+ * Two layouts share one set of parts: from 1024px wide (and 560px tall) the
+ * sidebar stands beside the panel (`data-layout="two"`); narrower, one pane
+ * at a time with a foot under the thumb (`data-layout="drill"`).
+ *
+ * Sizes are those of an interface, not of a page: a section's name is 24px,
+ * a row's title 21px, a line of detail 13px, a caps label 11.5 to 12px, and
+ * a photograph is a thumbnail. Each is written `max(px, rem)`: on a laptop
+ * the root size is 90%, so the px floor is what shows there, and the rem
+ * half lets the text grow with the reader's own font size. Every control is
+ * at least 44px tall under a finger and 40px under a mouse (the secondary
+ * contact lines 32px; WCAG 2.2 asks for 24px).
+ *
+ * Everything that moves here is a transform or an opacity. The sheet and the
+ * phone's panes are driven by Motion (they have to finish leaving before
+ * they are removed); what arrives inside them is plain CSS, each block
+ * waiting for its `--d`.
+ */
+
+/* The page behind does not scroll while the menu is open. On the root alone:
+   locking the body too would make it the scroll container of the bars a page
+   pins under the header, and they would jump. The page never moves, so there
+   is no position to restore. */
+html[data-nav-open] {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* Scrim and sheet live in one fixed box that clips them, so the sheet can sit
+   beyond the right edge without giving the page a sideways scroll. */
+.site-menu-root {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  overflow: hidden;
+}
+
+.menu-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgb(10 34 50 / 0.72);
+  touch-action: none;
+}
+
+.site-menu {
+  /* The index's blue and the panel's paper. `--menu-ground` is whichever of
+     the two a block sits on, for the fade that closes a scrolling pane. */
+  --menu-side: var(--color-navy);
+  --menu-panel: var(--color-ivory);
+  --menu-ground: var(--menu-side);
+  /* The tint a photograph's frame holds until its file has loaded. */
+  --menu-frame: var(--color-stone);
+  --menu-pad: 20px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: var(--menu-side);
+  color: var(--color-on-dark);
+  /* Whatever the browser draws itself on the blue is drawn for a dark ground. */
+  color-scheme: dark;
+  outline: none;
+  -webkit-font-smoothing: antialiased;
+}
+.site-menu * {
+  box-sizing: border-box;
+}
+@media (min-width: 768px) {
+  /* A drawer beside the dimmed page, so the reader sees where they are. */
+  .site-menu[data-layout='drill'] {
+    --menu-pad: 32px;
+    width: clamp(440px, calc(100vw - 260px), 520px);
+  }
+}
+/* The sidebar and its panel never fill a laptop's screen: at least 144px of
+   the page stays beside them at 1024px, and more with every pixel of width. */
+.site-menu[data-layout='two'] {
+  width: min(100%, clamp(880px, 62vw, 1000px));
+}
+
+/* The bar floats over this band. */
+.menu-topband {
+  flex: none;
+  height: var(--nav-h);
+}
+
+.menu-body {
+  flex: 1;
+  min-height: 0;
+}
+
+/* A pane that scrolls on its own. When there is more than fits it says so
+   twice: a thin scrollbar, and a fade in its ground's colour over the last
+   rows. */
+.menu-scroller {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* A control brought into view by the keyboard lands clear of the pane's
+     edges and of the fade, so its focus ring is whole. */
+  scroll-padding-block: 8px 32px;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(244 241 234 / 0.3) transparent;
+}
+.menu-scroller[data-tone='light'] {
+  /* Room for the scrollbar is kept on both sides whether or not it shows, so
+     a section that overflows is exactly as wide as one that does not. */
+  scrollbar-gutter: stable both-edges;
+  scrollbar-color: rgb(30 31 29 / 0.3) transparent;
+}
+.menu-scroller::after {
+  content: '';
+  position: sticky;
+  bottom: 0;
+  display: block;
+  flex: none;
+  height: 24px;
+  background: linear-gradient(to top, var(--menu-ground), transparent);
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Arrivals. Each block waits for `--d`, then settles 16px from the right (the
+   way the sheet came); the section names rise through a band.
+   -------------------------------------------------------------------------- */
+
+@keyframes menu-settle {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+@keyframes menu-settle-near {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+}
+@keyframes menu-rise {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+@keyframes menu-fade {
+  from {
+    opacity: 0;
+  }
+}
+/* Filled backwards only: a block holds its start while it waits, and once it
+   has arrived the animation lets go of it, leaving no transform behind. */
+.menu-in {
+  animation: menu-settle 450ms var(--ease-editorial) var(--d, 0ms) backwards;
+}
+.menu-in-near {
+  animation: menu-settle-near 420ms var(--ease-editorial) var(--d, 0ms) backwards;
+}
+.menu-rise {
+  animation: menu-rise 520ms var(--ease-reveal) var(--d, 0ms) backwards;
+}
+.menu-fade {
+  animation: menu-fade 300ms var(--ease-editorial) var(--d, 0ms) backwards;
+}
+/* A layout swapped in by a resize or a rotation arrives finished. */
+[data-still] :is(.menu-in, .menu-in-near, .menu-rise, .menu-fade) {
+  animation: none;
+}
+[data-still] .menu-photo-cover {
+  transition: none;
+}
+
+/* --------------------------------------------------------------------------
+   Photographs: thumbnails, 4:3.
+   -------------------------------------------------------------------------- */
+
+.menu-photo {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: var(--menu-frame);
+}
+.menu-photo img {
+  object-fit: cover;
+}
+.menu-photo-cover {
+  position: absolute;
+  /* A pixel past the frame, which clips it: a frame of a fractional height
+     would otherwise show a line of the photograph under the cover. */
+  inset: -1px;
+  background: var(--menu-frame);
+  transform-origin: center bottom;
+  transition: transform 480ms var(--ease-reveal) var(--d, 0ms);
+}
+.menu-photo[data-loaded] .menu-photo-cover {
+  transform: scaleY(0);
+}
+/* The holder that fetches the journeys' photographs ahead of the menu. */
+.menu-warm {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Section names, on the blue: tabs on the wide layout, entries that open a
+   pane on the narrow one.
+   -------------------------------------------------------------------------- */
+
+.menu-chapter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  min-height: 48px;
+  padding: 0;
+  border: 0;
+  background: none;
+  /* At rest a name stands back a little (white at 80%, 4.7:1 on the blue);
+     the one showing, and the one pointed at, are full white. */
+  color: rgb(255 255 255 / 0.8);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.3s var(--ease-editorial);
+}
+/* The band a name rises through as the sheet opens. */
+.menu-band {
+  display: block;
+  overflow: hidden;
+  padding-block: 3px;
+}
+.menu-chapter-in {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.menu-chapter-label {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 4px;
+  font-family: var(--font-display);
+  font-size: max(24px, 1.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+}
+/* The house hairline: drawn from the left, leaving to the right, and held
+   only under the section that is showing. */
+.menu-chapter-label::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 0.3s var(--ease-exit);
+}
+.menu-chapter:is(:hover, :focus-visible, [aria-selected='true'], [aria-expanded='true']) {
+  color: var(--color-on-dark);
+}
+.menu-chapter:is([aria-selected='true'], [aria-expanded='true']) .menu-chapter-label::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+  transition: transform 0.45s var(--ease-editorial);
+}
+.menu-chevron {
+  flex: none;
+  margin-right: 4px;
+  transition: transform 0.3s var(--ease-editorial);
+}
+.menu-chapter:is(:hover, :focus-visible, [aria-selected='true'], [aria-expanded='true'])
+  .menu-chevron {
+  transform: translateX(4px);
+}
+/* The small square before the section the page being read belongs to. */
+.menu-here {
+  background: currentColor;
+}
+
+/* --------------------------------------------------------------------------
+   The other pages, the Plan button and the contact lines, on the blue.
+   -------------------------------------------------------------------------- */
+
+.site-menu .nav-label {
+  font-size: max(12px, 0.75rem);
+}
+.menu-pages ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.menu-pages li {
+  display: flex;
+}
+.menu-page {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  color: var(--color-on-dark);
+}
+/* The box is the target; the hairline belongs to the word inside it. On
+   the blue it is white, like the word. */
+.menu-page .nav-link::after {
+  background: currentColor;
+}
+.menu-page:is(:hover, :focus-visible) .nav-link {
+  color: var(--color-on-dark);
+}
+.menu-page:is(:hover, :focus-visible, [aria-current='page']) .nav-link::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+/* The button's label at the size of the links around it: the site's own
+   button label is under 10px on a laptop, too small beside them. */
+.site-menu .menu-plan {
+  justify-content: space-between;
+  width: 100%;
+  min-height: 44px;
+  font-size: max(11.5px, 0.71875rem);
+}
+/* On the blue the white button answers the pointer by paling, not by
+   turning the ground's own blue, which would make it disappear. */
+.site-menu .menu-plan:hover {
+  background: var(--color-acqua);
+  color: var(--color-ink);
+}
+.menu-contact {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-style: normal;
+}
+.menu-contact-line {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  font-family: var(--font-ui);
+  font-size: max(13px, 0.8125rem);
+  line-height: 1.4;
+  color: var(--color-on-dark-body);
+  transition: color 0.3s var(--ease-editorial);
+}
+.menu-contact-line:is(:hover, :focus-visible) {
+  color: var(--color-on-dark);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+/* Under a finger every link is a full 44px. */
+@media (pointer: coarse) {
+  .menu-page,
+  .menu-contact-line {
+    min-height: 44px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   A section, on the light panel: its heading with the link beside it, then
+   its rows.
+   -------------------------------------------------------------------------- */
+
+.menu-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0 16px;
+  min-height: 48px;
+}
+.menu-head-title {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: max(11.5px, 0.71875rem);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.site-menu .link-rule {
+  min-height: 44px;
+  font-size: max(11.5px, 0.71875rem);
+}
+/* On the panel a hovered link takes the blue that is text-safe on paper
+   (6.4:1); the site's brighter hover blue is 3.3:1 at this size. */
+.site-menu [data-tone='light'] .link-rule {
+  --rule-hover: var(--color-acqua-text);
+}
+/* The rule link carries more room above its word than below; beside a
+   heading it is lifted so the two stand on one line. */
+.site-menu .menu-headlink {
+  top: -3px;
+}
+/* The arrow answers the keyboard as it answers the pointer. */
+.site-menu .group:focus-visible .btn-arrow,
+.site-menu .link-rule:focus-visible .btn-arrow {
+  transform: translateX(0.25rem);
+}
+
+.menu-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* The rule is the row's own, so it arrives with the row and not ahead of it. */
+.menu-row-item + .menu-row-item .menu-row {
+  border-top: 1px solid var(--color-line);
+}
+/* A journey's name in a line of names never breaks in two. */
+.menu-nowrap {
+  white-space: nowrap;
+}
+/* The whole row is one link: photograph, words and arrow. */
+.menu-row {
+  --thumb: 120px;
+  display: grid;
+  grid-template-columns: var(--thumb) minmax(0, 1fr) 24px;
+  align-items: center;
+  column-gap: 20px;
+  padding-block: 16px;
+  color: var(--color-ink);
+}
+.menu-row--list {
+  --thumb: 64px;
+  column-gap: 16px;
+  padding-block: 10px;
+}
+.menu-row-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+.menu-row-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  margin-bottom: 6px;
+  font-family: var(--font-ui);
+  font-size: max(11.5px, 0.71875rem);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+/* 'New', 'Waitlist' or 'Sold out'. */
+.menu-status {
+  color: var(--color-acqua-text);
+}
+/* Never cut short: a long name wraps. */
+.menu-row-title {
+  font-family: var(--font-display);
+  font-size: max(21px, 1.3125rem);
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+  transition: color 0.3s var(--ease-editorial);
+}
+.menu-row--list .menu-row-title {
+  font-size: max(18px, 1.125rem);
+  letter-spacing: 0;
+}
+.menu-row-line {
+  margin-top: 6px;
+  font-family: var(--font-ui);
+  font-size: max(13px, 0.8125rem);
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: var(--color-body);
+}
+.menu-row-arrow {
+  display: flex;
+  justify-content: flex-end;
+  color: var(--color-muted);
+  transition: color 0.3s var(--ease-editorial);
+}
+/* The one blue that is text-safe on paper (6.4:1). */
+.menu-row:is(:hover, :focus-visible, [aria-current='page']) .menu-row-title {
+  color: var(--color-acqua-text);
+}
+.menu-row:is(:hover, :focus-visible) .menu-row-arrow {
+  color: var(--color-ink);
+}
+/* Under the journeys: the dates, said once. */
+.menu-note {
+  margin: 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-line);
+  font-family: var(--font-ui);
+  font-size: max(13px, 0.8125rem);
+  line-height: 1.5;
+  color: var(--color-muted);
+}
+/* The label over the ways that share one address. */
+.menu-group {
+  display: flex;
+  align-items: flex-end;
+  min-height: 40px;
+  margin: 0;
+  padding-bottom: 6px;
+  border-top: 1px solid var(--color-line);
+  font-family: var(--font-ui);
+  font-size: max(11.5px, 0.71875rem);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+/* --------------------------------------------------------------------------
+   The wide layout: the sidebar, and the panel beside it.
+   -------------------------------------------------------------------------- */
+
+.menu-two {
+  display: grid;
+  grid-template-columns: clamp(272px, 21vw, 312px) minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+}
+.menu-side-top {
+  grid-area: 1 / 1;
+  padding: 12px 28px 0;
+}
+.menu-tabs {
+  display: flex;
+  flex-direction: column;
+}
+.menu-side-bottom {
+  grid-area: 2 / 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 28px;
+}
+.menu-two .menu-pages {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-line-dark);
+}
+/* The button and the contact lines stand at the foot of the sidebar. */
+.menu-side-foot {
+  margin-top: auto;
+  padding-top: 24px;
+}
+.menu-two .menu-contact {
+  margin-top: 10px;
+}
+.menu-stage {
+  --menu-ground: var(--menu-panel);
+  grid-area: 1 / 2 / span 2;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 36px 0;
+  background: var(--menu-panel);
+  color: var(--color-ink);
+  color-scheme: light;
+  outline: none;
+}
+.menu-stage-in {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+}
+/* A section that replaces another fades in under its own arrivals, so its
+   frames and rules do not cut in ahead of its words. The one the sheet opens
+   on arrives with the sheet and needs no fade. */
+.menu-stage-in[data-replaced] {
+  animation: menu-fade 220ms var(--ease-editorial) backwards;
+}
+[data-still] .menu-stage-in {
+  animation: none;
+}
+/* A short window: the sidebar tightens so all of it stays in view. */
+@media (max-height: 719px) {
+  .menu-two .menu-chapter {
+    min-height: 44px;
+  }
+  .menu-two .menu-page {
+    min-height: 36px;
+  }
+  .menu-two .menu-pages {
+    margin-top: 8px;
+    padding-top: 6px;
+  }
+  .menu-side-foot {
+    padding-top: 12px;
+  }
+  /* The one long list keeps to a 600px window without a scroll of a few pixels. */
+  .menu-two .menu-row--list {
+    padding-block: 8px;
+  }
+}
+@media (max-height: 719px) and (pointer: coarse) {
+  .menu-two .menu-page {
+    min-height: 44px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   The narrow layout: the index first, a section as a pane of its own, and a
+   foot under the thumb.
+   -------------------------------------------------------------------------- */
+
+.menu-drill {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+.menu-panes {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+}
+.menu-pane {
+  position: absolute;
+  inset: 0;
+  padding: 0 var(--menu-pad);
+  outline: none;
+}
+/* The index stays where it is, so it comes back at the place it was left; it
+   steps aside while a section is open. */
+.menu-level {
+  padding-top: 8px;
+  background: var(--menu-side);
+  transition:
+    transform 380ms var(--ease-editorial) 60ms,
+    opacity 380ms var(--ease-editorial) 60ms,
+    visibility 0s;
+}
+.menu-level[data-away] {
+  transform: translateX(-24%);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    transform 260ms var(--ease-exit),
+    opacity 260ms var(--ease-exit),
+    visibility 0s linear 260ms;
+}
+.menu-drill .menu-chapter {
+  min-height: 56px;
+}
+.menu-drill .menu-chapter-label {
+  font-size: max(26px, 1.625rem);
+}
+.menu-drill .menu-chevron {
+  margin-right: 8px;
+}
+.menu-drill .menu-pages {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-line-dark);
+}
+.menu-drill .menu-page {
+  min-height: 48px;
+}
+.menu-drill .menu-contact {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-line-dark);
+}
+.menu-drill .menu-contact-line {
+  min-height: 44px;
+}
+/* A section's pane: the light panel, at the width of the screen. */
+.menu-sub-pane {
+  --menu-ground: var(--menu-panel);
+  background: var(--menu-panel);
+  color: var(--color-ink);
+  color-scheme: light;
+}
+/* Its name large, since it also says where the reader now is. */
+.menu-drill .menu-head {
+  min-height: 64px;
+  padding-top: 12px;
+}
+.menu-drill .menu-head-title {
+  font-family: var(--font-display);
+  font-size: max(26px, 1.625rem);
+  font-weight: var(--title-weight, 500);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  text-transform: none;
+  color: var(--color-ink);
+}
+.menu-drill .menu-row {
+  --thumb: 96px;
+  column-gap: 16px;
+  padding-block: 14px;
+}
+.menu-drill .menu-row--list {
+  --thumb: 64px;
+  padding-block: 10px;
+}
+.menu-drill .menu-row-title {
+  font-size: max(20px, 1.25rem);
+}
+.menu-drill .menu-row--list .menu-row-title {
+  font-size: max(18px, 1.125rem);
+}
+/* The keyboard's way back; the thumb's is in the foot. Shown only on focus. */
+.menu-back-focus {
+  position: absolute;
+  top: 6px;
+  left: var(--menu-pad);
+  z-index: 2;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 0;
+  background: var(--color-navy);
+  color: var(--color-on-dark);
+  cursor: pointer;
+}
+.menu-back-focus:not(:focus-visible) {
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.menu-foot {
+  display: grid;
+  padding: 0 var(--menu-pad) env(safe-area-inset-bottom);
+  border-top: 1px solid var(--color-line-dark);
+  background: var(--menu-side);
+}
+/* The two states change places in one step. They hold the same white
+   button at two widths, and a cross-fade would show both labels at once. */
+.menu-foot-state {
+  grid-area: 1 / 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  min-height: 72px;
+  visibility: hidden;
+}
+.menu-foot-state[data-on] {
+  visibility: visible;
+}
+.menu-foot .menu-plan {
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+}
+/* Beside the way back: centred, with tighter sides. Its label may still wrap
+   when the reader's text is much larger; it is never forced onto one line,
+   which would push the foot past the screen. */
+.menu-foot .menu-back + .menu-plan {
+  justify-content: center;
+  padding-inline: 14px;
+  text-align: center;
+}
+.menu-back {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  min-width: 72px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-on-dark);
+  cursor: pointer;
+  transition: color 0.3s var(--ease-editorial);
+}
+.menu-back:is(:hover, :focus-visible) {
+  color: var(--color-acqua);
+}
+/* A phone on its side: the foot gives the height back. */
+@media (max-height: 479px) {
+  .menu-foot-state {
+    min-height: 56px;
+  }
+  .menu-foot .menu-plan {
+    min-height: 44px;
+  }
+  .menu-drill .menu-chapter {
+    min-height: 48px;
+  }
+}
+
+/* A window only a few lines tall (a laptop at 400% zoom is 320 by 256): the
+   bar stays, and everything under it, the foot included, scrolls as one, so
+   the list is not squeezed between two fixed bands. */
+@media (max-height: 320px) {
+  .menu-drill {
+    display: block;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .menu-panes {
+    overflow: visible;
+  }
+  .menu-pane {
+    position: static;
+    overflow: visible;
+  }
+  .menu-pane.menu-scroller::after {
+    display: none;
+  }
+  .menu-level[data-away] {
+    display: none;
+  }
+  /* The foot, with the way back, is now at the end of the scroll: the button
+     at the top of a section shows for everyone, not only for the keyboard. */
+  .menu-back-focus,
+  .menu-back-focus:not(:focus-visible) {
+    position: static;
+    display: inline-flex;
+    align-items: center;
+    width: auto;
+    height: auto;
+    min-height: 44px;
+    margin-top: 6px;
+    padding: 0 14px;
+    overflow: visible;
+    clip-path: none;
+  }
+}
+
+/* The section a menu link scrolled to takes focus, so the next Tab goes on
+   from there; like the page's own <main>, it shows no ring for it. */
+[data-nav-target]:focus {
+  outline: none;
+}
+
+/* Forced colours (Windows high contrast) repaint backgrounds, and a cue that
+   is only a background disappears: the section that is showing keeps a real
+   underline, the small square takes the text colour, and the panel is set
+   off from the sidebar by a line. */
+@media (forced-colors: active) {
+  .menu-chapter:is([aria-selected='true'], [aria-expanded='true']) .menu-chapter-label {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .menu-here {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
+  .menu-stage {
+    border-left: 1px solid CanvasText;
+  }
+  .site-menu {
+    border-left: 1px solid CanvasText;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion: movement is removed, not shortened. The stylesheet's
+   global rule already ends every animation and transition at once; here the
+   covers go (a photograph simply appears), nothing is nudged and nothing
+   waits on a delay.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-level {
+    transition-delay: 0s !important;
+  }
+  /* No arrivals at all: a delay alone would still hold a block back, so the
+     animations are removed and everything is present with the sheet. */
+  .site-menu :is(.menu-in, .menu-in-near, .menu-rise, .menu-fade, .menu-stage-in) {
+    animation: none !important;
+  }
+  [data-nav-cover] {
+    display: none !important;
+  }
+  /* With no cover, a file that never loads would show the browser's own
+     broken-image box: the frame stays its plain tint until it has loaded. */
+  .menu-photo:not([data-loaded]) img {
+    visibility: hidden;
+  }
+  .site-menu .btn-arrow,
+  .menu-chevron {
+    transform: none !important;
+  }
+  .menu-level[data-away] {
+    transform: none;
+  }
+}

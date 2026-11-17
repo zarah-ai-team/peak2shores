@@ -3,7 +3,7 @@
    tokens, buttons and labels). A film opening on night, the five on paper as
    a row of tall photographs, the ways to travel on night beside a framed
    screen, and a deep-lake close. Photographs at the homepage radius; one
-   heading style throughout: Georgia, regular, never italic.
+   heading style throughout: Newsreader, regular, never italic.
    ========================================================================== */
 
 .xp {
@@ -33,7 +33,7 @@
 .xp-ask h2 {
   font-size: var(--h2);
   line-height: 1.08;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.008em;
 }
 .xp .lab + h2 {
   margin-top: 1rem;
@@ -121,7 +121,7 @@
       180deg,
       rgb(8 20 28 / 0.5) 0%,
       rgb(8 20 28 / 0) 26%,
-      rgb(8 20 28 / 0) 44%,
+      rgb(8 20 28 / 0) 40%,
       rgb(8 20 28 / 0.78) 100%
     ),
     linear-gradient(90deg, rgb(8 20 28 / 0.5) 0%, rgb(8 20 28 / 0) 60%);
@@ -138,9 +138,10 @@
   color: var(--ice);
 }
 .xp-hero h1 {
-  font-size: clamp(2.75rem, 4.87vw, 5.75rem);
+  /* A step smaller (17 Nov): 59px on a laptop, 40px on a phone. */
+  font-size: clamp(2.5rem, 4.1vw, 4.1rem);
   line-height: 1.02;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.014em;
   margin: clamp(0.875rem, 1.17vw, 1.375rem) 0 clamp(0.875rem, 1.06vw, 1.25rem);
   max-width: 13ch;
 }
@@ -198,6 +199,12 @@
   text-decoration: none;
   color: rgb(255 255 255 / 0.78);
   transition: color 0.5s var(--ease);
+}
+/* Stated again with the page's own class in front, so it holds whichever of
+   this stylesheet and home.css (`.hc a { color: inherit }`) the bundle places
+   last. */
+.hc .xp-index a {
+  color: rgb(255 255 255 / 0.78);
 }
 .xp-index a::before,
 .xp-index a::after {
@@ -428,7 +435,7 @@
   font-family: var(--sans);
   font-size: 0.75rem;
   letter-spacing: 0.2em;
-  color: rgb(255 255 255 / 0.7);
+  color: #fff;
 }
 .xp-wl {
   order: 1;
@@ -638,5 +645,29 @@
   .xp .on .txt .bar i {
     animation: none;
     width: 0;
+  }
+}
+
+/* -- Review fixes, 17 Nov --------------------------------------------------- */
+@media (max-width: 640px) {
+  /* Never larger than the home page's headline on a phone. */
+  .xp-hero h1 {
+    font-size: 2.125rem;
+  }
+}
+@media (max-width: 600px) {
+  /* On a phone the words sit low over the film: the lower half deepens
+     behind them so the eyebrow, the title and the line all read. */
+  .xp-hero .shade {
+    background:
+      linear-gradient(
+        180deg,
+        rgb(8 20 28 / 0.5) 0%,
+        rgb(8 20 28 / 0) 22%,
+        rgb(8 20 28 / 0) 34%,
+        rgb(8 20 28 / 0.62) 58%,
+        rgb(8 20 28 / 0.86) 100%
+      ),
+      linear-gradient(90deg, rgb(8 20 28 / 0.5) 0%, rgb(8 20 28 / 0) 60%);
   }
 }

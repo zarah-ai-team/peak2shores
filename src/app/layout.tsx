@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Poppins } from 'next/font/google';
+import { Instrument_Sans, Newsreader } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -13,15 +13,26 @@ import { SmoothScroll } from '@/components/motion/SmoothScroll';
 import { consentDefaults } from '@/lib/analytics';
 import { jsonLd } from '@/lib/seo';
 import { site } from '@/lib/site';
-import { getNavigation } from '@/lib/content';
+import { getNavigation, getSiteMenu } from '@/lib/content';
 
-/* Display type is Georgia, a system serif, so nothing is downloaded for it.
-   Poppins is the interface and body voice; 400–600 cover body, labels and
-   buttons. Self-hosted by next/font — no request leaves the site. */
-const poppins = Poppins({
+/* Display type is Newsreader (with its optical sizes, so a large heading is
+   drawn finer than a caption); Instrument Sans is the interface and body
+   voice. Both are variable fonts, so every weight comes from one file each.
+   Self-hosted by next/font — no request leaves the site. */
+const newsreader = Newsreader({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-poppins',
+  style: ['normal', 'italic'],
+  axes: ['opsz'],
+  variable: '--font-newsreader',
+  display: 'swap',
+});
+const instrumentSans = Instrument_Sans({
+  subsets: ['latin'],
+  style: ['normal', 'italic'],
+  // Its width axis too (75–100%): the Destinations page sets each country's
+  // name in the condensed cut.
+  axes: ['wdth'],
+  variable: '--font-instrument-sans',
   display: 'swap',
 });
 
@@ -96,11 +107,17 @@ const organization = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const nav = await getNavigation();
+  // The menu's journeys, countries, ways to travel and experiences are read
+  // here and handed to the header as plain data.
+  const [nav, menu] = await Promise.all([getNavigation(), getSiteMenu()]);
   return (
     // The boot script writes attributes onto <html> before hydration; React
     // must not treat them as a mismatch.
-    <html lang="en" className={poppins.variable} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${newsreader.variable} ${instrumentSans.variable}`}
+      suppressHydrationWarning
+    >
       <body>
         <script dangerouslySetInnerHTML={{ __html: boot }} />
         {/* Consent Mode defaults must exist before Tag Manager loads. */}
@@ -119,7 +136,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         </a>
         <MotionProvider>
           <Preloader />
-          <Header primary={nav.primary} cta={nav.cta} />
+          <Header primary={nav.primary} cta={nav.cta} menu={menu} />
           {/* After the header: its color follows the header's state through a
               sibling selector (.scroll-progress in globals.css). */}
           <ScrollProgress />

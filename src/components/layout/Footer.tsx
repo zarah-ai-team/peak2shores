@@ -2,11 +2,15 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { site, whatsappHref } from '@/lib/site';
 import type { Navigation } from '@/lib/content';
+import { CopyrightYear } from '@/components/layout/CopyrightYear';
 import { FooterSignup } from '@/components/layout/FooterSignup';
 import { RevealGroup, RevealItem } from '@/components/motion/Reveal';
 import { Ground } from '@/components/motion/Ground';
 
 const link = 'transition-colors duration-300 hover:text-acqua';
+/* On a touch screen every footer link is a 44px target, the height the buttons
+   already keep there. With a mouse the rows stay as compact as they are. */
+const tap = 'pointer-coarse:flex pointer-coarse:min-h-11 pointer-coarse:items-center';
 
 /**
  * The page ends dark: navy-deep, with the closing line and the journal
@@ -59,7 +63,7 @@ export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
                   <Link
                     key={item.href + item.label}
                     href={item.href}
-                    className={`prose-body-sm py-1.5 ${link}`}
+                    className={`prose-body-sm py-1.5 ${link} ${tap}`}
                   >
                     {item.label}
                   </Link>
@@ -71,11 +75,11 @@ export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
           <RevealItem className="col-span-full md:col-span-8 lg:col-span-3 lg:col-start-10">
             <p className="kicker-sm m-0 mb-4">{site.locations}</p>
             <p className="prose-body-sm m-0 flex flex-col items-start">
-              <a href={`mailto:${site.email}`} className={`py-1.5 ${link}`}>
+              <a href={`mailto:${site.email}`} className={`py-1.5 ${link} ${tap}`}>
                 {site.email}
               </a>
               {site.phone && site.phoneHref && (
-                <a href={`tel:${site.phoneHref}`} className={`py-1.5 ${link}`}>
+                <a href={`tel:${site.phoneHref}`} className={`py-1.5 ${link} ${tap}`}>
                   {site.phone}
                 </a>
               )}
@@ -84,12 +88,12 @@ export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
                   href={whatsappHref() ?? undefined}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`py-1.5 ${link}`}
+                  className={`py-1.5 ${link} ${tap}`}
                 >
                   WhatsApp
                 </a>
               )}
-              <a href={site.bookingUrl ?? '/plan#contact'} className={`py-1.5 ${link}`}>
+              <a href={site.bookingUrl ?? '/plan#contact'} className={`py-1.5 ${link} ${tap}`}>
                 Book a call
               </a>
               {site.instagram && (
@@ -97,7 +101,7 @@ export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
                   href={site.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`inline-flex items-center gap-2 py-1.5 ${link}`}
+                  className={`inline-flex items-center gap-2 py-1.5 ${link} ${tap}`}
                 >
                   <svg
                     width="16"
@@ -120,16 +124,29 @@ export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
           </RevealItem>
         </RevealGroup>
 
-        <div className="kicker-sm mt-10 flex flex-col gap-4 border-t border-line-dark pt-6 text-on-dark-muted lg:mt-[clamp(2.25rem,2.97vw,3.5rem)] lg:flex-row lg:justify-between">
-          <span className="flex flex-wrap gap-x-6 gap-y-2">
+        <div className="kicker-sm mt-10 flex flex-col gap-4 border-t border-line-dark pt-6 text-on-dark-muted lg:mt-[clamp(2.25rem,2.97vw,3.5rem)] lg:flex-row lg:items-center lg:justify-between">
+          <span className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <span>
-              © {new Date().getFullYear()} {site.legalName}
+              © <CopyrightYear built={new Date().getFullYear()} /> {site.legalName}
             </span>
             {site.sellerOfTravel && <span>Seller of Travel Reg. No. {site.sellerOfTravel}</span>}
+            {/* The studio that built the site, with its mark (17 Nov), kept
+                small in this line so the footer stays compact (Marc, 29 Oct). */}
+            <span className="flex items-center gap-2.5">
+              Powered by
+              <Image
+                src="/images/brand/zarah-ai.svg"
+                alt="Zarah AI"
+                width={95}
+                height={64}
+                unoptimized
+                className="h-8 w-auto lg:h-9"
+              />
+            </span>
           </span>
           <nav aria-label="Legal" className="flex flex-wrap gap-x-6 gap-y-1">
             {nav.legal.map((item) => (
-              <Link key={item.href} href={item.href} className={`py-1.5 ${link}`}>
+              <Link key={item.href} href={item.href} className={`py-1.5 ${link} ${tap}`}>
                 {item.label}
               </Link>
             ))}
