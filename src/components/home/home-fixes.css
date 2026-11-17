@@ -49,9 +49,10 @@
   font-family: var(--serif);
   font-style: italic;
   font-weight: 400;
-  font-size: clamp(1rem, 1.4vw, 1.25rem);
-  line-height: 1.45;
-  max-width: 38ch;
+  /* Larger since the owner's note of 18 Nov 2026. */
+  font-size: clamp(1.25rem, 1.9vw, 1.75rem);
+  line-height: 1.4;
+  max-width: 36ch;
   margin: 0 0 2rem;
   /* The water-blue (17 Nov review): the brighter cyan fell to 3.4:1 over
      the Seville clip. */
@@ -124,7 +125,7 @@
     margin-bottom: 1rem;
   }
   .hc .hc-hero .copy.left .standfirst {
-    font-size: 1rem;
+    font-size: 1.1875rem;
     margin-bottom: 1.5rem;
   }
 }

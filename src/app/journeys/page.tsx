@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { JourneyCollection, type CollectionCard } from '@/components/journeys/JourneyCollection';
-import { JourneysHero } from '@/components/journeys/JourneysHero';
+import { JourneysMap } from '@/components/journeys/JourneysMap';
 import { JourneyTabs } from '@/components/journeys/JourneyTabs';
 import { DetailsDifference } from '@/components/journeys/DetailsDifference';
 import { Faq } from '@/components/ui/Faq';
@@ -48,15 +48,18 @@ const monthLabel = (ym: string) =>
   });
 
 /**
- * The Journeys page, after Ishika's notes of 3 November 2026:
+ * The Journeys page, after Ishika's notes of 3 November 2026 and the owner's
+ * note of 18 November 2026 (start with the Collection; the map as its second
+ * view):
  *
- * 1. The page's name over a wide map of the region, the journeys under it as
- *    a carousel (no full-bleed photograph: only the homepage has one).
+ * 1. The Collection, opening the page: the journey cards with their dropdown
+ *    filters, and a Cards / Map switch whose Map view is the globe with the
+ *    journeys as a carousel (no full-bleed photograph: only the homepage has
+ *    one).
  * 2. The in-page menu, pinned under the header.
  * 3. The details that make the difference (moved here from the homepage).
- * 4. The Collection: dropdown filters and the journey cards.
- * 5. Bespoke Private Travel: one slim navy banner.
- * 6. Good to know: the questions. No button of its own since the chat notes
+ * 4. Bespoke Private Travel: one slim navy banner.
+ * 5. Good to know: the questions. No button of its own since the chat notes
  *    of 9 November 2026: it repeated the floating "Connect with our team".
  *
  * Only the journeys with a page are shown (Marc's three, for launch); the
@@ -120,7 +123,7 @@ export default async function JourneysPage() {
 
   return (
     <>
-      <JourneysHero journeys={full} />
+      <JourneyCollection cards={cards} tba={DATES_TBA} map={<JourneysMap journeys={full} />} />
       <JourneyTabs
         label="On this page"
         tabs={[
@@ -133,7 +136,6 @@ export default async function JourneysPage() {
         ctaHref="/plan#contact"
       />
       <DetailsDifference />
-      <JourneyCollection cards={cards} tba={DATES_TBA} />
 
       <section className="jxb" id="private" aria-labelledby="jxb-h">
         <div className="jxb-in">

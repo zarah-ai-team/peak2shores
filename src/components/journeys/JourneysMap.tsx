@@ -26,13 +26,14 @@ const cardPhoto = (key: MediaKey, pos?: string) => {
 };
 
 /**
- * The Journeys page's opening, after Ishika's notes of 3 November 2026: no
- * full-bleed photograph (only the homepage has one) but the page's name and
- * Marc's line, then the earth as a globe with the journeys as a carousel under
+ * The Journeys map: the earth as a globe with the journeys as a carousel under
  * it. Choosing a journey turns the globe to its region and draws its route,
  * with its stops and nights; "Stay tuned" draws back to the whole earth.
+ *
+ * It opened the page until the owner's note of 18 November 2026; it is now the
+ * Map view of The Collection (JourneyCollection), which opens the page.
  */
-export function JourneysHero({ journeys }: { journeys: Journey[] }) {
+export function JourneysMap({ journeys }: { journeys: Journey[] }) {
   const items: HeroJourney[] = journeys.map((j) => {
     const route = j.route ?? [];
     const stays = j.flyer?.parts.flatMap((p) => p.stays) ?? [];
@@ -60,33 +61,12 @@ export function JourneysHero({ journeys }: { journeys: Journey[] }) {
   });
 
   return (
-    <section className="jxh" aria-labelledby="jxh-h1">
-      <div className="jxh-head">
-        <p className="jxh-lab">Journeys</p>
-        <h1 id="jxh-h1">Small Luxury Group Journeys</h1>
-        <p className="jxh-line">
-          Extraordinary destinations. Intimate groups. Thoughtfully curated experiences.
-        </p>
-        <div className="jxh-say">
-          <p>
-            Intimate journeys shared with a small circle of fellow travelers, bringing together
-            exceptional places, meaningful experiences and the joy of discovering the world
-            together.
-          </p>
-          <p className="hint">
-            <i aria-hidden />
-            Choose a journey below and the globe will take you there.
-          </p>
-        </div>
-      </div>
-
-      <HeroCarousel
-        journeys={items}
-        label="A globe showing the chosen journey’s route, its stops and nights"
-        // "Stay tuned" names no place, so its photograph promises none: a boat
-        // on open water, the coast fading behind it.
-        soonPhoto={cardPhoto('home-hero')}
-      />
-    </section>
+    <HeroCarousel
+      journeys={items}
+      label="A globe showing the chosen journey’s route, its stops and nights"
+      // "Stay tuned" names no place, so its photograph promises none: a boat
+      // on open water, the coast fading behind it.
+      soonPhoto={cardPhoto('home-hero')}
+    />
   );
 }

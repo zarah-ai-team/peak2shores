@@ -2,7 +2,15 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import {
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type ReactNode,
+} from 'react';
 import { Arrow } from '@/components/ui/Button';
 import './collection.css';
 
@@ -32,6 +40,13 @@ export type CollectionCard = {
 };
 
 type Show = 'all' | 'now' | 'soon';
+
+/** The Collection's two views: the journey cards, or the journeys on the globe. */
+type View = 'cards' | 'map';
+const views: [View, string][] = [
+  ['cards', 'Cards'],
+  ['map', 'Map'],
+];
 
 const shows: [Show, string][] = [
   ['all', 'All'],
@@ -76,8 +91,34 @@ const toggle = (v: string[], x: string) => (v.includes(x) ? v.filter((y) => y !=
  * then `tba` ("Dates to be announced") for the journeys without dates, and it
  * is not shown at all until some journey has a month.
  */
-export function JourneyCollection({ cards, tba }: { cards: CollectionCard[]; tba: string }) {
+export function JourneyCollection({
+  cards,
+  tba,
+  map,
+}: {
+  cards: CollectionCard[];
+  tba: string;
+  /** The Map view (the globe and its carousel), built on the server. Without it there is no switch. */
+  map?: ReactNode;
+}) {
   const [f, setF] = useState<Filters>(none);
+  const [view, setView] = useState<View>('cards');
+  /* The globe is drawn only once the Map view has been opened, then kept, so
+     going back and forth does not lose the journey it was turned to. */
+  const [mapOpened, setMapOpened] = useState(false);
+  const tabs = useRef<HTMLDivElement>(null);
+  const show = (next: View) => {
+    setView(next);
+    if (next === 'map') setMapOpened(true);
+  };
+  /* A tab list: the arrow keys move between the two views. */
+  const onTabKey = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    event.preventDefault();
+    const next: View = view === 'cards' ? 'map' : 'cards';
+    show(next);
+    tabs.current?.querySelector<HTMLButtonElement>(`#jx-tab-${next}`)?.focus();
+  };
   const set = (patch: Partial<Filters>) => setF((cur) => ({ ...cur, ...patch }));
 
   const opts = useMemo(() => {
@@ -150,94 +191,147 @@ export function JourneyCollection({ cards, tba }: { cards: CollectionCard[]; tba
     <div className="jx">
       <section className="col" id="collection" aria-labelledby="jx-col">
         <div className="colh">
-          <p className="lab">Our journeys</p>
-          <h2 id="jx-col">The Collection</h2>
-        </div>
-
-        <div className="fbar" role="group" aria-label="Filter journeys">
-          <Menu
-            label="Destination"
-            value={f.dest}
-            options={one('dest', opts.dests)}
-            onPick={(dest) => set({ dest })}
-          />
-          {opts.lens.length > 0 && (
-            <Menu
-              label="Length"
-              value={f.len}
-              options={one('len', opts.lens)}
-              onPick={(len) => set({ len })}
-            />
-          )}
-          {opts.whens.length > 0 && (
-            <Menu
-              label="Departure"
-              value={departures.find(([key]) => key === f.when)?.[1] ?? 'All'}
-              options={departures.map(([key, label]) => ({
-                key,
-                label,
-                count: count({ when: key }),
-                on: key === f.when,
-              }))}
-              onPick={(when) => set({ when })}
-            />
-          )}
-          {opts.styles.length > 0 && (
-            <Menu
-              label="Travel style"
-              multi
-              value={chosen(f.style)}
-              options={many('style', opts.styles)}
-              onPick={(x) => set({ style: toggle(f.style, x) })}
-            />
-          )}
-          {opts.insps.length > 0 && (
-            <Menu
-              label="What inspires you"
-              multi
-              value={chosen(f.insp)}
-              options={many('insp', opts.insps)}
-              onPick={(x) => set({ insp: toggle(f.insp, x) })}
-            />
-          )}
-          <Menu
-            label="Availability"
-            value={shows.find(([k]) => k === f.show)?.[1] ?? 'All'}
-            options={shows.map(([k, t]) => ({
-              key: k,
-              label: t,
-              count: count({ show: k }),
-              on: k === f.show,
-            }))}
-            onPick={(k) => set({ show: k as Show })}
-          />
-          {anyOn && (
-            <button type="button" className="fclear" onClick={clearAll}>
-              Clear
-            </button>
-          )}
-          <div className="fend">
-            <span role="status" aria-live="polite">
-              Showing {shown.length} of {cards.length} journeys
-            </span>
+          <div>
+            <p className="lab">Our journeys</p>
+            {/* The page's name: the Collection opens the Journeys page. */}
+            <h1 id="jx-col">
+              The Collection<span className="sr-only">: Small Luxury Group Journeys</span>
+            </h1>
           </div>
+          {map && (
+            <div
+              ref={tabs}
+              className="colview"
+              role="tablist"
+              aria-label="View the journeys as"
+              onKeyDown={onTabKey}
+            >
+              {views.map(([key, label]) => (
+                <button
+                  key={key}
+                  type="button"
+                  role="tab"
+                  id={`jx-tab-${key}`}
+                  aria-selected={view === key}
+                  aria-controls={`jx-view-${key}`}
+                  tabIndex={view === key ? 0 : -1}
+                  className={view === key ? 'on' : undefined}
+                  onClick={() => show(key)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
-        <ul className="grid">
-          {shown.map((c, i) => (
-            <li key={c.slug}>
-              <ProductCard card={c} priority={i < 3} />
-            </li>
-          ))}
-          {shown.length === 0 && (
-            <li className="empty">
-              No journeys match those filters.{' '}
-              <button type="button" onClick={clearAll}>
-                Clear them
+        {map && (
+          <div
+            id="jx-view-map"
+            className="colmap"
+            role="tabpanel"
+            aria-labelledby="jx-tab-map"
+            hidden={view !== 'map'}
+          >
+            <p className="colmap-hint">
+              <i aria-hidden />
+              Choose a journey below and the globe will take you there.
+            </p>
+            {mapOpened && map}
+          </div>
+        )}
+
+        <div
+          id="jx-view-cards"
+          role={map ? 'tabpanel' : undefined}
+          aria-labelledby={map ? 'jx-tab-cards' : undefined}
+          hidden={view !== 'cards'}
+        >
+          <div className="fbar" role="group" aria-label="Filter journeys">
+            <Menu
+              label="Destination"
+              value={f.dest}
+              options={one('dest', opts.dests)}
+              onPick={(dest) => set({ dest })}
+            />
+            {opts.lens.length > 0 && (
+              <Menu
+                label="Length"
+                value={f.len}
+                options={one('len', opts.lens)}
+                onPick={(len) => set({ len })}
+              />
+            )}
+            {opts.whens.length > 0 && (
+              <Menu
+                label="Departure"
+                value={departures.find(([key]) => key === f.when)?.[1] ?? 'All'}
+                options={departures.map(([key, label]) => ({
+                  key,
+                  label,
+                  count: count({ when: key }),
+                  on: key === f.when,
+                }))}
+                onPick={(when) => set({ when })}
+              />
+            )}
+            {opts.styles.length > 0 && (
+              <Menu
+                label="Travel style"
+                multi
+                value={chosen(f.style)}
+                options={many('style', opts.styles)}
+                onPick={(x) => set({ style: toggle(f.style, x) })}
+              />
+            )}
+            {opts.insps.length > 0 && (
+              <Menu
+                label="What inspires you"
+                multi
+                value={chosen(f.insp)}
+                options={many('insp', opts.insps)}
+                onPick={(x) => set({ insp: toggle(f.insp, x) })}
+              />
+            )}
+            <Menu
+              label="Availability"
+              value={shows.find(([k]) => k === f.show)?.[1] ?? 'All'}
+              options={shows.map(([k, t]) => ({
+                key: k,
+                label: t,
+                count: count({ show: k }),
+                on: k === f.show,
+              }))}
+              onPick={(k) => set({ show: k as Show })}
+            />
+            {anyOn && (
+              <button type="button" className="fclear" onClick={clearAll}>
+                Clear
               </button>
-            </li>
-          )}
-        </ul>
+            )}
+            <div className="fend">
+              <span role="status" aria-live="polite">
+                Showing {shown.length} of {cards.length} journeys
+              </span>
+            </div>
+          </div>
+
+          <ul className="grid">
+            {shown.map((c, i) => (
+              <li key={c.slug}>
+                <ProductCard card={c} priority={i < 3} />
+              </li>
+            ))}
+            {shown.length === 0 && (
+              <li className="empty">
+                No journeys match those filters.{' '}
+                <button type="button" onClick={clearAll}>
+                  Clear them
+                </button>
+              </li>
+            )}
+          </ul>
+        </div>
       </section>
     </div>
   );

@@ -4,243 +4,12 @@
    homepage radius, deep-lake bands, pill buttons, nothing square.
    ========================================================================== */
 
-/* -- 01 Opening ---------------------------------------------------------- */
-/* As on the Journeys page: the name on paper, then the photograph framed. */
-.dz-open {
-  padding: clamp(2.5rem, 5vw, 4.5rem) var(--dz-side) clamp(1rem, 2vw, 2rem);
-  background: var(--paper);
-  color: var(--ink);
-}
-.dz-open-head {
-  display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  align-items: end;
-  gap: 1.5rem clamp(2rem, 6vw, 6rem);
-  margin-bottom: clamp(2rem, 3.4vw, 3rem);
-}
-.dz-open-lab {
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  margin: 0;
-  font-family: var(--sans);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: var(--lake);
-}
-.dz-open-lab::before {
-  content: '';
-  width: 1.75rem;
-  height: 1px;
-  background: currentColor;
-}
-/* The same size as the Journeys page's title, on one line from a laptop up. */
-.dz-open h1 {
-  margin: 1rem 0 0.875rem;
-  font-family: var(--serif);
-  font-weight: var(--title-weight);
-  font-size: clamp(2rem, 3.3vw, 3.5rem);
-  line-height: 1.05;
-  letter-spacing: -0.01em;
-  text-wrap: balance;
-}
-@media (min-width: 1024px) {
-  .dz-open h1 {
-    white-space: nowrap;
-  }
-}
-.dz-open-line {
-  margin: 0;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(1.0625rem, 1.3vw, 1.3125rem);
-  color: var(--lake);
-}
-.dz-open-say > p {
-  margin: 0;
-  font-family: var(--sans);
-  font-size: 0.9375rem;
-  line-height: 1.65;
-  color: var(--muted);
-}
-.dz-open-say .ctas {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem 1.5rem;
-  margin-top: 1.25rem;
-}
-.dz-open-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  min-height: 2.75rem;
-  font-family: var(--sans);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--lake);
-  text-decoration: none;
-}
-.dz-open-link:hover {
-  color: var(--brand);
-}
-.dz-frame {
-  position: relative;
-  aspect-ratio: 1400 / 560;
-  overflow: hidden;
-  border-radius: 1.5rem;
-  background: var(--deep);
-  box-shadow: 0 1.5rem 3.5rem rgb(20 29 36 / 0.16);
-  isolation: isolate;
-}
-.dz-frame-shade {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgb(8 20 28 / 0) 55%, rgb(8 20 28 / 0.55) 100%);
-}
-/* The countries, as a way into the page, along the foot of the photograph. */
-.dz-index {
-  position: absolute;
-  left: 1.25rem;
-  right: 1.25rem;
-  bottom: clamp(1rem, 2vw, 1.75rem);
-  z-index: 5;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 0.5rem 0.625rem;
-}
-.dz-index a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.625rem;
-  min-height: 2.75rem;
-  padding: 0 clamp(1rem, 1.06vw, 1.25rem);
-  border-radius: 999px;
-  border: 1px solid rgb(255 255 255 / 0.4);
-  background: rgb(8 20 28 / 0.72);
-  color: #fff;
-  font-family: var(--sans);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  text-decoration: none;
-  touch-action: manipulation;
-  transition:
-    background-color 0.4s var(--ease),
-    border-color 0.4s var(--ease);
-}
-/* The country's name, white. Stated with the page's own class in front:
-   home.css sets `.hc a { color: inherit }` at the same weight as `.dz-index a`,
-   and whichever stylesheet the bundle places last would otherwise win (it
-   left the names in ink on the dark ground, where they could not be read). */
-.hc .dz-index a {
-  color: #fff;
-}
-.dz-index a span {
-  color: var(--sky);
-  letter-spacing: 0.1em;
-}
-.dz-index a:hover {
-  background: var(--color-brand-deep);
-  border-color: var(--color-brand-deep);
-}
-.dz-index a:hover span {
-  color: #fff;
-}
-.dz-index a:focus-visible {
-  outline: 2px solid var(--sky);
-  outline-offset: 0.1875rem;
-}
-
-/* -- 02 Statement -------------------------------------------------------- */
-.dz-intro p em {
-  white-space: nowrap;
-}
-.dz-facts {
-  list-style: none;
-  margin: clamp(2rem, 2.97vw, 3.5rem) auto 0;
-  padding: 0;
-  max-width: 61.25rem;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  border-top: 1px solid rgb(20 29 36 / 0.14);
-}
-.dz-facts li {
-  padding: clamp(1.25rem, 1.48vw, 1.75rem) 1rem 0;
-  display: grid;
-  gap: 0.5rem;
-  justify-items: center;
-}
-.dz-facts li + li {
-  border-left: 1px solid rgb(20 29 36 / 0.14);
-}
-.dz-facts b {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(2.5rem, 2.97vw, 3.5rem);
-  line-height: 1;
-  letter-spacing: -0.012em;
-  color: var(--brand);
-}
-.dz-facts span {
-  font-family: var(--sans);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-/* -- 03 Where we go ------------------------------------------------------ */
-.dz-where {
-  background: var(--paper);
-  color: var(--ink);
-  padding: 0 var(--dz-side) clamp(3rem, 4.24vw, 5rem);
-}
-/* One column for the opening and the heading: the site gutter on a phone or
-   laptop, and on a wide screen a centred 1600px measure, so the words never
-   hug the far edges of a 1920px monitor. (The story of the countries sets its
-   own: full bleed, its words at the gutter, see .dz-story.) */
+/* The closing invitation keeps one column: the site gutter on a phone or
+   laptop, and on a wide screen a centred 1600px measure. (The story of the
+   countries sets its own: full bleed, its words at the gutter, see .dz-story.) */
 .dz {
   --dz-side: max(var(--gut), calc((100% - 100rem) / 2));
 }
-.dz-head {
-  display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
-  gap: clamp(2rem, 3.39vw, 4rem);
-  align-items: end;
-}
-.dz-head p {
-  max-width: 34rem;
-  justify-self: end;
-}
-.dz-head .lab {
-  color: var(--lake);
-}
-.dz-head h2 {
-  font-family: var(--serif);
-  font-weight: var(--title-weight);
-  font-size: clamp(2.125rem, 3.18vw, 3.75rem);
-  line-height: 1.02;
-  letter-spacing: -0.012em;
-  margin: 1rem 0 0;
-  max-width: 20ch;
-}
-.dz-head p {
-  font-family: var(--sans);
-  font-weight: 300;
-  font-size: clamp(0.875rem, 0.795vw, 0.9375rem);
-  line-height: 1.75;
-  margin: 0;
-  color: #3a434a;
-}
-
 /* -- The countries: one story, told by scrolling (PlaceStory) ------------- */
 /* One tall article per country, each holding a stage pinned under the
    header; the next country's stage scrolls up with the one it replaces, a
@@ -321,6 +90,17 @@
    height back (see .dz-ui). */
 .dz-ui + .dz-place {
   margin-top: calc(var(--dz-x) - var(--dz-hs));
+}
+/* When the story opens the page (Destinations, since 18 Nov), the first
+   country is not pulled: its stage is pinned from the very top with its name
+   already standing, and /destinations#<first> is the top of the page. */
+@media (prefers-reduced-motion: no-preference) {
+  .dz-story[data-lead] .dz-ui + .dz-place {
+    margin-top: calc(-1 * var(--dz-hs));
+  }
+  .dz-story[data-lead] .dz-ui + .dz-place > .dz-stage {
+    margin-top: 0;
+  }
 }
 .dz-place:last-of-type {
   height: calc(var(--dz-len) - var(--dz-x));
@@ -723,21 +503,6 @@
 }
 
 /* -- Smaller screens ----------------------------------------------------- */
-@media (max-width: 900px) {
-  .dz-open-head {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .dz-frame {
-    aspect-ratio: 4 / 3;
-  }
-  .dz-head {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 1.25rem;
-  }
-  .dz-head p {
-    justify-self: start;
-  }
-}
 /* A tablet held upright and anything narrower: the words above, the row of
    photographs beneath them, starting at the gutter. */
 @media (max-width: 899px), (max-aspect-ratio: 4/5) {
@@ -769,29 +534,6 @@
   }
 }
 @media (max-width: 600px) {
-  .dz-frame {
-    aspect-ratio: 4 / 3.4;
-  }
-  .dz-index {
-    gap: 0.375rem;
-    left: 0.75rem;
-    right: 0.75rem;
-  }
-  .dz-index a {
-    min-height: 2.5rem;
-    padding: 0 0.875rem;
-    font-size: 0.6875rem;
-  }
-  .dz-facts {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .dz-facts li {
-    padding: 1.375rem 0;
-  }
-  .dz-facts li + li {
-    border-left: 0;
-    border-top: 1px solid rgb(20 29 36 / 0.14);
-  }
   /* On a phone the journeys are the cards at the end of the row; the words
      keep to the country's name and its line. The name takes the width, and
      the progress line, which it would cross, is left out. */
@@ -814,7 +556,6 @@
 /* Nothing pinned and nothing moving: each country is its photograph with its
    name (the land still in front of it), then its details, in the flow. */
 @media (prefers-reduced-motion: reduce) {
-  .dz-index a,
   .dz-j-title,
   .dz-arrow {
     transition: none;

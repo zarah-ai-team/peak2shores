@@ -236,13 +236,80 @@
   color: var(--ink);
   padding: clamp(4.5rem, 7.2vw, 8.125rem) var(--gut) clamp(5rem, 7.8vw, 8.75rem);
 }
+/* The Collection opens the Journeys page: the room a page's first section
+   takes under the header, not a mid-page section's. */
+.jx:first-child .col {
+  padding-top: clamp(2.5rem, 5vw, 4.5rem);
+}
+/* The heading at the left, the Cards / Map switch at the right. */
 .jx .colh {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem 2rem;
   margin-bottom: 2.5rem;
+}
+/* The switch: one pill holding the two views, the chosen one filled in the
+   brand blue. */
+.jx .colview {
+  display: inline-flex;
+  padding: 0.25rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: #fff;
+}
+.jx .colview button {
+  min-width: 5.5rem;
+  min-height: 2.5rem;
+  padding: 0 1.25rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    background-color 0.25s var(--ease),
+    color 0.25s var(--ease);
+}
+.jx .colview button:hover {
+  color: var(--lake);
+}
+.jx .colview button.on {
+  background: var(--brand);
+  color: #fff;
+}
+.jx .colview button:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 0.1875rem;
+}
+/* The Map view: one line saying what the globe does, then the globe and its
+   carousel (styled in journeys-index.css). */
+.jx .colmap-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin: 0 0 1.5rem;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--muted);
+}
+.jx .colmap-hint i {
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--brand);
 }
 .jx .colh .lab {
   color: var(--lake);
 }
-.jx .colh h2 {
+.jx .colh h1 {
   font-family: var(--serif);
   font-weight: var(--title-weight);
   font-size: var(--h2);

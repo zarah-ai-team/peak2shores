@@ -1,12 +1,11 @@
 /*
- * The Journeys page, after Ishika's notes of 3 November 2026: the map hero and
- * its carousel (JourneysHero, HeroCarousel), the details that make the
+ * The Journeys page, after Ishika's notes of 3 November 2026: the globe and
+ * its carousel (JourneysMap, HeroCarousel: the Collection's Map view), the details that make the
  * difference (DetailsDifference), the Collection's dropdown filters, and the
  * Bespoke Private Travel banner. No gold: her gold accents are the house
  * blues — sky blue on dark ground, lake blue on paper.
  */
 
-.jxh,
 .xpd,
 .jxb,
 .jx {
@@ -26,26 +25,7 @@
   -webkit-font-smoothing: antialiased;
 }
 
-/* -- 1. Hero: the name, the map, the journeys -------------------------------- */
-.jxh {
-  padding: clamp(2.5rem, 5vw, 4.5rem) var(--gut) clamp(3rem, 5vw, 4.5rem);
-  background: var(--paper);
-  color: var(--ink);
-}
-/* The page's name has the full width to itself, so it holds one line on a
-   laptop or wider; the line and the paragraph sit under it, side by side. */
-.jxh-head {
-  display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-  align-items: start;
-  gap: 0 clamp(2rem, 6vw, 6rem);
-  margin-bottom: clamp(2rem, 3.4vw, 3rem);
-}
-.jxh-head > .jxh-lab,
-.jxh-head > h1 {
-  grid-column: 1 / -1;
-}
-.jxh-lab,
+/* The small label over a section, shared by the sections below. */
 .xpd-lab,
 .jxb-lab {
   display: flex;
@@ -59,7 +39,6 @@
   text-transform: uppercase;
   color: var(--lake);
 }
-.jxh-lab::before,
 .xpd-lab::before,
 .jxb-lab::before {
   content: '';
@@ -67,51 +46,8 @@
   height: 1px;
   background: currentColor;
 }
-/* One line on a laptop or wider, sized to the column it has. */
-.jxh h1 {
-  margin: 1rem 0 0.875rem;
-  font-family: var(--serif);
-  font-weight: var(--title-weight);
-  font-size: clamp(2rem, 3.3vw, 3.5rem);
-  line-height: 1.05;
-  letter-spacing: -0.01em;
-  text-wrap: balance;
-}
-@media (min-width: 900px) {
-  .jxh h1 {
-    white-space: nowrap;
-  }
-}
-.jxh-line {
-  margin: 0;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(1.0625rem, 1.3vw, 1.3125rem);
-  color: var(--lake);
-}
-.jxh-say {
-  margin-top: 0.25rem;
-}
-.jxh-say p {
-  margin: 0;
-  font-size: 0.9375rem;
-  line-height: 1.65;
-  color: var(--muted);
-}
-.jxh-say .hint {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  margin-top: 1rem;
-  font-size: 0.8125rem;
-}
-.jxh-say .hint i {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background: var(--brand);
-}
 
+/* -- 1. The globe and its carousel (the Collection's Map view) ------------- */
 /* The globe. */
 .jxh-map {
   position: relative;
@@ -879,9 +815,6 @@
   }
 }
 @media (max-width: 760px) {
-  .jxh-head {
-    grid-template-columns: minmax(0, 1fr);
-  }
   .jxh-map {
     aspect-ratio: 1.25;
   }

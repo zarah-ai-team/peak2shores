@@ -39,7 +39,14 @@ import type { StoryPlace } from './story';
  * Readers who ask for reduced motion get no pinning and no movement: each
  * country is its photograph with its name, then its details, in the flow.
  */
-export function PlaceStory({ places }: { places: StoryPlace[] }) {
+export function PlaceStory({
+  places,
+  lead = false,
+}: {
+  places: StoryPlace[];
+  /** The story is the first thing on its page: the first country opens it, its name already standing. */
+  lead?: boolean;
+}) {
   const root = useRef<HTMLDivElement>(null);
   /** The country on screen, for the pill's name. */
   const [current, setCurrent] = useState(0);
@@ -77,7 +84,14 @@ export function PlaceStory({ places }: { places: StoryPlace[] }) {
   return (
     // The header stays over the story (`data-pin-header`): the stage is pinned
     // beneath it, and a header stepping aside would open a gap above it.
-    <div ref={root} className="dz-story" data-tone="dark" data-fab-away data-pin-header>
+    <div
+      ref={root}
+      className="dz-story"
+      data-lead={lead ? '' : undefined}
+      data-tone="dark"
+      data-fab-away
+      data-pin-header
+    >
       {/* Over the whole story and still while the countries change. */}
       <div className="dz-ui">
         <div className="dz-ui-in">
@@ -117,7 +131,7 @@ export function PlaceStory({ places }: { places: StoryPlace[] }) {
 const STATIC = [
   '.dz-ui,.dz-mark,.dz-bar{display:none}',
   '.dz-place,.dz-place:last-of-type{height:auto;padding:0}',
-  '.dz-ui+.dz-place{margin-top:0}',
+  '.dz-ui+.dz-place,.dz-story[data-lead] .dz-ui+.dz-place{margin-top:0}',
   '.dz-stage{position:relative;top:auto;height:auto;margin-top:0}',
   '.dz-scene{position:relative;height:var(--dz-hs);overflow:hidden}',
   '.dz-detail{position:relative;height:auto;padding-top:clamp(2.5rem,5vw,4.5rem);padding-bottom:clamp(3rem,6vw,5.5rem);pointer-events:auto}',
