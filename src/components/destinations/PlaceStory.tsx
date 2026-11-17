@@ -133,10 +133,10 @@ const STATIC = [
   '.dz-place,.dz-place:last-of-type{height:auto;padding:0}',
   '.dz-ui+.dz-place,.dz-story[data-lead] .dz-ui+.dz-place{margin-top:0}',
   '.dz-stage{position:relative;top:auto;height:auto;margin-top:0}',
-  '.dz-scene{position:relative;height:var(--dz-hs);overflow:hidden}',
+  '.dz-scene{position:relative;height:var(--dz-hs);overflow:hidden;overflow:clip}',
   '.dz-detail{position:relative;height:auto;padding-top:clamp(2.5rem,5vw,4.5rem);padding-bottom:clamp(3rem,6vw,5.5rem);pointer-events:auto}',
   '.dz-h,.dz-copy-body,.dz-cards{opacity:1}',
-  '.dz-cards{clip-path:none;overflow-x:auto;padding-bottom:.75rem}',
+  '.dz-cards{clip-path:none;overflow-x:auto;padding-bottom:.75rem;scroll-padding-inline:var(--dz-side)}',
   '.dz-row{padding-right:var(--dz-side)}',
 ].join('');
 
@@ -172,13 +172,7 @@ const Place = memo(function Place({
   } as CSSProperties;
 
   return (
-    <article
-      id={place.slug}
-      className="dz-place"
-      aria-labelledby={titleId}
-      style={vars}
-      data-cut={scene.cutout ? '' : undefined}
-    >
+    <article id={place.slug} className="dz-place" aria-labelledby={titleId} style={vars}>
       <div className="dz-stage">
         <div className="dz-scene" aria-hidden>
           <div className="dz-media">
@@ -673,6 +667,9 @@ function drive(
   // point in the direction it was going, or back if it had barely left the
   // last one. Never on touch, keys or a glide of its own, never with reduced
   // motion (nothing is pinned then), and any new gesture takes over at once.
+  // The glide is SmoothScroll's own (`p2s:scroll-to`, as the site menu's
+  // in-page links and the pill use): everything that decides it lives here,
+  // and leaves with the story.
   let lastWheel = -Infinity;
   let heading = 1;
   let idle = 0;

@@ -75,8 +75,10 @@ export type StoryPlace = {
  * - Croatia: Rovinj from the air (the client's photograph): the name stands
  *   out at sea, behind the wooded island's tree line.
  *
- * `skyline` and the sizes are what the cut-out script prints for each
- * photograph; run it again and update them if a photograph is replaced.
+ * `width` and `height` are the photograph's own; `skyline` is read from the
+ * skyline the cut-out script prints for it (where its land first rises, across
+ * the frame), set where the name's foot should meet the land. If a photograph
+ * is replaced, run the script again and set these afresh.
  */
 export const SCENES: Record<string, StoryScene> = {
   switzerland: {

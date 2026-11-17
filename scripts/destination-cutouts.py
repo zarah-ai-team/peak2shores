@@ -20,6 +20,8 @@ How a cut-out is made (OpenCV, numpy, Pillow):
   1. GrabCut at a working size, seeded with what is certainly sky (the top of
      the frame) and certainly ground (the foot of the frame) for each photograph,
      plus a colour prior: pixels close to the sky's own colours are "probably sky".
+     It starts from a fixed random state, so a photograph is always cut the
+     same way, alone or with the others.
   2. The sky is the part of that result connected to the top edge; small specks
      of sky inside the land (gaps between leaves) are filled, specks of land in
      the sky (birds, haze) removed.
@@ -63,11 +65,12 @@ PHOTOS = {
             [(0.035, 0.22), (0.2, 0.22), (0.2, 0.27), (0.035, 0.27)],
             [(0.3, 0.22), (0.5, 0.22), (0.5, 0.45), (0.3, 0.45)],
         ],
-        # The canal and its foot; the palazzo down the left edge (its facade,
-        # then the wider block below its roof).
+        # The canal and its foot; the palazzo down the left edge (its facade
+        # from under its roof, then the wider block below). Its roof and the
+        # finials on it are left to GrabCut, for the sky between them.
         'ground': [
             [(0, 0.7), (1, 0.7), (1, 1), (0, 1)],
-            [(0, 0.11), (0.022, 0.11), (0.022, 0.38), (0, 0.38)],
+            [(0, 0.14), (0.018, 0.14), (0.022, 0.16), (0.022, 0.38), (0, 0.38)],
             [(0, 0.385), (0.165, 0.385), (0.165, 0.7), (0, 0.7)],
         ],
         'sky_sample': (0.25, 0.02, 1.0, 0.5),
@@ -133,6 +136,10 @@ def sky_likeness(lab: np.ndarray, sample: np.ndarray) -> np.ndarray:
 
 def grabcut(img: np.ndarray, cfg: dict) -> np.ndarray:
     """Binary sky mask (True = sky) at working size."""
+    # k-means and GrabCut start from OpenCV's random state, and the cut follows
+    # where they start (a bank of cloud can go either way). Fixed here, so a
+    # photograph is always cut the same way, whichever photographs run with it.
+    cv2.setRNGSeed(2)
     h, w = img.shape[:2]
     s = WORK / max(h, w)
     small = cv2.resize(img, (round(w * s), round(h * s)), interpolation=cv2.INTER_AREA)

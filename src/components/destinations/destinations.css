@@ -57,6 +57,15 @@
     --dz-hs: calc(100svh - var(--nav-h-compact));
   }
 }
+/* A visit to a country's address (/destinations#italy, a link or a typed
+   address) opens on the country at once, not with the site's glide down the
+   page: the browser then holds the country in place while the page above it
+   settles (its web fonts arriving), where a glide set off before that would
+   stop a line or two past the country's rest. Once the page's own smooth
+   scrolling has started (Lenis), it is in charge, as on every page. */
+html:has(.dz-story) {
+  scroll-behavior: auto;
+}
 .dz-place {
   /* How far the row of photographs travels to show its last card. */
   --dz-drift: max(
