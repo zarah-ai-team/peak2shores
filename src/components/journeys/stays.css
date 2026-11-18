@@ -1,0 +1,414 @@
+/*
+ * Where you'll stay (Stays.tsx): the hotel cards on a journey's page and the
+ * hotel pop-up. The cards sit in the journey page's `.jy` scope and use its
+ * tokens; the pop-up is placed at the end of <body> by the shared Dialog, so
+ * it uses the site's own tokens only.
+ */
+
+/* -- The section and its cards ----------------------------------------------- */
+.jy.jst {
+  padding: clamp(5rem, 9.7vw, 8.75rem) var(--gut, clamp(1.25rem, 3.39vw, 4rem));
+  background: var(--paper, var(--color-ivory));
+  color: var(--ink, #141d24);
+}
+.jy.jst .lab {
+  color: var(--lake, var(--color-acqua-text));
+}
+/* The section's line sits under the heading, on one line on a desktop. */
+.jy.jst .head {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.jy.jst .say {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--muted, #5a646d);
+}
+.jst-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 1.7vw, 1.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* The card itself does not clip, so the focus ring drawn round it shows; its
+   photograph is clipped to the card's top corners instead. */
+.jst-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--rule, rgb(20 29 36 / 0.14));
+  border-radius: 1rem;
+  background: #fff;
+  transition: box-shadow 0.4s var(--ease-editorial);
+}
+.jst-ph {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: calc(1rem - 1px) calc(1rem - 1px) 0 0;
+  background: var(--color-stone);
+}
+.jst-img {
+  object-fit: cover;
+  transition: transform 0.9s var(--ease-editorial);
+}
+.jst-pill {
+  position: absolute;
+  left: 0.875rem;
+  top: 0.875rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 999px;
+  background: rgb(14 47 66 / 0.82);
+  color: #fff;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+.jst-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 1.25rem 1.375rem 1.5rem;
+}
+.jst-name {
+  margin: 0;
+  font-family: var(--serif, var(--font-display));
+  font-weight: 400;
+  font-size: clamp(1.125rem, 1.4vw, 1.3125rem);
+  line-height: 1.25;
+}
+/* The card's button: plain text in the heading, stretched over the whole card,
+   so the photograph, the place and the line below open the pop-up too. Its
+   focus ring is drawn round the card. */
+.jst-name button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.jst-name button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 1rem;
+}
+.jst-name button:focus-visible {
+  outline: none;
+}
+.jst-name button:focus-visible::after {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 3px;
+}
+/* "[Marc to confirm]": the house lake blue, never a warm tone. */
+.jst-tbc {
+  margin: 0.375rem 0 0;
+  font-size: 0.75rem;
+  color: var(--color-acqua-text);
+}
+.jst-more,
+.jst-site {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: auto 0 0;
+  padding-top: 0.875rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-acqua-text);
+  text-decoration: none;
+}
+.jst-more svg {
+  width: 0.625rem;
+  height: 0.625rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  transition: transform 0.4s var(--ease-editorial);
+}
+@media (hover: hover) {
+  .jst-card[data-opens]:hover {
+    box-shadow: 0 1.25rem 2.5rem -1.5rem rgb(10 34 50 / 0.35);
+  }
+  .jst-card[data-opens]:hover .jst-img {
+    transform: scale(1.03);
+  }
+  .jst-card[data-opens]:hover .jst-more {
+    text-decoration: underline;
+    text-underline-offset: 0.3em;
+  }
+  .jst-card[data-opens]:hover .jst-more svg {
+    transform: rotate(90deg);
+  }
+  .jst-site:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.3em;
+  }
+}
+@media (max-width: 1100px) {
+  .jst-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 800px) {
+  .jst-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* -- The pop-up (inside the shared Dialog) -------------------------------------- */
+.hpop {
+  font-family: var(--font-ui);
+  color: var(--color-ink);
+}
+.hpop-where {
+  margin: 0 0 1rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  color: var(--color-acqua-text);
+}
+.hpop-tbc {
+  letter-spacing: 0.04em;
+  text-transform: none;
+  font-weight: 500;
+}
+
+/* The gallery: one photograph at a time, crossfading. */
+.hpop-gal {
+  position: relative;
+}
+.hpop-frame {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  background: var(--color-stone);
+  touch-action: pan-y;
+}
+.hpop-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.45s var(--ease-editorial),
+    visibility 0s linear 0.45s;
+}
+.hpop-slide[data-on] {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 0.45s var(--ease-editorial),
+    visibility 0s linear 0s;
+}
+.hpop-img {
+  object-fit: cover;
+  user-select: none;
+}
+/* The arrows: white discs like the home page slider's, the lake blue under
+   the pointer, 44px to a finger. */
+.hpop-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-top: -1.375rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--color-ink);
+  box-shadow: 0 0.25rem 1rem rgb(10 34 50 / 0.25);
+  cursor: pointer;
+  transition:
+    background-color 0.3s var(--ease-editorial),
+    color 0.3s var(--ease-editorial);
+}
+.hpop-arrow[data-dir='prev'] {
+  left: 0.75rem;
+}
+.hpop-arrow[data-dir='next'] {
+  right: 0.75rem;
+}
+.hpop-arrow svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.hpop-arrow:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px #fff;
+}
+@media (hover: hover) {
+  .hpop-arrow:hover {
+    background: var(--color-acqua-text);
+    color: #fff;
+  }
+}
+@media (pointer: coarse) {
+  .hpop-arrow {
+    width: 44px;
+    height: 44px;
+    margin-top: -22px;
+  }
+}
+.hpop-count {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  margin: 0;
+  padding: 0.25rem 0.625rem;
+  border-radius: 999px;
+  background: rgb(10 34 50 / 0.72);
+  color: #fff;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+}
+
+/* The tabs: a row of caps labels on a hairline, the chosen one underlined in
+   the brand blue; on a narrow screen the row scrolls sideways. */
+.hpop-tabs {
+  display: flex;
+  gap: 1.5rem;
+  margin: 1.5rem 0 0;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--color-line);
+  scrollbar-width: none;
+}
+.hpop-tabs::-webkit-scrollbar {
+  display: none;
+}
+.hpop-tab {
+  flex: 0 0 auto;
+  min-height: 44px;
+  margin: 0 0 -1px;
+  padding: 0.75rem 0;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--color-muted);
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 0.25s var(--ease-editorial),
+    border-color 0.25s var(--ease-editorial);
+}
+.hpop-tab[aria-selected='true'] {
+  color: var(--color-ink);
+  border-bottom-color: var(--color-brand);
+}
+.hpop-tab:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: -2px;
+}
+@media (hover: hover) {
+  .hpop-tab:hover {
+    color: var(--color-ink);
+  }
+}
+.hpop-panel {
+  padding-top: 1.125rem;
+}
+.hpop-panel:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 0.25rem;
+}
+.hpop-panel p {
+  margin: 0;
+  max-width: 62ch;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--color-body);
+}
+
+/* The foot: the hotel's website as a pill, and the photographs' credits. */
+.hpop-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-line);
+}
+.hpop-site {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  min-height: var(--pill-h);
+  padding: 0 var(--pill-px);
+  border: 1px solid var(--color-navy);
+  border-radius: 999px;
+  color: var(--color-navy);
+  font-size: var(--pill-fs);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color 0.3s var(--ease-editorial),
+    color 0.3s var(--ease-editorial);
+}
+@media (hover: hover) {
+  .hpop-site:hover {
+    background: var(--color-navy);
+    color: #fff;
+  }
+}
+.hpop-credit {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--color-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jst-card,
+  .jst-img,
+  .jst-more svg,
+  .hpop-slide,
+  .hpop-slide[data-on],
+  .hpop-arrow,
+  .hpop-tab,
+  .hpop-site {
+    transition: none;
+  }
+  .jst-card[data-opens]:hover .jst-img {
+    transform: none;
+  }
+}

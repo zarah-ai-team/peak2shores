@@ -22,8 +22,8 @@ export const metadata = pageMetadata({
 const standsRight = (pos?: string) => parseFloat(pos ?? '') > 50;
 
 /**
- * Where we stay (2 Nov notes): the homepage's "Where we stay" button opens
- * here. Each place Marc names, in his words, with both of its photographs
+ * Where we stay (2 Nov notes), reached from the site menu. Each place Marc
+ * names, in his words, with both of its photographs
  * (his selection of 9 Nov): the hotel itself, and beside it the place around
  * it (the lake boat at Lucerne's quay, Isola Bella, Victoria Falls, Rovinj's
  * Old Town, Cardamom House from the air). What is known of each picture's

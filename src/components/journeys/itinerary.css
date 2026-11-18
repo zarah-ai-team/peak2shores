@@ -18,7 +18,7 @@
 /* -- The map ------------------------------------------------------------------- */
 
 .jr-side {
-  background: #eeeae0;
+  background: var(--color-panel);
 }
 .jr-stick {
   position: sticky;
@@ -57,7 +57,7 @@
   stroke-width: 0.8;
 }
 .jr-land {
-  stroke: rgb(244 241 234 / 0.22);
+  stroke: rgb(255 255 255 / 0.22);
   stroke-width: 0.7;
 }
 .jr-land.is-ours {
@@ -425,7 +425,7 @@
   min-height: 1.75rem;
   padding: 0.25rem 0.75rem;
   border-radius: 6px;
-  background: #f4f1ea;
+  background: var(--color-panel);
   color: var(--ink);
   font-size: 0.6875rem;
   font-weight: 600;
@@ -473,7 +473,7 @@
     background-color 0.4s;
 }
 .jr-acc:hover .chev {
-  background: #f4f1ea;
+  background: var(--color-panel);
 }
 .jr-acc[aria-expanded='true'] .chev {
   transform: rotate(180deg);

@@ -431,15 +431,16 @@ export function JourneySlider({
                   </Link>
                 </div>
               ) : (
-                // One button, to the journey's own page (13 Nov), in place of
-                // the pair "Request details" and "Itinerary & dates".
+                // One button, "Explore the journey", to the journey's own page
+                // (13 Nov; Ishika's notes of 9 Nov, item 3), in place of the
+                // pair "Request details" and "Itinerary & dates".
                 <div className="acts">
                   <Link
                     className="btn btn-accent"
                     href={`/journeys/${s.slug}`}
-                    aria-label={`Explore journey: ${s.title}`}
+                    aria-label={`Explore the journey: ${s.title}`}
                   >
-                    Explore journey <Arrow />
+                    Explore the journey <Arrow />
                   </Link>
                 </div>
               )}

@@ -64,7 +64,8 @@ async function get(url, as = 'text', attempt = 1) {
 
 /** The ImageObject JSON-LD block Unsplash embeds on every photo page. */
 function readImageObject(html) {
-  const blocks = html.match(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g) ?? [];
+  const blocks =
+    html.match(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g) ?? [];
   for (const block of blocks) {
     const json = block.replace(/^<script[^>]*>/, '').replace(/<\/script>$/, '');
     try {
@@ -124,7 +125,12 @@ async function writeImage(record) {
     .resize({ width: MAX_EDGE, height: MAX_EDGE, fit: 'inside', withoutEnlargement: true })
     .jpeg({ quality: JPEG_QUALITY, mozjpeg: true })
     .toFile(dest);
-  return { file: `${record.slot}.jpg`, bytes: statSync(dest).size, fileWidth: info.width, fileHeight: info.height };
+  return {
+    file: `${record.slot}.jpg`,
+    bytes: statSync(dest).size,
+    fileWidth: info.width,
+    fileHeight: info.height,
+  };
 }
 
 /** How each source is named in CREDITS.md. */
@@ -135,6 +141,30 @@ const SOURCE_NAMES = {
   shutterstock: 'Shutterstock',
 };
 
+/** CREDITS.md's section for the hotels' own photographs, linked to the page each was taken from. */
+function hotelSection(hotels) {
+  const site = (r) => new URL(r.pageUrl).hostname.replace(/^www\./, '');
+  return `
+## Hotel photographs
+
+The hotel pop-ups on the journey pages (\`src/components/journeys/Stays.tsx\`,
+data in \`src/lib/data/hotels.ts\`) show each hotel's own photographs, taken
+from the hotel's official website or its group's official image server on
+18 November 2026, resized to at most 2400px wide and saved under
+\`public/images/hotels/<hotel>/\`. Each is credited as the hotel gives it, in the
+pop-up and on \`/credits\`; \`credits.json\` also records the download URL.
+
+**Before launch:** none of these photographs came with stated terms of use.
+Confirm with each hotel, or its press office, that they may be shown this way.
+The Hotel Excelsior Dubrovnik shows the licensed Pexels frame
+\`home-jr-adriatic\` until its own photographs are supplied.
+
+| Slot | File | Source | Credit |
+| --- | --- | --- | --- |
+${hotels.map((r) => `| \`${r.slot}\` | ${r.file} | [${site(r)}](${r.pageUrl}) | ${r.author} |`).join('\n')}
+`;
+}
+
 function writeCreditsMd(all) {
   const rows = Object.values(all).sort((a, b) => a.slot.localeCompare(b.slot));
   const sourceOf = (r) => r.source ?? 'wikimedia';
@@ -144,7 +174,10 @@ function writeCreditsMd(all) {
   // everything under public/ is served with the site. Once its author and
   // licence are confirmed it gets an entry in credits.json and a row on /credits.
   const supplied = bySource('client');
-  const licensed = rows.filter((r) => sourceOf(r) !== 'client');
+  // The hotels' own photographs (the hotel pop-ups) are not stock: they get a
+  // section of their own below the stock table.
+  const hotels = bySource('hotel');
+  const licensed = rows.filter((r) => !['client', 'hotel'].includes(sourceOf(r)));
   const stock = bySource('unsplash');
   const pexels = bySource('pexels');
   const commons = bySource('wikimedia');
@@ -195,7 +228,7 @@ source page itself. None of it was shot for Peaks2Shores; see
 ${licensed
   .map((r) => `| \`${r.slot}\` | ${r.file} | ${link(r)} | ${authorOf(r)} | ${r.licence} |`)
   .join('\n')}
-`;
+${hotels.length ? hotelSection(hotels) : ''}`;
   writeFileSync(creditsMdPath, md, 'utf8');
   // A stock row without a name reads "<library> contributor", here and on /credits.
   const unnamed = licensed.filter((r) => !r.author);
@@ -227,7 +260,9 @@ if (!creditsOnly) {
         if (entry.source !== 'unsplash') throw new Error(`unsupported source ${entry.source}`);
         const record = await sourceUnsplash(entry);
         if (dry) {
-          console.log(`[dry] ${entry.slot.padEnd(12)} ${record.author} · ${record.location ?? '—'} · ${record.title}`);
+          console.log(
+            `[dry] ${entry.slot.padEnd(12)} ${record.author} · ${record.location ?? '—'} · ${record.title}`,
+          );
           continue;
         }
         const file = await writeImage(record);

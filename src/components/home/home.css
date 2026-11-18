@@ -622,9 +622,9 @@
 }
 
 /* -- 05 The founder's line -----------------------------------------------
-   The band, its film and the face of the words. How the mark, the quote, his
-   name and the way on are set over the film, and the shade that holds them,
-   is in home-fixes.css. */
+   The band, its film and the face of the words. How the mark, the quote and
+   his name are set over the film, and the shade that holds them, is in
+   home-fixes.css. */
 .hc-pause {
   position: relative;
   overflow: hidden;
@@ -1050,8 +1050,10 @@
   font-size: clamp(0.875rem, 0.795vw, 0.9375rem);
   line-height: 1.42;
 }
+/* A value still to come from Marc ("[…]"): the lake blue (7.1:1 on the
+   paper) in the sans face, so it stands apart from the serif notes. */
 .hc-hot dd.ph {
-  color: #8a4f2e;
+  color: var(--lake);
   font-family: var(--sans);
   font-size: 0.9375rem;
 }

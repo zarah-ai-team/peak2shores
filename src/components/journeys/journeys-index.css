@@ -1,11 +1,13 @@
 /*
- * The Journeys page, after Ishika's notes of 3 November 2026: the globe and
- * its carousel (JourneysMap, HeroCarousel: the Collection's Map view), the details that make the
+ * The Journeys page, after Ishika's notes of 3 and 9 November 2026: the
+ * half-and-half hero (JourneysHero), the globe and its carousel (JourneysMap,
+ * HeroCarousel: the Collection's Map view), the details that make the
  * difference (DetailsDifference), the Collection's dropdown filters, and the
  * Bespoke Private Travel banner. No gold: her gold accents are the house
  * blues — sky blue on dark ground, lake blue on paper.
  */
 
+.jxh,
 .xpd,
 .jxb,
 .jx {
@@ -26,6 +28,7 @@
 }
 
 /* The small label over a section, shared by the sections below. */
+.jxh-lab,
 .xpd-lab,
 .jxb-lab {
   display: flex;
@@ -39,12 +42,89 @@
   text-transform: uppercase;
   color: var(--lake);
 }
+.jxh-lab::before,
 .xpd-lab::before,
 .jxb-lab::before {
   content: '';
   width: 1.75rem;
   height: 1px;
   background: currentColor;
+}
+
+/* -- 0. The hero: half and half (notes of 9 November 2026, after A&K) -------
+   The words on the house navy at the left, one photograph filling the right
+   half; smaller than the homepage's hero, so the in-page menu and the top of
+   The Collection are on the first screen of a laptop. The text column starts
+   on the page's gutter, in line with every section below it. On the navy,
+   white 14:1, the water-blue label and line 7.9:1, the intro 9.2:1. */
+.jxh {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: clamp(26rem, 58svh, 36rem);
+  background: var(--deep);
+  color: #fff;
+}
+.jxh-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(3rem, 5vw, 5.5rem) clamp(2rem, 5vw, 6rem) clamp(3rem, 5vw, 5.5rem) var(--gut);
+}
+.jxh .jxh-lab {
+  color: var(--sky);
+}
+.jxh h1 {
+  max-width: 11em;
+  margin: 1.125rem 0 1rem;
+  font-family: var(--serif);
+  font-weight: var(--title-weight);
+  font-size: clamp(2.25rem, 3.4vw, 3.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+}
+.jxh-line {
+  max-width: 30em;
+  margin: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.0625rem, 1.3vw, 1.3125rem);
+  line-height: 1.45;
+  color: var(--sky);
+  text-wrap: balance;
+}
+.jxh-line span {
+  white-space: nowrap;
+}
+.jxh-say {
+  max-width: 32rem;
+  margin: 1.5rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--color-on-dark-body);
+}
+/* The photograph's half: the deep navy holds the frame while it loads. */
+.jxh-photo {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-navy-deep);
+}
+.jxh-photo img {
+  object-fit: cover;
+}
+/* A phone: the photograph first, the width of the screen, then the words. */
+@media (max-width: 760px) {
+  .jxh {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+  .jxh-photo {
+    order: -1;
+    aspect-ratio: 3 / 2;
+  }
+  .jxh-text {
+    padding: 2.25rem var(--gut) 2.75rem;
+  }
 }
 
 /* -- 1. The globe and its carousel (the Collection's Map view) ------------- */
@@ -56,7 +136,8 @@
   /* The same corner as the photographs under it. */
   border-radius: 1.5rem;
   border: 1px solid var(--rule);
-  background: #f4f1ea;
+  /* The paper of the page round the whole earth: no sand. */
+  background: var(--paper);
   isolation: isolate;
 }
 .jxh-canvas {
@@ -300,7 +381,7 @@
   text-transform: uppercase;
   color: var(--muted);
 }
-.jxh-card h2 {
+.jxh-card h3 {
   margin: 0.5rem 0 0;
   font-family: var(--serif);
   font-weight: 400;
@@ -409,8 +490,10 @@
    six touches as a ruled 3 × 2 table of fine hairlines, each with a large
    serif numeral and a line icon in the brand blue, its rule drawing across
    in blue as the pointer comes to it. No tiles, no gradients, no dark block. */
+/* No scroll margin here or on the banner: the page's scroll padding
+   (globals.css) already lands each section of the in-page menu clear of the
+   header and the pinned bar, with smooth scrolling or without it. */
 .xpd {
-  scroll-margin-top: calc(var(--nav-h-compact) + 3.5rem);
   display: grid;
   grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
   gap: clamp(2rem, 5vw, 5rem);
@@ -587,6 +670,11 @@
 .jx .fmenu {
   position: relative;
 }
+/* The open menu and its list are drawn above the filter buttons that follow
+   it, which on a phone or a tablet stand right under the list. */
+.jx .fmenu.open {
+  z-index: 2;
+}
 .jx .fbtn {
   display: inline-flex;
   align-items: center;
@@ -711,7 +799,6 @@
 }
 /* -- 5. Bespoke Private Travel: one slim navy banner ----------------------------- */
 .jxb {
-  scroll-margin-top: calc(var(--nav-h-compact) + 3.5rem);
   padding: 0 var(--gut) clamp(1rem, 2vw, 2rem);
   background: var(--paper);
 }
@@ -749,8 +836,9 @@
   flex-wrap: wrap;
   gap: 0.75rem;
 }
-/* The house button on the blue ground: the first is white with an ink label,
-   the second a white outline that fills on hover. */
+/* The house button on the navy ground: "Bespoke Private Travel", solid in the
+   house button blue, turning white with an ink label on hover. (A plain
+   `.jxb-btn` is a white outline that fills on hover.) */
 .jxb-btn {
   display: inline-flex;
   align-items: center;
@@ -794,7 +882,8 @@
 }
 @media (pointer: coarse) {
   .jxb-btn,
-  .jx .fbtn {
+  .jx .fbtn,
+  .jx .flist button {
     min-height: 44px;
   }
 }
@@ -817,6 +906,18 @@
 @media (max-width: 760px) {
   .jxh-map {
     aspect-ratio: 1.25;
+  }
+  /* On a phone the caption would lie over the route's first stops, and the
+     chosen card right under the globe names the journey: the caption is kept
+     for screen readers only, which still hear it as the journey changes. */
+  .jxh-pill {
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
   .jxh-soon {
     left: 1rem;
@@ -878,7 +979,7 @@
   flex: none;
 }
 
-/* Phone: the banner's buttons take their own line, each the full width. */
+/* Phone: the banner's button takes its own line, the full width. */
 @media (max-width: 760px) {
   .jxb-ctas {
     flex: 1 1 100%;

@@ -9,11 +9,11 @@ import { Section } from '@/components/ui/Section';
 import { StatusTag } from '@/components/ui/StatusTag';
 import { EnquiryForm } from '@/components/journeys/EnquiryForm';
 import { journeyTagStatus } from '@/components/pages/journeyStatus';
+import { fromPriceLabel } from '@/lib/journeyPrice';
 import {
   getDestinations,
   getEnquirableJourneyTitles,
   getJourneySummaries,
-  getSiteSettings,
   pageMetadata,
   type JourneySummary,
 } from '@/lib/content';
@@ -29,11 +29,10 @@ export const metadata = pageMetadata({
 });
 
 export default async function PlanPage() {
-  const [journeys, titles, destinations, site] = await Promise.all([
+  const [journeys, titles, destinations] = await Promise.all([
     getJourneySummaries(),
     getEnquirableJourneyTitles(),
     getDestinations(),
-    getSiteSettings(),
   ]);
 
   return (
@@ -107,8 +106,9 @@ export default async function PlanPage() {
 
 /**
  * The departures as a ledger: a real table from 768px (Journey · Window ·
- * Days · Group · From · Status), stacked rows on a phone. Each title links to
- * its journey.
+ * Days · Group · Price · Status), stacked rows on a phone. Each title links to
+ * its journey. The price is the journey's from-price line, "From $X per
+ * person" or "Rates to be announced" (fromPriceLabel).
  */
 function Ledger({ journeys }: { journeys: JourneySummary[] }) {
   const status = (journey: JourneySummary) => {
@@ -122,7 +122,7 @@ function Ledger({ journeys }: { journeys: JourneySummary[] }) {
         <caption className="sr-only">Upcoming departures</caption>
         <thead>
           <tr className="border-b border-ink">
-            {['Journey', 'Window', 'Days', 'Group', 'From', 'Status'].map((h) => (
+            {['Journey', 'Window', 'Days', 'Group', 'Price', 'Status'].map((h) => (
               <th key={h} scope="col" className="kicker-sm pb-4 pr-6 font-medium last:pr-0">
                 {h}
               </th>
@@ -144,15 +144,7 @@ function Ledger({ journeys }: { journeys: JourneySummary[] }) {
               <td className="meta py-6 pr-6 text-body">{journey.departureWindow}</td>
               <td className="meta py-6 pr-6 text-body">{journey.days}</td>
               <td className="meta py-6 pr-6 text-body">{site.groupSize}</td>
-              <td className="meta py-6 pr-6 text-body">
-                {journey.priceFrom ? (
-                  <>
-                    <span className="font-semibold text-ink">{journey.priceFrom}</span> pp
-                  </>
-                ) : (
-                  'To be announced'
-                )}
-              </td>
+              <td className="meta py-6 pr-6 text-body">{fromPriceLabel(journey)}</td>
               <td className="py-6">{status(journey)}</td>
             </tr>
           ))}
@@ -179,16 +171,8 @@ function Ledger({ journeys }: { journeys: JourneySummary[] }) {
                 <dd className="m-0">{site.groupSize}</dd>
               </div>
               <div>
-                <dt className="kicker-sm mb-1">From</dt>
-                <dd className="m-0">
-                  {journey.priceFrom ? (
-                    <>
-                      <span className="font-semibold text-ink">{journey.priceFrom}</span> pp
-                    </>
-                  ) : (
-                    'To be announced'
-                  )}
-                </dd>
+                <dt className="kicker-sm mb-1">Price</dt>
+                <dd className="m-0">{fromPriceLabel(journey)}</dd>
               </div>
               <div>
                 <dt className="kicker-sm mb-1">Status</dt>

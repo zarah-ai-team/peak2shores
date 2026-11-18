@@ -12,7 +12,10 @@ export const metadata = pageMetadata({
 
 type Credit = {
   slot: string;
-  /** `client` marks media Peaks2Shores supplied itself; anything else is stock. */
+  /**
+   * `client` marks media Peaks2Shores supplied itself, `hotel` a hotel's own
+   * photograph (the hotel pop-ups on the journey pages); anything else is stock.
+   */
   source?: string;
   title: string;
   pageUrl?: string;
@@ -35,19 +38,86 @@ const libraries: Record<string, string> = {
   shutterstock: 'Shutterstock',
 };
 
+/** The website a hotel's photograph comes from, "mandarinoriental.com". */
+const siteOf = (row: Credit) =>
+  row.pageUrl ? new URL(row.pageUrl).hostname.replace(/^www\./, '') : '';
+
 const authorOf = (row: Credit) => {
   const library = libraries[row.source ?? ''];
   return row.author || (library ? `${library} contributor` : '');
 };
 
 /**
- * Attribution for the stock photography.
+ * One table of credits: the photograph (linked to its source page), who it is
+ * credited to, and a last column (the license for stock, the website it comes
+ * from for a hotel's photograph). Below 640px each row stacks.
+ */
+function CreditTable({
+  rows,
+  caption,
+  authorHead,
+  lastHead,
+  last,
+}: {
+  rows: Credit[];
+  caption: string;
+  authorHead: string;
+  lastHead: string;
+  last: (row: Credit) => string;
+}) {
+  return (
+    <table className="block w-full border-collapse text-left sm:table">
+      <caption className="sr-only">{caption}</caption>
+      <thead className="hidden sm:table-header-group">
+        <tr className="border-b border-line">
+          <th scope="col" className="kicker-sm py-4 pr-6 font-medium">
+            Photograph
+          </th>
+          <th scope="col" className="kicker-sm py-4 pr-6 font-medium">
+            {authorHead}
+          </th>
+          <th scope="col" className="kicker-sm py-4 font-medium sm:text-right">
+            {lastHead}
+          </th>
+        </tr>
+      </thead>
+      <tbody className="block sm:table-row-group">
+        {rows.map((row) => (
+          <tr key={row.slot} className="grid gap-1 border-b border-line py-4 sm:table-row sm:py-0">
+            <td className="prose-body-sm min-w-0 [overflow-wrap:anywhere] sm:py-4 sm:pr-6 sm:align-top">
+              {row.pageUrl ? (
+                <a href={row.pageUrl} rel="noopener noreferrer license" className="prose-link">
+                  {titleOf(row)}
+                </a>
+              ) : (
+                titleOf(row)
+              )}
+            </td>
+            <td className="prose-body-sm min-w-0 [overflow-wrap:anywhere] sm:py-4 sm:pr-6 sm:align-top">
+              {authorOf(row)}
+            </td>
+            <td className="kicker-sm sm:whitespace-nowrap sm:py-4 sm:text-right sm:align-top">
+              {last(row)}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+/**
+ * Attribution for the stock photography, and for the hotels' own photographs.
  *
  * Most frames are Unsplash (no attribution required, credited as a courtesy);
  * the few Wikimedia Commons frames are CC BY-SA and do require visible credit.
  * Generated from the same manifest the sourcing scripts write, so it can never
  * drift from what is on the site. Remove it only once every credited frame has
  * been replaced with commissioned photography.
+ *
+ * The hotels' photographs (the hotel pop-ups on the journey pages) come from
+ * each hotel's official website; they are listed apart, credited as the hotel
+ * gives it, each linked to the page it was taken from.
  *
  * The films and photographs the client supplied are recorded in
  * `reports/image-asset-plan.md`, not in the manifest, because everything under
@@ -56,62 +126,53 @@ const authorOf = (row: Credit) => {
  * are confirmed. The filter below holds back an entry that arrives without them.
  */
 export default function CreditsPage() {
-  const rows = (Object.values(credits) as Credit[])
-    .filter((row) => row.source !== 'client' || (row.author && row.licence))
-    .sort((a, b) => a.slot.localeCompare(b.slot));
+  const all = (Object.values(credits) as Credit[]).sort((a, b) => a.slot.localeCompare(b.slot));
+  const stock = all.filter(
+    (row) => row.source !== 'hotel' && (row.source !== 'client' || (row.author && row.licence)),
+  );
+  const hotels = all.filter((row) => row.source === 'hotel');
 
   return (
     <>
       <PageTitle kicker="Credits" title="Photography." variant="stacked">
         The photographs and films listed below are used under the licenses shown. Each links to its
         source on Unsplash, Pexels or Wikimedia Commons, where the license text and the author’s
-        full attribution can be found.
+        full attribution can be found. The hotels’ own photographs follow, each credited to its
+        hotel and linked to the hotel’s page it comes from.
       </PageTitle>
 
       {/* The table is several screens tall, so the default 15% threshold is
           never reached on a short viewport: start as soon as any of it shows. */}
       <Reveal as="section" amount={0} className="container-site pb-section-sm">
-        <table className="block w-full border-collapse text-left sm:table">
-          <caption className="sr-only">Photograph, author and license</caption>
-          <thead className="hidden sm:table-header-group">
-            <tr className="border-b border-line">
-              <th scope="col" className="kicker-sm py-4 pr-6 font-medium">
-                Photograph
-              </th>
-              <th scope="col" className="kicker-sm py-4 pr-6 font-medium">
-                Author
-              </th>
-              <th scope="col" className="kicker-sm py-4 font-medium sm:text-right">
-                License
-              </th>
-            </tr>
-          </thead>
-          <tbody className="block sm:table-row-group">
-            {rows.map((row) => (
-              <tr
-                key={row.slot}
-                className="grid gap-1 border-b border-line py-4 sm:table-row sm:py-0"
-              >
-                <td className="prose-body-sm min-w-0 [overflow-wrap:anywhere] sm:py-4 sm:pr-6 sm:align-top">
-                  {row.pageUrl ? (
-                    <a href={row.pageUrl} rel="noopener noreferrer license" className="prose-link">
-                      {titleOf(row)}
-                    </a>
-                  ) : (
-                    titleOf(row)
-                  )}
-                </td>
-                <td className="prose-body-sm min-w-0 [overflow-wrap:anywhere] sm:py-4 sm:pr-6 sm:align-top">
-                  {authorOf(row)}
-                </td>
-                <td className="kicker-sm sm:whitespace-nowrap sm:py-4 sm:text-right sm:align-top">
-                  {row.licence}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <CreditTable
+          rows={stock}
+          caption="Photograph, author and license"
+          authorHead="Author"
+          lastHead="License"
+          last={(row) => row.licence}
+        />
       </Reveal>
+
+      {hotels.length > 0 && (
+        <section className="container-site pb-section-sm" aria-labelledby="credits-hotels">
+          <Reveal amount={0}>
+            <h2 id="credits-hotels" className="h3 m-0 mb-4">
+              The hotels’ photographs
+            </h2>
+            <p className="prose-body-sm measure m-0 mb-6">
+              Shown in the hotel pop-ups on the journey pages. Each photograph is the hotel’s own,
+              taken from its official website and credited as the hotel gives it.
+            </p>
+            <CreditTable
+              rows={hotels}
+              caption="Hotel photograph, credit and source"
+              authorHead="Credit"
+              lastHead="Website"
+              last={siteOf}
+            />
+          </Reveal>
+        </section>
+      )}
     </>
   );
 }

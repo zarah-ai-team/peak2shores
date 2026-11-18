@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Arrow } from '@/components/ui/Button';
 import type { JourneySummary } from '@/lib/content';
+import { fromPriceLabel } from '@/lib/journeyPrice';
 import { DATES_TBA } from '@/lib/journeys';
 import { comingSoon, flipbook, journeyRank, statusLabel } from '@/lib/data/flipbook';
 import { getMedia, type MediaKey } from '@/lib/media';
@@ -146,7 +147,7 @@ export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
       lead: book?.tagline ?? j.lead,
       facts: [
         ...(j.departure && j.departure !== DATES_TBA ? [j.departure] : []),
-        ...(j.priceFrom ? [`From ${j.priceFrom}`] : []),
+        ...(j.priceFrom ? [fromPriceLabel(j)] : []),
       ],
       status: statusLabel[j.status ?? 'open'],
       photo: slidePhoto(j),

@@ -187,9 +187,14 @@
       font-size: clamp(90%, calc(90% + (100vw - 1440px) * 0.003572), 100%);
     }
   }
-  /* A journey page pins its tab bar under the header; anchors clear both. */
+  /* A page with an in-page menu (a journey's page, the Journeys page) pins
+     its tab bar under the header, and anchors land flush under both: the
+     header's height, then the bar's 3.5rem tabs and its 1px rule. The first
+     section after the bar lands with the bar just pinned, and no strip of the
+     section before shows above any of them; each section's own top padding
+     keeps its words clear of the bar. */
   html:has([data-journey-tabs]) {
-    scroll-padding-top: calc(var(--nav-h-compact) + 5.5rem);
+    scroll-padding-top: calc(var(--nav-h-compact) + 3.5rem + 1px);
   }
 
   body {

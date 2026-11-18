@@ -6,7 +6,7 @@ import { journeyTagStatus } from '@/components/pages/journeyStatus';
 import type { JourneySummary } from '@/lib/content';
 import type { MediaKey } from '@/lib/media';
 import { site } from '@/lib/site';
-import { RATES_TBA } from '@/lib/journeys';
+import { fromPriceLabel } from '@/lib/journeyPrice';
 
 /**
  * A small luxury group journey as a card, after A&K's journey finder: a
@@ -79,15 +79,7 @@ export function JourneyCard({
         </dl>
 
         <div className="mt-4 flex items-baseline justify-between gap-4 border-t border-line pt-4">
-          <p className="meta m-0 text-body">
-            {journey.priceFrom ? (
-              <>
-                From <span className="font-semibold text-ink">{journey.priceFrom}</span> per person
-              </>
-            ) : (
-              RATES_TBA
-            )}
-          </p>
+          <p className="meta m-0 text-body">{fromPriceLabel(journey)}</p>
           <span
             aria-hidden
             className="kicker-sm inline-flex items-center gap-2 whitespace-nowrap text-ink"
@@ -175,16 +167,7 @@ export function JourneyListing({
         <div className="mt-6 flex flex-wrap items-baseline justify-between gap-4 border-t border-line pt-5">
           <p className="m-0">
             <span className="kicker-sm mr-3">Price</span>
-            <span className="meta text-body">
-              {journey.priceFrom ? (
-                <>
-                  From <span className="font-semibold text-ink">{journey.priceFrom}</span> per
-                  person
-                </>
-              ) : (
-                RATES_TBA
-              )}
-            </span>
+            <span className="meta text-body">{fromPriceLabel(journey)}</span>
           </p>
           <span
             aria-hidden

@@ -25,7 +25,9 @@ export function ConnectButton() {
   // while either is on screen (`data-fab-away`). It also steps aside for a
   // row of controls it would cover, such as the journeys slider's arrows and
   // Pause (`data-fab-clear`), while that row is in the strip of the screen
-  // where the button sits. Looked up again on every page.
+  // where the button sits. Looked up again on every page, and the rows again
+  // whenever the page's content changes: some are only built later, as the
+  // Journeys page's Map view is the first time it is opened.
   useEffect(() => {
     const showing = new Set<Element>();
     const update = (entries: IntersectionObserverEntry[]) => {
@@ -41,22 +43,44 @@ export function ConnectButton() {
     document.querySelectorAll('[data-fab-away], footer').forEach((el) => whole.observe(el));
 
     // The strip: the foot of the screen, as tall as the button and its margin.
-    const rows = [...document.querySelectorAll('[data-fab-clear]')];
+    let rows: Element[] = [];
     let strip: IntersectionObserver | null = null;
     const watch = () => {
       strip?.disconnect();
+      strip = null;
       rows.forEach((el) => showing.delete(el));
+      // With rows to watch, the new observer reports each one straight away.
+      if (!rows.length) {
+        setAway(showing.size > 0);
+        return;
+      }
       const above = Math.max(0, window.innerHeight - STRIP);
       strip = new IntersectionObserver(update, { rootMargin: `-${above}px 0px 0px 0px` });
       rows.forEach((el) => strip?.observe(el));
     };
-    if (rows.length) {
+    const collect = () => {
+      const found = [...document.querySelectorAll('[data-fab-clear]')];
+      if (found.length === rows.length && found.every((el, i) => el === rows[i])) return;
+      rows.forEach((el) => showing.delete(el));
+      rows = found;
       watch();
-      window.addEventListener('resize', watch);
-    }
+    };
+    collect();
+    let frame = 0;
+    const changes = new MutationObserver(() => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        collect();
+      });
+    });
+    changes.observe(document.body, { childList: true, subtree: true });
+    window.addEventListener('resize', watch);
     return () => {
       whole.disconnect();
       strip?.disconnect();
+      changes.disconnect();
+      if (frame) window.cancelAnimationFrame(frame);
       window.removeEventListener('resize', watch);
       setAway(false);
     };

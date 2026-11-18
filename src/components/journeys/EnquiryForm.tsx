@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { Reveal } from '@/components/motion/Reveal';
 import { Button, ButtonLink } from '@/components/ui/Button';
 import { SectionLabel, Tick } from '@/components/ui/Editorial';
 import { site } from '@/lib/site';
-import { failureMessage, postForm } from '@/lib/forms';
+import { failureMessage, postForm, privacyConsent } from '@/lib/forms';
 import { track } from '@/lib/analytics';
 import { readFirstTouch } from '@/lib/attribution';
 
@@ -58,6 +58,12 @@ const inputClass = `${control} h-12`;
    kicker, so it reads at a glance in a form. */
 const labelClass = 'font-ui text-[0.6875rem] font-medium uppercase tracking-[0.14em] text-body';
 
+/* The Privacy Policy tick box, as on a journey page's pop-ups. The box is
+   named by the sentence alone, since the label around it also holds the
+   link's "(opens in a new tab)". The error is the one /api/enquiry gives. */
+const consentName = `${privacyConsent.before} ${privacyConsent.policy.label}`;
+const consentError = 'Please tick the box to agree to the Privacy Policy.';
+
 /**
  * "Tell us a little. We'll call you, not the other way round."
  *
@@ -66,7 +72,14 @@ const labelClass = 'font-ui text-[0.6875rem] font-medium uppercase tracking-[0.1
  * form in the last six, as a white card. On a journey's page the card opens
  * on the journey and its dates, so it is clear what is being asked about.
  * Fields are boxes with a caps label above; "traveling as" is a row of
- * choices; the note and the button close the card.
+ * choices; the Privacy Policy tick box is the last field, and the note and
+ * the button close the card.
+ *
+ * The browser checks the name and the email. The tick box starts clear and
+ * nothing sends until it is ticked: a send that finds it clear puts an error
+ * line under it, read out at once, and focus moves to the box unless the
+ * browser has a name or an email to point to first. The line goes as soon as
+ * the box is ticked.
  *
  * The status line is a persistent live region so failures are announced; on
  * success focus moves to the confirmation heading. The confirmation never
@@ -97,10 +110,29 @@ export function EnquiryForm({
   const [errorText, setErrorText] = useState('');
   const [submitted, setSubmitted] = useState<Submitted>({});
   const doneRef = useRef<HTMLHeadingElement>(null);
+  const [consent, setConsent] = useState(false);
+  /** True once a send has found the box clear: from then on its error follows the box. */
+  const [consentTried, setConsentTried] = useState(false);
+  const consentRef = useRef<HTMLInputElement>(null);
+  const consentErrorId = `${useId()}-consent-error`;
+  const consentMissing = consentTried && !consent;
 
   useEffect(() => {
     if (status === 'sent' || status === 'undelivered') doneRef.current?.focus();
   }, [status]);
+
+  /* The box is `required`, so the browser's check before a send finds it
+     clear. Its own error line answers instead of the browser's bubble. The
+     browser moves focus to a name or an email it found wrong; when the box is
+     the only field wrong, focus moves to the box. */
+  function onConsentInvalid(event: React.FormEvent<HTMLInputElement>) {
+    event.preventDefault();
+    setConsentTried(true);
+    const box = event.currentTarget;
+    if (box.form?.querySelector('input:invalid, select:invalid, textarea:invalid') === box) {
+      box.focus();
+    }
+  }
 
   const firstName = site.founder.name.split(' ')[0];
   const defaultIntro =
@@ -111,6 +143,12 @@ export function EnquiryForm({
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (status === 'sending') return;
+    // Nothing sends without the tick, even where the browser skipped its check.
+    if (!consent) {
+      setConsentTried(true);
+      consentRef.current?.focus();
+      return;
+    }
 
     const data = new FormData(event.currentTarget);
     const field = (name: string) => {
@@ -131,6 +169,8 @@ export function EnquiryForm({
         notes: data.get('notes'),
         party,
         journey,
+        // The Privacy Policy box, ticked: the route refuses a request without it.
+        consent,
         // Where this visitor first came from — stored with the enquiry.
         source: readFirstTouch(),
         // Honeypot: a field no person sees or fills. The server drops
@@ -398,6 +438,69 @@ export function EnquiryForm({
                       />
                     </Field>
 
+                    {/* The Privacy Policy tick box: a quiet line, 44px tall to
+                        a finger. Its error line stays in the page while empty,
+                        so what it comes to say is read out. */}
+                    <div className="flex min-w-0 flex-col sm:col-span-2">
+                      <label className="flex min-h-11 cursor-pointer items-center gap-3 font-ui text-[0.875rem] leading-[1.5] text-body pointer-coarse:min-h-[44px]">
+                        <input
+                          ref={consentRef}
+                          type="checkbox"
+                          name="consent"
+                          required
+                          aria-label={consentName}
+                          checked={consent}
+                          onChange={(e) => setConsent(e.target.checked)}
+                          onInvalid={onConsentInvalid}
+                          aria-invalid={consentMissing}
+                          aria-describedby={consentMissing ? consentErrorId : undefined}
+                          className={`m-0 size-5 shrink-0 cursor-pointer accent-navy ${
+                            consentMissing
+                              ? 'outline-2 outline-offset-2 outline-error focus-visible:outline-ink'
+                              : ''
+                          }`}
+                        />
+                        <span>
+                          {privacyConsent.before}{' '}
+                          <a
+                            href={privacyConsent.policy.href}
+                            target="_blank"
+                            rel="noopener"
+                            className="inline-flex items-baseline gap-1 text-ink underline decoration-acqua-deep decoration-1 underline-offset-[0.22em] transition-colors duration-300 hover:text-acqua-text hover:decoration-current"
+                          >
+                            {privacyConsent.policy.label}
+                            <span className="sr-only"> (opens in a new tab)</span>
+                            <NewTab />
+                          </a>
+                        </span>
+                      </label>
+                      <p
+                        id={consentErrorId}
+                        role="alert"
+                        className="m-0 flex items-start gap-[0.4375rem] font-ui text-[0.8125rem] leading-[1.45] text-error [&:not(:empty)]:mt-2"
+                      >
+                        {consentMissing && (
+                          <>
+                            <svg
+                              aria-hidden
+                              focusable="false"
+                              width="14"
+                              height="14"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                              className="mt-0.5 shrink-0"
+                            >
+                              <circle cx="8" cy="8" r="6.75" />
+                              <path d="M8 4.5v4.25M8 10.75v.75" strokeLinecap="round" />
+                            </svg>
+                            {consentError}
+                          </>
+                        )}
+                      </p>
+                    </div>
+
                     {/* Honeypot. `hidden` takes it off the page, out of the
                         accessibility tree and out of page captures; bots reading
                         the markup still fill it, and autofill ignores the name. */}
@@ -461,6 +564,24 @@ function Field({
       </span>
       {children}
     </label>
+  );
+}
+
+/** The small arrow that marks a link opening in a new tab, as on the pop-ups. */
+function NewTab() {
+  return (
+    <svg
+      aria-hidden
+      focusable="false"
+      width="10"
+      height="10"
+      viewBox="0 0 10 10"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.1"
+    >
+      <path d="M3 1.5h5.5V7M8.5 1.5L1.5 8.5" />
+    </svg>
   );
 }
 

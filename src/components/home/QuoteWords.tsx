@@ -1,6 +1,6 @@
 /**
  * Marc's line, set in full from the first moment (8 Nov: the words no longer
- * dim and light up one by one), with the credit and link beneath.
+ * dim and light up one by one), with the credit beneath.
  */
 export function QuoteWords({
   before,
@@ -11,7 +11,7 @@ export function QuoteWords({
   before: string;
   emphasis: string;
   after: string;
-  /** The credit and link, beneath the words. */
+  /** The credit, beneath the words. */
   children: React.ReactNode;
 }) {
   return (

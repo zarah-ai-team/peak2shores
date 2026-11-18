@@ -124,17 +124,25 @@ function frame(route: LonLat[], w: number, h: number): View {
     my = Math.max(my, Math.abs(y));
   }
   const r0 = radius(w, h);
-  const fit = Math.min((w * 0.3) / (mx * r0), (h * 0.27) / (my * r0));
+  // A phone's narrow globe keeps the route closer to its middle, so the names
+  // of the stops at either end still fit inside the frame.
+  const across = w < 500 ? 0.22 : 0.3;
+  const fit = Math.min((w * across) / (mx * r0), (h * 0.27) / (my * r0));
   // Never closer than about seven degrees across, so the region stays legible.
   const near = w / 7 / ((r0 * Math.PI) / 180);
   return { lon, lat, k: Math.max(1, Math.min(fit, near)) };
 }
 
-/* Natural map colours: sea, land, the chosen journey's countries, the route. */
+/* The map's colours: a clear sea, the land a cool pale grey (no sand: the
+   owner's decision of 18 November 2026), the chosen journey's countries in
+   soft sage, the route in the brand blue. The lines between countries are
+   the page's ink, faint, and the countries' names its slate blue. */
 const SEA = '#aad3df';
-const LAND = '#ece8d8';
+const LAND = '#edf1f4';
 const LAND_LIT = '#d3e0b9';
 const BRAND = '#018fc9';
+const BORDER = 'rgb(20 29 36 / 0.22)';
+const NAME = (alpha: number) => `rgb(61 90 108 / ${alpha})`;
 
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 
@@ -200,10 +208,10 @@ export function HeroCarousel({
     let raf = 0;
     let last = 0;
 
-    /* The earth itself, in natural map colours (notes of 5 November 2026): a
-       clear sea blue, land in soft sage and sand, the countries of the chosen
-       journey a little greener, fine borders, and their names once close
-       enough to read. No glow, no dark ground. */
+    /* The earth itself, in map colours (notes of 5 November 2026, cooled on
+       18 November): a clear sea blue, the land a pale cool grey, the
+       countries of the chosen journey in soft sage, fine borders, and their
+       names once close enough to read. No glow, no dark ground. */
     const paintBase = (hi: boolean) => {
       // The fine coastlines only once close in; the whole earth needs no more than the coarse ones.
       const land = (hi && view.k > 2 && atlas.hi) || atlas.lo;
@@ -243,7 +251,7 @@ export function HeroCarousel({
           bctx.lineWidth = 0.7;
           bctx.stroke();
         };
-        layer((c) => !lit.has(c.properties.name), LAND, 'rgb(122 112 92 / 0.45)');
+        layer((c) => !lit.has(c.properties.name), LAND, BORDER);
         if (lit.size) layer((c) => lit.has(c.properties.name), LAND_LIT, 'rgb(86 104 66 / 0.75)');
       }
 
@@ -261,7 +269,9 @@ export function HeroCarousel({
         bctx.font = `500 12px ${sans}`;
         bctx.textAlign = 'center';
         if ('letterSpacing' in bctx) (bctx as { letterSpacing: string }).letterSpacing = '5px';
-        bctx.fillStyle = `rgb(92 84 66 / ${0.75 * show})`;
+        // Once fully shown, 6.4:1 on the land, 5.3:1 on the chosen
+        // countries and 4.6:1 on the sea.
+        bctx.fillStyle = NAME(show);
         const centre: LonLat = [view.lon, view.lat];
         // Names give way to the route: none where a stop and its label would be.
         const taken = (journey?.stops ?? []).map((s) => p(s.at) ?? [-999, -999]);
@@ -499,6 +509,9 @@ export function HeroCarousel({
 
     const size = () => {
       const box = el.getBoundingClientRect();
+      // While Cards is chosen the Map view is hidden and the canvas measures
+      // nothing: it keeps its last size, so there is never an empty canvas to draw from.
+      if (!box.width || !box.height) return;
       dpr = Math.min(2, window.devicePixelRatio || 1);
       w = box.width;
       h = box.height;
@@ -640,7 +653,10 @@ export function HeroCarousel({
         </p>
       </div>
 
-      <div className="jxh-bar">
+      {/* `data-fab-clear`: the floating "Connect with our team" steps aside
+          rather than cover the journey arrows, the only way to change the
+          journey on a phone. */}
+      <div className="jxh-bar" data-fab-clear>
         <p className="jxh-count">{journeys.length} journeys · more coming</p>
         <div className="jxh-nav">
           <div className="jxh-dots" role="group" aria-label="Choose a journey">
@@ -691,7 +707,7 @@ export function HeroCarousel({
             >
               <Photo photo={x.photo} />
               <p className="top">{x.country}</p>
-              <h2 id={`jxh-c-${x.slug}`}>{x.title}</h2>
+              <h3 id={`jxh-c-${x.slug}`}>{x.title}</h3>
               <p className="facts">
                 {x.facts.map((fact, i) => (
                   <Fragment key={fact}>
@@ -719,7 +735,7 @@ export function HeroCarousel({
           >
             <Photo photo={soonPhoto} />
             <p className="top">Stay tuned</p>
-            <h2 id="jxh-c-soon">More journeys are on the way</h2>
+            <h3 id="jxh-c-soon">More journeys are on the way</h3>
             <p className="facts">New destinations are being prepared now.</p>
             <p className="foot">
               <Link href="/#circle" onFocus={() => setActive(journeys.length)}>

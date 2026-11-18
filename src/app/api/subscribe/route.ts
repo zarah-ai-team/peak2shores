@@ -12,11 +12,15 @@ import { circleConsent, circleConsentText } from '@/lib/forms';
  * tells a new subscriber to confirm from their inbox. Its confirmation email
  * and the unsubscribe link in every email are the provider's to send.
  *
- * Each sign-up carries its record of consent: the line shown under the field
- * (lib/forms) and the page the form stood on.
+ * A sign-up must carry `consent: true`: the visitor ticked the Privacy Policy
+ * box under the field. Without it nothing is delivered, and the answer is 422
+ * with the words the form shows under the box. Each sign-up carries its
+ * record of consent: the sentence the visitor ticked (lib/forms) and the page
+ * the form stood on.
  *
  * Responses mirror /api/enquiry: `{ ok: true, delivered }` (delivered: false
- * means nothing was stored anywhere — set the env var before launch), or 502
+ * means nothing was stored anywhere — set the env var before launch), 422
+ * `{ error }` for an address that is not valid or a box not ticked, or 502
  * when a configured provider fails. The log records the event and channel,
  * never the address.
  */
@@ -50,18 +54,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'A valid email address is required.' }, { status: 422 });
   }
 
+  // The Privacy Policy tick box: no sign-up is delivered without it.
+  if (body.value.consent !== true) {
+    return NextResponse.json({ error: circleConsent.unticked }, { status: 422 });
+  }
+
   const source = readSource(body.value.source);
-  // The record of consent: the line the form showed, and the page it stood on.
-  // Both arrive from the browser, so only a flag and a short site path are read.
-  const consent =
-    body.value.consent === true
-      ? { statement: circleConsentText, policy: circleConsent.policy.href }
-      : undefined;
+  // The record of consent: the sentence the visitor ticked, and the page the
+  // form stood on. Both arrive from the browser, so only a flag and a short
+  // site path are read.
   const result = await deliver('subscription', {
     email,
     source,
     page: sitePath(body.value.page),
-    consent,
+    consent: { statement: circleConsentText, policy: circleConsent.policy.href },
   });
 
   console.info('[peaks2shores] circle sign-up received', {

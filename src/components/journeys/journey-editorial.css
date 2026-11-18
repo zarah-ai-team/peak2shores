@@ -211,12 +211,6 @@
   font-family: var(--serif);
   font-style: italic;
   font-size: clamp(1.125rem, 1.5vw, 1.375rem);
-  color: #f3f0ea;
-}
-.jy .hero-ctas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
 }
 .jy .facts {
   position: absolute;
@@ -276,7 +270,6 @@
 
 /* -- 3. The places, one at a time --------------------------------------------- */
 .jy.pl {
-  scroll-margin-top: var(--nav-h-compact);
   overflow: hidden;
   min-height: clamp(52rem, 75vw, 67.5rem);
   padding-bottom: 6rem;
@@ -660,12 +653,8 @@
   animation: none;
 }
 
-/* -- 1c. The private line (chat notes of 9 November 2026) ----------------------
-   "Want to take this journey privately? Learn more", after the reference the
-   client circled: a quiet line at the right gutter, level with the route, its
-   link to Bespoke Private Travel under it. The route and the line share a row
-   that wraps, so where the two do not fit side by side the line drops under
-   the route rather than onto it. */
+/* -- 1c. The hero's foot -------------------------------------------------------
+   The route, in a row that runs gutter to gutter under the title. */
 .jy .hero-c {
   /* The row runs gutter to gutter; the title keeps its 16ch, the route 48rem. */
   max-width: none;
@@ -680,37 +669,6 @@
 .jy .hfoot .hroute {
   flex: 0 1 48rem;
   min-width: 0;
-}
-.jy .priv {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  /* The route's stops end 0.25rem above its foot; the link's rule matches. */
-  margin: 0 0 0.25rem;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(0.9375rem, 1.1vw, 1.0625rem);
-  line-height: 1.4;
-  color: #f3f0ea;
-  text-shadow:
-    0 1px 2px rgb(8 20 28 / 0.5),
-    0 0 12px rgb(8 20 28 / 0.55);
-}
-.jy .priv .tlink {
-  padding-top: 0.5rem;
-  font-style: normal;
-}
-/* The brand blue is too dark over a photograph: the link lifts to sky blue. */
-.jy .priv .tlink:hover {
-  color: var(--sky);
-}
-/* A finger gets the full 44px, the words still sitting on their rule. */
-@media (pointer: coarse) {
-  .jy .priv .tlink {
-    display: inline-flex;
-    align-items: flex-end;
-    min-height: 44px;
-  }
 }
 
 /* -- 2. Overview, after the notes of 5 November 2026 --------------------------
@@ -801,11 +759,37 @@
   text-transform: uppercase;
   color: var(--muted);
 }
-.jy.intro .row {
+/* "Want to take this journey privately? Learn more" (Ishika's notes of
+   9 November 2026, item 18), directly under the figures: the question in the
+   page's italic, its link to Bespoke Private Travel beside it, or under it
+   where the column is too narrow for both. */
+.jy.intro .priv {
   display: flex;
-  align-items: center;
   flex-wrap: wrap;
-  gap: 1rem 1.75rem;
+  align-items: baseline;
+  gap: 0 1rem;
+  margin: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.0625rem, 1.25vw, 1.1875rem);
+  line-height: 1.45;
+  color: #24313b;
+}
+.jy.intro .priv .tlink {
+  padding-top: 0.5rem;
+  font-style: normal;
+  color: var(--ink);
+}
+.jy.intro .priv .tlink:hover {
+  color: var(--color-brand-deep);
+}
+/* A finger gets the full 44px, the words still sitting on their rule. */
+@media (pointer: coarse) {
+  .jy.intro .priv .tlink {
+    display: inline-flex;
+    align-items: flex-end;
+    min-height: 44px;
+  }
 }
 .jy.intro .ov-more {
   display: grid;
@@ -924,7 +908,6 @@
 
 /* -- 3. The extension banner --------------------------------------------------- */
 .jy.ext {
-  scroll-margin-top: calc(var(--nav-h-compact) + 3.5rem);
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
   gap: clamp(2rem, 5vw, 5rem);
@@ -1069,89 +1052,8 @@
   text-shadow: 0 1px 8px rgb(0 0 0 / 0.6);
 }
 
-/* -- 4. Where you'll stay ---------------------------------------------------------- */
-.jy.stay {
-  scroll-margin-top: var(--nav-h-compact);
-  padding: clamp(5rem, 9.7vw, 8.75rem) var(--gut);
-  background: var(--paper);
-  color: var(--ink);
-}
-.jy.stay .lab {
-  color: var(--lake);
-}
-.jy.stay .say {
-  max-width: 38ch;
-  margin: 0;
-  font-size: 0.9375rem;
-  line-height: 1.6;
-  color: var(--muted);
-}
-.jy .hgrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(1rem, 1.7vw, 1.5rem);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.jy .hcard {
-  overflow: hidden;
-  border: 1px solid var(--rule);
-  border-radius: 1rem;
-  background: #fff;
-}
-.jy .hcard .ph {
-  position: relative;
-  aspect-ratio: 16 / 10;
-  background: var(--color-stone);
-}
-.jy .hcard .pill {
-  position: absolute;
-  left: 0.875rem;
-  top: 0.875rem;
-  padding: 0.375rem 0.75rem;
-  border-radius: 999px;
-  background: rgb(14 47 66 / 0.78);
-  color: #fff;
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-.jy .hcard .hb {
-  padding: 1.25rem 1.375rem 1.5rem;
-}
-.jy .hcard h3 {
-  margin: 0;
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(1.125rem, 1.4vw, 1.3125rem);
-  line-height: 1.25;
-}
-.jy .hcard .tbc {
-  margin: 0.375rem 0 0;
-  font-size: 0.75rem;
-  color: #a4552b;
-}
-.jy .hcard a {
-  display: inline-block;
-  margin-top: 0.875rem;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--lake);
-  text-decoration: none;
-}
-.jy .hcard a:hover {
-  color: var(--brand);
-  text-decoration: underline;
-  text-underline-offset: 0.25em;
-}
-
-/* -- 5. Dates & rates ----------------------------------------------------------- */
+/* -- 4. Dates & rates ----------------------------------------------------------- */
 .jy.dep {
-  scroll-margin-top: var(--nav-h-compact);
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(18rem, 25rem);
   gap: clamp(2rem, 4vw, 4rem);
@@ -1166,11 +1068,77 @@
 .jy.dep h2 {
   margin-bottom: clamp(2rem, 3.4vw, 3rem);
 }
+/* The filter above the table, shown once the journey has departures: the
+   years (or months) as one white capsule of options, the chosen one filled
+   with the deeper brand blue (white on it reads at 4.9:1). The radio buttons
+   themselves are hidden; their focus ring is drawn on the option. */
+.jy .dfilter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin: 0 0 1.75rem;
+}
+.jy.dep .dfilter .lab {
+  color: var(--muted);
+}
+.jy .dopts {
+  display: inline-flex;
+  flex-wrap: wrap;
+  padding: 0.25rem;
+  border: 1px solid var(--rule);
+  border-radius: 1.5rem;
+  background: #fff;
+}
+.jy .dopts label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.5rem;
+  min-height: 2.5rem;
+  padding: 0 1.125rem;
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    background-color 0.3s var(--ease),
+    color 0.3s var(--ease);
+}
+.jy .dopts label:hover {
+  color: var(--lake);
+}
+.jy .dopts label:has(:checked) {
+  background: var(--color-brand-deep);
+  color: #fff;
+}
+.jy .dopts label:has(:focus-visible) {
+  outline: 2px solid var(--ink);
+  outline-offset: 0.1875rem;
+}
+@media (pointer: coarse) {
+  .jy .dopts label {
+    min-height: 44px;
+  }
+}
+/* Fixed columns, so they keep their places as the filter changes the rows. */
 .jy .tbl {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
 }
-.jy .tbl th {
+.jy .tbl thead th:nth-child(1) {
+  width: 40%;
+}
+.jy .tbl thead th:nth-child(2) {
+  width: 30%;
+}
+.jy .tbl thead th {
   padding: 0 1rem 0.875rem 0;
   border-bottom: 1px solid var(--rule);
   text-align: left;
@@ -1180,19 +1148,18 @@
   text-transform: uppercase;
   color: var(--muted);
 }
-.jy .tbl td {
+.jy .tbl td,
+.jy .tbl tbody th {
   padding: 1.375rem 1rem 1.375rem 0;
   border-bottom: 1px solid var(--rule);
+  text-align: left;
   font-size: 0.9375rem;
+  font-weight: 400;
   vertical-align: middle;
 }
-.jy .tbl td.big {
+.jy .tbl .big {
   font-family: var(--serif);
   font-size: clamp(1.125rem, 1.5vw, 1.375rem);
-}
-.jy .tbl td.act {
-  padding-right: 0;
-  text-align: right;
 }
 .jy .status {
   display: inline-flex;
@@ -1210,15 +1177,6 @@
   height: 0.5rem;
   border-radius: 50%;
   background: var(--brand);
-}
-.jy .btn-outline {
-  border: 1px solid var(--ink);
-  color: var(--ink);
-  background: transparent;
-}
-.jy .btn-outline:hover {
-  background: var(--ink);
-  color: #fff;
 }
 .jy.dep .circle {
   display: flex;
@@ -1279,8 +1237,20 @@
   font-size: 0.875rem;
   color: #e3ebf0;
 }
+/* The two booking buttons fill the box; a label too long for a narrow phone
+   wraps onto a second line inside its pill. They stand in a column of their
+   own, spaced as the box's other lines are. */
+.jy .rate .ctas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
 .jy .rate .btn {
   margin-top: 0.625rem;
+  padding-block: 0.5rem;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.3;
 }
 .jy .rate .fine {
   margin: 1rem 0 0;
@@ -1289,20 +1259,251 @@
   color: #a9bcc8;
 }
 
+/* -- 5. Essential information ------------------------------------------------------
+   After Dates and rates, on paper: the topics of the journey's guide in two
+   columns between hairlines, and beside them a white card that says where its
+   PDF will be. */
+.jy.ess {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 25rem);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: start;
+  padding: clamp(5rem, 9.7vw, 8.75rem) var(--gut);
+  background: var(--paper);
+  color: var(--ink);
+}
+.jy.ess .lab {
+  color: var(--lake);
+}
+.jy.ess .say {
+  margin: clamp(1.5rem, 2.4vw, 2rem) 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.jy.ess .topics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 2.25rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.jy.ess .topics li {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1.125rem 0 1.25rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--serif);
+  font-size: clamp(1.125rem, 1.4vw, 1.3125rem);
+  line-height: 1.3;
+}
+.jy.ess .topics li::before {
+  content: '';
+  flex: none;
+  width: 1.125rem;
+  height: 1px;
+  background: var(--brand);
+}
+.jy.ess .guide {
+  padding: clamp(1.75rem, 2.6vw, 2.25rem);
+  border: 1px solid var(--rule);
+  border-radius: 1.25rem;
+  background: #fff;
+}
+.jy.ess .guide svg {
+  display: block;
+  width: 2rem;
+  height: 2rem;
+  fill: none;
+  stroke: var(--brand);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.jy.ess .guide .lab {
+  margin-top: 1.25rem;
+}
+.jy.ess .guide .t {
+  margin: 0.625rem 0 0;
+  font-family: var(--serif);
+  font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+  line-height: 1.35;
+}
+/* Followed on the same paper by "More to discover" (`.mtd`), the section
+   ends sooner, on a hairline within the gutters. */
+.jy.ess:has(+ .mtd) {
+  padding-bottom: clamp(4.5rem, 7.2vw, 7rem);
+}
+.jy.ess:has(+ .mtd)::after {
+  content: '';
+  position: absolute;
+  left: var(--gut);
+  right: var(--gut);
+  bottom: 0;
+  border-top: 1px solid var(--rule);
+}
+
+/* -- The in-page menu's inquiry (JourneyTabs) ---------------------------------------
+   From 1024px the bar's right end holds the journey at a glance (its days and
+   group size over its from-price) and the "Make an inquiry" pill; on a phone
+   or a tablet the same pill sits in a slim bar fixed to the foot of the
+   screen, so that the tabs keep the menu bar's whole width (beside the
+   inquiry block a tablet showed only two or three of them). These sit outside
+   `.jy`, so they read the site's own tokens. Where the tabs scroll sideways,
+   the end with tabs hidden past it fades out. */
+.jt-tabs[data-edge='end'] {
+  mask-image: linear-gradient(90deg, #000 calc(100% - 2.5rem), transparent);
+}
+.jt-tabs[data-edge='start'] {
+  mask-image: linear-gradient(90deg, transparent, #000 2.5rem);
+}
+.jt-tabs[data-edge='both'] {
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 2.5rem,
+    #000 calc(100% - 2.5rem),
+    transparent
+  );
+}
+.jt-aside {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .jt-aside {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: clamp(1rem, 1.4vw, 1.5rem);
+  }
+}
+.jt-glance {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: end;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-ui);
+  text-align: right;
+}
+.jt-glance li {
+  font-size: var(--type-kicker);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--color-muted);
+}
+/* A hairline between the days and the group size. */
+.jt-glance li + li:not(.v)::before {
+  content: '';
+  display: inline-block;
+  width: 1px;
+  height: 0.75em;
+  margin: 0 0.75em;
+  background: var(--color-line);
+  vertical-align: -0.05em;
+}
+.jt-glance .v {
+  grid-column: 1 / -1;
+  margin-top: 0.25rem;
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--color-ink);
+}
+.jt-pill {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--pill-h);
+  padding: 0 var(--pill-px);
+  border: 1px solid var(--color-brand-deep);
+  border-radius: 999px;
+  background: var(--color-brand-deep);
+  color: #fff;
+  font-family: var(--font-ui);
+  font-size: var(--pill-fs);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.3s var(--ease-editorial),
+    border-color 0.3s var(--ease-editorial);
+}
+.jt-pill:hover {
+  background: var(--color-navy);
+  border-color: var(--color-navy);
+}
+/* The phone's and tablet's bar: off the foot of the screen (and out of reach)
+   until the hero has gone, then risen into view; while it shows, anchors and
+   focus keep clear of it. It sits under the site menu (z-index 40) and its
+   scrim, which cover it while the menu is open, and above the page. */
+.jt-ibar {
+  display: none;
+}
+@media (max-width: 1023.98px) {
+  .jt-ibar {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem var(--site-gutter) calc(0.5rem + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--color-line);
+    background: var(--color-ivory);
+    box-shadow: 0 -0.5rem 1.5rem rgb(14 47 66 / 0.08);
+    transform: translateY(calc(100% + 1rem));
+    visibility: hidden;
+    transition:
+      transform 0.45s var(--ease-editorial),
+      visibility 0s linear 0.45s;
+  }
+  .jt-ibar[data-on] {
+    transform: none;
+    visibility: visible;
+    transition:
+      transform 0.45s var(--ease-editorial),
+      visibility 0s;
+  }
+  .jt-ibar .jt-glance {
+    justify-content: start;
+    text-align: left;
+  }
+  html:has(.jt-ibar[data-on]) {
+    scroll-padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .jt-ibar,
+  .jt-ibar[data-on] {
+    transition: none;
+  }
+}
+
 /* -- Tablet and phone ------------------------------------------------------------------ */
 @media (max-width: 1100px) {
-  .jy .hgrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
   .jy.ext,
-  .jy.dep {
+  .jy.dep,
+  .jy.ess {
     grid-template-columns: minmax(0, 1fr);
   }
   /* The facts make two rows from here down, taller than the room the hero's
-     words keep above its foot, and the private line sits under the route: so
-     the words stand in the flow above the facts (as they already did on a
-     phone) and the strip can never lie over the route or the link. A screen
-     too short for it all scrolls instead of crowding. */
+     words keep above its foot: so the words stand in the flow above the facts
+     (as they already did on a phone) and the strip can never lie over the
+     route. A screen too short for it all scrolls instead of crowding. */
   .jy.hero {
     height: auto;
     min-height: max(40rem, 100svh);
@@ -1327,17 +1528,8 @@
   .jy .facts > div:nth-child(n + 4) {
     border-top: 1px solid var(--line);
   }
-  /* The private line under the route: the question, then its link beside it,
-     or on a line of its own where the screen is too narrow for both. */
   .jy .hfoot {
     display: block;
-  }
-  .jy .priv {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0 0.75rem;
-    margin-top: 1.25rem;
   }
 }
 @media (max-width: 800px) {
@@ -1351,7 +1543,7 @@
     border-right: 0;
     border-top: 1px solid var(--line);
   }
-  .jy .hgrid {
+  .jy.ess .topics {
     grid-template-columns: minmax(0, 1fr);
   }
   .jy .hroute {
@@ -1393,29 +1585,28 @@
   .jy .tbl,
   .jy .tbl tbody,
   .jy .tbl tr,
-  .jy .tbl td {
+  .jy .tbl td,
+  .jy .tbl tbody th {
     display: block;
   }
   .jy .tbl tr {
     padding: 1.25rem 0;
     border-bottom: 1px solid var(--rule);
   }
-  .jy .tbl td {
+  .jy .tbl td,
+  .jy .tbl tbody th {
     padding: 0.375rem 0;
     border: 0;
   }
-  .jy .tbl td[data-k]::before {
+  .jy .tbl [data-k]::before {
     content: attr(data-k);
     display: block;
     font-family: var(--sans);
     font-size: 0.6875rem;
+    font-weight: 400;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--muted);
-  }
-  .jy .tbl td.act {
-    padding-top: 0.875rem;
-    text-align: left;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1428,16 +1619,6 @@
   .jy .plbg {
     transition: none;
   }
-}
-
-/* The stays' line sits under the heading, on one line on a desktop. */
-.jy.stay .head {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1rem;
-}
-.jy.stay .say {
-  max-width: none;
 }
 
 /* Figures line up in the dates table and the rate (UX: tabular numbers). */
@@ -1513,4 +1694,21 @@
   .jy .hroute .nm {
     letter-spacing: 0.1em;
   }
+}
+
+/* -- The header over a journey's page ------------------------------------------
+   The header turns to its solid paper bar as soon as the page moves
+   (`data-header="solid-on-scroll"` on the hero, Header.tsx). Here it does so
+   in the same frame, without the bar's usual 0.45s fade, so a quick scroll
+   (Page Down, a flick on a phone) never shows the hero's words through a bar
+   still fading in. The logo and the header's button switch with it. The open
+   menu (`data-menu`) and the moment after it closes (`data-nav-closing`) keep
+   their own fades. */
+html:has([data-header='solid-on-scroll']) .site-header:not([data-menu], [data-nav-closing]) {
+  transition-property: height, transform;
+}
+html:has([data-header='solid-on-scroll'])
+  .site-header:not([data-menu], [data-nav-closing])
+  :is(.site-logo img, .header-cta) {
+  transition: none;
 }

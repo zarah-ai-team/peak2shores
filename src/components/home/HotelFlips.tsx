@@ -2,7 +2,6 @@
 
 import { useRef, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { hotels } from '@/lib/data/home';
 import { Chevron, HomeMedia } from './HomeMedia';
 import { useDragScroll } from '@/components/ui/useDrag';
@@ -11,9 +10,10 @@ import { useDragScroll } from '@/components/ui/useDrag';
  * 08 — Hotels & lodges: five tall cards that turn over on hover or
  * tap to show the one detail that earns the place its booking and what lies
  * near it. Five across on a wide screen, a rail below that: swiped on a touch
- * screen, moved with the arrows beside the hint on a desktop. A bracketed
- * value is still to come from Marc and is set in rust so it cannot ship
- * unnoticed.
+ * screen, moved with the arrows beside the hint on a desktop. The section
+ * ends on the hint and the arrows, with no button: /where-we-stay is reached
+ * from the site menu. A bracketed value is still to come from Marc and is set
+ * in the lake blue, in the sans face, so it cannot ship unnoticed.
  *
  * Where a mouse turns a card by resting on it (CSS), its click does nothing:
  * a click that also toggled the card left it stuck turned, or turning back
@@ -163,11 +163,6 @@ export function HotelFlips() {
             <Chevron dir="right" />
           </button>
         </div>
-      </div>
-      <div className="ctarow left">
-        <Link className="btn btn-light" href="/where-we-stay">
-          Where we stay
-        </Link>
       </div>
     </section>
   );

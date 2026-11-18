@@ -1,7 +1,5 @@
 'use client';
 
-import Image from 'next/image';
-import Link from 'next/link';
 import {
   useEffect,
   useId,
@@ -11,33 +9,11 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
 } from 'react';
-import { Arrow } from '@/components/ui/Button';
+import type { CollectionCardData } from '@/lib/journeyCards';
+import { CollectionCard } from './CollectionCard';
 import './collection.css';
-
-/** One journey as a card on the Journeys page — plain data, built on the server. */
-export type CollectionCard = {
-  slug: string;
-  title: string;
-  region: string;
-  tagline: string;
-  blurb: string;
-  /** The destinations it counts under, for the filter. */
-  dest: string[];
-  inspire: string[];
-  days?: number;
-  /** The months it departs in, earliest first; empty until the dates are set. */
-  when: { ym: string; label: string }[];
-  /** How the journey travels: "Multi-country", "Includes boat travel"… */
-  style: string[];
-  /** The places on the route, in order, each once: the card’s Itinerary line. */
-  stops: string[];
-  /** The length and, once Marc sets them, the rate and the departure (a date or a year). */
-  facts: string[];
-  status: string;
-  soon?: boolean;
-  tint: string;
-  imgs: { src: string; alt: string }[];
-};
+// The filters' dropdowns are styled with the rest of the Journeys page.
+import './journeys-index.css';
 
 type Show = 'all' | 'now' | 'soon';
 
@@ -67,9 +43,8 @@ type Filters = {
   len: string;
   /** 'All', a month ('2027-06'), or 'tba' for the journeys without dates. */
   when: string;
-  style: string[];
 };
-const none: Filters = { dest: 'All', show: 'all', insp: [], len: 'All', when: 'All', style: [] };
+const none: Filters = { dest: 'All', show: 'all', insp: [], len: 'All', when: 'All' };
 
 /** What a several-choice dropdown shows as chosen. */
 const chosen = (v: string[]) =>
@@ -78,25 +53,26 @@ const toggle = (v: string[], x: string) => (v.includes(x) ? v.filter((y) => y !=
 
 /**
  * The Collection: the label and heading, then one white panel of filters as
- * dropdowns in a row (Destination · Length · Departure · Travel style · What
- * inspires you · Availability), each option counting its journeys and greyed
- * when it has none, a Clear link while any filter is on, and the count at the
- * row's end. Every option is read from the journeys themselves, and a filter
- * with nothing to choose is left out. Then the journeys as tall product
- * cards, in the order they arrive (Marc's own).
+ * dropdowns in a row (Destination · Length · Month · What inspires you ·
+ * Availability), each option counting its journeys and greyed when it has
+ * none, a Clear link while any filter is on, and the count at the row's end.
+ * Every option is read from the journeys themselves, and a filter with
+ * nothing to choose is left out. Then the journeys as tall product cards
+ * (CollectionCard), in the order they arrive (Marc's own).
  *
- * After the chat notes of 9 November 2026: no Sort switch (Shortest and
- * Longest only repeated the Length filter), and Departure is the filter by
- * month. It lists the months the journeys really leave in, earliest first,
- * then `tba` ("Dates to be announced") for the journeys without dates, and it
- * is not shown at all until some journey has a month.
+ * After Ishika's notes of 9 November 2026: no Sort switch (Shortest and
+ * Longest only repeated the Length filter) and no Travel style filter, and
+ * Month is the filter by departure month. It lists the months the journeys
+ * really leave in, earliest first, then `tba` ("Dates to be announced") for
+ * the journeys without dates, and it is not shown at all until some journey
+ * has a month.
  */
 export function JourneyCollection({
   cards,
   tba,
   map,
 }: {
-  cards: CollectionCard[];
+  cards: CollectionCardData[];
   tba: string;
   /** The Map view (the globe and its carousel), built on the server. Without it there is no switch. */
   map?: ReactNode;
@@ -130,14 +106,13 @@ export function JourneyCollection({
       lens: lengths.filter(([, fits]) => cards.some((c) => c.days && fits(c.days))).map(([l]) => l),
       whens: [...months].sort(([a], [b]) => a.localeCompare(b)),
       undated: cards.some((c) => c.when.length === 0),
-      styles: uniq(cards.flatMap((c) => c.style)),
       insps: uniq(cards.flatMap((c) => c.inspire)).sort(),
     };
   }, [cards]);
 
   /* Whether a card passes the filters, with some of them swapped (so each
      menu counts what choosing an option would show). */
-  const pass = (c: CollectionCard, over: Partial<Filters> = {}) => {
+  const pass = (c: CollectionCardData, over: Partial<Filters> = {}) => {
     const x = { ...f, ...over };
     const fits = lengths.find(([l]) => l === x.len)?.[1];
     return (
@@ -146,7 +121,6 @@ export function JourneyCollection({
       (x.len === 'All' || (!!c.days && !!fits?.(c.days))) &&
       (x.when === 'All' ||
         (x.when === 'tba' ? c.when.length === 0 : c.when.some((m) => m.ym === x.when))) &&
-      x.style.every((y) => c.style.includes(y)) &&
       x.insp.every((y) => c.inspire.includes(y))
     );
   };
@@ -160,8 +134,7 @@ export function JourneyCollection({
     f.show !== 'all' ||
     f.len !== 'All' ||
     f.when !== 'All' ||
-    f.insp.length > 0 ||
-    f.style.length > 0;
+    f.insp.length > 0;
   const clearAll = () => setF(none);
 
   /** A single-choice menu: "All", then the options. */
@@ -172,14 +145,14 @@ export function JourneyCollection({
       count: count({ [key]: o }),
       on: f[key] === o,
     }));
-  /** The Departure menu: "All", each month, then the journeys without dates. */
+  /** The Month menu: "All", each month, then the journeys without dates. */
   const departures: (readonly [string, string])[] = [
     ['All', 'All'],
     ...opts.whens,
     ...(opts.undated ? [['tba', tba] as const] : []),
   ];
   /** A several-choice menu: each option counted as if added to the others. */
-  const many = (key: 'insp' | 'style', list: string[]) =>
+  const many = (key: 'insp', list: string[]) =>
     list.map((o) => ({
       key: o,
       label: o,
@@ -193,10 +166,7 @@ export function JourneyCollection({
         <div className="colh">
           <div>
             <p className="lab">Our journeys</p>
-            {/* The page's name: the Collection opens the Journeys page. */}
-            <h1 id="jx-col">
-              The Collection<span className="sr-only">: Small Luxury Group Journeys</span>
-            </h1>
+            <h2 id="jx-col">The Collection</h2>
           </div>
           {map && (
             <div
@@ -264,7 +234,7 @@ export function JourneyCollection({
             )}
             {opts.whens.length > 0 && (
               <Menu
-                label="Departure"
+                label="Month"
                 value={departures.find(([key]) => key === f.when)?.[1] ?? 'All'}
                 options={departures.map(([key, label]) => ({
                   key,
@@ -273,15 +243,6 @@ export function JourneyCollection({
                   on: key === f.when,
                 }))}
                 onPick={(when) => set({ when })}
-              />
-            )}
-            {opts.styles.length > 0 && (
-              <Menu
-                label="Travel style"
-                multi
-                value={chosen(f.style)}
-                options={many('style', opts.styles)}
-                onPick={(x) => set({ style: toggle(f.style, x) })}
               />
             )}
             {opts.insps.length > 0 && (
@@ -316,10 +277,12 @@ export function JourneyCollection({
             </div>
           </div>
 
+          {/* The cards start below the page's hero, so none of their
+              photographs is loaded ahead of the hero's. */}
           <ul className="grid">
-            {shown.map((c, i) => (
+            {shown.map((c) => (
               <li key={c.slug}>
-                <ProductCard card={c} priority={i < 3} />
+                <CollectionCard card={c} />
               </li>
             ))}
             {shown.length === 0 && (
@@ -355,11 +318,19 @@ function Menu({
 }) {
   const [open, setOpen] = useState(false);
   const box = useRef<HTMLDivElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
   const id = useId();
 
+  /* The list hides as it closes, so focus inside it would be lost to the
+     page: it goes back to the menu's own button. */
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      const inside = box.current?.contains(document.activeElement);
+      setOpen(false);
+      if (inside) trigger.current?.focus();
+    };
     const onDown = (e: PointerEvent) => {
       if (box.current && !box.current.contains(e.target as Node)) setOpen(false);
     };
@@ -374,6 +345,7 @@ function Menu({
   return (
     <div className={`fmenu${open ? ' open' : ''}`} ref={box}>
       <button
+        ref={trigger}
         type="button"
         className="fbtn"
         aria-expanded={open}
@@ -398,7 +370,9 @@ function Menu({
                 disabled={empty}
                 onClick={() => {
                   onPick(o.key);
-                  if (!multi) setOpen(false);
+                  if (multi) return;
+                  setOpen(false);
+                  trigger.current?.focus();
                 }}
               >
                 {multi && <i className="box" aria-hidden />}
@@ -410,96 +384,5 @@ function Menu({
         })}
       </ul>
     </div>
-  );
-}
-
-/** A no-break space, by its code: typed as a character it cannot be seen in the source. */
-const NBSP = String.fromCharCode(0xa0);
-
-/**
- * The places in order, "Lucerne · Grindelwald · …". A name of two words
- * ("Lake Garda") is never split, and each dot stays with the place before it,
- * so the line only breaks after a dot.
- */
-const itinerary = (stops: string[]) => stops.map((s) => s.replaceAll(' ', NBSP)).join(`${NBSP}· `);
-
-/**
- * A journey as a product card: its photographs to browse at the top, the card
- * settling into the colour of the place, the region and booking state on it,
- * then the name, the tagline, the line, the itinerary (the places in order,
- * as on A&K's cards), the facts as pills and a white button in. The pills,
- * after the chat notes of 9 November 2026: the days, the rate and the
- * departure, the last two only once Marc sets them. No "Small group" pill.
- */
-function ProductCard({ card: c, priority }: { card: CollectionCard; priority: boolean }) {
-  const [shot, setShot] = useState(0);
-  const href = c.soon ? '/plan#contact' : `/journeys/${c.slug}`;
-
-  return (
-    <article
-      className={`pc${c.soon ? ' soon' : ''}`}
-      style={{ ['--tint' as string]: c.tint }}
-      aria-labelledby={`pc-${c.slug}`}
-    >
-      <div className="pcm">
-        {c.imgs.map((m, i) => (
-          <Image
-            key={m.src}
-            className={i === shot ? 'on' : undefined}
-            src={m.src}
-            alt={i === shot ? m.alt : ''}
-            fill
-            sizes="(min-width: 1100px) 33vw, (min-width: 700px) 50vw, 100vw"
-            priority={priority && i === 0}
-          />
-        ))}
-        <div className="pcg" aria-hidden />
-      </div>
-      <div className="pctop">
-        <span>{c.region}</span>
-        <span className={`st${c.soon ? ' soon' : ''}`}>
-          <i aria-hidden />
-          {c.status}
-        </span>
-      </div>
-      <div className="pcb">
-        {c.imgs.length > 1 && (
-          <div className="dots" role="group" aria-label="Photographs">
-            {c.imgs.map((m, i) => (
-              <button
-                key={m.src}
-                type="button"
-                className={i === shot ? 'on' : undefined}
-                aria-label={`Photograph ${i + 1} of ${c.imgs.length}`}
-                aria-pressed={i === shot}
-                onClick={() => setShot(i)}
-              >
-                <i />
-              </button>
-            ))}
-          </div>
-        )}
-        <h3 id={`pc-${c.slug}`}>{c.title}</h3>
-        <p className="tl">{c.tagline}</p>
-        {c.blurb && <p className="d">{c.blurb}</p>}
-        {c.stops.length > 1 && (
-          <p className="pit">
-            <small>Itinerary</small> {itinerary(c.stops)}
-          </p>
-        )}
-        <div className="ptags">
-          {c.facts.map((f) => (
-            <span key={f}>{f}</span>
-          ))}
-        </div>
-        <Link
-          className="pbtn"
-          href={href}
-          aria-label={`${c.soon ? 'Register your interest in' : 'View the journey'} ${c.title}`}
-        >
-          {c.soon ? 'Register your interest' : 'View the journey'} <Arrow />
-        </Link>
-      </div>
-    </article>
   );
 }

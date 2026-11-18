@@ -24,8 +24,9 @@ export function Intro() {
 }
 
 /** 05 — Marc's remark over the Cape Town film, set in full: the mark, the
-    words, his name and the way on, on one centre axis with nothing drawn
-    around them. */
+    words and his name, on one centre axis with nothing drawn around them.
+    The remark has no link of its own: the story follows a little further
+    down the page. */
 export function Statement() {
   return (
     <section className="hc-pause" aria-label="A word from our founder">
@@ -40,9 +41,6 @@ export function Statement() {
           <p className="credit">
             <span>{site.founder.name}</span> <b aria-hidden>·</b> <span>Founder, {site.name}</span>
           </p>
-          <Link className="qlink" href="#story">
-            Discover the Peaks2Shores story <span aria-hidden>→</span>
-          </Link>
         </QuoteWords>
       </div>
     </section>

@@ -1,4 +1,5 @@
 import { getJourneys, getSiteSettings } from '@/lib/content';
+import { fromPriceLabel } from '@/lib/journeyPrice';
 
 /* Rebuilt hourly, with the journeys, so a released journey is listed on time. */
 export const revalidate = 3600;
@@ -11,6 +12,11 @@ export const revalidate = 3600;
 export async function GET() {
   const [site, journeys] = await Promise.all([getSiteSettings(), getJourneys()]);
   const url = (path: string) => `${site.url}${path}`;
+  /** The journey's price line as the site shows it, in the middle of a sentence. */
+  const price = (j: (typeof journeys)[number]) => {
+    const label = fromPriceLabel(j);
+    return label.charAt(0).toLowerCase() + label.slice(1);
+  };
 
   const lines = [
     `# ${site.name}`,
@@ -27,7 +33,7 @@ export async function GET() {
     ...journeys.map(
       (j) =>
         `- [${j.title}](${url(`/journeys/${j.slug}`)}): ${j.country}, ${j.region}. ${j.days} days, ` +
-        `${j.departureISO ? `departs ${j.departureWindow}` : 'dates to be announced'}, ${j.priceFrom ? `from ${j.priceFrom} per person` : 'rates to be announced'}, small group` +
+        `${j.departureISO ? `departs ${j.departureWindow}` : 'dates to be announced'}, ${price(j)}, small group` +
         `${j.hostedByMarc ? ', hosted by Marc' : ''}${j.status && j.status !== 'open' ? ` (${j.status.replace('-', ' ')})` : ''}. ${j.lead}`,
     ),
     '',

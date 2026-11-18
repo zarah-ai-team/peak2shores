@@ -4,14 +4,16 @@ import { Frame } from '@/components/ui/Frame';
 import { Ground } from '@/components/motion/Ground';
 import { Reveal, RevealGroup, RevealItem } from '@/components/motion/Reveal';
 import { TextReveal } from '@/components/motion/TextReveal';
-import { ButtonLink } from '@/components/ui/Button';
+import { Arrow, ButtonLink } from '@/components/ui/Button';
 import { FactList, MetaItem, SectionLabel, Tick } from '@/components/ui/Editorial';
 import { StatusTag } from '@/components/ui/StatusTag';
 import { journeyTagStatus } from '@/components/pages/journeyStatus';
 import { isNew, type Journey, type JourneyDetail, type JourneySummary } from '@/lib/content';
-import { journeyStays, RATES_TBA } from '@/lib/journeys';
+import { fromPriceLabel } from '@/lib/journeyPrice';
+import { journeyStays } from '@/lib/journeys';
 import { enterAt } from '@/lib/motion';
 import { site } from '@/lib/site';
+import { OpenJourneyForm } from './forms/JourneyForms';
 import { JourneyCard } from './JourneyCard';
 
 /* -- 1. Hero --------------------------------------------------------------- */
@@ -23,7 +25,7 @@ function journeyFacts(journey: Journey): { label: string; value: React.ReactNode
     { label: 'Days', value: `${journey.days} days · ${journey.days - 1} nights` },
     { label: 'Departure', value: journey.departureWindow },
     { label: 'Group', value: site.groupSize },
-    { label: 'From', value: journey.priceFrom ? `${journey.priceFrom} per person` : RATES_TBA },
+    { label: 'Price', value: fromPriceLabel(journey) },
     {
       label: 'Hosted by',
       value: journey.hostedByMarc ? site.founder.name : 'Our team on the ground',
@@ -367,7 +369,7 @@ export function DatesAndRates({ journey, cta }: { journey: Journey; cta: string 
         <table className="mb-6 w-full border-collapse text-left">
           <thead className="sr-only md:not-sr-only">
             <tr className="border-b border-ink">
-              {['Departure', 'Length', 'Group', 'From', 'Availability'].map((h) => (
+              {['Departure', 'Length', 'Group', 'Price', 'Availability'].map((h) => (
                 <th key={h} scope="col" className="kicker-sm pb-3 pr-6 font-medium text-muted">
                   {h}
                 </th>
@@ -392,14 +394,8 @@ export function DatesAndRates({ journey, cta }: { journey: Journey; cta: string 
                 {site.groupSize}
               </td>
               <td className="meta py-0 pr-6 text-body md:py-6">
-                <span className="kicker-sm mb-1.5 block md:hidden">From</span>
-                {journey.priceFrom ? (
-                  <>
-                    <span className="font-semibold text-ink">{journey.priceFrom}</span> per person
-                  </>
-                ) : (
-                  RATES_TBA
-                )}
+                <span className="kicker-sm mb-1.5 block md:hidden">Price</span>
+                {fromPriceLabel(journey)}
                 {journey.flyer?.ratesNote && (
                   <span className="mt-1 block text-muted">{journey.flyer.ratesNote}</span>
                 )}
@@ -622,9 +618,9 @@ export function InPreparation({ journey }: { journey: Journey }) {
                   <ButtonLink href="#itinerary" variant="rule" arrow>
                     Itinerary
                   </ButtonLink>
-                  <ButtonLink href="#enquire" variant="rule">
+                  <OpenJourneyForm kind="enquiry" className="link-rule cursor-pointer">
                     Register interest
-                  </ButtonLink>
+                  </OpenJourneyForm>
                 </div>
               </>
             ) : (
@@ -638,9 +634,9 @@ export function InPreparation({ journey }: { journey: Journey }) {
                   Ask for it and we will send the day-by-day as soon as it is signed off — usually
                   within a few days.
                 </p>
-                <ButtonLink href="#enquire" variant="rule" arrow>
-                  Request the itinerary
-                </ButtonLink>
+                <OpenJourneyForm kind="enquiry" className="link-rule cursor-pointer">
+                  Request the itinerary <Arrow />
+                </OpenJourneyForm>
               </>
             )}
           </div>

@@ -64,8 +64,10 @@
 }
 
 /* -- Route map ------------------------------------------------------------- */
-/* After the sample journey page: pale sea, cream land, the route in lake
-   blue over a faint trace of itself, numbered white pills for the places.
+/* After the sample journey page: pale sea, pale blue-grey land with the
+   journey's own countries lighter still (no sand or brown, by the owner's
+   choice of 18 Nov 2026), the route in lake blue over a faint trace of
+   itself, numbered white pills for the places.
    The finished map is the default; RouteDraw adds data-route="armed" (route
    faint, places muted but named) and then "drawing" (each leg draws in turn,
    each place lights as the line reaches it). */
@@ -80,13 +82,13 @@
   fill: #d6e7ee;
 }
 .route-land {
-  fill: #efeae0;
-  stroke: #d8cbb0;
+  fill: var(--color-panel);
+  stroke: #b9cad5;
   stroke-width: 1;
   stroke-linejoin: round;
 }
 .route-land.is-ours {
-  fill: #f7f2e8;
+  fill: var(--color-ivory);
 }
 
 .route-leg path {

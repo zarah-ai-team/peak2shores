@@ -1,0 +1,68 @@
+/*
+ * More to discover (MoreToDiscover): the row of other journeys under a
+ * journey's page. Scoped to `.mtd`; the heading follows the journey page's
+ * section titles, and the cards style themselves (collection-card.css).
+ */
+
+.mtd {
+  --mtd-gut: clamp(1.25rem, 3.39vw, 4rem);
+  --mtd-gap: clamp(1.25rem, 1.94vw, 1.75rem);
+  box-sizing: border-box;
+  padding: clamp(4.5rem, 7.2vw, 7rem) var(--mtd-gut) clamp(5rem, 7.8vw, 8rem);
+  background: var(--color-ivory);
+  color: #141d24;
+  -webkit-font-smoothing: antialiased;
+}
+.mtd .mtd-h {
+  margin: 0 0 clamp(2rem, 3.4vw, 3rem);
+  font-family: var(--font-display);
+  font-weight: var(--title-weight);
+  font-size: clamp(2.125rem, 3.6vw, 4rem);
+  line-height: 1.04;
+  letter-spacing: -0.012em;
+  color: inherit;
+  text-wrap: balance;
+}
+/* Three cards across, the size of The Collection's; fewer leave the row's
+   end open rather than stretch. */
+.mtd-row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - 2 * var(--mtd-gap)) / 3);
+  gap: var(--mtd-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.mtd-row > li {
+  display: flex;
+  min-width: 0;
+}
+/* A tablet or a phone: a row swiped sideways, two cards across on a tablet
+   and on a phone one card and the edge of the next. It runs to the edges of
+   the screen; its first and last cards stop on the page's gutter. The row
+   clips what leaves it, so its padding holds the cards' shadows, and the
+   negative margins give that room back. */
+@media (max-width: 1100px) {
+  .mtd-row {
+    grid-auto-columns: calc((100% - var(--mtd-gap)) / 2);
+    margin: -2rem calc(-1 * var(--mtd-gut)) -5.5rem;
+    padding: 2.25rem var(--mtd-gut) 5.5rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--mtd-gut);
+    scrollbar-width: none;
+  }
+  .mtd-row::-webkit-scrollbar {
+    display: none;
+  }
+  .mtd-row > li {
+    scroll-snap-align: start;
+  }
+}
+@media (max-width: 760px) {
+  .mtd-row {
+    grid-auto-columns: 82%;
+  }
+}

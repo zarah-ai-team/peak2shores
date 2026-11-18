@@ -22,11 +22,15 @@ export type NewsletterVariant = 'compact' | 'large' | 'dark' | 'invite';
  *   field with a blue pill of a button beside it, the pair centred, stacking
  *   on a phone.
  *
- * Every form but the compact one carries the consent line: the privacy
- * policy, and that one can leave at any time. Its words live in lib/forms
- * (`circleConsent`); the form tells the route that it showed them, and on
- * which page, and the route sends that on with the address as the record of
- * consent.
+ * Under the field every form carries the Privacy Policy tick box, unticked:
+ * "I agree to the Privacy Policy" (the policy opens in a new tab, so a
+ * half-filled form is not lost), and beside it "Unsubscribe at any time."
+ * Nothing is sent until the box is ticked. A send without the tick says so
+ * under the box, marks the box and moves focus to it; from then on the
+ * message follows the box, and ticking it clears both. The words live in
+ * lib/forms (`circleConsent`). /api/subscribe refuses a sign-up without the
+ * tick, and sends the sentence the visitor ticked on with the address, and
+ * the page the form stood on, as the record of consent.
  *
  * Posts to /api/subscribe, which answers `{ ok, delivered }`. `delivered:
  * false` means no mailing provider is wired yet and nothing was stored, so the
@@ -51,10 +55,18 @@ export function NewsletterForm({
   const dark = variant === 'dark' || invite;
   const [email, setEmail] = useState('');
   const [website, setWebsite] = useState('');
+  const [consented, setConsented] = useState(false);
+  /** True once a send was tried without the tick: the box's message then follows it. */
+  const [tried, setTried] = useState(false);
   const [status, setStatus] = useState<Status>('idle');
   const [errorText, setErrorText] = useState('');
   const resultRef = useRef<HTMLParagraphElement>(null);
+  const consentRef = useRef<HTMLInputElement>(null);
   const id = `email-${useId().replace(/:/g, '')}`;
+  /** A send found the box unticked, and it still is. */
+  const unticked = tried && !consented;
+  /** The last send went to the route and failed. */
+  const failed = status === 'error' && !unticked;
 
   useEffect(() => {
     if (status === 'done' || status === 'undelivered') resultRef.current?.focus();
@@ -63,6 +75,15 @@ export function NewsletterForm({
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (status === 'sending') return;
+    if (!consented) {
+      // Nothing is sent without the tick. The message under the box takes the
+      // place of an earlier failed send's, and the reader is taken to the box.
+      setTried(true);
+      setStatus('idle');
+      setErrorText('');
+      consentRef.current?.focus();
+      return;
+    }
     setStatus('sending');
     try {
       const res = await postForm('/api/subscribe', {
@@ -70,9 +91,9 @@ export function NewsletterForm({
         website,
         source: readFirstTouch(),
         // For the list's record of consent: the page this form stands on, and
-        // whether the consent line stood under the field.
+        // that the visitor ticked the box.
         page: window.location.pathname,
-        consent: variant !== 'compact',
+        consent: consented,
       });
       if (res.ok) {
         const data = (await res.json().catch(() => ({}))) as { delivered?: boolean };
@@ -152,6 +173,34 @@ export function NewsletterForm({
           dark ? 'text-on-dark hover:text-acqua' : 'hover:text-brand'
         }`;
 
+  // The tick box's line on each ground, a quiet line in the small print's
+  // place. Over the photograph: white words, centred, and a white-edged box of
+  // the field's dark glass that fills white once ticked, with a white focus
+  // ring. On the footer's navy: its muted on-dark words, the box edged in the
+  // same, water-blue once ticked. On paper: the muted ink, the box edged in it,
+  // navy once ticked, as the journey pop-ups' box is. Off the photograph a
+  // send without the tick also edges the box in the error colour until it is
+  // ticked; over it the white message under the box says so alone. Under
+  // forced colours (Windows high contrast) the fills give way to the system's,
+  // so the tick takes the system's text colour to stay seen.
+  const consentTone = invite
+    ? {
+        line: 'justify-center text-center text-white',
+        box: 'border-white bg-[rgb(8_20_28/0.42)] checked:bg-white focus-visible:outline-white',
+        tick: 'text-navy',
+      }
+    : dark
+      ? {
+          line: 'text-on-dark-muted',
+          box: 'border-on-dark-muted checked:border-acqua checked:bg-acqua aria-[invalid=true]:border-error-dark',
+          tick: 'text-navy-deep',
+        }
+      : {
+          line: 'text-muted',
+          box: 'border-muted checked:border-navy checked:bg-navy aria-[invalid=true]:border-error',
+          tick: 'text-white',
+        };
+
   return (
     <div
       className={`w-full ${variant === 'compact' ? '' : invite ? 'mx-auto max-w-[30rem]' : 'max-w-[32.5rem]'} ${className}`}
@@ -182,8 +231,8 @@ export function NewsletterForm({
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Your email"
-          aria-describedby={status === 'error' ? `${id}-error` : undefined}
-          aria-invalid={status === 'error' ? true : undefined}
+          aria-describedby={failed ? `${id}-error` : undefined}
+          aria-invalid={failed ? true : undefined}
           className={`min-w-0 ${invite ? 'sm:flex-1' : 'flex-1 border-0 bg-transparent outline-none'} ${fieldText}`}
         />
         {/* Honeypot: hidden from people, screen readers and page captures;
@@ -212,37 +261,106 @@ export function NewsletterForm({
           {status === 'sending' ? 'Sending' : 'Join The Circle'}
         </button>
       </form>
-      {variant !== 'compact' && (
-        <p
-          className={`prose-body-sm mt-3 ${invite ? 'text-center text-white' : dark ? 'text-on-dark-muted' : 'text-muted'}`}
-        >
-          {circleConsent.before}{' '}
-          <a
-            href={circleConsent.policy.href}
-            className={`underline underline-offset-2 hover:no-underline${invite ? ' whitespace-nowrap' : ''}`}
-          >
-            {circleConsent.policy.label}
-          </a>
-          .{' '}
-          {/* Centred over the photograph, the line breaks between its two
-              sentences on a phone, never inside the link or the second one. */}
-          {invite ? (
-            <span className="whitespace-nowrap">{circleConsent.after}</span>
-          ) : (
-            circleConsent.after
-          )}
-        </p>
-      )}
+      {/* The tick box, then "Unsubscribe at any time." beside it as plain
+          words. On a narrow screen the line breaks between the two, never
+          inside the label. It stands outside the <form> so the field's row
+          keeps its own layout; the form's send reads its state. */}
+      <p
+        className={`prose-body-sm mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 ${consentTone.line}`}
+      >
+        {/* The box and its words are one target: 24px tall with a mouse,
+            44px under a finger. */}
+        <label className="inline-flex min-h-[24px] cursor-pointer items-center gap-3 pointer-coarse:min-h-11">
+          <span className="relative inline-flex shrink-0">
+            {/* Named by the sentence alone: the label around it also holds
+                the link's "(opens in a new tab)". Marked valid outright until
+                a send finds it unticked: a browser would otherwise announce
+                the required box as invalid before anything has been sent. */}
+            <input
+              ref={consentRef}
+              type="checkbox"
+              name="consent"
+              required
+              aria-label={`${circleConsent.before} ${circleConsent.policy.label}`}
+              aria-invalid={unticked}
+              aria-describedby={unticked ? `${id}-error` : undefined}
+              checked={consented}
+              onChange={(e) => setConsented(e.target.checked)}
+              className={`peer m-0 block size-5 cursor-pointer appearance-none border-[1.5px] transition-colors duration-200 ${consentTone.box}`}
+            />
+            <svg
+              aria-hidden
+              focusable="false"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={`pointer-events-none absolute inset-0 hidden size-full peer-checked:block forced-colors:text-[color:CanvasText] ${consentTone.tick}`}
+            >
+              <path d="M5.5 10.5l3 3 6-7" />
+            </svg>
+          </span>
+          <span>
+            {circleConsent.before}{' '}
+            <a
+              href={circleConsent.policy.href}
+              target="_blank"
+              rel="noopener"
+              className="inline-flex items-baseline gap-1 whitespace-nowrap underline underline-offset-2 hover:no-underline"
+            >
+              {circleConsent.policy.label}
+              <span className="sr-only"> (opens in a new tab)</span>
+              <NewTab />
+            </a>
+          </span>
+        </label>
+        <span>{circleConsent.after}</span>
+      </p>
+      {/* The form's one message, under the box: the tick box's, or a failed
+          send's. It stays in the page so that what it comes to say is
+          announced; the box, or the field, is described by it while it
+          speaks of them. Over the photograph it takes the band's soft dark
+          glow, as the line above it does, so it holds 4.5:1 where the
+          photograph is bright. */}
       <p
         id={`${id}-error`}
         role="alert"
         aria-live="assertive"
-        className={`prose-body-sm mt-3 ${invite ? 'text-white' : dark ? 'text-error-dark' : 'text-error'}`}
+        className={`prose-body-sm mt-3 ${
+          invite
+            ? 'text-white [text-shadow:0_0_1.25rem_rgb(0_0_0/0.45),0_1px_0.25rem_rgb(0_0_0/0.35)]'
+            : dark
+              ? 'text-error-dark'
+              : 'text-error'
+        }`}
       >
-        {status === 'error'
-          ? errorText || `That didn’t send. Please try again, or email ${site.email}.`
-          : ''}
+        {unticked
+          ? circleConsent.unticked
+          : failed
+            ? errorText || `That didn’t send. Please try again, or email ${site.email}.`
+            : ''}
       </p>
     </div>
+  );
+}
+
+/** The small arrow that marks a link opening in a new tab, as the journey pop-ups draw it. */
+function NewTab() {
+  return (
+    <svg
+      aria-hidden
+      focusable="false"
+      width="10"
+      height="10"
+      viewBox="0 0 10 10"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.1"
+      className="shrink-0"
+    >
+      <path d="M3 1.5h5.5V7M8.5 1.5L1.5 8.5" />
+    </svg>
   );
 }

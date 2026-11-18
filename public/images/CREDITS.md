@@ -148,3 +148,86 @@ source page itself. None of it was shot for Peaks2Shores; see
 | `tr-2` | tr-2.jpg | [Unsplash](https://unsplash.com/photos/snow-capped-mountains-reflected-in-lake-o75824r-9HE) | Martin Leitgeb | Unsplash License |
 | `tr-3` | tr-3.jpg | [Unsplash](https://unsplash.com/photos/green-trees-on-brown-mountain-near-body-of-water-during-daytime-kJ2_a03Bp-M) | Henrique Ferreira | Unsplash License |
 | `tr-4` | tr-4.jpg | [Unsplash](https://unsplash.com/photos/silhouette-of-palm-trees-near-body-of-water-during-sunset-FQjUaIMQF3Q) | Denys Kostyuchenko | Unsplash License |
+
+## Hotel photographs
+
+The hotel pop-ups on the journey pages (`src/components/journeys/Stays.tsx`,
+data in `src/lib/data/hotels.ts`) show each hotel's own photographs, taken
+from the hotel's official website or its group's official image server on
+18 November 2026, resized to at most 2400px wide and saved under
+`public/images/hotels/<hotel>/`. Each is credited as the hotel gives it, in the
+pop-up and on `/credits`; `credits.json` also records the download URL.
+
+**Before launch:** none of these photographs came with stated terms of use.
+Confirm with each hotel, or its press office, that they may be shown this way.
+The Hotel Excelsior Dubrovnik shows the licensed Pexels frame
+`home-jr-adriatic` until its own photographs are supplied.
+
+| Slot | File | Source | Credit |
+| --- | --- | --- | --- |
+| `hotel-ambasador-split-01` | hotels/ambasador-split/01-rooftop-pool.jpg | [ambasadorsplit.com](https://ambasadorsplit.com/en/dining) | Ambasador Split |
+| `hotel-ambasador-split-02` | hotels/ambasador-split/02-sea-view-suite.jpg | [ambasadorsplit.com](https://ambasadorsplit.com/en/rooms-and-suites) | Ambasador Split |
+| `hotel-ambasador-split-03` | hotels/ambasador-split/03-room-at-dusk.jpg | [ambasadorsplit.com](https://ambasadorsplit.com/en/rooms-and-suites) | Ambasador Split |
+| `hotel-ambasador-split-04` | hotels/ambasador-split/04-waterfront-dining.jpg | [ambasadorsplit.com](https://ambasadorsplit.com/en) | Ambasador Split |
+| `hotel-ambasador-split-05` | hotels/ambasador-split/05-hacelia-spa.jpg | [ambasadorsplit.com](https://ambasadorsplit.com/en/hacelia-spa) | Ambasador Split |
+| `hotel-ambasador-split-06` | hotels/ambasador-split/06-split-from-above.jpg | [ambasadorsplit.com](https://ambasadorsplit.com/en/our-story) | Ambasador Split |
+| `hotel-bergwelt-grindelwald-01` | hotels/bergwelt-grindelwald/01-chalets-and-pool.jpg | [bergwelt-grindelwald.com](https://bergwelt-grindelwald.com/en/) | Bergwelt Grindelwald |
+| `hotel-bergwelt-grindelwald-02` | hotels/bergwelt-grindelwald/02-lounge.jpg | [bergwelt-grindelwald.com](https://bergwelt-grindelwald.com/en/) | Bergwelt Grindelwald |
+| `hotel-bergwelt-grindelwald-03` | hotels/bergwelt-grindelwald/03-grill-restaurant.jpg | [bergwelt-grindelwald.com](https://bergwelt-grindelwald.com/en/) | Bergwelt Grindelwald |
+| `hotel-bergwelt-grindelwald-04` | hotels/bergwelt-grindelwald/04-pinte.jpg | [bergwelt-grindelwald.com](https://bergwelt-grindelwald.com/en/) | Bergwelt Grindelwald |
+| `hotel-bergwelt-grindelwald-05` | hotels/bergwelt-grindelwald/05-spa-fireplace.jpg | [bergwelt-grindelwald.com](https://bergwelt-grindelwald.com/en/) | Bergwelt Grindelwald |
+| `hotel-bergwelt-grindelwald-06` | hotels/bergwelt-grindelwald/06-eiger-view.jpg | [bergwelt-grindelwald.com](https://bergwelt-grindelwald.com/en/) | Bergwelt Grindelwald |
+| `hotel-fairmont-montreux-01` | hotels/fairmont-montreux/01-belle-epoque-facade.jpg | [fairmont.com](https://www.fairmont.com/en/hotels/montreux/fairmont-le-montreux-palace.html) | Fairmont Hotels & Resorts, part of Accor |
+| `hotel-fairmont-montreux-02` | hotels/fairmont-montreux/02-grand-hall.jpg | [fairmont.com](https://www.fairmont.com/en/hotels/montreux/fairmont-le-montreux-palace.html) | Fairmont Hotels & Resorts, part of Accor |
+| `hotel-fairmont-montreux-03` | hotels/fairmont-montreux/03-lake-view-room.jpg | [fairmont.com](https://www.fairmont.com/en/hotels/montreux/fairmont-le-montreux-palace/rooms.html) | Fairmont Hotels & Resorts, part of Accor |
+| `hotel-fairmont-montreux-04` | hotels/fairmont-montreux/04-glass-roofed-restaurant.jpg | [fairmont.com](https://www.fairmont.com/en/hotels/montreux/fairmont-le-montreux-palace.html) | Fairmont Hotels & Resorts, part of Accor |
+| `hotel-fairmont-montreux-05` | hotels/fairmont-montreux/05-indoor-pool.jpg | [fairmont.com](https://www.fairmont.com/en/hotels/montreux/fairmont-le-montreux-palace/wellness.html) | Fairmont Hotels & Resorts, part of Accor |
+| `hotel-fairmont-montreux-06` | hotels/fairmont-montreux/06-balcony-lake-view.jpg | [fairmont.com](https://www.fairmont.com/en/hotels/montreux/fairmont-le-montreux-palace.html) | Fairmont Hotels & Resorts, part of Accor |
+| `hotel-grand-park-rovinj-01` | hotels/grand-park-rovinj/01-terraces-and-marina.jpg | [maistra.com](https://www.maistra.com/properties/grand-park-hotel-rovinj/) | Maistra Hospitality Group |
+| `hotel-grand-park-rovinj-02` | hotels/grand-park-rovinj/02-sea-view-room.jpg | [maistra.com](https://www.maistra.com/properties/grand-park-hotel-rovinj/) | Maistra Hospitality Group |
+| `hotel-grand-park-rovinj-03` | hotels/grand-park-rovinj/03-restaurant-terrace.jpg | [maistra.com](https://www.maistra.com/properties/grand-park-hotel-rovinj/) | Maistra Hospitality Group |
+| `hotel-grand-park-rovinj-04` | hotels/grand-park-rovinj/04-indoor-pool.jpg | [maistra.com](https://www.maistra.com/properties/grand-park-hotel-rovinj/) | Maistra Hospitality Group |
+| `hotel-grand-park-rovinj-05` | hotels/grand-park-rovinj/05-infinity-pool.jpg | [maistra.com](https://www.maistra.com/properties/grand-park-hotel-rovinj/) | Maistra Hospitality Group |
+| `hotel-grand-park-rovinj-06` | hotels/grand-park-rovinj/06-rovinj-bay.jpg | [maistra.com](https://www.maistra.com/properties/grand-park-hotel-rovinj/) | Maistra Hospitality Group |
+| `hotel-jw-marriott-venice-01` | hotels/jw-marriott-venice/01-isola-delle-rose.jpg | [traveler.marriott.com](https://traveler.marriott.com/venice/jw-venice-design/) | Marriott International |
+| `hotel-jw-marriott-venice-02` | hotels/jw-marriott-venice/02-arrival-by-boat.jpg | [traveler.marriott.com](https://traveler.marriott.com/venice/jw-venice-design/) | Marriott International |
+| `hotel-jw-marriott-venice-03` | hotels/jw-marriott-venice/03-rooftop-dining.jpg | [traveler.marriott.com](https://traveler.marriott.com/venice/jw-venice-design/) | Marriott International |
+| `hotel-jw-marriott-venice-04` | hotels/jw-marriott-venice/04-spa-pool.jpg | [traveler.marriott.com](https://traveler.marriott.com/venice/jw-venice-design/) | Marriott International |
+| `hotel-jw-marriott-venice-05` | hotels/jw-marriott-venice/05-olive-grove.jpg | [traveler.marriott.com](https://traveler.marriott.com/venice/jw-venice-design/) | Marriott International |
+| `hotel-jw-marriott-venice-06` | hotels/jw-marriott-venice/06-venice-across-the-lagoon.jpg | [traveler.marriott.com](https://traveler.marriott.com/venice/jw-venice-design/) | Marriott International |
+| `hotel-la-palma-stresa-01` | hotels/la-palma-stresa/01-garden-and-hotel.jpg | [hlapalma.it](https://www.hlapalma.it/en/) | Hotel La Palma |
+| `hotel-la-palma-stresa-02` | hotels/la-palma-stresa/02-lake-view-room.jpg | [hlapalma.it](https://www.hlapalma.it/en/rooms/) | Hotel La Palma |
+| `hotel-la-palma-stresa-03` | hotels/la-palma-stresa/03-restaurant.jpg | [hlapalma.it](https://www.hlapalma.it/en/concept/) | Hotel La Palma |
+| `hotel-la-palma-stresa-04` | hotels/la-palma-stresa/04-sky-bar.jpg | [hlapalma.it](https://www.hlapalma.it/en/sky-bar/) | Hotel La Palma |
+| `hotel-la-palma-stresa-05` | hotels/la-palma-stresa/05-lakeside-pool.jpg | [hlapalma.it](https://www.hlapalma.it/en/concept/) | Hotel La Palma |
+| `hotel-la-palma-stresa-06` | hotels/la-palma-stresa/06-sky-pool.jpg | [hlapalma.it](https://www.hlapalma.it/en/concept/) | Hotel La Palma |
+| `hotel-majestic-bologna-01` | hotels/majestic-bologna/01-terrace-over-bologna.jpg | [grandhotelmajestic.duetorrihotels.com](https://grandhotelmajestic.duetorrihotels.com/en/luxury-hotel-italy-5-stars-bologna/rooms-suites) | Grand Hotel Majestic già Baglioni |
+| `hotel-majestic-bologna-02` | hotels/majestic-bologna/02-junior-suite.jpg | [grandhotelmajestic.duetorrihotels.com](https://grandhotelmajestic.duetorrihotels.com/en/luxury-hotel-italy-5-stars-bologna/rooms-suites) | Grand Hotel Majestic già Baglioni |
+| `hotel-majestic-bologna-03` | hotels/majestic-bologna/03-frescoed-ceiling.jpg | [grandhotelmajestic.duetorrihotels.com](https://grandhotelmajestic.duetorrihotels.com/en/luxury-hotel-italy-5-stars-bologna/hotel) | Grand Hotel Majestic già Baglioni |
+| `hotel-majestic-bologna-04` | hotels/majestic-bologna/04-i-carracci.jpg | [grandhotelmajestic.duetorrihotels.com](https://grandhotelmajestic.duetorrihotels.com/en/luxury-hotel-italy-5-stars-bologna/i-carracci-restaurant) | Grand Hotel Majestic già Baglioni |
+| `hotel-majestic-bologna-05` | hotels/majestic-bologna/05-majestic-terraces.jpg | [grandhotelmajestic.duetorrihotels.com](https://grandhotelmajestic.duetorrihotels.com/en/luxury-hotel-italy-5-stars-bologna/majestic-terraces) | Grand Hotel Majestic già Baglioni |
+| `hotel-majestic-bologna-06` | hotels/majestic-bologna/06-bologna-from-above.jpg | [grandhotelmajestic.duetorrihotels.com](https://grandhotelmajestic.duetorrihotels.com/en/luxury-hotel-italy-5-stars-bologna/hotel) | Grand Hotel Majestic già Baglioni |
+| `hotel-mandarin-oriental-luzern-01` | hotels/mandarin-oriental-luzern/01-lakeside-palace.jpg | [mandarinoriental.com](https://www.mandarinoriental.com/en/luzern/palace/gallery) | Mandarin Oriental Hotel Group |
+| `hotel-mandarin-oriental-luzern-02` | hotels/mandarin-oriental-luzern/02-lake-view-junior-suite.jpg | [mandarinoriental.com](https://www.mandarinoriental.com/en/luzern/palace/gallery) | Mandarin Oriental Hotel Group |
+| `hotel-mandarin-oriental-luzern-03` | hotels/mandarin-oriental-luzern/03-lake-view-suite-terrace.jpg | [mandarinoriental.com](https://www.mandarinoriental.com/en/luzern/palace/gallery) | Mandarin Oriental Hotel Group |
+| `hotel-mandarin-oriental-luzern-04` | hotels/mandarin-oriental-luzern/04-colonnade-restaurant.jpg | [mandarinoriental.com](https://www.mandarinoriental.com/en/luzern/palace/gallery) | Mandarin Oriental Hotel Group |
+| `hotel-mandarin-oriental-luzern-05` | hotels/mandarin-oriental-luzern/05-spa-treatment-room.jpg | [mandarinoriental.com](https://www.mandarinoriental.com/en/luzern/palace/gallery) | Mandarin Oriental Hotel Group |
+| `hotel-mandarin-oriental-luzern-06` | hotels/mandarin-oriental-luzern/06-lucerne-at-dusk.jpg | [mandarinoriental.com](https://www.mandarinoriental.com/en/luzern/palace/gallery) | Mandarin Oriental Hotel Group |
+| `hotel-palazzo-cordusio-milan-01` | hotels/palazzo-cordusio-milan/01-palazzo-facade.jpg | [melia.com](https://www.melia.com/en/hotels/italy/milan/palazzo-cordusio-gran-melia) | Meliá Hotels International |
+| `hotel-palazzo-cordusio-milan-02` | hotels/palazzo-cordusio-milan/02-junior-suite.jpg | [melia.com](https://www.melia.com/en/hotels/italy/milan/palazzo-cordusio-gran-melia) | Meliá Hotels International |
+| `hotel-palazzo-cordusio-milan-03` | hotels/palazzo-cordusio-milan/03-giardino-cordusio.jpg | [melia.com](https://www.melia.com/en/hotels/italy/milan/palazzo-cordusio-gran-melia) | Meliá Hotels International |
+| `hotel-palazzo-cordusio-milan-04` | hotels/palazzo-cordusio-milan/04-rooftop-terrace.jpg | [melia.com](https://www.melia.com/en/hotels/italy/milan/palazzo-cordusio-gran-melia) | Meliá Hotels International |
+| `hotel-palazzo-cordusio-milan-05` | hotels/palazzo-cordusio-milan/05-spa-pool.jpg | [melia.com](https://www.melia.com/en/hotels/italy/milan/palazzo-cordusio-gran-melia) | Meliá Hotels International |
+| `hotel-palazzo-cordusio-milan-06` | hotels/palazzo-cordusio-milan/06-piazza-cordusio.jpg | [melia.com](https://www.melia.com/en/hotels/italy/milan/palazzo-cordusio-gran-melia) | Meliá Hotels International |
+| `hotel-quellenhof-lazise-01` | hotels/quellenhof-lazise/01-resort-pool.jpg | [quellenhof-lazise.it](https://www.quellenhof-lazise.it/en/quellenhof-lazise/impressions) | Quellenhof Luxury Resort Lazise |
+| `hotel-quellenhof-lazise-02` | hotels/quellenhof-lazise/02-suite-oliva.jpg | [quellenhof-lazise.it](https://www.quellenhof-lazise.it/en/quellenhof-lazise/impressions) | Quellenhof Luxury Resort Lazise |
+| `hotel-quellenhof-lazise-03` | hotels/quellenhof-lazise/03-suite-terrace-bathing-lake.jpg | [quellenhof-lazise.it](https://www.quellenhof-lazise.it/en/quellenhof-lazise/impressions) | Quellenhof Luxury Resort Lazise |
+| `hotel-quellenhof-lazise-04` | hotels/quellenhof-lazise/04-panorama-restaurant.jpg | [quellenhof-lazise.it](https://www.quellenhof-lazise.it/en/quellenhof-lazise/impressions) | Quellenhof Luxury Resort Lazise |
+| `hotel-quellenhof-lazise-05` | hotels/quellenhof-lazise/05-onda-spa.jpg | [quellenhof-lazise.it](https://www.quellenhof-lazise.it/en/quellenhof-lazise/impressions) | Quellenhof Luxury Resort Lazise |
+| `hotel-quellenhof-lazise-06` | hotels/quellenhof-lazise/06-bathing-lake.jpg | [quellenhof-lazise.it](https://www.quellenhof-lazise.it/en/quellenhof-lazise/impressions) | Quellenhof Luxury Resort Lazise |
+| `hotel-zermatterhof-01` | hotels/zermatterhof/01-carriage-and-hotel.jpg | [zermatterhof.ch](https://www.zermatterhof.ch/) | Grand Hotel Zermatterhof |
+| `hotel-zermatterhof-02` | hotels/zermatterhof/02-guest-room.jpg | [zermatterhof.ch](https://www.zermatterhof.ch/sleep/) | Grand Hotel Zermatterhof |
+| `hotel-zermatterhof-03` | hotels/zermatterhof/03-matterhorn-window.jpg | [zermatterhof.ch](https://www.zermatterhof.ch/sleep/) | Grand Hotel Zermatterhof |
+| `hotel-zermatterhof-04` | hotels/zermatterhof/04-prato-borni.jpg | [zermatterhof.ch](https://www.zermatterhof.ch/restaurants-and-bars/) | Grand Hotel Zermatterhof |
+| `hotel-zermatterhof-05` | hotels/zermatterhof/05-spa-pool.jpg | [zermatterhof.ch](https://www.zermatterhof.ch/spa/) | Grand Hotel Zermatterhof |
+| `hotel-zermatterhof-06` | hotels/zermatterhof/06-matterhorn.jpg | [zermatterhof.ch](https://www.zermatterhof.ch/) | Grand Hotel Zermatterhof |

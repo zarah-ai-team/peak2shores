@@ -171,6 +171,23 @@ export type JourneyFlyer = {
  */
 export type JourneyStatus = 'open' | 'waitlist' | 'sold-out' | 'past';
 
+/**
+ * One dated departure of a journey, a row of the Dates and rates table on its
+ * page. The table shows the month in each date ("Jun 19 – Jul 1, 2027") and
+ * filters the rows by year, or by month when every departure starts in the
+ * same year.
+ */
+export type JourneyDeparture = {
+  /** The first day, 'YYYY-MM-DD'. */
+  start: string;
+  /** The last day, 'YYYY-MM-DD'. */
+  end: string;
+  /** The rate for this departure per person, e.g. '$12,400'. Absent: the journey's from-price. */
+  price?: string;
+  /** Where this departure stands for booking. Absent: the journey's own status. */
+  status?: JourneyStatus;
+};
+
 export type Journey = {
   slug: string;
   /**
@@ -211,6 +228,18 @@ export type Journey = {
    * enter a month he has not confirmed.
    */
   departureMonths?: string[];
+  /**
+   * The dated departures, for the Dates and rates table on the journey's page
+   * (listed there by date) and the date choice of its group booking form.
+   * Absent or empty until Marc confirms them: the table then shows a single
+   * "Dates to be announced" row. Never enter a departure he has not confirmed.
+   *
+   * Only the table, the booking form and the Journeys page's Month filter read
+   * this list: when departures are entered, update `departure`,
+   * `departureWindow` and `departureISO` with them too, since the hero's
+   * Departure fact, the cards' facts and the journey's status read those.
+   */
+  departures?: JourneyDeparture[];
   group: string;
   groupMax: number;
   /** e.g. '$12,400'. Absent until Marc sets the rate. */
@@ -402,7 +431,8 @@ const allJourneys: Journey[] = [
         {
           place: 'Grindelwald',
           name: 'Hotel Bergwelt Grindelwald',
-          url: 'https://www.bergwelt.com/',
+          // The hotel's own site (www.bergwelt.com answers 503 to every request).
+          url: 'https://bergwelt-grindelwald.com/en/',
         },
         {
           place: 'Montreux',

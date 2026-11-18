@@ -30,8 +30,8 @@ const cardPhoto = (key: MediaKey, pos?: string) => {
  * it. Choosing a journey turns the globe to its region and draws its route,
  * with its stops and nights; "Stay tuned" draws back to the whole earth.
  *
- * It opened the page until the owner's note of 18 November 2026; it is now the
- * Map view of The Collection (JourneyCollection), which opens the page.
+ * It is the Map view of The Collection (JourneyCollection), which follows the
+ * page's half-and-half hero and its in-page menu.
  */
 export function JourneysMap({ journeys }: { journeys: Journey[] }) {
   const items: HeroJourney[] = journeys.map((j) => {

@@ -19,7 +19,10 @@ const CLOSING_MS = 400;
 /**
  * The header has four states, all in CSS (`.site-header` in globals.css):
  *
- * - transparent over a hero, frosted paper once the page is read (`data-solid`)
+ * - transparent over a hero, plain paper once the page is read (`data-solid`):
+ *   once the hero has passed behind the bar, or, over a hero marked
+ *   `data-header="solid-on-scroll"` (a journey page's), as soon as the page
+ *   moves, so the bar never lies over that hero's title
  * - one size everywhere: the same bar, logo and links on every page and at
  *   every scroll position (`data-compact` marks a moved page but changes no size)
  * - out of the way on a long scroll down, back on any scroll up (`data-hidden`),
@@ -77,8 +80,11 @@ export function Header({
       // time so a re-rendered page never leaves a detached node here.
       const hero = overHero ? document.querySelector<HTMLElement>('[data-hero]') : null;
 
-      // The header solidifies once the hero's bottom edge has passed behind it.
-      if (hero) {
+      // The header solidifies once the hero's bottom edge has passed behind it,
+      // or as soon as the page has moved over a hero that asks for that.
+      if (hero?.dataset.header === 'solid-on-scroll') {
+        setScrolled(y > 0);
+      } else if (hero) {
         const barHeight = barRef.current?.offsetHeight ?? 84;
         setScrolled(hero.getBoundingClientRect().bottom <= barHeight + 8);
       } else {

@@ -41,7 +41,7 @@ export function Faq({
     <section
       id={id}
       aria-labelledby={`${id}-title`}
-      className={`container-site scroll-mt-[calc(var(--nav-h-compact)+3.5rem)] pb-section-sm ${className}`}
+      className={`container-site pb-section-sm ${className}`}
     >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
       <div className="grid-site gap-y-block">

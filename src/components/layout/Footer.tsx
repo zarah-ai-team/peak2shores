@@ -15,8 +15,10 @@ const tap = 'pointer-coarse:flex pointer-coarse:min-h-11 pointer-coarse:items-ce
 /**
  * The page ends dark: navy-deep, with the closing line and the journal
  * sign-up, then the brand, the two footer groups and the contact column, then
- * the legal row. Phone, WhatsApp and the Seller of Travel number appear only
- * when they are set in `site.ts` — nothing is shown that hasn't been confirmed.
+ * the legal row. The contact column holds the email, the phone, WhatsApp and
+ * Instagram, and no "Book a call" (Ishika's notes of 9 November 2026). Phone,
+ * WhatsApp and the Seller of Travel number appear only when they are set in
+ * `site.ts` — nothing is shown that hasn't been confirmed.
  */
 export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
   return (
@@ -93,9 +95,6 @@ export function Footer({ nav }: { nav: Pick<Navigation, 'footer' | 'legal'> }) {
                   WhatsApp
                 </a>
               )}
-              <a href={site.bookingUrl ?? '/plan#contact'} className={`py-1.5 ${link} ${tap}`}>
-                Book a call
-              </a>
               {site.instagram && (
                 <a
                   href={site.instagram}

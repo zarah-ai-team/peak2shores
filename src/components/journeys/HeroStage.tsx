@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Fragment, useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 
 export type HeroPlace = {
   name: string;
@@ -21,21 +21,14 @@ const HERO_SIZES = '(max-width: 800px) 230vw, 100vw';
  * and along the route each place with its nights. Pointing at a place (or
  * tabbing to it) crossfades the photograph to that place; leaving returns it
  * to the journey's own. Only opacity changes: no zoom, no movement.
- *
- * `foot` is a quiet line that shares the route's row: at the right gutter on a
- * desktop, under the route on a tablet or phone (the journey page's "Want to
- * take this journey privately?", chat notes of 9 November 2026).
  */
 export function HeroStage({
   media,
   places,
-  foot,
   children,
 }: {
   media: { src?: string; alt?: string };
   places: HeroPlace[];
-  /** A line beside the route (under it on a tablet or phone). */
-  foot?: ReactNode;
   /** The breadcrumb, title and lead line, above the route. */
   children: ReactNode;
 }) {
@@ -90,35 +83,29 @@ export function HeroStage({
       <div className="hero-shade" aria-hidden />
       <div className="hero-c">
         {children}
-        {(places.length > 1 || foot) && (
+        {places.length > 1 && (
           <div className="hfoot">
-            {places.length > 1 && (
-              <ol className="hroute" aria-label="The route" onMouseLeave={() => setOn(-1)}>
-                {places.map((p, k) => (
-                  <li key={p.name} className={on === k ? 'on' : undefined}>
-                    <button
-                      type="button"
-                      aria-pressed={on === k}
-                      aria-label={`${p.name}, ${p.stay}: show a photograph of ${p.name}`}
-                      onMouseEnter={() => show(k)}
-                      onFocus={() => show(k)}
-                      onBlur={() => setOn(-1)}
-                      onClick={() => {
-                        setWarm(true);
-                        setOn((cur) => (cur === k ? -1 : k));
-                      }}
-                    >
-                      <span className="nm">{p.name}</span>
-                      <span className="ns">{p.stay}</span>
-                    </button>
-                  </li>
-                ))}
-              </ol>
-            )}
-            {/* Keyed, and so not a bare sibling of the route: a line that comes
-                from a server component can still be loading when this renders,
-                and React in development then asks it for a key. */}
-            <Fragment key="foot">{foot}</Fragment>
+            <ol className="hroute" aria-label="The route" onMouseLeave={() => setOn(-1)}>
+              {places.map((p, k) => (
+                <li key={p.name} className={on === k ? 'on' : undefined}>
+                  <button
+                    type="button"
+                    aria-pressed={on === k}
+                    aria-label={`${p.name}, ${p.stay}: show a photograph of ${p.name}`}
+                    onMouseEnter={() => show(k)}
+                    onFocus={() => show(k)}
+                    onBlur={() => setOn(-1)}
+                    onClick={() => {
+                      setWarm(true);
+                      setOn((cur) => (cur === k ? -1 : k));
+                    }}
+                  >
+                    <span className="nm">{p.name}</span>
+                    <span className="ns">{p.stay}</span>
+                  </button>
+                </li>
+              ))}
+            </ol>
           </div>
         )}
       </div>

@@ -30,14 +30,18 @@ export const flipbook: Record<string, { title: string; short?: string; tagline: 
 };
 
 /**
- * The deep colour a journey's card settles into below its photograph, drawn
- * from the place: alpine lake, Adriatic water, Venetian brick. The coming
- * journeys carry their own.
+ * The deep colour a journey's card settles into below its photograph: alpine
+ * lake for Swiss Elegance, Adriatic water for The Adriatic Collection and the
+ * house navy (#0e2f42) for Italy Uncovered. No brown anywhere (the owner's
+ * decision of 18 November 2026). Each holds every line on the card: white
+ * from 8.1:1 and the water-blue "Itinerary" label from 4.6:1 (on the navy,
+ * 14:1 and 7.9:1), and the navy stays apart from the other two side by side.
+ * The coming journeys carry their own.
  */
 export const journeyTint: Record<string, string> = {
   'swiss-elegance': '#1d4a66',
   'adriatic-collection': '#0f5767',
-  'the-italian-experience': '#6a3a2a',
+  'the-italian-experience': '#0e2f42',
 };
 
 /** Where a journey stands for booking, in words. */
@@ -78,13 +82,14 @@ export const comingSoon: ComingJourney[] = [
     places: ['Sicily'],
     region: 'Italy',
     tagline: 'A Timeless Mediterranean Love Affair',
-    tint: '#6b4b1c',
+    // The house charcoal, dark as Etna's stone.
+    tint: '#232422',
     dest: ['Italy'],
     inspire: ['Coast & Islands', 'Culture', 'Food & Wine'],
     photo: {
       src: '/images/g2.jpg',
       alt: 'Ripe lemons, some halved, in wooden crates',
-      tone: '#a58f6a',
+      tone: '#6c7f86',
     },
   },
   {
@@ -116,13 +121,14 @@ export const comingSoon: ComingJourney[] = [
     places: ['Southern Africa'],
     region: 'Southern Africa',
     tagline: 'Cape Town · Kruger · Victoria Falls · Botswana · Zambia',
-    tint: '#5a3620',
+    // The house navy-deep, the night over the bush.
+    tint: '#0a2232',
     dest: ['Southern Africa'],
     inspire: ['Nature', 'Culture'],
     photo: {
       src: '/images/drive/south-africa-safari-game-drive-sunset.jpg',
       alt: 'A safari vehicle under an acacia at sunset',
-      tone: '#a8784e',
+      tone: '#5d6b70',
     },
     more: [
       {

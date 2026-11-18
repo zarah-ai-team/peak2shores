@@ -1,12 +1,11 @@
 import type { Metadata } from 'next';
 import '@/components/journeys/journey.css';
-import { Faq } from '@/components/ui/Faq';
-import { journeyFaq } from '@/lib/data/faq';
 import { notFound } from 'next/navigation';
 import { Itinerary } from '@/components/journeys/Itinerary';
 import { JourneyMap } from '@/components/journeys/JourneyMap';
 import { JyItinerary } from '@/components/journeys/JourneyItinerary';
 import { JourneyTabs, type JourneyTab } from '@/components/journeys/JourneyTabs';
+import { JourneyFormsProvider } from '@/components/journeys/forms/JourneyForms';
 import {
   FromMarc,
   Gallery,
@@ -18,13 +17,16 @@ import {
   WhyThisJourney,
 } from '@/components/journeys/JourneySections';
 import {
+  departureOptions,
   JyDates,
   JyExtension,
   JyExtensionRow,
   JyHero,
   JyIntro,
-  JyStays,
 } from '@/components/journeys/JourneyEditorial';
+import { JyEssentials } from '@/components/journeys/JourneyEssentials';
+import { MoreToDiscover } from '@/components/journeys/MoreToDiscover';
+import { Stays as HotelStays } from '@/components/journeys/Stays';
 import {
   getJourneyBySlug,
   getJourneySlugs,
@@ -34,6 +36,7 @@ import {
   pageMetadata,
   type Journey,
 } from '@/lib/content';
+import { fromPriceLabel } from '@/lib/journeyPrice';
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -163,23 +166,44 @@ export default async function JourneyPage({ params }: Params) {
   const detail = journey.detail;
   const flyer = journey.flyer;
 
-  /* The A&K menu: Overview │ Itinerary │ (extension) │ Stays │ Dates & Rates.
-     A tab whose section has nothing to show yet is left out rather than
-     linking nowhere. The bar carries no button of its own (chat notes of
-     9 November 2026): "Request details" stays on the page itself, in the
-     Overview and under Dates & Rates. */
-  const hasStays =
-    !!flyer || !!detail || !!journey.itinerary?.some((d) => d.stay && d.stay !== '—');
+  /* The A&K menu: Overview │ Itinerary │ (extension) │ Stays │ Dates & Rates │
+     Essential information. A tab whose section has nothing to show yet is
+     left out rather than linking nowhere. The bar's inquiry block carries the
+     journey's days, group size and from-price, and "Make an inquiry" (Ishika's
+     notes of 9 November 2026, item 17a). */
+  const hasStays = flyer
+    ? flyer.hotels.length > 0
+    : !!detail || !!journey.itinerary?.some((d) => d.stay && d.stay !== '—');
   const tabs: JourneyTab[] = [
     { id: 'overview', label: 'Overview' },
     ...(days.length || flyer ? [{ id: 'itinerary', label: 'Itinerary' }] : []),
     ...(flyer?.extension ? [{ id: 'extension', label: flyer.extension.tab }] : []),
     ...(hasStays ? [{ id: 'stays', label: 'Stays' }] : []),
     { id: 'dates', label: 'Dates & Rates' },
+    { id: 'essentials', label: 'Essential information' },
   ];
+  const glance = {
+    days: `${journey.days} days`,
+    group: site.groupSize,
+    price: fromPriceLabel(journey),
+  };
+  const departures = departureOptions(journey);
 
+  /* The page in the order of Ishika's notes of 9 November 2026: hero, menu,
+     overview, itinerary, extension (if any), stays, dates and rates,
+     essential information, more to discover, footer. The provider holds the
+     page's pop-up forms: the inquiry, and the group and private booking
+     requests, each already knowing the journey. A journey written before the
+     flyers (`detail` or a working day by day) keeps its own sections up to
+     its stays; guests' words, where a journey has them, follow the stays. */
   return (
-    <>
+    <JourneyFormsProvider
+      journey={{
+        slug: journey.slug,
+        title: journey.title,
+        departures: departures.length ? departures : undefined,
+      }}
+    >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(trip) }} />
       <script
         type="application/ld+json"
@@ -187,14 +211,14 @@ export default async function JourneyPage({ params }: Params) {
       />
 
       <JyHero journey={journey} />
-      <JourneyTabs tabs={tabs} />
+      <JourneyTabs tabs={tabs} glance={glance} />
 
       {flyer ? (
         <>
           <JyIntro journey={journey} flyer={flyer} />
           <JyItinerary journey={journey} flyer={flyer} after={<JyExtensionRow flyer={flyer} />} />
-          <JyExtension journey={journey} flyer={flyer} />
-          <JyStays flyer={flyer} />
+          <JyExtension flyer={flyer} />
+          <HotelStays journey={journey} />
         </>
       ) : (
         <div id="overview">
@@ -230,9 +254,10 @@ export default async function JourneyPage({ params }: Params) {
         )
       )}
       {!flyer && <Stays journey={journey} />}
-      <JyDates journey={journey} />
-      <Faq items={[...journeyFaq, ...(flyer?.faq ?? [])]} className="pt-section-sm" />
       {detail && detail.quotes.length > 0 && <Guests detail={detail} />}
-    </>
+      <JyDates journey={journey} />
+      <JyEssentials />
+      <MoreToDiscover current={journey} />
+    </JourneyFormsProvider>
   );
 }
