@@ -15,7 +15,8 @@ import { circleConsent, circleConsentText } from '@/lib/forms';
  * A sign-up must carry `consent: true`: the visitor ticked the Privacy Policy
  * box under the field. Without it nothing is delivered, and the answer is 422
  * with the words the form shows under the box. Each sign-up carries its
- * record of consent: the sentence the visitor ticked (lib/forms) and the page
+ * record of consent: the line shown with the tick box, its label then
+ * "Unsubscribe at any time." (`circleConsentText` in lib/forms), and the page
  * the form stood on.
  *
  * Responses mirror /api/enquiry: `{ ok: true, delivered }` (delivered: false
@@ -60,9 +61,9 @@ export async function POST(request: Request) {
   }
 
   const source = readSource(body.value.source);
-  // The record of consent: the sentence the visitor ticked, and the page the
-  // form stood on. Both arrive from the browser, so only a flag and a short
-  // site path are read.
+  // The record of consent: the line shown with the tick box, and the page the
+  // form stood on. The tick and the page arrive from the browser, so only a
+  // flag and a short site path are read; the line's words come from lib/forms.
   const result = await deliver('subscription', {
     email,
     source,

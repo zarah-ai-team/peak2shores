@@ -62,7 +62,7 @@ const labelClass = 'font-ui text-[0.6875rem] font-medium uppercase tracking-[0.1
    named by the sentence alone, since the label around it also holds the
    link's "(opens in a new tab)". The error is the one /api/enquiry gives. */
 const consentName = `${privacyConsent.before} ${privacyConsent.policy.label}`;
-const consentError = 'Please tick the box to agree to the Privacy Policy.';
+const consentError = privacyConsent.unticked;
 
 /**
  * "Tell us a little. We'll call you, not the other way round."
@@ -77,9 +77,10 @@ const consentError = 'Please tick the box to agree to the Privacy Policy.';
  *
  * The browser checks the name and the email. The tick box starts clear and
  * nothing sends until it is ticked: a send that finds it clear puts an error
- * line under it, read out at once, and focus moves to the box unless the
- * browser has a name or an email to point to first. The line goes as soon as
- * the box is ticked.
+ * line under it, and focus moves to the box unless the browser has a name or
+ * an email to point to first. The line is read out politely, so it waits for
+ * what the browser says about those fields. It goes as soon as the box is
+ * ticked.
  *
  * The status line is a persistent live region so failures are announced; on
  * success focus moves to the confirmation heading. The confirmation never
@@ -122,11 +123,13 @@ export function EnquiryForm({
   }, [status]);
 
   /* The box is `required`, so the browser's check before a send finds it
-     clear. Its own error line answers instead of the browser's bubble. The
-     browser moves focus to a name or an email it found wrong; when the box is
-     the only field wrong, focus moves to the box. */
+     clear. Its own error line answers instead of the browser's bubble, and the
+     form's state follows the box, which a browser can change behind React's
+     back. The browser moves focus to a name or an email it found wrong; when
+     the box is the only field wrong, focus moves to the box. */
   function onConsentInvalid(event: React.FormEvent<HTMLInputElement>) {
     event.preventDefault();
+    setConsent(false);
     setConsentTried(true);
     const box = event.currentTarget;
     if (box.form?.querySelector('input:invalid, select:invalid, textarea:invalid') === box) {
@@ -144,7 +147,10 @@ export function EnquiryForm({
     event.preventDefault();
     if (status === 'sending') return;
     // Nothing sends without the tick, even where the browser skipped its check.
-    if (!consent) {
+    // The box as it shows decides, and the form's state follows it.
+    const ticked = consentRef.current?.checked ?? consent;
+    if (ticked !== consent) setConsent(ticked);
+    if (!ticked) {
       setConsentTried(true);
       consentRef.current?.focus();
       return;
@@ -170,7 +176,7 @@ export function EnquiryForm({
         party,
         journey,
         // The Privacy Policy box, ticked: the route refuses a request without it.
-        consent,
+        consent: ticked,
         // Where this visitor first came from — stored with the enquiry.
         source: readFirstTouch(),
         // Honeypot: a field no person sees or fills. The server drops
@@ -223,8 +229,34 @@ export function EnquiryForm({
   })();
 
   return (
-    <section id="enquire" aria-label={headline} className="bg-stone py-section-sm text-ink">
-      <div data-tone="stone" className="container-site grid-site gap-y-block">
+    <section
+      id="enquire"
+      aria-label={headline}
+      className="relative bg-stone py-section-sm text-ink"
+    >
+      {/* `#contact`, where the site's Contact and "Book a call" links land:
+          an empty mark where the content begins, so from 1024px the top of
+          the form, with the words beside it. Not the "Prefer to talk?" lines
+          there: they stay pinned beside the form, so a jump to them would
+          land wherever they were pinned, past the top of the form. The mark
+          is kept out of the slide-in that blocks get as they scroll into view
+          (`data-no-settle`): a jump from far up the page then lands on where
+          the content rests, not where its slide-in still holds it.
+          On a touch screen below 1024px, where the words come first and
+          nothing slides in, CSS anchor positioning moves the mark onto the
+          "Prefer to talk?" lines, so the ways to talk and the start of the
+          form share the screen, on a phone held sideways too. A browser
+          without anchor positioning keeps the mark where the content
+          begins. */}
+      <div
+        id="contact"
+        data-no-settle
+        className="max-lg:pointer-coarse:absolute max-lg:pointer-coarse:inset-x-0 max-lg:pointer-coarse:top-[anchor(--prefer-to-talk_top)]"
+      />
+      {/* `data-fab-clear`: the floating "Connect with our team" steps aside
+          while the form and the ways to talk pass under it, rather than sit
+          over their fields and links. */}
+      <div data-tone="stone" className="container-site grid-site gap-y-block" data-fab-clear>
         {/* On a desktop the words stay beside the card while the form is filled
             in, clear of the header and a journey's pinned tab bar. */}
         <Reveal className="col-span-4 flex flex-col gap-stack md:col-span-8 lg:sticky lg:top-[calc(var(--nav-h-compact)+6rem)] lg:col-span-5 lg:self-start">
@@ -234,10 +266,7 @@ export function EnquiryForm({
           </SectionLabel>
           <h2 className="h2">{headline}</h2>
           <p className="prose-body measure-lead">{intro ?? defaultIntro}</p>
-          <div
-            id="contact"
-            className="mt-2 flex flex-col gap-3 border-t border-[rgb(20_29_36/0.14)] pt-6"
-          >
+          <div className="mt-2 flex flex-col gap-3 border-t border-[rgb(20_29_36/0.14)] pt-6 [anchor-name:--prefer-to-talk]">
             <span className="kicker-sm">Prefer to talk?</span>
             <a
               href={`mailto:${site.email}`}
@@ -292,7 +321,23 @@ export function EnquiryForm({
               </div>
             ) : (
               <Reveal delay={0.1}>
-                <form onSubmit={onSubmit} className="flex flex-col">
+                {/* The page's script sends the form. Pressed before it has
+                    run, or without it, the browser sends the form itself:
+                    `method="post"` keeps what was typed out of the address
+                    (a GET would put it there, in the history and in the
+                    host's logs), and it comes back to this form. Nothing is
+                    delivered that way, so without a script the form says so
+                    first. */}
+                <form onSubmit={onSubmit} method="post" action="#contact" className="flex flex-col">
+                  <noscript>
+                    <p className="prose-body-sm mb-7">
+                      This form needs JavaScript to send. Please email{' '}
+                      <a href={`mailto:${site.email}`} className="prose-link">
+                        {site.email}
+                      </a>{' '}
+                      instead.
+                    </p>
+                  </noscript>
                   {journeyTitle && (
                     <p className="mb-7 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-[rgb(20_29_36/0.08)] pb-5">
                       <span className="kicker-sm">Inquiring about</span>
@@ -439,15 +484,25 @@ export function EnquiryForm({
                     </Field>
 
                     {/* The Privacy Policy tick box: a quiet line, 44px tall to
-                        a finger. Its error line stays in the page while empty,
-                        so what it comes to say is read out. */}
+                        a finger, only as wide as the box and its words, so a
+                        press on the empty space beside them ticks nothing. The
+                        box starts clear on every visit, as in the pop-ups:
+                        `autoComplete="off"` keeps a browser that reloads the
+                        page on Back from bringing back a tick the form's state
+                        cannot see. Under a finger the link is a 44px target of
+                        its own, centred on its words, so a press just above or
+                        below them opens the policy rather than ticking the
+                        box. Its error line stays in the page while empty, so
+                        what it comes to say is read out, politely, after what
+                        the browser says about a name or an email. */}
                     <div className="flex min-w-0 flex-col sm:col-span-2">
-                      <label className="flex min-h-11 cursor-pointer items-center gap-3 font-ui text-[0.875rem] leading-[1.5] text-body pointer-coarse:min-h-[44px]">
+                      <label className="flex min-h-11 cursor-pointer items-center gap-3 self-start font-ui text-[0.875rem] leading-[1.5] text-body pointer-coarse:min-h-[44px]">
                         <input
                           ref={consentRef}
                           type="checkbox"
                           name="consent"
                           required
+                          autoComplete="off"
                           aria-label={consentName}
                           checked={consent}
                           onChange={(e) => setConsent(e.target.checked)}
@@ -466,7 +521,7 @@ export function EnquiryForm({
                             href={privacyConsent.policy.href}
                             target="_blank"
                             rel="noopener"
-                            className="inline-flex items-baseline gap-1 text-ink underline decoration-acqua-deep decoration-1 underline-offset-[0.22em] transition-colors duration-300 hover:text-acqua-text hover:decoration-current"
+                            className="relative inline-flex items-baseline gap-1 text-ink underline decoration-acqua-deep decoration-1 underline-offset-[0.22em] transition-colors duration-300 hover:text-acqua-text hover:decoration-current pointer-coarse:after:absolute pointer-coarse:after:inset-x-0 pointer-coarse:after:top-1/2 pointer-coarse:after:h-11 pointer-coarse:after:-translate-y-1/2"
                           >
                             {privacyConsent.policy.label}
                             <span className="sr-only"> (opens in a new tab)</span>
@@ -476,7 +531,7 @@ export function EnquiryForm({
                       </label>
                       <p
                         id={consentErrorId}
-                        role="alert"
+                        aria-live="polite"
                         className="m-0 flex items-start gap-[0.4375rem] font-ui text-[0.8125rem] leading-[1.45] text-error [&:not(:empty)]:mt-2"
                       >
                         {consentMissing && (

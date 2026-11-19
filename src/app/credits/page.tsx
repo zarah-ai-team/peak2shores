@@ -86,7 +86,16 @@ function CreditTable({
           <tr key={row.slot} className="grid gap-1 border-b border-line py-4 sm:table-row sm:py-0">
             <td className="prose-body-sm min-w-0 [overflow-wrap:anywhere] sm:py-4 sm:pr-6 sm:align-top">
               {row.pageUrl ? (
-                <a href={row.pageUrl} rel="noopener noreferrer license" className="prose-link">
+                // A stock photograph's page holds its license; the page a
+                // hotel's photograph was taken from does not, so it is a plain
+                // link.
+                <a
+                  href={row.pageUrl}
+                  rel={
+                    row.source === 'hotel' ? 'noopener noreferrer' : 'noopener noreferrer license'
+                  }
+                  className="prose-link"
+                >
                   {titleOf(row)}
                 </a>
               ) : (

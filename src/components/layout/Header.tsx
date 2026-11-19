@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSelectedLayoutSegments } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { SiteMenu as SiteMenuData } from '@/lib/content/types';
 import { site, isHeroRoute, type NavItem } from '@/lib/site';
@@ -39,6 +39,15 @@ const CLOSING_MS = 400;
  * Both logo files are in the tree; CSS cross-fades between them, so the swap
  * never waits on a render. Nothing here reads the window to decide what to
  * render, so the server and the browser always draw the same bar.
+ *
+ * What the bar draws (over a hero or not, the spacer, the current link) is
+ * read from the route the root layout is showing, not from the address. The
+ * address can differ between the server and the browser: Vercel renders the
+ * hourly rebuild of the homepage under "/index", so usePathname() read
+ * "/index" on the server and "/" in the browser, and the cached homepage got
+ * a solid bar and a spacer over the film (found 19 Nov 2026). The route is
+ * the same on both sides: "/" on the homepage, "/journeys/<slug>" on a
+ * journey. The address still drives the effects, which run in the browser.
  */
 export function Header({
   primary,
@@ -50,7 +59,8 @@ export function Header({
   menu: SiteMenuData;
 }) {
   const pathname = usePathname() ?? '/';
-  const overHero = isHeroRoute(pathname);
+  const route = `/${useSelectedLayoutSegments().join('/')}`;
+  const overHero = isHeroRoute(route);
   const [scrolled, setScrolled] = useState(!overHero);
   const [compact, setCompact] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -217,8 +227,7 @@ export function Header({
           <div className="header-inline hidden items-center lg:flex">
             <nav aria-label="Primary" className="flex gap-[clamp(1.25rem,1.695vw,2rem)]">
               {primary.map((item) => {
-                const active =
-                  item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
+                const active = item.href === '/' ? route === '/' : route.startsWith(item.href);
                 return (
                   <Link
                     key={item.href}
@@ -234,7 +243,7 @@ export function Header({
 
             <Link
               href={cta.href}
-              aria-current={pathname.startsWith(cta.href) ? 'page' : undefined}
+              aria-current={route.startsWith(cta.href) ? 'page' : undefined}
               className="header-cta ml-[clamp(1.5rem,2.54vw,3rem)] inline-flex min-h-(--btn-h) items-center border border-current px-[clamp(1rem,1.17vw,1.375rem)] font-ui text-(length:--type-button) font-medium uppercase leading-none tracking-[0.16em] transition-colors duration-300"
             >
               {cta.label}

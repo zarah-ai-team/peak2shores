@@ -25,12 +25,14 @@ type Edge = 'start' | 'end' | 'both';
  * (Ishika's notes of 9 November 2026, item 17a; the owner's decisions of
  * 18 November): from 1024px, at its right end, the journey's days, group size
  * and from-price and the "Make an inquiry" button; on a phone or a tablet, a
- * slim bar fixed to the foot of the screen with the days, the from-price and
- * the same button, shown once the hero has gone and hidden while the footer is
- * on the screen, so that there the tabs keep the menu bar's whole width. That
- * bar is marked `data-fab-away`, so the floating "Connect with our team" steps
- * aside while it shows. The button opens the page's inquiry pop-up, so it must
- * sit inside the page's `JourneyFormsProvider`.
+ * slim bar fixed to the foot of the screen with the days, the group size, the
+ * from-price and the same button, shown once the hero has gone and hidden
+ * while the footer is on the screen, so that there the tabs keep the menu
+ * bar's whole width. That bar is marked `data-fab-away`, so the floating
+ * "Connect with our team" steps aside while it shows. On a short screen (a
+ * phone held sideways) the slim bar stays down and the button joins the tabs
+ * instead, as from 1024px (journey-editorial.css). The button opens the page's
+ * inquiry pop-up, so it must sit inside the page's `JourneyFormsProvider`.
  *
  * Without `glance`, a link button sits at the right of the bar only where
  * `cta` is given.
@@ -236,6 +238,7 @@ export function JourneyTabs({
         <div className="jt-ibar" data-on={barOn ? '' : undefined} data-fab-away>
           <ul className="jt-glance" aria-label="This journey at a glance">
             <li>{glance.days}</li>
+            <li>{glance.group}</li>
             <li className="v">{glance.price}</li>
           </ul>
           <OpenJourneyForm kind="enquiry" className="jt-pill">

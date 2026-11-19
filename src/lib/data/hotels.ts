@@ -565,6 +565,7 @@ export const hotels: HotelRecord[] = [
           alt: 'A suite’s private terrace among plants, Bologna’s red rooftops and towers beyond',
           width: 1440,
           height: 800,
+          tab: 'hotel',
         },
         {
           src: '/images/hotels/majestic-bologna/02-junior-suite.jpg',
@@ -578,7 +579,6 @@ export const hotels: HotelRecord[] = [
           alt: 'A painted Renaissance ceiling with mythological figures in an ornate frame',
           width: 1440,
           height: 800,
-          tab: 'hotel',
           source:
             'https://grandhotelmajestic.duetorrihotels.com/en/luxury-hotel-italy-5-stars-bologna/hotel',
         },
@@ -698,6 +698,10 @@ export const hotels: HotelRecord[] = [
       {
         id: 'hotel',
         text: 'A resort that fills its own island, Isola delle Rose, in the southern Venetian lagoon. Its historic buildings, once a hospital, were redesigned by Matteo Thun, and a park with old olive trees surrounds them.',
+      },
+      {
+        id: 'rooms',
+        text: 'Rooms, suites and villas that Matteo Thun designed to be spacious and full of light, as part of the resort’s focus on wellness.',
       },
       {
         id: 'dining',

@@ -301,10 +301,11 @@
   stroke: currentColor;
   stroke-width: 1.6;
 }
-/* A touch screen at laptop width has the smaller root size: the dots and the
-   arrows keep 44px to the finger. */
+/* A finger gets 44px each way: a touch screen keeps the full root size, where
+   the dots are only 1.75rem (28px) square. */
 @media (pointer: coarse) {
   .jxh-dots button {
+    min-width: 44px;
     height: 44px;
   }
   .jxh-arrow {

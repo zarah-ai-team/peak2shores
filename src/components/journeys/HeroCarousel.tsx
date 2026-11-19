@@ -2,7 +2,16 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Fragment, useEffect, useRef, useState, type PointerEvent } from 'react';
+import {
+  Fragment,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type PointerEvent,
+} from 'react';
 import {
   geoBounds,
   geoDistance,
@@ -14,6 +23,7 @@ import {
 import { feature } from 'topojson-client';
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
 import type { GeometryCollection, Topology } from 'topojson-specification';
+import { ShownSlugs } from './shownSlugs';
 
 type LonLat = [number, number];
 
@@ -156,6 +166,10 @@ const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2
  * it, so a click opens the journey. The globe is chosen by the dots and the
  * arrows, by resting the pointer on a card or reaching it with the keyboard,
  * and on a touch screen by the card the rail is swiped to.
+ *
+ * In The Collection only the journeys its filters let through are shown
+ * (ShownSlugs), in their own order, with "Stay tuned" still last; when the
+ * filters change them, the carousel starts again from the first.
  */
 export function HeroCarousel({
   journeys,
@@ -167,20 +181,31 @@ export function HeroCarousel({
   /** The photograph on the last card, "Stay tuned". */
   soonPhoto: CardPhoto;
 }) {
-  const [active, setActive] = useState(0);
+  const only = useContext(ShownSlugs);
+  const list = useMemo(
+    () => (only ? journeys.filter((x) => only.includes(x.slug)) : journeys),
+    [journeys, only],
+  );
+  /* The chosen card, with the set of journeys it was chosen in: the moment
+     the filters leave a new set, its first card is the chosen one, so the
+     choice never points past the new set. */
+  const ids = list.map((x) => x.slug).join(' ');
+  const [pick, setPick] = useState({ ids, k: 0 });
+  const active = pick.ids === ids ? pick.k : 0;
+  const setActive = useCallback((k: number) => setPick({ ids, k }), [ids]);
   const [ready, setReady] = useState(false);
   const track = useRef<HTMLUListElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
-  const goTo = useRef<(k: number) => void>(() => {});
+  const goTo = useRef<(next: HeroJourney | null) => void>(() => {});
   /* The card in view, for the swipe to read without re-binding its listener. */
   const shown = useRef(0);
   /* True while the rail is being scrolled by the arrows or the dots. */
   const led = useRef(false);
   const rest = useRef(0);
 
-  const n = journeys.length + 1; // + "Stay tuned"
-  const soon = active === journeys.length;
-  const j = soon ? null : journeys[active];
+  const n = list.length + 1; // + "Stay tuned"
+  const soon = active === list.length;
+  const j = soon ? null : (list[active] ?? null);
 
   useEffect(() => {
     const el = canvas.current;
@@ -483,8 +508,8 @@ export function HeroCarousel({
       if (!raf) raf = requestAnimationFrame(tick);
     };
 
-    goTo.current = (k: number) => {
-      journey = journeys[k] ?? null;
+    goTo.current = (next) => {
+      journey = next;
       target = journey ? frame(journey.route, w, h) : { ...EARTH, lon: view.lon + 8 };
       spin = !journey && !still;
       progress = 0;
@@ -554,24 +579,53 @@ export function HeroCarousel({
       ro.disconnect();
       io.disconnect();
     };
-  }, [journeys]);
+  }, []);
 
-  /* `journeys` too: when the page's data is refreshed the globe above is set
-     up again from the whole earth, and must be turned back to the chosen
-     journey rather than left there under its caption. */
+  /* The globe turns to the chosen journey whenever it changes: by a dot, an
+     arrow or a card, or by the filters leaving a new set of journeys. Set up
+     once, it keeps the canvas's last size while the Map view is hidden, so a
+     change made from the Cards view is framed as well. */
   useEffect(() => {
-    if (ready) goTo.current(active);
-  }, [active, ready, journeys]);
+    if (ready) goTo.current(j);
+  }, [j, ready]);
 
   useEffect(() => {
     shown.current = active;
   }, [active]);
 
+  /* A new set of journeys shows from its first card, the one now chosen; the
+     choice is kept with the new set, so a return to an earlier set starts
+     from its first card too. The rail goes back to its start with it: at
+     once while it shows, or, when the filters changed from the Cards view,
+     as the Map view opens again. Hidden, the rail reads 0, and on showing
+     the browser gives it back the offset it had, where the swipe would
+     choose another card. */
+  useEffect(() => {
+    setPick((p) => (p.ids === ids ? p : { ids, k: 0 }));
+    const box = track.current;
+    if (!box) return;
+    const home = () => {
+      if (box.scrollLeft > 1) box.scrollTo({ left: 0 });
+    };
+    if (box.clientWidth) {
+      home();
+      return;
+    }
+    const shows = new ResizeObserver(() => {
+      if (!box.clientWidth) return;
+      shows.disconnect();
+      home();
+    });
+    shows.observe(box);
+    return () => shows.disconnect();
+  }, [ids]);
+
   /* On a touch screen there is no pointer to rest on a card and a tap opens
      the journey, so the globe follows the rail: once a swipe settles, the
      first card wholly in view is the chosen one (unless the chosen one still
      is). The rail is the cards' offset parent, so offsetLeft is a card's
-     place in it. */
+     place in it. Bound again for each new set of journeys, whose card the
+     swipe chooses. */
   useEffect(() => {
     const box = track.current;
     if (!box) return;
@@ -601,7 +655,7 @@ export function HeroCarousel({
       window.clearTimeout(timer);
       window.clearTimeout(rest.current);
     };
-  }, []);
+  }, [setActive]);
 
   /* A pointer that comes to rest on a card chooses it; one only passing over
      on its way down the page does not. */
@@ -645,7 +699,11 @@ export function HeroCarousel({
         </span>
         {j && (
           <p className="sr-only">
-            {j.stops.map((s) => (s.nights ? `${s.name}, ${s.nights} nights` : s.name)).join('; ')}
+            {j.stops
+              .map((s) =>
+                s.nights ? `${s.name}, ${s.nights} ${s.nights === 1 ? 'night' : 'nights'}` : s.name,
+              )
+              .join('; ')}
           </p>
         )}
         <p className="jxh-soon" aria-hidden={!soon}>
@@ -657,7 +715,9 @@ export function HeroCarousel({
           rather than cover the journey arrows, the only way to change the
           journey on a phone. */}
       <div className="jxh-bar" data-fab-clear>
-        <p className="jxh-count">{journeys.length} journeys · more coming</p>
+        <p className="jxh-count">
+          {list.length} {list.length === 1 ? 'journey' : 'journeys'} · more coming
+        </p>
         <div className="jxh-nav">
           <div className="jxh-dots" role="group" aria-label="Choose a journey">
             {Array.from({ length: n }, (_, k) => (
@@ -665,7 +725,7 @@ export function HeroCarousel({
                 key={k}
                 type="button"
                 className={k === active ? 'on' : undefined}
-                aria-label={k < journeys.length ? journeys[k].title : 'Stay tuned'}
+                aria-label={k < list.length ? list[k].title : 'Stay tuned'}
                 aria-pressed={k === active}
                 onClick={() => go(k)}
               >
@@ -697,7 +757,7 @@ export function HeroCarousel({
       </div>
 
       <ul className="jxh-cards" ref={track} data-rail>
-        {journeys.map((x, k) => (
+        {list.map((x, k) => (
           <li key={x.slug}>
             <article
               className={`jxh-card${k === active ? ' on' : ''}`}
@@ -729,7 +789,7 @@ export function HeroCarousel({
         <li>
           <article
             className={`jxh-card${soon ? ' on' : ''}`}
-            onPointerEnter={(e) => point(e, journeys.length)}
+            onPointerEnter={(e) => point(e, list.length)}
             onPointerLeave={unpoint}
             aria-labelledby="jxh-c-soon"
           >
@@ -738,7 +798,7 @@ export function HeroCarousel({
             <h3 id="jxh-c-soon">More journeys are on the way</h3>
             <p className="facts">New destinations are being prepared now.</p>
             <p className="foot">
-              <Link href="/#circle" onFocus={() => setActive(journeys.length)}>
+              <Link href="/#circle" onFocus={() => setActive(list.length)}>
                 Join The Circle
                 {arrow}
               </Link>

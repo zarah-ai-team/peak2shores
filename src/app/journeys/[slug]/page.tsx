@@ -58,10 +58,18 @@ function describe(journey: Journey) {
   );
 }
 
+/* A journey address that leads nowhere shows the 404 page: it takes that
+   page's title and stays out of search, as not-found.tsx does, rather than
+   falling back to the homepage's title. */
+const notFoundMetadata: Metadata = {
+  title: 'Something went off course',
+  robots: { index: false, follow: false },
+};
+
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const journey = await getJourneyBySlug(slug);
-  if (!journey) return {};
+  if (!journey) return notFoundMetadata;
 
   const base = pageMetadata({
     title: journey.seo?.title ?? journey.title,

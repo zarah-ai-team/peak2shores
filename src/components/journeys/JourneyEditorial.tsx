@@ -69,10 +69,11 @@ function placesOf(j: Journey): HeroPlace[] {
     Travel on the Plan page, as every private-travel link on the site does. */
 const PRIVATE_HREF = '/plan#private';
 
-/** Where a journey stands, for its own page: until dates are set, "Coming soon". */
+/** Where a journey stands for booking, in the words its card and the home
+    slider use: "Now booking" while it is open, dates set or not (booking
+    requests are taken before the dates are announced). */
 export function statusOf(journey: Journey) {
-  if (journey.status && journey.status !== 'open') return statusLabel[journey.status] ?? 'Departed';
-  return journey.departureISO ? 'Now booking' : 'Coming soon';
+  return statusLabel[journey.status ?? 'open'] ?? 'Departed';
 }
 
 /* -- Departures ----------------------------------------------------------------- */

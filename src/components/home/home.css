@@ -1206,11 +1206,21 @@
     height: 33.75rem;
   }
 }
-/* On a touch screen every button keeps a full 44px target. */
+/* On a touch screen every button keeps a full 44px target, the film's
+   pause button and its four clip dots included. Set here for every width:
+   the hero's own sizes outrank the 44px `.hc .circ` rule further down. */
 @media (pointer: coarse) {
   .hc-hero .ctas .btn,
   .hc-fab .fab-btn {
     min-height: 44px;
+  }
+  .hc-hero .vctl .circ {
+    width: 44px;
+    height: 44px;
+  }
+  .hc-hero .vdot {
+    width: 44px;
+    height: 44px;
   }
 }
 @media (max-width: 900px) {
@@ -1296,6 +1306,16 @@
   .hc-hero .copy .eb i,
   .hc-hero .copy .eb::after {
     display: none;
+  }
+}
+/* A phone held sideways (or any screen in landscape up to 960px): the film's
+   controls move up under the header too, as on an upright phone or tablet.
+   Low in the frame they share the buttons' row, and below about 940px the
+   place name ran into "Discover Peaks2Shores". */
+@media (max-width: 960px) and (orientation: landscape) {
+  .hc-hero .vctl {
+    bottom: auto;
+    top: calc(var(--nav-h) + 0.75rem);
   }
 }
 

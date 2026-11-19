@@ -60,6 +60,32 @@ function sitePath(value: unknown) {
   return path && /^\/(?!\/)[\w\-./]*$/.test(path) ? path : undefined;
 }
 
+/** An http(s) address's origin (`https://example.com`), or undefined. */
+function webOrigin(value: string | null | undefined) {
+  if (!value) return undefined;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' || url.protocol === 'http:' ? url.origin : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * The address the visitor sent the form from, for the "Page" link in the
+ * team's email: the site answers at more than one address, and the link
+ * should open the page that was on screen. It is the Origin the browser sent
+ * with the request when that names the host the request reached (so a forged
+ * Origin is not taken), else the address the request reached, else the
+ * site's own.
+ */
+function requestOrigin(request: Request, fallback: string) {
+  const origin = webOrigin(request.headers.get('origin'));
+  const host = request.headers.get('host');
+  if (origin && host && new URL(origin).host === host) return origin;
+  return webOrigin(request.url) ?? fallback;
+}
+
 function refuse(error: string) {
   return NextResponse.json({ error }, { status: 422 });
 }
@@ -83,7 +109,7 @@ export async function POST(request: Request) {
   }
 
   if (data.form === undefined) return planEnquiry(data);
-  if (isJourneyForm(data.form)) return journeyRequest(data.form, data);
+  if (isJourneyForm(data.form)) return journeyRequest(data.form, data, request);
   return refuse('This form could not be sent. Please email us instead.');
 }
 
@@ -125,7 +151,7 @@ async function planEnquiry(data: Record<string, unknown>) {
   if (!EMAIL_PATTERN.test(email)) {
     return refuse('A valid email address is required.');
   }
-  if (data.consent !== true) return refuse('Please tick the box to agree to the Privacy Policy.');
+  if (data.consent !== true) return refuse(privacyConsent.unticked);
 
   const result = await deliver('enquiry', {
     form: 'plan',
@@ -175,8 +201,13 @@ async function planEnquiry(data: Record<string, unknown>) {
  * so the request names it as the site does, whatever the page sent; the type
  * (group or private) is the form itself. The refusals are the sentences the
  * forms show beside their fields, for a browser that skipped those checks.
+ * The page's full address is built on the address the visitor was on.
  */
-async function journeyRequest(kind: JourneyFormKind, data: Record<string, unknown>) {
+async function journeyRequest(
+  kind: JourneyFormKind,
+  data: Record<string, unknown>,
+  request: Request,
+) {
   const [site, journeys] = await Promise.all([getSiteSettings(), getJourneys()]);
 
   const slug = text(data.slug, 120);
@@ -219,7 +250,7 @@ async function journeyRequest(kind: JourneyFormKind, data: Record<string, unknow
   if (guests !== undefined && guests > site.maxGuests) {
     return refuse(`For a larger party, please write to us at ${site.email}.`);
   }
-  if (data.consent !== true) return refuse('Please tick the box to agree to the Privacy Policy.');
+  if (data.consent !== true) return refuse(privacyConsent.unticked);
 
   const form = JOURNEY_FORMS[kind];
   const subject =
@@ -242,7 +273,7 @@ async function journeyRequest(kind: JourneyFormKind, data: Record<string, unknow
     room: booking ? room : undefined,
     notes,
     page,
-    pageUrl: page ? `${site.url}${page}` : undefined,
+    pageUrl: page ? `${requestOrigin(request, site.url)}${page}` : undefined,
     consent: { statement: privacyConsentText, policy: privacyConsent.policy.href },
     source,
   });

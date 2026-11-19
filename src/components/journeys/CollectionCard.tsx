@@ -21,7 +21,8 @@ const itinerary = (stops: string[]) => stops.map((s) => s.replaceAll(' ', NBSP))
  * A journey as a product card: its photographs to browse at the top, the card
  * settling into the colour of the place, the region and booking state on it,
  * then the name, the tagline, the line, the itinerary (the places in order,
- * as on A&K's cards), the facts as pills, the price line and a white button.
+ * as on A&K's cards), the facts as pills, the price line and a white button,
+ * "View journey".
  * The pills, after the chat notes of 9 November 2026: the days and, once Marc
  * sets it, the departure. No "Small group" pill. The price line comes from
  * fromPriceLabel(): "From $12,400 per person", or "Rates to be announced"
@@ -44,7 +45,9 @@ export function CollectionCard({
   const [shot, setShot] = useState(0);
   const href = c.soon ? '/plan#contact' : `/journeys/${c.slug}`;
   const imgs = compact ? c.imgs.slice(0, 1) : c.imgs;
-  const cta = c.soon ? 'Register your interest' : compact ? 'View journey' : 'View the journey';
+  // One label on every card, The Collection's and More to discover's alike:
+  // "View journey", the words of Ishika's notes (item 26).
+  const cta = c.soon ? 'Register your interest' : 'View journey';
 
   return (
     <article

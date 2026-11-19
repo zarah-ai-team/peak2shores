@@ -31,20 +31,36 @@ const reachable = (el: HTMLElement) =>
 const LEAVE_MS = 200;
 
 /**
+ * How many dialogs hold the page, and the root's own styles from before the
+ * first of them. Every dialog shares the one count, so the page is let go only
+ * when the last hold is: a dialog opened while another is still closing (the
+ * browser's `close` event comes a moment after close()) neither loses a hold
+ * nor lets the page go behind it.
+ */
+let holds = 0;
+let before = { overflow: '', overscrollBehavior: '' };
+
+/**
  * Holds the page still while a dialog is open, as the site menu does: the root
  * stops scrolling (the touch and keyboard scrolling of every browser) and the
  * smooth wheel scrolling of SmoothScroll is told to stop. Returns what lets the
- * page go again.
+ * page go again, which counts once however often it is called.
  */
 function holdPage() {
   const root = document.documentElement;
-  const { overflow, overscrollBehavior } = root.style;
-  root.style.overflow = 'hidden';
-  root.style.overscrollBehavior = 'none';
-  window.dispatchEvent(new Event('p2s:scroll-lock'));
+  if (holds++ === 0) {
+    before = { overflow: root.style.overflow, overscrollBehavior: root.style.overscrollBehavior };
+    root.style.overflow = 'hidden';
+    root.style.overscrollBehavior = 'none';
+    window.dispatchEvent(new Event('p2s:scroll-lock'));
+  }
+  let held = true;
   return () => {
-    root.style.overflow = overflow;
-    root.style.overscrollBehavior = overscrollBehavior;
+    if (!held) return;
+    held = false;
+    if (--holds > 0) return;
+    root.style.overflow = before.overflow;
+    root.style.overscrollBehavior = before.overscrollBehavior;
     window.dispatchEvent(new Event('p2s:scroll-unlock'));
   };
 }
@@ -140,7 +156,9 @@ export function Dialog({
       opener.current = active instanceof HTMLElement && active !== document.body ? active : null;
       dialog.dataset.state = 'enter';
       dialog.showModal();
-      release.current = holdPage();
+      // Opened again before the `close` event of its last closing came, it
+      // keeps the hold it still has.
+      release.current ??= holdPage();
       if (bodyRef.current) bodyRef.current.scrollTop = 0;
       (latest.current.initialFocus?.current ?? titleRef.current)?.focus({ preventScroll: true });
       // Two frames: the first paints the start of the way in, the second ends it.
@@ -162,6 +180,10 @@ export function Dialog({
   /** Closed, by the timer above or by the browser itself: the page is let go. */
   const onClosed = () => {
     const dialog = ref.current;
+    // The browser sends `close` a moment after close(). When the dialog has
+    // been opened again in that moment, the event is about the closing before:
+    // the dialog stays open, holding the page.
+    if (dialog?.open) return;
     window.clearTimeout(leaving.current);
     if (dialog) delete dialog.dataset.state;
     release.current?.();

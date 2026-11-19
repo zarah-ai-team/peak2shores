@@ -12,12 +12,13 @@ import { NextResponse } from 'next/server';
  * counters are per instance and the limit is correspondingly looser; put a
  * platform limiter (or a shared store) in front of it there.
  *
- * NETLIFY: each route handler runs as a serverless function. Every warm
- * instance keeps its own Map, a cold start begins empty, and concurrent
- * instances do not share counts — so "5 per minute" is per instance: a
- * best-effort brake on one bursty client, not a guarantee. For a hard limit
- * add a Netlify rate-limit rule on /api/* (Site configuration → Security), or
- * back `tooManyRequests` with a shared store. Behavior here is unchanged.
+ * VERCEL, where the site runs (and Netlify alike): each route handler runs as
+ * a serverless function. Every warm instance keeps its own Map, a cold start
+ * begins empty, and concurrent instances do not share counts — so "5 per
+ * minute" is per instance: a best-effort brake on one bursty client, not a
+ * guarantee. For a hard limit add a Vercel Firewall rate-limit rule on /api/*
+ * (a Netlify rate-limit rule there), or back `tooManyRequests` with a shared
+ * store.
  */
 
 /** Largest body either form can legitimately produce, with room to spare. */
@@ -30,15 +31,19 @@ type Bucket = { count: number; resetAt: number };
 const buckets = new Map<string, Bucket>();
 
 function clientKey(request: Request) {
-  // Netlify's edge sets x-nf-client-connection-ip itself, so a client cannot
-  // forge it; prefer it. Otherwise, behind a proxy the first forwarded address
-  // is the client's; without one, fall back to a single shared bucket so the
-  // limit still applies.
-  const netlify = request.headers.get('x-nf-client-connection-ip')?.trim();
-  if (netlify) return netlify;
-  const forwarded = request.headers.get('x-forwarded-for');
-  const ip = forwarded?.split(',')[0]?.trim() || request.headers.get('x-real-ip') || 'anonymous';
-  return ip;
+  // Key only on an address the host writes itself. Vercel, where the site
+  // runs, sets x-real-ip and x-forwarded-for on every request and overwrites
+  // any value the client sends. x-nf-client-connection-ip is set only by
+  // Netlify's edge; anywhere else the client chooses it, so it is read on
+  // Netlify only. Without an address (an empty header counts as none), every
+  // request shares one bucket, so the limit still applies.
+  const h = request.headers;
+  if (process.env.NETLIFY === 'true') {
+    return h.get('x-nf-client-connection-ip')?.trim() || 'anonymous';
+  }
+  return (
+    h.get('x-real-ip')?.trim() || h.get('x-forwarded-for')?.split(',')[0]?.trim() || 'anonymous'
+  );
 }
 
 /** True when this client has already sent more than the window allows. */

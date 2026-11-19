@@ -60,7 +60,10 @@ export type EnquiryPayload = {
   room?: RoomOption;
   heardFrom?: string;
   notes: string;
-  /** The page the form was sent from: its path, and its full address on the public site. */
+  /**
+   * The page the form was sent from: its path, and its full address at the
+   * address the visitor was on (the site answers at more than one).
+   */
   page?: string;
   pageUrl?: string;
   /**
@@ -80,9 +83,10 @@ export type SubscriptionPayload = {
   /**
    * The consent line that stood under the field, in the words the visitor
    * read, and the policy it names. With the envelope's `submittedAt` this is
-   * the list's record of consent; absent only if a form showed no such line.
+   * the list's record of consent. Every sign-up carries it: /api/subscribe
+   * refuses one sent without the tick.
    */
-  consent?: { statement: string; policy: string };
+  consent: { statement: string; policy: string };
 };
 
 export type DeliveryKind = 'enquiry' | 'subscription';

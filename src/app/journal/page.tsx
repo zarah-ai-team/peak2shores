@@ -28,6 +28,12 @@ export async function generateMetadata() {
 /* A piece can be scheduled with publishAt, so the index rebuilds hourly. */
 export const revalidate = 3600;
 
+/* Each photograph loads over the house image ground (stone, the soft lake
+   blue the site's other image frames hold), not its slot's own tone: two of
+   those tones are a khaki and a greige, and the palette has no sand, beige or
+   brown. The cover that lifts off each photograph takes the same blue. */
+const ground = '!bg-stone [&_[data-curtain]]:!bg-stone';
+
 /**
  * The journal index as a magazine spread: one lead piece, then a row of
  * three in different shapes. Every entry is still in preparation, so each
@@ -84,7 +90,7 @@ export default async function JournalPage() {
                 media={lead.media}
                 ratio="16/10"
                 sizes="(min-width: 1024px) 66vw, 100vw"
-                className="col-span-4 opacity-85 grayscale-[.25] md:col-span-8 lg:col-span-8"
+                className={`col-span-4 opacity-85 grayscale-[.25] md:col-span-8 lg:col-span-8 ${ground}`}
               />
               <div className="col-span-4 md:col-span-6 lg:col-span-4 lg:col-start-9">
                 <Teaser entry={lead} size="lead" />
@@ -103,7 +109,7 @@ export default async function JournalPage() {
                         media={entry.media}
                         ratio={i === 1 ? '1/1' : '4/5'}
                         sizes="(min-width: 768px) 33vw, 100vw"
-                        className="mb-7 opacity-85 grayscale-[.25]"
+                        className={`mb-7 opacity-85 grayscale-[.25] ${ground}`}
                       />
                       <Teaser entry={entry} />
                     </article>

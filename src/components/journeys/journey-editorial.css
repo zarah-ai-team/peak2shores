@@ -183,6 +183,13 @@
   color: inherit;
   text-decoration: none;
 }
+/* A finger gets the full 44px; the row keeps its 18px height. */
+@media (pointer: coarse) {
+  .jy .crumb a {
+    padding-block: 13px;
+    margin-block: -13px;
+  }
+}
 .jy .crumb a:hover {
   color: var(--sky);
 }
@@ -1348,9 +1355,10 @@
 /* -- The in-page menu's inquiry (JourneyTabs) ---------------------------------------
    From 1024px the bar's right end holds the journey at a glance (its days and
    group size over its from-price) and the "Make an inquiry" pill; on a phone
-   or a tablet the same pill sits in a slim bar fixed to the foot of the
-   screen, so that the tabs keep the menu bar's whole width (beside the
-   inquiry block a tablet showed only two or three of them). These sit outside
+   or a tablet the same facts and pill sit in a slim bar fixed to the foot of
+   the screen, so that the tabs keep the menu bar's whole width (beside the
+   inquiry block a tablet showed only two or three of them). On a short
+   screen the pill alone joins the tabs instead (below). These sit outside
    `.jy`, so they read the site's own tokens. Where the tabs scroll sideways,
    the end with tabs hidden past it fades out. */
 .jt-tabs[data-edge='end'] {
@@ -1478,18 +1486,92 @@
       transform 0.45s var(--ease-editorial),
       visibility 0s;
   }
+  /* The facts give way to the button, never the button to them: they wrap
+     where they no longer fit beside it (the price onto two even lines), and
+     the pill keeps its size and the gutter, down to 320px. Where there is
+     room, the days and the group size share a line, with the hairline between
+     them, over the price. */
   .jt-ibar .jt-glance {
+    display: flex;
+    flex-wrap: wrap;
     justify-content: start;
+    align-items: baseline;
+    min-width: 0;
     text-align: left;
   }
+  .jt-ibar .jt-glance .v {
+    flex-basis: 100%;
+    white-space: normal;
+    text-wrap: pretty;
+  }
+  /* Anchors and focus keep clear of the bar at its tallest (95px, where the
+     facts take three lines; a longer price or a larger text size can make it
+     so at any width). */
   html:has(.jt-ibar[data-on]) {
-    scroll-padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+    scroll-padding-bottom: calc(6.75rem + env(safe-area-inset-bottom));
+  }
+}
+/* Under 410px the days and the group size no longer fit side by side next to
+   the pill: each takes its own line, without the hairline. The bar is then
+   73px tall, 95px where the price wraps too. In em, so the switch follows the
+   browser's text size (409.92px at the usual 16px). */
+@media (max-width: 25.62em) {
+  .jt-ibar .jt-glance li {
+    flex-basis: 100%;
+    white-space: normal;
+  }
+  .jt-ibar .jt-glance li + li:not(.v)::before {
+    display: none;
+  }
+}
+/* Under 390px the pill's sides and the gap tighten a little, so a 375px phone
+   keeps the price on one line. In em, as above (389.92px at 16px). */
+@media (max-width: 24.37em) {
+  .jt-ibar {
+    gap: 0.75rem;
+  }
+  .jt-ibar .jt-pill {
+    padding-inline: 1.125rem;
   }
 }
 @media (prefers-reduced-motion: reduce) {
   .jt-ibar,
   .jt-ibar[data-on] {
     transition: none;
+  }
+}
+/* A short screen under 1024px wide (a phone held sideways, a laptop window
+   zoomed in): a third bar would leave the page about half the screen, so the
+   pill moves into the pinned menu bar, where it sits from 1024px, without the
+   days and the price (the hero's facts carry them). The slim bar stays down,
+   and while it would show, so does the floating "Connect with our team"
+   (unless its panel is open), as it does for the bar on a phone held upright.
+   After the rules above, which it overrides. */
+@media (max-width: 1023.98px) and (max-height: 500px) {
+  .jt-ibar,
+  .jt-ibar[data-on] {
+    display: none;
+  }
+  .jt-aside {
+    display: flex;
+    flex: none;
+    align-items: center;
+  }
+  .jt-aside .jt-glance {
+    display: none;
+  }
+  html:has(.jt-ibar[data-on]) {
+    scroll-padding-bottom: 0;
+  }
+  html:has(.jt-ibar[data-on]) .hc-fab:not(.open) {
+    opacity: 0;
+    transform: translateY(1rem);
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity 0.4s var(--ease),
+      transform 0.4s var(--ease),
+      visibility 0s linear 0.4s;
   }
 }
 

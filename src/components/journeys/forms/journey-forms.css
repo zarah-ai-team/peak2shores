@@ -25,6 +25,11 @@
      when a field takes focus; 15px on a laptop. */
   --jf-field-fs: max(1rem, 15px);
   container: jf / inline-size;
+  /* Positioned, so the screen-reader-only words inside (`.sr-only`, placed
+     absolutely) stay within the dialog's scrolling body: placed against the
+     panel instead, they would give the panel itself room to scroll, and a
+     scroll there would take the title bar and the close button off screen. */
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -357,8 +362,11 @@ textarea.jf-control {
 }
 
 /* -- The tick box ------------------------------------------------------------ */
+/* The box and its words are one target, 44px tall, and only as wide as they
+   are: a press on the empty space beside them ticks nothing. */
 .jf-consent {
   display: flex;
+  align-self: flex-start;
   align-items: center;
   gap: 0.75rem;
   min-height: 2.75rem;
@@ -383,6 +391,7 @@ textarea.jf-control {
   outline-color: var(--jf-ink);
 }
 .jf-link {
+  position: relative;
   display: inline-flex;
   align-items: baseline;
   gap: 0.25rem;
@@ -396,6 +405,19 @@ textarea.jf-control {
 .jf-link:hover {
   color: var(--color-acqua-text);
   text-decoration-color: currentColor;
+}
+/* Under a finger the link is a 44px target, centred on its words, so a press
+   just above or below them opens the policy rather than ticking the box. The
+   words do not move. */
+@media (pointer: coarse) {
+  .jf-link::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    height: 2.75rem;
+    translate: 0 -50%;
+  }
 }
 
 /* -- The foot: the line about replies, and the button ---------------------- */

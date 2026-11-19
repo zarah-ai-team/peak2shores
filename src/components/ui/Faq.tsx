@@ -57,7 +57,7 @@ export function Faq({
             <li key={item.question} className="border-b border-line">
               <details className="journey-day group/day">
                 <summary className="grid cursor-pointer list-none grid-cols-[minmax(0,1fr)_1.5rem] items-baseline gap-x-4 py-6 lg:py-[clamp(1rem,1.27vw,1.5rem)]">
-                  <h3 className="h5 m-0 transition-colors duration-300 group-hover/day:text-brand">
+                  <h3 className="h5 m-0 transition-colors duration-300 group-hover/day:text-acqua-text">
                     {item.question}
                   </h3>
                   <span

@@ -1,16 +1,26 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { useSelectedLayoutSegment } from 'next/navigation';
 import { Reveal } from '@/components/motion/Reveal';
 import { ButtonLink } from '@/components/ui/Button';
 import { NewsletterForm } from '@/components/ui/NewsletterForm';
 
 /**
- * Routes that already carry the journal sign-up in their own body (the
+ * Whether the page already carries the journal sign-up in its own body (the
  * homepage's Circle, the journal page). The footer must not ask twice.
+ *
+ * Read from the route the root layout is showing, not from the address: no
+ * segment on the homepage, `journal` on the journal and any page under it. A
+ * missing page is its own route (`/_not-found`), so it keeps the sign-up
+ * whatever its address. The address can differ between the server and the
+ * browser: Vercel renders the hourly rebuild of the homepage under "/index",
+ * so usePathname() read "/index" on the server and "/" in the browser. The
+ * cached homepage carried the sign-up, the browser swapped it for the brand
+ * line, and React threw error #418 (found 19 Nov 2026). The route is the same
+ * on both sides.
  */
-function hasOwnSignup(pathname: string) {
-  return pathname === '/' || pathname === '/journal' || pathname.startsWith('/journal/');
+function hasOwnSignup(segment: string | null) {
+  return segment === null || segment === 'journal';
 }
 
 /**
@@ -19,8 +29,7 @@ function hasOwnSignup(pathname: string) {
  * planning instead.
  */
 export function FooterSignup() {
-  const pathname = usePathname() ?? '';
-  const own = hasOwnSignup(pathname);
+  const own = hasOwnSignup(useSelectedLayoutSegment());
 
   return (
     <>

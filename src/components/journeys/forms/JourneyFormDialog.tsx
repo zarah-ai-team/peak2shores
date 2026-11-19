@@ -137,7 +137,7 @@ function check(kind: JourneyFormKind, values: Values): Errors {
       errors.guests = `For a larger party, please write to us at ${site.email}.`;
     }
   }
-  if (!values.consent) errors.consent = 'Please tick the box to agree to the Privacy Policy.';
+  if (!values.consent) errors.consent = privacyConsent.unticked;
   return errors;
 }
 
@@ -301,6 +301,9 @@ export function JourneyFormDialog({
       : '';
     const departure = departures.find((d) => d.value === values.departure)?.label ?? '';
     const page = window.location.pathname;
+    // The address of the page on screen, for the email's "Page" link: the site
+    // answers at more than one. A page opened from a file has none of its own.
+    const origin = /^https?:$/.test(window.location.protocol) ? window.location.origin : site.url;
     const subject =
       kind === 'enquiry'
         ? `Inquiry: ${journey.title}`
@@ -317,7 +320,7 @@ export function JourneyFormDialog({
         ['Preferred dates', booking ? values.dates.trim() : ''],
         ['Room', booking ? values.room : ''],
         ['Note', values.notes[kind].trim()],
-        ['Page', `${site.url}${page}`],
+        ['Page', `${origin}${page}`],
       ] as [string, string][]
     ).filter(([, value]) => value);
 

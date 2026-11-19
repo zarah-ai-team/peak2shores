@@ -42,38 +42,46 @@ export async function postForm(path: string, body: unknown): Promise<Response> {
 }
 
 /**
+ * The tick box at the foot of the inquiry form on /plan and of a journey
+ * page's pop-up forms (the inquiry and the two booking requests), in the words
+ * the visitor reads. The forms build their label from these parts and show
+ * `unticked` under the box when a request is sent without the tick;
+ * /api/enquiry refuses such a request with the same words, and sends the
+ * label's sentence on with each request as its record of consent. Change the
+ * wording here and both follow.
+ */
+export const privacyConsent = {
+  before: 'I agree to the',
+  policy: { label: 'Privacy Policy', href: '/privacy' },
+  unticked: 'Please tick the box to agree to the Privacy Policy.',
+} as const;
+
+/** The tick box's label as one sentence, for the request's record. */
+export const privacyConsentText = `${privacyConsent.before} ${privacyConsent.policy.label}.`;
+
+/**
  * The tick box under a Circle sign-up field, in the words the visitor reads:
  * the box's label ("I agree to the Privacy Policy"), then "Unsubscribe at any
  * time." beside it. The form builds its line from these parts and shows
- * `unticked` under the box when a sign-up is sent without the tick;
- * /api/subscribe refuses such a sign-up with the same words, and sends the
- * sentence the visitor ticked on with each sign-up, so the mailing list can
- * hold what was agreed to. Change the wording here and both follow.
+ * `unticked` under the box when a sign-up is sent without the tick (the same
+ * words as the other forms'); /api/subscribe refuses such a sign-up with the
+ * same words, and sends the whole line shown with the box
+ * (`circleConsentText`) on with each sign-up, so the mailing list can hold
+ * what was agreed to. Change the wording here and both follow.
  */
 export const circleConsent = {
   before: 'I agree to the',
   policy: { label: 'Privacy Policy', href: '/privacy' },
   after: 'Unsubscribe at any time.',
-  unticked: 'Please tick the box to agree to the Privacy Policy.',
+  unticked: privacyConsent.unticked,
 } as const;
-
-/** What the visitor ticked, as one sentence, for the sign-up's record. */
-export const circleConsentText = `${circleConsent.before} ${circleConsent.policy.label}. ${circleConsent.after}`;
 
 /**
- * The tick box at the foot of a journey page's pop-up forms (the inquiry and
- * the two booking requests), in the words the visitor reads. The form builds
- * its label from these parts, and /api/enquiry sends the same sentence on with
- * each request as its record of consent. Change the wording here and both
- * follow.
+ * The line shown with the tick box, for the sign-up's record of consent: the
+ * box's label, then "Unsubscribe at any time.". The box itself is named by
+ * its label alone.
  */
-export const privacyConsent = {
-  before: 'I agree to the',
-  policy: { label: 'Privacy Policy', href: '/privacy' },
-} as const;
-
-/** The tick box's label as one sentence, for the request's record. */
-export const privacyConsentText = `${privacyConsent.before} ${privacyConsent.policy.label}.`;
+export const circleConsentText = `${circleConsent.before} ${circleConsent.policy.label}. ${circleConsent.after}`;
 
 /**
  * The longest value each field of the journey pop-up forms may hold. The

@@ -24,19 +24,22 @@ const count = (n: number) => `${n} ${n === 1 ? 'departure' : 'departures'}`;
 
 /**
  * The Dates and rates table of a journey's page: dates, price and status for
- * each departure, after A&K's. Above it, when the journey has departures, a
- * small filter by year (by month when every departure starts in the same
- * year): native radio buttons drawn as pills, so the arrow keys move between
- * them, and a polite status line that says how many departures are shown.
- * On a phone each row stacks, every value under its column's name.
+ * each departure, after A&K's. Above it, when the departures start in more
+ * than one year (or month), a small filter by year (by month when every
+ * departure starts in the same year): native radio buttons drawn as pills, so
+ * the arrow keys move between them, and a polite status line that says how
+ * many departures are shown. A filter with a single choice would change
+ * nothing, so it is left out. On a phone each row stacks, every value under
+ * its column's name.
  */
 export function JourneyDepartures({
   rows,
-  filter,
+  filter: offered,
 }: {
   rows: DepartureRow[];
   filter?: DepartureFilter;
 }) {
+  const filter = offered && offered.options.length > 1 ? offered : undefined;
   const [pick, setPick] = useState(ALL);
   const id = useId();
   const shown = filter && pick !== ALL ? rows.filter((r) => r.key === pick) : rows;

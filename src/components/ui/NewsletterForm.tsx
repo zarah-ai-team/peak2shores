@@ -27,10 +27,12 @@ export type NewsletterVariant = 'compact' | 'large' | 'dark' | 'invite';
  * half-filled form is not lost), and beside it "Unsubscribe at any time."
  * Nothing is sent until the box is ticked. A send without the tick says so
  * under the box, marks the box and moves focus to it; from then on the
- * message follows the box, and ticking it clears both. The words live in
- * lib/forms (`circleConsent`). /api/subscribe refuses a sign-up without the
- * tick, and sends the sentence the visitor ticked on with the address, and
- * the page the form stood on, as the record of consent.
+ * message follows the box, and ticking it clears both. A failed send's
+ * message goes once the box changes. The words live in lib/forms
+ * (`circleConsent`). /api/subscribe refuses a sign-up without the tick, and
+ * sends the line shown with the box (its label, then "Unsubscribe at any
+ * time.") on with the address, and the page the form stood on, as the record
+ * of consent.
  *
  * Posts to /api/subscribe, which answers `{ ok, delivered }`. `delivered:
  * false` means no mailing provider is wired yet and nothing was stored, so the
@@ -75,7 +77,11 @@ export function NewsletterForm({
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (status === 'sending') return;
-    if (!consented) {
+    // The box as it shows decides, and the form's state follows it: a browser
+    // can change a box behind React's back.
+    const ticked = consentRef.current?.checked ?? consented;
+    if (ticked !== consented) setConsented(ticked);
+    if (!ticked) {
       // Nothing is sent without the tick. The message under the box takes the
       // place of an earlier failed send's, and the reader is taken to the box.
       setTried(true);
@@ -93,7 +99,7 @@ export function NewsletterForm({
         // For the list's record of consent: the page this form stands on, and
         // that the visitor ticked the box.
         page: window.location.pathname,
-        consent: consented,
+        consent: ticked,
       });
       if (res.ok) {
         const data = (await res.json().catch(() => ({}))) as { delivered?: boolean };
@@ -269,23 +275,37 @@ export function NewsletterForm({
         className={`prose-body-sm mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 ${consentTone.line}`}
       >
         {/* The box and its words are one target: 24px tall with a mouse,
-            44px under a finger. */}
+            44px under a finger. Under a finger the link is a 44px target of
+            its own, centred on its words, so a press just above or below them
+            opens the policy rather than ticking the box. */}
         <label className="inline-flex min-h-[24px] cursor-pointer items-center gap-3 pointer-coarse:min-h-11">
           <span className="relative inline-flex shrink-0">
             {/* Named by the sentence alone: the label around it also holds
                 the link's "(opens in a new tab)". Marked valid outright until
                 a send finds it unticked: a browser would otherwise announce
-                the required box as invalid before anything has been sent. */}
+                the required box as invalid before anything has been sent.
+                It starts clear on every visit, as the journey pop-ups' box
+                does: `autoComplete="off"` keeps a browser that reloads the
+                page on Back from bringing back a tick the form's state cannot
+                see. A change to it drops a failed send's message, so that
+                message never comes back once the box has been touched. */}
             <input
               ref={consentRef}
               type="checkbox"
               name="consent"
               required
+              autoComplete="off"
               aria-label={`${circleConsent.before} ${circleConsent.policy.label}`}
               aria-invalid={unticked}
               aria-describedby={unticked ? `${id}-error` : undefined}
               checked={consented}
-              onChange={(e) => setConsented(e.target.checked)}
+              onChange={(e) => {
+                setConsented(e.target.checked);
+                if (status === 'error') {
+                  setStatus('idle');
+                  setErrorText('');
+                }
+              }}
               className={`peer m-0 block size-5 cursor-pointer appearance-none border-[1.5px] transition-colors duration-200 ${consentTone.box}`}
             />
             <svg
@@ -308,7 +328,7 @@ export function NewsletterForm({
               href={circleConsent.policy.href}
               target="_blank"
               rel="noopener"
-              className="inline-flex items-baseline gap-1 whitespace-nowrap underline underline-offset-2 hover:no-underline"
+              className="relative inline-flex items-baseline gap-1 whitespace-nowrap underline underline-offset-2 hover:no-underline pointer-coarse:after:absolute pointer-coarse:after:inset-x-0 pointer-coarse:after:top-1/2 pointer-coarse:after:h-11 pointer-coarse:after:-translate-y-1/2"
             >
               {circleConsent.policy.label}
               <span className="sr-only"> (opens in a new tab)</span>
