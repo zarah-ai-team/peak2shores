@@ -129,6 +129,41 @@
     margin-bottom: 1.5rem;
   }
 }
+/* A short screen (a phone held sideways, a small phone, a 600px-tall tablet):
+   the opening is the screen's height and no more. Nothing changes on a
+   screen taller than 600px. */
+@media (max-height: 600px) {
+  .hc .hc-hero {
+    min-height: 0;
+  }
+}
+/* A phone held sideways: the headline, its line and both buttons fit on the
+   first screen, the buttons side by side and clear of "Connect with our
+   team"; on the shortest (320px) the line gives way to them. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .hc .hc-hero .copy.left {
+    bottom: 5rem;
+  }
+  .hc .hc-hero .copy.left h1 {
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    margin-bottom: 0.5rem;
+  }
+  .hc .hc-hero .copy.left .standfirst {
+    font-size: 1rem;
+    line-height: 1.35;
+    margin-bottom: 0.75rem;
+    max-width: 40ch;
+  }
+  .hc .hc-hero .ctas .btn {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+}
+@media (orientation: landscape) and (max-height: 340px) {
+  .hc .hc-hero .copy.left .standfirst {
+    display: none;
+  }
+}
 
 /* -- 02 Philosophy: centered between two short blue rules ----------------- */
 /* One full screen under the solid header, the statement at its centre. */
@@ -164,6 +199,7 @@
   font-weight: var(--title-weight);
   font-size: clamp(2.375rem, 3.2vw, 3.75rem);
   letter-spacing: -0.008em;
+  text-wrap: balance;
 }
 .hc .hc-ways .head p.sub-h {
   margin-top: 0.25rem;
@@ -173,6 +209,29 @@
 /* Every title in one upright style; the signature card leads by width. */
 .hc .hc-ways .wt.lead {
   flex-basis: clamp(18.75rem, 27vw, 30rem);
+}
+/* Below 901px it takes the others' width: on an upright phone 80vw, so the
+   next tile peeks in; from 481px (a phone held sideways, a tablet) every tile
+   is an upright 320px, rather than a landscape tile beside a narrow lead. */
+@media (max-width: 900px) {
+  .hc .hc-ways .wt.lead {
+    flex-basis: 80vw;
+  }
+}
+@media (min-width: 481px) and (max-width: 900px) {
+  .hc .hc-ways .wt,
+  .hc .hc-ways .wt.lead {
+    flex-basis: 20rem;
+  }
+}
+/* A phone held sideways: the tiles keep to the screen's height (home.css)
+   and so stand a step wider, 368px, which keeps each line's words clear of
+   the number and the badge at the top. */
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
+  .hc .hc-ways .wt,
+  .hc .hc-ways .wt.lead {
+    flex-basis: 23rem;
+  }
 }
 .hc .hc-ways .wt.lead h3,
 .hc .hc-ways .badge {
@@ -210,9 +269,13 @@
   flex-wrap: nowrap;
   gap: 1.25rem;
 }
-.hc .hc-ways .head .btn:hover {
-  background: var(--color-brand-deep);
-  border-color: var(--color-brand-deep);
+/* Hover states hold only where a pointer hovers: a touch screen keeps :hover
+   on the last thing tapped. */
+@media (hover: hover) {
+  .hc .hc-ways .head .btn:hover {
+    background: var(--color-brand-deep);
+    border-color: var(--color-brand-deep);
+  }
 }
 @media (max-width: 760px) {
   .hc .hc-ways .head .ctarow {
@@ -342,9 +405,20 @@
   text-transform: uppercase;
   color: #5a646d;
 }
-.hc .hc-fd.story figcaption span {
+.hc .hc-fd.story figcaption [aria-hidden] {
   margin: 0 0.5rem;
   color: var(--color-brand);
+}
+/* His name on one line and what he is on the next, without the bar, where
+   the photograph's column is too narrow for both (a small phone, a tablet),
+   as under his remark: never a chance break after "Founder,". */
+@media (max-width: 380px), (min-width: 601px) and (max-width: 1199px) {
+  .hc .hc-fd.story figcaption .part {
+    display: block;
+  }
+  .hc .hc-fd.story figcaption [aria-hidden] {
+    display: none;
+  }
 }
 .hc .hc-fd.story .c {
   padding: 0;
@@ -376,16 +450,43 @@
   margin-top: 0.75rem;
   gap: 0.875rem;
 }
-.hc .hc-fd.story .btn:hover {
-  background: var(--color-brand-deep);
-  border-color: var(--color-brand-deep);
+@media (hover: hover) {
+  .hc .hc-fd.story .btn:hover {
+    background: var(--color-brand-deep);
+    border-color: var(--color-brand-deep);
+  }
 }
-@media (max-width: 900px) {
+@media (max-width: 600px) {
   .hc .hc-fd.story {
     grid-template-columns: minmax(0, 1fr);
   }
   .hc .hc-fd.story .img {
     width: min(100%, 24rem);
+  }
+}
+/* From 601 to 900px the photograph keeps its column beside the story (it
+   stood alone, half the width empty beside it, with the story beneath). */
+@media (min-width: 601px) and (max-width: 900px) {
+  .hc .hc-fd.story {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 2rem;
+    align-items: start;
+  }
+}
+/* The headline's two sentences each start a line, in balanced lines (the
+   no-break spaces in home.ts keep each "A" with its word); on the smallest
+   phones a step smaller, so "extraordinary journeys." holds one line. */
+@media (max-width: 900px) {
+  .hc .hc-fd.story h2 {
+    text-wrap: balance;
+  }
+  .hc .hc-fd.story h2 .line {
+    display: block;
+  }
+}
+@media (max-width: 380px) {
+  .hc .hc-fd.story h2 {
+    font-size: min(1.875rem, 8.6vw);
   }
 }
 
@@ -406,6 +507,19 @@
   .hc .hc-hot .head.solo p.sub-h {
     max-width: none;
     white-space: nowrap;
+  }
+}
+/* The hint under the cards in two even lines where it breaks, never "over"
+   alone. */
+.hc .hc-hot .flip-hint {
+  text-wrap: balance;
+}
+/* Below 1024px a card's place is set at 12px: tracked a little closer, it
+   keeps to one line ("Victoria Falls | Zimbabwe" broke after the bar) on
+   every card from 360px up. */
+@media (max-width: 1023px) {
+  .hc .hc-hot .fb .lab {
+    letter-spacing: 0.2em;
   }
 }
 
@@ -511,13 +625,12 @@
 }
 /* Over the photograph a link's focus ring is white, like the field's and the
    button's; and the address to write to keeps a white rule, in and out of
-   the pointer. */
+   the pointer (this outranks the site's own link hover, so it needs none). */
 .hc .hc-circle.invite .form a:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 3px;
 }
-.hc .hc-circle.invite .form .prose-link,
-.hc .hc-circle.invite .form .prose-link:hover {
+.hc .hc-circle.invite .form .prose-link {
   color: #fff;
   text-decoration-color: currentColor;
 }
@@ -526,7 +639,7 @@
    beneath it on the night ground, as on 13 Nov. The 1080px band over the
    photograph is for wider screens; on an upright phone it showed only a
    narrow slice, the herd behind the field. */
-@media (max-width: 700px) {
+@media (max-width: 700px) and (orientation: portrait) {
   .hc .hc-circle.invite {
     min-height: 0;
     display: block;
@@ -550,6 +663,15 @@
   .hc .hc-circle.invite .in > :is(h2, p),
   .hc .hc-circle.invite .form form + p {
     text-shadow: none;
+  }
+}
+/* A phone held sideways: one screen of the photograph with the invitation
+   over it (the shade keeps the words clear), rather than the 1080px band, or
+   the whole photograph above the words, two to three screens tall. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .hc .hc-circle.invite {
+    min-height: 100svh;
+    padding-block: 2.5rem;
   }
 }
 

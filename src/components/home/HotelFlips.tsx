@@ -151,6 +151,10 @@ export function HotelFlips() {
           <span className="by-tap">Tap a hotel to turn it over</span>
         </div>
         <div className="fnav">
+          {/* `data-fab-clear`: on a touch screen the floating "Connect"
+              button steps aside while the arrows are at the foot of the
+              screen, rather than sit over them (shown there only: home.css). */}
+          <span className="fab-mark" data-fab-clear aria-hidden />
           <button
             type="button"
             className="circ"

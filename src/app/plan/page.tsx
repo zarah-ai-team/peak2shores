@@ -4,16 +4,17 @@ import { andList, site } from '@/lib/site';
 import { planFaq } from '@/lib/data/faq';
 import { Frame } from '@/components/ui/Frame';
 import { Reveal } from '@/components/motion/Reveal';
-import { FactList, PageTitle, SectionLabel, Tick } from '@/components/ui/Editorial';
+import { FactList, SectionLabel, Tick } from '@/components/ui/Editorial';
 import { Section } from '@/components/ui/Section';
 import { StatusTag } from '@/components/ui/StatusTag';
-import { EnquiryForm } from '@/components/journeys/EnquiryForm';
+import { EnquiryForm, type EnquiryJourney } from '@/components/journeys/EnquiryForm';
 import { journeyTagStatus } from '@/components/pages/journeyStatus';
 import { fromPriceLabel } from '@/lib/journeyPrice';
 import {
   getDestinations,
   getEnquirableJourneyTitles,
   getJourneySummaries,
+  getMedia,
   pageMetadata,
   type JourneySummary,
 } from '@/lib/content';
@@ -35,22 +36,53 @@ export default async function PlanPage() {
     getDestinations(),
   ]);
 
+  /* The journeys a visitor can join, as the form's photograph cards: every
+     one the enquiry API accepts, with its length and route. */
+  const cards: EnquiryJourney[] = journeys
+    .filter((j) => titles.includes(j.title) && j.status !== 'past')
+    .map((j) => {
+      const m = getMedia(j.cardMedia);
+      return {
+        slug: j.slug,
+        title: j.title,
+        line: `${j.days} days · ${j.region}`,
+        img: m.src,
+        alt: m.alt,
+      };
+    });
+  const marc = getMedia('marc-portrait');
+
   return (
     <>
-      <PageTitle kicker="Plan your journey" title={'Start with a\u00a0conversation.'}>
-        Join one of our upcoming departures, or design a private journey on your own dates. Either
-        way it begins the same way — you tell us a little, and our team takes it from there.
-      </PageTitle>
+      <EnquiryForm
+        journeys={cards}
+        destinations={destinations.map((d) => d.country)}
+        portrait={marc.src ? { src: marc.src, alt: marc.alt ?? 'Marc Haeni' } : undefined}
+      />
+
+      <Section pad="section-sm" aria-labelledby="departures-title">
+        <div className="mb-block flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <SectionLabel className="mb-stack">Upcoming departures</SectionLabel>
+            <Reveal variant="mask">
+              <h2 id="departures-title" className="h2 max-w-[24ch]">
+                Or take a place on a journey that is already going.
+              </h2>
+            </Reveal>
+          </div>
+        </div>
+        <Ledger journeys={journeys.filter((journey) => journey.status !== 'past')} />
+      </Section>
 
       <Section ground="stone" pad="section-sm" id="private" aria-labelledby="private-title">
         <div className="grid-site items-center gap-y-block">
           <Frame
             media="plan-private"
             ratio="4/5"
-            sizes="(min-width: 1024px) 45vw, 100vw"
-            className="col-span-4 md:col-span-5 lg:col-span-5"
+            sizes="(min-width: 1024px) 45vw, (min-width: 768px) 36vw, (orientation: landscape) calc((100vh - 6.25rem) * 0.8), 100vw"
+            className="col-span-4 md:col-span-3 lg:col-span-5 max-md:landscape:col-span-2 max-md:landscape:self-start max-lg:landscape:max-h-[calc(100svh-var(--nav-h)-2rem)]"
           />
-          <Reveal className="col-span-4 md:col-span-7 lg:col-span-6 lg:col-start-7">
+          <Reveal className="col-span-4 md:col-span-5 lg:col-span-6 lg:col-start-7 max-md:landscape:col-span-2">
             <SectionLabel tone="stone" className="mb-stack flex items-center gap-3.5">
               <Tick />
               Bespoke Private Travel
@@ -76,33 +108,17 @@ export default async function PlanPage() {
         </div>
       </Section>
 
-      <Section pad="section-sm" aria-labelledby="departures-title">
-        <div className="mb-block flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <SectionLabel className="mb-stack">Upcoming departures</SectionLabel>
-            <Reveal variant="mask">
-              <h2 id="departures-title" className="h2 max-w-[24ch]">
-                Or take a place on a journey that is already going.
-              </h2>
-            </Reveal>
-          </div>
-        </div>
-        <Ledger journeys={journeys.filter((journey) => journey.status !== 'past')} />
-      </Section>
-
-      <EnquiryForm
-        journeyOptions={titles}
-        journeySlugs={Object.fromEntries(
-          journeys.filter((j) => titles.includes(j.title)).map((j) => [j.slug, j.title]),
-        )}
-        headline="Tell us a little. We’ll call you, not the other way round."
-        intro="Whether it’s a departure on the list or something we have not planned yet, this is where it starts. Inquiring holds nothing and commits you to nothing."
-      />
-
-      <Faq items={planFaq} />
+      <Faq items={planFaq} className="pt-section-sm" />
     </>
   );
 }
+
+/**
+ * To a finger, a journey's title is a 44px target however short it is: an
+ * invisible band centred on it, as on the enquiry form's Privacy Policy link.
+ */
+const TITLE_TARGET =
+  'relative pointer-coarse:after:absolute pointer-coarse:after:inset-x-0 pointer-coarse:after:top-1/2 pointer-coarse:after:h-11 pointer-coarse:after:-translate-y-1/2';
 
 /**
  * The departures as a ledger: a real table from 768px (Journey · Window ·
@@ -133,9 +149,10 @@ function Ledger({ journeys }: { journeys: JourneySummary[] }) {
           {journeys.map((journey) => (
             <tr key={journey.slug} className="group border-b border-line">
               <th scope="row" className="py-6 pr-6 text-left font-normal">
+                {/* One box to a finger, a title on two lines included. */}
                 <Link
                   href={`/journeys/${journey.slug}`}
-                  className="h5 transition-colors duration-300 hover:text-brand-deep"
+                  className={`h5 transition-colors duration-300 hover:text-brand-deep pointer-coarse:block ${TITLE_TARGET}`}
                 >
                   {journey.title}
                 </Link>
@@ -154,7 +171,7 @@ function Ledger({ journeys }: { journeys: JourneySummary[] }) {
       <ul className="m-0 list-none border-t border-ink p-0 md:hidden">
         {journeys.map((journey) => (
           <li key={journey.slug} className="border-b border-line py-6">
-            <Link href={`/journeys/${journey.slug}`} className="h5 mb-3 block">
+            <Link href={`/journeys/${journey.slug}`} className={`h5 mb-3 block ${TITLE_TARGET}`}>
               {journey.title}
             </Link>
             <dl className="meta m-0 grid grid-cols-2 gap-x-4 gap-y-3 text-body">

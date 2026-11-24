@@ -1,5 +1,5 @@
 /*
- * A journey page's pop-up forms (JourneyFormDialog): "Make an inquiry", "Book
+ * A journey page's pop-up forms (JourneyFormDialog): "Make an enquiry", "Book
  * this journey" and "Book as a private journey", inside the site's Dialog.
  * Scoped to `.jf`.
  *
@@ -156,9 +156,14 @@
   color: var(--jf-muted);
   opacity: 1;
 }
-.jf-control:hover,
-.jf-code:hover {
-  border-color: var(--jf-edge-hover);
+/* The pointer's states here and below are kept to screens with one
+   (`hover: hover`), so a tap never leaves a field or a button looking
+   pressed. */
+@media (hover: hover) {
+  .jf-control:hover,
+  .jf-code:hover {
+    border-color: var(--jf-edge-hover);
+  }
 }
 /* Focus: the edge turns the deeper brand blue (#0179ab) and doubles, with a soft halo. */
 .jf-control:focus,
@@ -168,6 +173,8 @@
     0 0 0 1px var(--jf-focus),
     0 0 0 0.3125rem rgb(1 121 171 / 0.16);
 }
+/* A field the check found wrong takes the error red (--color-error, #b91c1c):
+   its edge, and with focus the doubled edge and the halo. */
 .jf-control[aria-invalid='true'],
 .jf-phone[data-invalid] .jf-code {
   border-color: var(--color-error);
@@ -175,7 +182,7 @@
 .jf-control[aria-invalid='true']:focus {
   box-shadow:
     0 0 0 1px var(--color-error),
-    0 0 0 0.3125rem rgb(138 59 46 / 0.14);
+    0 0 0 0.3125rem rgb(185 28 28 / 0.14);
 }
 textarea.jf-control {
   height: auto;
@@ -296,9 +303,11 @@ textarea.jf-control {
     border-color 0.2s var(--ease-editorial),
     color 0.2s var(--ease-editorial);
 }
-.jf-chip:hover span {
-  border-color: var(--jf-focus);
-  color: var(--color-acqua-text);
+@media (hover: hover) {
+  .jf-chip:hover span {
+    border-color: var(--jf-focus);
+    color: var(--color-acqua-text);
+  }
 }
 .jf-chip input:checked + span {
   border-color: var(--color-navy);
@@ -402,9 +411,11 @@ textarea.jf-control {
   text-underline-offset: 0.22em;
   transition: color 0.3s var(--ease-editorial);
 }
-.jf-link:hover {
-  color: var(--color-acqua-text);
-  text-decoration-color: currentColor;
+@media (hover: hover) {
+  .jf-link:hover {
+    color: var(--color-acqua-text);
+    text-decoration-color: currentColor;
+  }
 }
 /* Under a finger the link is a 44px target, centred on its words, so a press
    just above or below them opens the policy rather than ticking the box. The
@@ -473,25 +484,31 @@ textarea.jf-control {
   background: var(--color-brand-deep);
   color: #fff;
 }
-.jf-btn-blue:hover {
-  border-color: var(--color-navy);
-  background: var(--color-navy);
+@media (hover: hover) {
+  .jf-btn-blue:hover {
+    border-color: var(--color-navy);
+    background: var(--color-navy);
+  }
 }
 .jf-btn-line {
   border-color: var(--jf-ink);
   background: transparent;
   color: var(--jf-ink);
 }
-.jf-btn-line:hover {
-  background: var(--jf-ink);
-  color: #fff;
+@media (hover: hover) {
+  .jf-btn-line:hover {
+    background: var(--jf-ink);
+    color: #fff;
+  }
 }
 .jf-btn[aria-disabled='true'] {
   cursor: progress;
 }
-.jf-btn[aria-disabled='true']:hover {
-  border-color: var(--color-brand-deep);
-  background: var(--color-brand-deep);
+@media (hover: hover) {
+  .jf-btn[aria-disabled='true']:hover {
+    border-color: var(--color-brand-deep);
+    background: var(--color-brand-deep);
+  }
 }
 @container jf (width < 30rem) {
   .jf-foot .jf-btn {
@@ -531,8 +548,10 @@ textarea.jf-control {
   text-decoration-color: var(--color-acqua-deep);
   text-underline-offset: 0.22em;
 }
-.jf-done p a:hover {
-  color: var(--color-acqua-text);
+@media (hover: hover) {
+  .jf-done p a:hover {
+    color: var(--color-acqua-text);
+  }
 }
 .jf-actions {
   display: flex;

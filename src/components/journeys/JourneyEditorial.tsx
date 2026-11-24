@@ -3,6 +3,12 @@ import Link from 'next/link';
 import { Arrow } from '@/components/ui/Button';
 import type { Journey, JourneyFlyer } from '@/lib/content';
 import { flipbook, statusLabel } from '@/lib/data/flipbook';
+import {
+  ratesOf,
+  type JourneyRates,
+  type RateDeparture,
+  type RateItem,
+} from '@/lib/data/journeyRates';
 import { fromPriceLabel } from '@/lib/journeyPrice';
 import { DATES_TBA, RATES_TBA, type JourneyDeparture } from '@/lib/journeys';
 import { getMedia } from '@/lib/media';
@@ -10,8 +16,11 @@ import { site } from '@/lib/site';
 import { OpenJourneyForm } from './forms/JourneyForms';
 import { HeroStage, type HeroPlace } from './HeroStage';
 import { JourneyDepartures, type DepartureFilter, type DepartureRow } from './JourneyDepartures';
+import { JourneyRatesTable, type RateRow } from './JourneyRatesTable';
 import { placePhotos } from './placePhotos';
+import { RateIcon, type RateIconName } from './RateIcon';
 import './journey-editorial.css';
+import './journey-rates.css';
 
 /*
  * A journey's page, after Ishika's notes of 3 November 2026 (Swiss Elegance
@@ -23,7 +32,7 @@ import './journey-editorial.css';
  * the notes; nothing here adds facts.
  *
  * The page's forms open as pop-ups from `OpenJourneyForm` buttons, inside the
- * page's `JourneyFormsProvider`: the inquiry from the in-page menu, the group
+ * page's `JourneyFormsProvider`: the enquiry from the in-page menu, the group
  * and private booking requests from the rates box.
  */
 
@@ -306,9 +315,16 @@ export function JyExtensionRow({ flyer }: { flyer: JourneyFlyer }) {
   );
 }
 
-export function JyExtension({ flyer }: { flyer: JourneyFlyer }) {
+export function JyExtension({ flyer, slug }: { flyer: JourneyFlyer; slug?: string }) {
   const x = flyer.extension;
   if (!x) return null;
+  /* The lowest price for both journeys together, from the Dates & Prices
+     data when the journey has it (the same figure as its table). */
+  const rates = slug ? ratesOf(slug) : undefined;
+  const combo = rates?.departures
+    .map((d) => d.withExtension)
+    .filter((p): p is string => !!p)
+    .sort((a, b) => Number(a.replace(/\D/g, '')) - Number(b.replace(/\D/g, '')))[0];
   const photos = x.photos.map((p) => ({ ...p, m: getMedia(p.media) })).filter((p) => p.m.src);
   return (
     <section className="jy ext" id="extension" aria-labelledby="jy-ext-h">
@@ -334,7 +350,9 @@ export function JyExtension({ flyer }: { flyer: JourneyFlyer }) {
           </div>
           <div>
             <dt>{x.combo}</dt>
-            <dd>{RATES_TBA}</dd>
+            <dd>
+              {combo ? `From ${combo} per person${rates?.sample ? ' (sample)' : ''}` : RATES_TBA}
+            </dd>
           </div>
         </dl>
         <div className="xctas">
@@ -345,14 +363,22 @@ export function JyExtension({ flyer }: { flyer: JourneyFlyer }) {
       </div>
       {photos.length > 0 && (
         <ul className={`collage n${photos.length}`}>
-          {photos.map((p) => (
+          {photos.map((p, i) => (
             <li key={p.label}>
+              {/* The first photograph fills the collage's height, so a
+                  landscape one is cropped to it and drawn about one and a
+                  half times as wide as the collage is tall (480px on a
+                  phone); the others share the second column. */}
               <Image
                 className="fill"
                 src={p.m.src as string}
                 alt={p.m.alt ?? p.label}
                 fill
-                sizes="(min-width: 1000px) 22vw, 50vw"
+                sizes={
+                  i === 0
+                    ? '(min-width: 1101px) 54vw, (min-width: 601px) 65vw, 30rem'
+                    : '(min-width: 1101px) 22vw, (min-width: 601px) 42vw, 50vw'
+                }
               />
               <span>{p.label}</span>
             </li>
@@ -363,23 +389,163 @@ export function JyExtension({ flyer }: { flyer: JourneyFlyer }) {
   );
 }
 
-/* -- 4. Dates & rates ---------------------------------------------------------- */
+/* -- 4. Dates & prices -------------------------------------------------------- */
+
+const availabilityOf: Record<RateDeparture['availability'], [string, RateRow['tone'], string]> = {
+  available: ['Available', 'ok', 'Book this departure'],
+  limited: ['Limited', 'low', 'Book this departure'],
+  waitlist: ['Waitlist', 'wait', 'Join the waitlist'],
+  'sold-out': ['Sold out', 'out', 'Join the waitlist'],
+};
+
+function rateRows(rates: JourneyRates): RateRow[] {
+  return [...rates.departures]
+    .sort((a, b) => a.start.localeCompare(b.start))
+    .map((d) => {
+      const [label, tone, action] = availabilityOf[d.availability];
+      return {
+        id: `${d.start}/${d.end}`,
+        dates: datesOf(d),
+        starts: dayOf(d.start),
+        ends: dayOf(d.end),
+        year: d.start.slice(0, 4),
+        price: d.price,
+        single: d.single,
+        withExtension: d.withExtension,
+        availability: label,
+        detail:
+          d.availability === 'limited' && d.placesLeft
+            ? `${d.placesLeft} ${d.placesLeft === 1 ? 'place' : 'places'} left`
+            : undefined,
+        tone,
+        guaranteed: !!d.guaranteed,
+        notes: d.notes ?? [],
+        action,
+      };
+    });
+}
+
+const longDate = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+const weekday = new Intl.DateTimeFormat('en-US', { weekday: 'long', timeZone: 'UTC' });
+const dayOf = (iso: string) => ({
+  date: longDate.format(calendarDay(iso)),
+  day: weekday.format(calendarDay(iso)),
+});
 
 /*
- * The table lists each departure's dates, price and status (Ishika's notes of
- * 9 November 2026, item 21; the owner's decisions of 18 November). The rates
- * box books the journey: "Book this journey" opens the group booking form,
- * "Book as a private journey" the private one. Its other lines are the
- * placeholders that stay until Marc sends the section's wording (item 21e).
+ * Dates & Prices, after A&K's (Ishika's notes of 9 November 2026, item 21;
+ * the owner's requests of 24 November). A journey with rates in
+ * data/journeyRates.ts has two sections: the departures as a ruled table,
+ * then the additional information (what is
+ * included and not, price notes, deposit and payment), every part shown in
+ * full with an icon on each line. A journey without rates keeps the plain
+ * table, its rates box and its "to be announced" lines.
  */
 export function JyDates({ journey }: { journey: Journey }) {
+  const rates = ratesOf(journey.slug);
+  return rates ? <JyRates journey={journey} rates={rates} /> : <JyDatesTba journey={journey} />;
+}
+
+function JyRates({ journey, rates }: { journey: Journey; rates: JourneyRates }) {
+  const x = journey.flyer?.extension;
+  const rows = rateRows(rates);
+  /* The extension's short name: "Swiss Elegance", "Italy Uncovered". */
+  const xName = x?.title.split(/[,:]/)[0];
+  const parts: { id: string; t: string; icon: RateIconName; tone: string; items: RateItem[] }[] = [
+    { id: 'in', t: 'What’s included', icon: 'check', tone: 'in', items: rates.included },
+    { id: 'out', t: 'Not included', icon: 'cross', tone: 'out', items: rates.excluded },
+    { id: 'notes', t: 'Price notes', icon: 'tag', tone: 'note', items: rates.priceNotes },
+    { id: 'pay', t: 'Deposit & payment', icon: 'card', tone: 'note', items: rates.payment },
+  ];
+  return (
+    <>
+      <section className="jy dp" id="dates" aria-labelledby="jy-dp-h">
+        <header className="dp-h">
+          <div>
+            <p className="lab">Dates &amp; prices</p>
+            <h2 id="jy-dp-h">Dates and prices</h2>
+          </div>
+          <p className="dp-lede">
+            Each departure is limited to a small group. Prices are per person in US dollars, sharing
+            a double room.
+          </p>
+        </header>
+        {rates.sample && (
+          <p className="dp-sample" role="note">
+            <RateIcon name="info" />
+            <span>
+              <b>Sample dates and prices.</b> Shown for review only; the confirmed departures and
+              rates will replace them.
+            </span>
+          </p>
+        )}
+        <JourneyRatesTable rows={rows} extensionLabel={xName ? `With ${xName}` : undefined} />
+        <p className="dp-foot">
+          International flights are not included.
+          {xName && ` The price with ${xName} is in each departure’s details.`}
+        </p>
+      </section>
+
+      <section className="jy dpi" id="information" aria-labelledby="jy-dpi-h">
+        <header className="dp-h">
+          <div>
+            <p className="lab">Before you book</p>
+            <h2 id="jy-dpi-h">Additional information</h2>
+          </div>
+          <p className="dp-lede">
+            What your journey includes, what it leaves to you, and how booking works.
+          </p>
+        </header>
+        <div className="dpi-g">
+          {parts
+            .filter((p) => p.items.length > 0)
+            .map((p) => (
+              <article
+                key={p.id}
+                className={`dpi-c dpi-${p.tone}`}
+                aria-labelledby={`jy-dpi-${p.id}`}
+              >
+                <h3 id={`jy-dpi-${p.id}`}>
+                  <span className="dpi-hi">
+                    <RateIcon name={p.icon} />
+                  </span>
+                  {p.t}
+                </h3>
+                <ul>
+                  {p.items.map((it) => (
+                    <li key={it.text}>
+                      <RateIcon name={it.icon} className="dpi-i" />
+                      <span>{it.text}</span>
+                    </li>
+                  ))}
+                </ul>
+                {p.id === 'pay' && (
+                  <Link className="tlink" href="/terms">
+                    Read the Booking Terms →
+                  </Link>
+                )}
+              </article>
+            ))}
+        </div>
+      </section>
+    </>
+  );
+}
+
+/* The plain table, for a journey whose dates and rates are still to come. */
+function JyDatesTba({ journey }: { journey: Journey }) {
   const x = journey.flyer?.extension;
   const { rows, filter } = departureTable(journey);
   return (
     <section className="jy dep" id="dates" aria-labelledby="jy-dep-h">
       <div className="dep-main">
-        <p className="lab">Dates &amp; rates</p>
-        <h2 id="jy-dep-h">Dates and rates</h2>
+        <p className="lab">Dates &amp; prices</p>
+        <h2 id="jy-dep-h">Dates and prices</h2>
         <JourneyDepartures rows={rows} filter={filter} />
         <div className="circle">
           <div>
@@ -392,10 +558,10 @@ export function JyDates({ journey }: { journey: Journey }) {
         </div>
       </div>
 
-      <aside className="rate" aria-label="Rates">
+      <aside className="rate" aria-label="Prices">
         <p className="lab">Price</p>
         <p className="price">{fromPriceLabel(journey)}</p>
-        {journey.priceFrom && <p className="sm">Sharing a double room</p>}
+        {journey.priceFrom && <p className="sm">Per person, sharing a double room</p>}
         <p className="sm">Single supplement: to be announced</p>
         {x && (
           <div className="with">
@@ -404,8 +570,7 @@ export function JyDates({ journey }: { journey: Journey }) {
           </div>
         )}
         {/* `data-fab-clear`: the floating "Connect with our team" steps aside
-            while these buttons pass through the foot of the screen, where it
-            would otherwise lie over them. */}
+            while these buttons pass through the foot of the screen. */}
         <div className="ctas" data-fab-clear>
           <OpenJourneyForm kind="group" className="btn btn-blue">
             Book this journey <Arrow />
@@ -414,9 +579,6 @@ export function JyDates({ journey }: { journey: Journey }) {
             Book as a private journey
           </OpenJourneyForm>
         </div>
-        {/* It also read "Full inclusions and booking terms are listed below", but
-            no list follows: each journey's inclusions are still to come from
-            Marc (note of 29 October). Put the pointer back with the list. */}
         <p className="fine">International flights are not included.</p>
       </aside>
     </section>

@@ -1,9 +1,14 @@
 @import 'tailwindcss';
 
+/* `card:` — a screen with the room for a centred card (a pop-up, components/
+   ui/Dialog): 640px wide and 500px tall. A phone held sideways is wide
+   enough but not tall enough, and gets the full-height sheet instead. */
+@custom-variant card (@media (min-width: 40rem) and (min-height: 31.25rem));
+
 /* ==========================================================================
    Peaks2Shores — design tokens (wave 2, docs/redesign/DESIGN-SPEC.md §2)
 
-   A printed travel journal kept by one person: warm paper, deep lake-blue
+   A printed travel journal kept by one person: blue-white paper, deep lake-blue
    grounds, water-blue hairlines, photographs given room. Every page alternates
    reading (paper) and looking (a dark ground or a full-bleed photograph).
 
@@ -21,7 +26,7 @@
   --color-ivory: #fafcfe;
   --color-panel: #ecf2f7;
   /* A soft lake blue (it was a warm stone; the name stays so every use follows):
-     founder blocks, image grounds, the private-travel and inquiry bands. */
+     founder blocks, image grounds, the private-travel and enquiry bands. */
   --color-stone: #dfecf5;
   --color-stone-text: #3d5a6c; /* Caps labels on stone — 6.1:1 */
 
@@ -48,18 +53,23 @@
   --color-acqua-deep: #018fc9; /* the brand blue as a hairline on light; NOT text (3.6:1) */
   --color-acqua-text: #0b5c85; /* the lake blue, the acqua as text on light — 6.4:1 on ivory */
 
-  /* Feedback */
-  --color-error: #8a3b2e; /* 6.6:1 on ivory */
-  --color-error-dark: #e8a594; /* on navy / charcoal */
+  /* Feedback: a clear red (the owner's decision of 19 Nov 2026; it was a brick
+     brown). 6.3:1 on ivory, 6.5:1 on a white field, 5.7:1 on panel, 5.4:1 on
+     stone. The dark one: 5.9:1 on navy-deep (the footer's sign-up, where it
+     shows), 5.05:1 on navy, 5.6:1 on charcoal. */
+  --color-error: #b91c1c;
+  --color-error-dark: #f87171;
 
   /* Rules */
   --color-line: rgb(30 31 29 / 0.16);
   --color-line-dark: rgb(255 255 255 / 0.18);
 
-  /* Photographic tones — the ground a photograph loads over */
-  --color-tone-stone: #c9bea9;
-  --color-tone-sand: #e5dfd1;
-  --color-tone-slate: #8c8f86;
+  /* Photographic tones — the ground a photograph loads over. Calm blue-greys
+     in the journey cards' family, each at its old lightness: the site has no
+     sand, beige or brown (19 Nov 2026). The names are the old ones, kept. */
+  --color-tone-stone: #aec3ce;
+  --color-tone-sand: #d1e3ec;
+  --color-tone-slate: #819098;
 
   /* Type */
   --font-display: var(--font-newsreader), 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
@@ -93,7 +103,8 @@
      a 1280px laptop sees the composition a 1888px screen does instead of the
      same pixels crowded together. 1888px and wider is unchanged. The floors
      keep it legible: body 14–15px, meta 13px, caps labels 10.5px, nav 11px,
-     buttons 40px (44px on any touch screen). Phones keep their own values. */
+     buttons 40px (44px and the phone's labels on any touch screen). Phones
+     keep their own values. */
   :root {
     /* The house grade: pulls the stock comps toward one palette so pages read
        as shot rather than assembled. Applied by Frame to every photograph
@@ -117,6 +128,7 @@
     /* The small caps sizes, and the button every CTA shares (ui/Button,
        the header CTA, the newsletter submit, `.link-rule`). */
     --type-kicker: 0.71875rem;
+    --type-kicker-sm: 0.6875rem;
     --type-nav: 0.75rem;
     --type-meta: 0.84375rem;
     --type-button: 0.71875rem;
@@ -143,6 +155,7 @@
       --nav-h: clamp(4.75rem, 4.45vw, 5.25rem);
       --spacing-stack: clamp(1.125rem, 1.27vw, 1.5rem);
       --type-kicker: clamp(0.65625rem, 0.609vw, 0.71875rem);
+      --type-kicker-sm: 0.65625rem;
       --type-nav: clamp(0.71875rem, 0.636vw, 0.75rem);
       --type-meta: clamp(0.8125rem, 0.715vw, 0.84375rem);
       --type-button: clamp(0.65625rem, 0.609vw, 0.71875rem);
@@ -154,11 +167,17 @@
       --pill-fs: clamp(0.6875rem, 0.636vw, 0.75rem);
     }
   }
-  /* A finger needs the full target whatever the screen's width. */
+  /* A finger needs the full target whatever the screen's width. A touch
+     screen also keeps the phone's caps labels and button labels (11.5px, the
+     small ones 11px): the desktop floors are laptop density, read at arm's
+     length, and on a tablet they came out at 10.5px. */
   @media (pointer: coarse) {
     :root {
       --btn-h: 44px;
       --pill-h: 44px;
+      --type-kicker: 0.71875rem;
+      --type-kicker-sm: 0.6875rem;
+      --type-button: 0.71875rem;
     }
   }
 
@@ -167,6 +186,11 @@
     /* Anchor targets land clear of the fixed header. This is the ONLY place
        that offset is set; targets must not add scroll-margin on top of it. */
     scroll-padding-top: calc(var(--nav-h) + 1.5rem);
+    /* And clear of "Connect with our team" at the foot: a control brought
+       into view from below (Tab, a keyboard on a tablet) stops above the
+       44px pill and its margin instead of under it. A journey page sets its
+       own, for its phone bar. */
+    scroll-padding-bottom: 5rem;
     -webkit-text-size-adjust: 100%;
     /* No scrollbar down the side: the page still scrolls by wheel, trackpad,
        touch and keyboard, and the progress rule at the top shows how far. */
@@ -403,7 +427,7 @@
   .kicker-sm {
     font-family: var(--font-ui);
     font-weight: 500;
-    font-size: 0.65625rem;
+    font-size: var(--type-kicker-sm);
     line-height: 1.2;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -598,14 +622,19 @@
     transform-origin: left center;
     transition: transform 0.5s var(--ease-editorial) 0.16s;
   }
-  .link-rule:hover {
-    color: var(--rule-hover);
-  }
-  .link-rule:hover::before {
-    transform: scaleX(0);
-  }
-  .link-rule:hover::after {
-    transform: scaleX(1);
+  /* Hover styles here and below answer a pointer that can hover only: on a
+     touch screen the browser keeps a tapped element "hovered" until the next
+     tap elsewhere, which would leave the style standing. */
+  @media (hover: hover) {
+    .link-rule:hover {
+      color: var(--rule-hover);
+    }
+    .link-rule:hover::before {
+      transform: scaleX(0);
+    }
+    .link-rule:hover::after {
+      transform: scaleX(1);
+    }
   }
   /* On a dark ground or a photograph: on-dark text, water-blue line. */
   .link-rule--dark,
@@ -631,15 +660,19 @@
       color 0.3s var(--ease-editorial),
       text-decoration-color 0.3s var(--ease-editorial);
   }
-  .prose-link:hover {
-    color: var(--color-brand);
-    text-decoration-color: currentColor;
+  @media (hover: hover) {
+    .prose-link:hover {
+      color: var(--color-brand);
+      text-decoration-color: currentColor;
+    }
   }
   :where([data-tone='dark'], .bg-navy, .bg-navy-deep, .bg-charcoal) .prose-link {
     text-decoration-color: var(--color-acqua);
   }
-  :where([data-tone='dark'], .bg-navy, .bg-navy-deep, .bg-charcoal) .prose-link:hover {
-    color: var(--color-acqua);
+  @media (hover: hover) {
+    :where([data-tone='dark'], .bg-navy, .bg-navy-deep, .bg-charcoal) .prose-link:hover {
+      color: var(--color-acqua);
+    }
   }
 
   .rule {
@@ -668,22 +701,40 @@
     transform-origin: right center;
     transition: transform 0.45s var(--ease-editorial);
   }
-  .nav-link:hover::after,
   .nav-link:focus-visible::after,
   .nav-link[aria-current='page']::after {
     transform: scaleX(1);
     transform-origin: left center;
   }
-  .nav-link:hover {
-    color: var(--color-acqua);
+  @media (hover: hover) {
+    .nav-link:hover::after {
+      transform: scaleX(1);
+      transform-origin: left center;
+    }
+    .nav-link:hover {
+      color: var(--color-acqua);
+    }
   }
   /* On the paper bar the line and the hovered text both take the Peaks2Shores blue. */
   .site-header[data-solid]:not([data-menu]) .nav-link::after {
     background: var(--color-acqua-deep);
   }
-  .site-header[data-solid]:not([data-menu]) .nav-link:hover {
-    /* The brand blue a step deeper, so small type keeps 4.5:1 on paper. */
-    color: var(--color-brand-deep);
+  @media (hover: hover) {
+    .site-header[data-solid]:not([data-menu]) .nav-link:hover {
+      /* The brand blue a step deeper, so small type keeps 4.5:1 on paper. */
+      color: var(--color-brand-deep);
+    }
+  }
+  /* Under a finger (an iPad wide enough for the bar's links) each link is a
+     24px line in a 76px bar: a clear band above and below it, and into the
+     gaps beside it, makes a 44px target. The words and the hairline (::after)
+     stay where they are. */
+  @media (pointer: coarse) {
+    .site-header .nav-link::before {
+      content: '';
+      position: absolute;
+      inset: -10px -0.625rem;
+    }
   }
 
   /* Word-list toggles (journey filters, "traveling as"). Same hairline. */
@@ -752,10 +803,15 @@
     opacity: 0.4;
   }
   /* Outlines never lift — they fill. */
-  .btn--flat:hover,
   .btn--flat:active {
     transform: none !important;
     box-shadow: none !important;
+  }
+  @media (hover: hover) {
+    .btn--flat:hover {
+      transform: none !important;
+      box-shadow: none !important;
+    }
   }
 
   /* The optional arrow: a 1px-stroke →, nudged 4px on hover. */
@@ -763,12 +819,14 @@
     flex-shrink: 0;
     transition: transform 0.3s var(--ease-editorial);
   }
-  :is(a, button):hover > .btn-arrow,
-  .group:hover .btn-arrow {
-    transform: translateX(0.25rem);
-  }
-  :is(a, button):hover > .btn-arrow--back {
-    transform: translateX(-0.25rem);
+  @media (hover: hover) {
+    :is(a, button):hover > .btn-arrow,
+    .group:hover .btn-arrow {
+      transform: translateX(0.25rem);
+    }
+    :is(a, button):hover > .btn-arrow--back {
+      transform: translateX(-0.25rem);
+    }
   }
 
   /* ------------------------------------------------------------------------
@@ -832,9 +890,13 @@
   :where([data-tone='dark'], .bg-navy, .bg-navy-deep, .bg-charcoal) .frame-caption-rule {
     background: var(--color-acqua);
   }
-  .group:hover .frame-caption-rule,
   .group:focus-visible .frame-caption-rule {
     transform: scaleX(1);
+  }
+  @media (hover: hover) {
+    .group:hover .frame-caption-rule {
+      transform: scaleX(1);
+    }
   }
 
   /* A card's closing line. Always visible (wave 2); kept for compatibility. */
@@ -927,6 +989,20 @@
    in it, so tabbing into the navigation never puts focus off-screen. */
 .site-header[data-hidden]:focus-within {
   transform: none;
+}
+/* A journey's page on a short screen (a phone held sideways): the header steps
+   aside on a scroll down (Header.tsx) and the journey's menu bar, with its
+   enquiry pill, moves up into its place, so only the bar holds the top of the
+   screen. It steps back down when the header returns, keyboard focus in the
+   header included. (Under reduced motion the header never moves, so neither
+   does the bar.) */
+@media (max-height: 31.25rem) and (prefers-reduced-motion: no-preference) {
+  [data-journey-tabs] {
+    transition: top 0.45s var(--ease-editorial);
+  }
+  html:has(.site-header[data-hidden]:not(:focus-within)) [data-journey-tabs] {
+    top: 0;
+  }
 }
 
 /* Two logo files, cross-faded: light over a photograph or the menu, dark on paper. */
@@ -1045,14 +1121,17 @@
   opacity: 0;
 }
 
-/* The header CTA: an outline that fills on hover. */
-.site-header .header-cta:hover,
-.site-header[data-solid]:not([data-menu]) .header-cta:hover {
-  /* The brand blue a step deeper: a white label on the brand blue itself is
-     only 3.6:1. */
-  background-color: var(--color-brand-deep);
-  border-color: var(--color-brand-deep);
-  color: #ffffff;
+/* The header CTA: an outline that fills on hover (a pointer that can hover:
+   a tap would leave it filled). */
+@media (hover: hover) {
+  .site-header .header-cta:hover,
+  .site-header[data-solid]:not([data-menu]) .header-cta:hover {
+    /* The brand blue a step deeper: a white label on the brand blue itself is
+       only 3.6:1. */
+    background-color: var(--color-brand-deep);
+    border-color: var(--color-brand-deep);
+    color: #ffffff;
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -1517,9 +1596,10 @@ html[data-js] [data-ground][data-inview]::before {
   scroll-behavior: auto !important;
   user-select: none;
 }
-/* A slide-at-a-time slider keeps vertical page scrolling on touch. */
+/* A slide-at-a-time slider keeps vertical page scrolling on touch, and the
+   two-finger pinch that zooms the page everywhere else. */
 .hc-jr .frame {
-  touch-action: pan-y;
+  touch-action: pan-y pinch-zoom;
 }
 
 /* --------------------------------------------------------------------------

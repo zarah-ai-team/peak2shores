@@ -16,8 +16,9 @@ const slug = (s: string) =>
 
 /**
  * The shared shell for the legal pages: a title, an optional draft notice
- * (driven by `site.legalDraft` unless the page passes `draft`), a sticky
- * contents list and numbered sections in reading measure. The structure is
+ * (driven by `site.legalDraft` unless the page passes `draft`), a contents
+ * list (sticky beside the text from 1024px, a folded "Contents" above it
+ * below that) and numbered sections in reading measure. The structure is
  * final; the wording comes from Marc and replaces each section's body.
  */
 export function LegalPage({
@@ -36,6 +37,23 @@ export function LegalPage({
   draft?: boolean;
 }) {
   const items = sections.map((s, i) => ({ ...s, id: slug(s.heading) || `section-${i + 1}` }));
+
+  /** The numbered contents, one 44px row per section; `rule` draws the rows' hairlines. */
+  const contents = (className: string, rule: string) => (
+    <ol className={`m-0 list-none p-0 ${className}`}>
+      {items.map((s, i) => (
+        <li key={s.id} className={`${rule} border-line`}>
+          <a
+            href={`#${s.id}`}
+            className="kicker-sm flex min-h-11 items-center gap-3 py-2 text-body transition-colors duration-300 hover:text-brand"
+          >
+            <span className="w-5 shrink-0 text-muted">{String(i + 1).padStart(2, '0')}</span>
+            {s.heading}
+          </a>
+        </li>
+      ))}
+    </ol>
+  );
 
   return (
     <>
@@ -67,27 +85,23 @@ export function LegalPage({
 
       <section className="container-site pb-section-sm pt-block">
         <div className="grid-site gap-y-10">
-          <nav
-            aria-label="On this page"
-            className="col-span-full lg:col-span-3 lg:self-start lg:sticky lg:top-[calc(var(--nav-h)+2rem)]"
-          >
+          {/* "Last updated" stands outside the "On this page" landmark, which
+              holds the contents alone. From 1024px the list stands open in its
+              sticky column; narrower, it is folded under "Contents" (owner's
+              decision of 19 Nov 2026), one tap from any section. */}
+          <div className="measure col-span-full lg:col-span-3 lg:max-w-none lg:self-start lg:sticky lg:top-[calc(var(--nav-h)+2rem)]">
             <p className="kicker-sm m-0 mb-4">Last updated {updated}</p>
-            <ol className="m-0 hidden list-none border-t border-line p-0 lg:block">
-              {items.map((s, i) => (
-                <li key={s.id} className="border-b border-line">
-                  <a
-                    href={`#${s.id}`}
-                    className="kicker-sm flex min-h-11 items-center gap-3 py-2 text-body transition-colors duration-300 hover:text-brand"
-                  >
-                    <span className="w-5 shrink-0 text-muted">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    {s.heading}
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </nav>
+            <nav aria-label="On this page">
+              <details className="journey-day border-y border-line lg:hidden">
+                <summary className="kicker-sm flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 py-2 text-body">
+                  Contents
+                  <span aria-hidden className="day-toggle relative block size-3 shrink-0" />
+                </summary>
+                {contents('', 'border-t')}
+              </details>
+              {contents('hidden border-t border-line lg:block', 'border-b')}
+            </nav>
+          </div>
 
           <div className="col-span-full lg:col-span-7 lg:col-start-5">
             <div className="measure">

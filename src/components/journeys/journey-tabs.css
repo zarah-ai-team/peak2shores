@@ -1,0 +1,23 @@
+/*
+ * The in-page menu (JourneyTabs) on every page that carries it: a journey's
+ * page and the Journeys page. Where the tabs are wider than their room they
+ * scroll sideways, and the end with tabs hidden past it fades out
+ * (`data-edge`, set by JourneyTabs), so a tab is never cut mid-word at the
+ * strip's edge. Imported by the component itself, so the fade comes with the
+ * menu wherever it is used.
+ */
+.jt-tabs[data-edge='end'] {
+  mask-image: linear-gradient(90deg, #000 calc(100% - 2.5rem), transparent);
+}
+.jt-tabs[data-edge='start'] {
+  mask-image: linear-gradient(90deg, transparent, #000 2.5rem);
+}
+.jt-tabs[data-edge='both'] {
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 2.5rem,
+    #000 calc(100% - 2.5rem),
+    transparent
+  );
+}

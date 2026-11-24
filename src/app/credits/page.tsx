@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { PageTitle } from '@/components/ui/Editorial';
 import { Reveal } from '@/components/motion/Reveal';
 import { pageMetadata } from '@/lib/seo';
@@ -48,9 +49,32 @@ const authorOf = (row: Credit) => {
 };
 
 /**
+ * A website's name that may wrap after a dot, but keeps its last two parts
+ * whole: "grandhotelmajestic." then "duetorrihotels.com", never a lone "com".
+ * In the table each part holds together, so the column is never squeezed
+ * narrower than a part; a phone's stacked row may still break a part that is
+ * wider than the screen, rather than run the page off its edge.
+ */
+const breakAtDots = (host: string) => {
+  const labels = host.split('.');
+  const parts = [...labels.slice(0, -2).map((label) => `${label}.`), labels.slice(-2).join('.')];
+  return parts.map((part, i) => (
+    <Fragment key={i}>
+      {i > 0 && <wbr />}
+      <span className="sm:whitespace-nowrap">{part}</span>
+    </Fragment>
+  ));
+};
+
+/**
  * One table of credits: the photograph (linked to its source page), who it is
  * credited to, and a last column (the license for stock, the website it comes
  * from for a hotel's photograph). Below 640px each row stacks.
+ *
+ * `lastKind` says what that last column holds. A `license` is a few words that
+ * never break: below 640px it stands beside the author, so a credit takes two
+ * lines rather than three. A `website` stays on a line of its own below 640px,
+ * and in the table it may wrap, at its dots only.
  */
 function CreditTable({
   rows,
@@ -58,13 +82,16 @@ function CreditTable({
   authorHead,
   lastHead,
   last,
+  lastKind,
 }: {
   rows: Credit[];
   caption: string;
   authorHead: string;
   lastHead: string;
   last: (row: Credit) => string;
+  lastKind: 'license' | 'website';
 }) {
+  const license = lastKind === 'license';
   return (
     <table className="block w-full border-collapse text-left sm:table">
       <caption className="sr-only">{caption}</caption>
@@ -83,8 +110,17 @@ function CreditTable({
       </thead>
       <tbody className="block sm:table-row-group">
         {rows.map((row) => (
-          <tr key={row.slot} className="grid gap-1 border-b border-line py-4 sm:table-row sm:py-0">
-            <td className="prose-body-sm min-w-0 [overflow-wrap:anywhere] sm:py-4 sm:pr-6 sm:align-top">
+          <tr
+            key={row.slot}
+            className={`grid gap-1 border-b border-line py-4 sm:table-row sm:py-0 ${
+              license ? 'grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4' : ''
+            }`}
+          >
+            <td
+              className={`prose-body-sm min-w-0 [overflow-wrap:anywhere] sm:py-4 sm:pr-6 sm:align-top ${
+                license ? 'col-span-2' : ''
+              }`}
+            >
               {row.pageUrl ? (
                 // A stock photograph's page holds its license; the page a
                 // hotel's photograph was taken from does not, so it is a plain
@@ -105,8 +141,12 @@ function CreditTable({
             <td className="prose-body-sm min-w-0 [overflow-wrap:anywhere] sm:py-4 sm:pr-6 sm:align-top">
               {authorOf(row)}
             </td>
-            <td className="kicker-sm sm:whitespace-nowrap sm:py-4 sm:text-right sm:align-top">
-              {last(row)}
+            <td
+              className={`kicker-sm min-w-0 sm:py-4 sm:text-right sm:align-top ${
+                license ? 'whitespace-nowrap text-right' : 'max-sm:[overflow-wrap:anywhere]'
+              }`}
+            >
+              {license ? last(row) : breakAtDots(last(row))}
             </td>
           </tr>
         ))}
@@ -159,6 +199,7 @@ export default function CreditsPage() {
           authorHead="Author"
           lastHead="License"
           last={(row) => row.licence}
+          lastKind="license"
         />
       </Reveal>
 
@@ -178,6 +219,7 @@ export default function CreditsPage() {
               authorHead="Credit"
               lastHead="Website"
               last={siteOf}
+              lastKind="website"
             />
           </Reveal>
         </section>

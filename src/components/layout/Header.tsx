@@ -13,6 +13,13 @@ import { SiteMenu } from './SiteMenu';
 /** Past this the header steps aside on a scroll down. */
 const HIDE_AFTER = 480;
 
+/**
+ * A short screen (a phone held sideways), where the header and a journey's
+ * menu bar together would hold a third of the screen: there the bar takes the
+ * header's place while it is away (globals.css), so the header steps aside.
+ */
+const SHORT = '(max-height: 31.25rem)';
+
 /** How long the bar takes to return to the page's own state after the menu closes. */
 const CLOSING_MS = 400;
 
@@ -26,7 +33,8 @@ const CLOSING_MS = 400;
  * - one size everywhere: the same bar, logo and links on every page and at
  *   every scroll position (`data-compact` marks a moved page but changes no size)
  * - out of the way on a long scroll down, back on any scroll up (`data-hidden`),
- *   unless the page pins a bar beneath it (`[data-pin-header]`)
+ *   unless the page pins a bar beneath it (`[data-pin-header]`); on a short
+ *   screen a journey's menu bar moves up into its place instead
  * - on-dark over the open menu (`data-menu`), and for the moment after it
  *   closes (`data-nav-closing`) holding that state until the sheet has
  *   cleared the bar
@@ -61,6 +69,8 @@ export function Header({
   const pathname = usePathname() ?? '/';
   const route = `/${useSelectedLayoutSegments().join('/')}`;
   const overHero = isHeroRoute(route);
+  /** A journey's own page (not the Journeys page), whose menu bar can take the header's place. */
+  const journeyPage = /^\/journeys\/[^/]+$/.test(route);
   const [scrolled, setScrolled] = useState(!overHero);
   const [compact, setCompact] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -104,8 +114,14 @@ export function Header({
       setCompact(y > 40);
 
       // A page that pins a bar beneath the header (the journeys filters) keeps
-      // the header in place; hiding it would leave that bar floating.
-      const pinned = document.querySelector('[data-pin-header]') !== null;
+      // the header in place; hiding it would leave that bar floating. On a
+      // short screen a journey's menu bar moves up into the header's place
+      // instead (globals.css), so there the header steps aside as it does on
+      // any other page.
+      const short = journeyPage && window.matchMedia(SHORT).matches;
+      const pinned = [...document.querySelectorAll('[data-pin-header]')].some(
+        (bar) => !(short && bar.hasAttribute('data-journey-tabs')),
+      );
 
       const delta = y - lastY;
       if (pinned || y < HIDE_AFTER || delta < -4) setHidden(false);
@@ -126,7 +142,7 @@ export function Header({
       window.removeEventListener('resize', onScroll);
       if (frame) window.cancelAnimationFrame(frame);
     };
-  }, [overHero, pathname, menuOpen]);
+  }, [overHero, journeyPage, pathname, menuOpen]);
 
   // Close the menu whenever the route changes.
   useEffect(() => setMenuOpen(false), [pathname]);

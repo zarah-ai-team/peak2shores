@@ -1,0 +1,935 @@
+/*
+ * Plan your journey (EnquiryForm), after the client's reference: on the
+ * stone ground a giant "Let's talk." in white behind the section; on the
+ * left the words, the two ways to travel as pill choices, each with its
+ * icon, and the ways to reach us; on the right a frosted card whose form is
+ * in four numbered parts, its fields underlined with an icon at the start of
+ * the line. In the site's own palette: navy for a chosen option, the brand
+ * blue for the progress rule, focus and icons. Scoped to `.pe`.
+ */
+.pe {
+  --pe-ink: var(--color-navy);
+  --pe-muted: var(--color-muted);
+  --pe-rule: rgb(14 47 66 / 0.14);
+  --pe-soft: #eef4f9;
+  --pe-blue: var(--color-brand-deep);
+  --pe-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  position: relative;
+  /* `clip`, not `hidden`: it trims the giant word without becoming a scroll
+     container, so the words beside the card can stay pinned. */
+  overflow: hidden;
+  overflow: clip;
+  padding: clamp(3.5rem, 7vw, 6rem) max(clamp(1.25rem, 3.39vw, 4rem), calc((100% - 82rem) / 2))
+    clamp(5rem, 9vw, 8rem);
+  background: var(--color-stone);
+  color: var(--pe-ink);
+}
+.pe *,
+.pe *::before,
+.pe *::after {
+  box-sizing: border-box;
+}
+.pe svg {
+  flex: none;
+}
+.pe-anchor {
+  position: absolute;
+  top: 0;
+}
+
+/* The giant word behind, rising into place. */
+.pe-giant {
+  position: absolute;
+  inset-inline: 0;
+  top: clamp(1.5rem, 4vw, 3.5rem);
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(6rem, 19vw, 19rem);
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+  white-space: nowrap;
+  color: #fff;
+  opacity: 0.85;
+  pointer-events: none;
+  user-select: none;
+  animation: pe-rise 1.4s var(--pe-ease) both;
+}
+.pe-giant em {
+  font-style: italic;
+}
+@keyframes pe-rise {
+  from {
+    opacity: 0;
+    transform: translateY(2.5rem);
+  }
+}
+
+.pe-g {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 25rem) minmax(0, 1fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+  margin-top: clamp(7rem, 15vw, 13rem);
+}
+/* On a desktop the words stay beside the card while the form is filled in. */
+@media (min-width: 1024px) {
+  .pe-side {
+    position: sticky;
+    top: calc(var(--nav-h-compact, 5rem) + 2rem);
+  }
+}
+
+/* -- The words and the two ways ----------------------------------------------- */
+.pe-lab {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--color-stone-text);
+}
+.pe-lab::before {
+  content: '';
+  width: 1.75rem;
+  height: 1px;
+  background: var(--color-brand);
+}
+.pe-side h1 {
+  margin: 1.125rem 0 1.5rem;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.375rem, 3.8vw, 3.375rem);
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+}
+.pe-intro {
+  margin: 0 0 2.5rem;
+  font-family: var(--font-ui);
+  font-weight: 300;
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: var(--color-body);
+}
+.pe-path {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 2.75rem;
+}
+.pe-path button {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  min-height: 4.75rem;
+  padding: 0.5rem 1rem 0.5rem 0.5rem;
+  border: 1px solid rgb(255 255 255 / 0.9);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--pe-ink);
+  font-family: var(--font-ui);
+  font-size: 1.03rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 0.75rem 1.75rem -1.25rem rgb(14 47 66 / 0.35);
+  transition:
+    background-color 0.6s var(--pe-ease),
+    color 0.6s var(--pe-ease),
+    transform 0.5s var(--pe-ease),
+    box-shadow 0.5s var(--pe-ease);
+}
+@media (hover: hover) {
+  .pe-path button:hover {
+    transform: translateX(4px);
+    box-shadow: 0 1rem 2rem -1.25rem rgb(14 47 66 / 0.45);
+  }
+}
+/* The way's icon, in a soft circle; white on the chosen one. */
+.pe-pi {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: var(--pe-soft);
+  color: var(--pe-blue);
+  transition:
+    background-color 0.6s var(--pe-ease),
+    color 0.6s var(--pe-ease);
+}
+.pe-pi svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.pe-pt {
+  flex: 1;
+  min-width: 0;
+  line-height: 1.3;
+}
+.pe-pt small {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 300;
+  color: var(--pe-muted);
+}
+/* The tick on the right: an empty ring, filled when chosen. */
+.pe-pc {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1.5px solid #b5c2cb;
+  border-radius: 50%;
+  color: transparent;
+  transition: all 0.5s var(--pe-ease);
+}
+.pe-pc svg {
+  width: 0.875rem;
+  height: 0.875rem;
+  stroke-width: 2.5;
+}
+.pe-path button.on {
+  background: var(--pe-ink);
+  border-color: var(--pe-ink);
+  color: #fff;
+}
+.pe-path button.on small {
+  color: #c9d6de;
+}
+.pe-path button.on .pe-pi {
+  background: #fff;
+  color: var(--pe-ink);
+}
+.pe-path button.on .pe-pc {
+  border-color: var(--color-acqua);
+  background: var(--color-acqua);
+  color: var(--pe-ink);
+}
+.pe-who {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 1.875rem;
+  border-top: 1px solid var(--pe-rule);
+}
+.pe-av {
+  flex: none;
+  width: 3.75rem;
+  height: 3.75rem;
+  overflow: hidden;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #fff;
+}
+.pe-av img {
+  width: 100%;
+  height: 125%;
+  object-fit: cover;
+  object-position: center 6%;
+}
+.pe-who b {
+  display: block;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.375rem;
+}
+.pe-who span {
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  color: var(--pe-muted);
+}
+.pe-reach {
+  display: grid;
+  gap: 0.375rem;
+  margin: 1.375rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.pe-reach a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2.75rem;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  color: inherit;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.pe-ri {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--pe-rule);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--pe-blue);
+  transition: all 0.4s var(--pe-ease);
+}
+.pe-ri svg {
+  width: 1.0625rem;
+  height: 1.0625rem;
+}
+@media (hover: hover) {
+  .pe-reach a:hover .pe-ri {
+    background: var(--pe-ink);
+    border-color: var(--pe-ink);
+    color: #fff;
+  }
+}
+
+/* -- The card ----------------------------------------------------------------- */
+.pe-card {
+  padding: clamp(1.5rem, 3.6vw, 3rem) clamp(1.25rem, 3.8vw, 3.25rem) clamp(1.75rem, 3.5vw, 3rem);
+  border: 1px solid rgb(255 255 255 / 0.9);
+  border-radius: 2rem;
+  background: rgb(255 255 255 / 0.66);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow:
+    0 2rem 4.5rem -1.5rem rgb(14 47 66 / 0.16),
+    inset 0 1px 0 #fff;
+}
+/* Its head: the chosen way's icon, its name, and how far along the form is. */
+.pe-head {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin-bottom: 1rem;
+}
+.pe-hi {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--pe-ink);
+  color: #fff;
+}
+.pe-hi svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+.pe-steps {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-ui);
+}
+.pe-steps b {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+.pe-steps span {
+  font-size: 0.8125rem;
+  color: var(--pe-muted);
+}
+.pe-count {
+  flex: none;
+  padding: 0.375rem 0.75rem;
+  border-radius: 999px;
+  background: #fff;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  color: var(--pe-blue);
+}
+.pe-bar {
+  height: 3px;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgb(14 47 66 / 0.08);
+}
+.pe-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--color-brand), var(--color-acqua));
+  transition: width 0.8s var(--pe-ease);
+}
+.pe-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 3rem;
+}
+.pe-full {
+  grid-column: 1 / -1;
+}
+/* A numbered part: "01 About you", on a hairline. */
+.pe-grp {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 2.5rem 0 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--pe-rule);
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-stone-text);
+}
+.pe-grp span {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: #fff;
+  font-size: 0.625rem;
+  letter-spacing: 0.04em;
+  color: var(--pe-blue);
+}
+.pe-f {
+  min-width: 0;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  border: 0;
+}
+.pe-f > label,
+.pe-f > legend {
+  display: block;
+  padding: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.125rem, 1.45vw, 1.3125rem);
+  font-weight: 400;
+}
+.pe-f label small {
+  margin-left: 0.5rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  background: rgb(14 47 66 / 0.06);
+  font-family: var(--font-ui);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  vertical-align: 0.15em;
+  color: var(--pe-muted);
+}
+/* The underline, with its icon at the start; both turn blue with focus. */
+.pe-in {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  border-bottom: 1.5px solid var(--pe-ink);
+  transition: border-color 0.4s var(--pe-ease);
+}
+.pe-in::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 -1.5px;
+  height: 1.5px;
+  background: var(--color-brand);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s var(--pe-ease);
+}
+.pe-in:focus-within::after {
+  transform: scaleX(1);
+}
+.pe-fi {
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-top: 1.0625rem;
+  color: #8c9aa4;
+  transition: color 0.4s var(--pe-ease);
+}
+.pe-in:focus-within .pe-fi {
+  color: var(--color-brand);
+}
+.pe-in input,
+.pe-in textarea {
+  flex: 1;
+  min-width: 0;
+  padding: 0.875rem 0 0.8125rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-family: var(--font-ui);
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  color: var(--pe-ink);
+}
+.pe-in textarea {
+  min-height: 3.25rem;
+  resize: vertical;
+}
+.pe-in input:focus,
+.pe-in textarea:focus {
+  outline: none;
+}
+.pe-in input::placeholder,
+.pe-in textarea::placeholder {
+  color: #7c8892;
+}
+/* Traveling as. */
+.pe-seg {
+  display: inline-flex;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  padding: 0.3125rem;
+  border: 1px solid var(--pe-rule);
+  border-radius: 1.625rem;
+  background: #fff;
+}
+.pe-seg button {
+  min-height: 2.75rem;
+  padding: 0 1.125rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--pe-ink);
+  cursor: pointer;
+  transition: all 0.5s var(--pe-ease);
+}
+@media (hover: hover) {
+  .pe-seg button:not(.on):hover {
+    background: var(--pe-soft);
+  }
+}
+.pe-seg button.on {
+  background: var(--pe-ink);
+  color: #fff;
+}
+/* Guests. */
+.pe-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.3125rem;
+  border: 1px solid var(--pe-rule);
+  border-radius: 999px;
+  background: #fff;
+}
+.pe-step button {
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 0;
+  border-radius: 50%;
+  background: var(--pe-soft);
+  font-size: 1.125rem;
+  color: var(--pe-ink);
+  cursor: pointer;
+  transition: all 0.4s var(--pe-ease);
+}
+.pe-step button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+@media (hover: hover) {
+  .pe-step button:not(:disabled):hover {
+    background: var(--pe-ink);
+    color: #fff;
+  }
+}
+.pe-step output {
+  min-width: 3.25rem;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.625rem;
+}
+/* The journeys, as photograph cards with a tick when chosen. */
+.pe-jsel {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  gap: 0.75rem;
+  margin-top: 1.125rem;
+}
+.pe-jc {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.5rem 2.75rem 0.5rem 0.5rem;
+  border: 1.5px solid rgb(255 255 255 / 0.9);
+  border-radius: 1.125rem;
+  background: #fff;
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.3;
+  cursor: pointer;
+  transition: all 0.45s var(--pe-ease);
+}
+.pe-jc img {
+  flex: none;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 0.75rem;
+  object-fit: cover;
+}
+.pe-jt {
+  min-width: 0;
+}
+.pe-jc small {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--pe-muted);
+}
+.pe-jk {
+  position: absolute;
+  top: 50%;
+  right: 0.875rem;
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1.5px solid #c3ced6;
+  border-radius: 50%;
+  color: transparent;
+  transform: translateY(-50%);
+  transition: all 0.45s var(--pe-ease);
+}
+.pe-jk svg {
+  width: 0.75rem;
+  height: 0.75rem;
+  stroke-width: 2.6;
+}
+@media (hover: hover) {
+  .pe-jc:hover {
+    border-color: rgb(14 47 66 / 0.3);
+  }
+}
+.pe-jc.on {
+  border-color: var(--pe-ink);
+  box-shadow: 0 0.625rem 1.5rem -0.5rem rgb(14 47 66 / 0.22);
+}
+.pe-jc.on .pe-jk {
+  border-color: var(--pe-ink);
+  background: var(--pe-ink);
+  color: #fff;
+}
+.pe-jc:has(:focus-visible) {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+/* The destinations, as chips. */
+.pe-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+  margin-top: 1.125rem;
+}
+.pe-chips button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0 1.125rem 0 0.875rem;
+  border: 1px solid rgb(255 255 255 / 0.9);
+  border-radius: 999px;
+  background: #fff;
+  font-family: var(--font-ui);
+  font-size: 0.94rem;
+  font-weight: 500;
+  color: var(--pe-ink);
+  cursor: pointer;
+  transition: all 0.45s var(--pe-ease);
+}
+.pe-chips svg {
+  width: 1rem;
+  height: 1rem;
+  color: var(--pe-blue);
+}
+.pe-chips button.on {
+  background: var(--pe-ink);
+  border-color: var(--pe-ink);
+  color: #fff;
+}
+.pe-chips button.on svg {
+  color: var(--color-acqua);
+}
+.pe-info {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 1.25rem 0 0;
+  padding: 0.875rem 1.125rem;
+  border-radius: 1rem;
+  background: var(--pe-soft);
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--color-body);
+}
+.pe-ii {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--pe-blue);
+}
+.pe-ii svg {
+  width: 1rem;
+  height: 1rem;
+}
+.pe-info b {
+  font-weight: 600;
+  color: var(--pe-ink);
+}
+
+/* The tick box, the promises and the send button. */
+.pe-consent {
+  margin-top: 2rem;
+}
+.pe-consent label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2.75rem;
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-body);
+  cursor: pointer;
+}
+.pe-consent input {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  accent-color: var(--pe-ink);
+}
+.pe-consent a {
+  color: var(--pe-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--color-brand);
+  text-underline-offset: 0.22em;
+}
+.pe-err {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  color: var(--color-error);
+}
+.pe-err:not(:empty) {
+  margin-top: 0.5rem;
+}
+.pe-end {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.25rem 2rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--pe-rule);
+}
+.pe-promise {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-ui);
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--pe-muted);
+}
+.pe-promise li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.pe-promise svg {
+  width: 1rem;
+  height: 1rem;
+  color: var(--pe-blue);
+}
+.pe-send {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 1rem;
+  min-height: 4.25rem;
+  padding: 0 2.25rem 0 0.5625rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--pe-ink);
+  color: #fff;
+  font-family: var(--font-ui);
+  font-size: 1.03rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 1rem 2rem -1rem rgb(14 47 66 / 0.6);
+  transition:
+    transform 0.5s var(--pe-ease),
+    box-shadow 0.5s var(--pe-ease);
+}
+.pe-si {
+  display: grid;
+  place-items: center;
+  width: 3.125rem;
+  height: 3.125rem;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--pe-ink);
+}
+.pe-si svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  stroke-width: 1.75;
+  transition: transform 0.5s var(--pe-ease);
+}
+@media (hover: hover) {
+  .pe-send:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 1.25rem 2.5rem -1rem rgb(14 47 66 / 0.7);
+  }
+  .pe-send:hover .pe-si svg {
+    transform: translateX(3px);
+  }
+}
+.pe-send[aria-disabled='true'] {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+/* Every control's keyboard focus. */
+.pe button:focus-visible,
+.pe a:focus-visible,
+.pe-consent input:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 3px;
+}
+
+/* -- Sent --------------------------------------------------------------------- */
+.pe-done {
+  padding: 3rem 1.25rem;
+  text-align: center;
+}
+.pe-tick {
+  display: grid;
+  place-items: center;
+  width: 4.375rem;
+  height: 4.375rem;
+  margin: 0 auto 1.375rem;
+  border-radius: 50%;
+  background: var(--pe-ink);
+  color: #fff;
+  animation: pe-pop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.pe-tick svg {
+  width: 1.75rem;
+  height: 1.75rem;
+  stroke-width: 2.4;
+}
+@keyframes pe-pop {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+}
+.pe-done h2 {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  outline: none;
+}
+.pe-done p {
+  max-width: 30em;
+  margin: 0 auto 0.75rem;
+  font-family: var(--font-ui);
+  font-weight: 300;
+  font-size: 0.94rem;
+  line-height: 1.7;
+  color: var(--color-body);
+}
+.pe-done .pe-sum {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  background: #fff;
+  font-weight: 500;
+  color: var(--pe-ink);
+}
+.pe-done .pe-send {
+  margin-top: 1rem;
+}
+.pe-again {
+  margin-top: 1.25rem;
+  min-height: 2.875rem;
+  padding: 0 1.5rem;
+  border: 1px solid var(--pe-rule);
+  border-radius: 999px;
+  background: transparent;
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--pe-ink);
+  cursor: pointer;
+}
+
+/* -- Narrower screens --------------------------------------------------------- */
+@media (max-width: 1023.98px) {
+  .pe-g {
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: clamp(5rem, 16vw, 8rem);
+  }
+  .pe-side {
+    max-width: 36rem;
+  }
+}
+@media (max-width: 640px) {
+  .pe-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pe-card {
+    border-radius: 1.5rem;
+  }
+  .pe-count {
+    display: none;
+  }
+  .pe-end {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .pe-send {
+    justify-content: flex-start;
+  }
+  .pe-path button {
+    min-height: 4.25rem;
+  }
+  .pe-pi {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pe-giant,
+  .pe-tick {
+    animation: none;
+  }
+  .pe * {
+    transition: none !important;
+  }
+}

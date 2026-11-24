@@ -144,14 +144,17 @@ function frame(route: LonLat[], w: number, h: number): View {
 }
 
 /* The map's colours: a clear sea, the land a cool pale grey (no sand: the
-   owner's decision of 18 November 2026), the chosen journey's countries in
-   soft sage, the route in the brand blue. The lines between countries are
-   the page's ink, faint, and the countries' names its slate blue. */
+   owner's decision of 18 November 2026), the chosen journey's countries in a
+   pale card blue edged in the cards' #1d4a66 (blues like the journey cards,
+   19 November; it was a sage), set as far from the sea as from the land, the
+   route in the brand blue. The lines between countries are the page's ink,
+   faint, and the countries' names its slate blue. */
 const SEA = '#aad3df';
 const LAND = '#edf1f4';
-const LAND_LIT = '#d3e0b9';
+const LAND_LIT = '#cfe0ec';
 const BRAND = '#018fc9';
 const BORDER = 'rgb(20 29 36 / 0.22)';
+const BORDER_LIT = 'rgb(29 74 102 / 0.6)';
 const NAME = (alpha: number) => `rgb(61 90 108 / ${alpha})`;
 
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
@@ -233,10 +236,28 @@ export function HeroCarousel({
     let raf = 0;
     let last = 0;
 
+    type Box = [number, number, number, number];
+    /* The caption over the map, where it shows (1024px and wider; below, it
+       is for screen readers only), as a box in the canvas's own pixels with
+       a little air: no name the canvas draws goes under it. */
+    const pill = el.parentElement?.querySelector<HTMLElement>('.jxh-pill');
+    const keepOut = (): Box | null => {
+      const pb = pill?.getBoundingClientRect();
+      if (!pb || pb.width <= 1) return null;
+      const cb = el.getBoundingClientRect();
+      return [
+        pb.left - cb.left - 6,
+        pb.top - cb.top - 6,
+        pb.right - cb.left + 6,
+        pb.bottom - cb.top + 6,
+      ];
+    };
+    const meets = (a: Box, b: Box) => a[0] < b[2] && a[2] > b[0] && a[1] < b[3] && a[3] > b[1];
+
     /* The earth itself, in map colours (notes of 5 November 2026, cooled on
-       18 November): a clear sea blue, the land a pale cool grey, the
-       countries of the chosen journey in soft sage, fine borders, and their
-       names once close enough to read. No glow, no dark ground. */
+       18 and 19 November): a clear sea blue, the land a pale cool grey, the
+       countries of the chosen journey in a pale card blue, fine borders, and
+       their names once close enough to read. No glow, no dark ground. */
     const paintBase = (hi: boolean) => {
       // The fine coastlines only once close in; the whole earth needs no more than the coarse ones.
       const land = (hi && view.k > 2 && atlas.hi) || atlas.lo;
@@ -277,7 +298,7 @@ export function HeroCarousel({
           bctx.stroke();
         };
         layer((c) => !lit.has(c.properties.name), LAND, BORDER);
-        if (lit.size) layer((c) => lit.has(c.properties.name), LAND_LIT, 'rgb(86 104 66 / 0.75)');
+        if (lit.size) layer((c) => lit.has(c.properties.name), LAND_LIT, BORDER_LIT);
       }
 
       // The earth's edge, as a fine line, while the whole of it is in view.
@@ -294,18 +315,25 @@ export function HeroCarousel({
         bctx.font = `500 12px ${sans}`;
         bctx.textAlign = 'center';
         if ('letterSpacing' in bctx) (bctx as { letterSpacing: string }).letterSpacing = '5px';
-        // Once fully shown, 6.4:1 on the land, 5.3:1 on the chosen
+        // Once fully shown, 6.4:1 on the land, 5.4:1 on the chosen
         // countries and 4.6:1 on the sea.
         bctx.fillStyle = NAME(show);
         const centre: LonLat = [view.lon, view.lat];
         // Names give way to the route: none where a stop and its label would be.
         const taken = (journey?.stops ?? []).map((s) => p(s.at) ?? [-999, -999]);
+        const caption = keepOut();
         for (const l of NAMES) {
           if (geoDistance(l.at, centre) > Math.PI / 2.2) continue;
           const [x, y] = p(l.at) ?? [-99, -99];
           if (taken.some(([sx, sy]) => Math.abs(sx - x) < 150 && Math.abs(sy - y) < 40)) continue;
-          if (x > 40 && x < w - 40 && y > 20 && y < h - 20)
-            bctx.fillText(l.name.toUpperCase(), x, y);
+          // A name is drawn whole or not at all: all of it inside the frame
+          // (the measure includes the letter spacing), none of it under the
+          // caption.
+          const name = l.name.toUpperCase();
+          const half = bctx.measureText(name).width / 2;
+          if (x - half < 8 || x + half > w - 8 || y <= 20 || y >= h - 20) continue;
+          if (caption && meets([x - half, y - 12, x + half, y + 4], caption)) continue;
+          bctx.fillText(name, x, y);
         }
         if ('letterSpacing' in bctx) (bctx as { letterSpacing: string }).letterSpacing = '0px';
       }
@@ -387,17 +415,92 @@ export function HeroCarousel({
         return lens[Math.min(at24, lens.length - 1)] <= upto + 0.5;
       };
       const spots = journey.stops.map((s) => ({ s, xy: p(s.at) ?? [0, 0] }));
-      type Box = [number, number, number, number];
+      // Labels never sit on one another, on the caption over the map, or
+      // close over or under another stop's dot, where a name would read as
+      // that stop's: each dot is kept clear 9px to either side and 13px above
+      // and below.
       const labels: Box[] = [];
-      // Every stop's dot is kept clear too.
-      for (const { xy } of spots) labels.push([xy[0] - 9, xy[1] - 9, xy[0] + 9, xy[1] + 9]);
-      for (const { s, xy } of spots) {
-        if (!reached(s.at)) continue;
+      const caption = keepOut();
+      if (caption) labels.push(caption);
+      const dots = spots.map(({ xy }): Box => [xy[0] - 9, xy[1] - 13, xy[0] + 9, xy[1] + 13]);
+      labels.push(...dots);
+      const fs = w < 700 ? 15 : 19;
+      const nfs = w < 700 ? 9.5 : 11;
+      const nameFont = `400 ${fs}px ${serif}`;
+      const nightsFont = `600 ${nfs}px ${sans}`;
+      const nightsOf = (s: (typeof spots)[number]['s']) =>
+        `${s.nights} ${s.nights === 1 ? 'NIGHT' : 'NIGHTS'}`;
+      // A label tries its side, then the other, then drops its nights, and on
+      // a crowded small map is left off (the dot stays; the card below names
+      // every stop). The first and last stops are placed first, so the ends
+      // of the route keep their names, and where neither side has room an
+      // end's name goes under its dot, or over it. The places are set for the
+      // whole route at once, so no name moves as the line arrives.
+      type Side = 'left' | 'right' | 'below' | 'above';
+      const placed = new Map<number, { side: Side; withNights: boolean }>();
+      const order = spots.length > 1 ? [0, spots.length - 1] : [0];
+      for (let i = 1; i < spots.length - 1; i++) order.push(i);
+      for (const i of order) {
+        const { s, xy } = spots[i];
         const [x, y] = xy;
         const left =
           spots.some(
             (o) => o.s !== s && o.xy[0] > x && o.xy[0] - x < 170 && Math.abs(o.xy[1] - y) < 34,
           ) || x > w * 0.86;
+        const nt = nightsOf(s);
+        ctx.font = nameFont;
+        const nameW = ctx.measureText(s.name).width;
+        ctx.font = nightsFont;
+        const nightsW = s.nights > 0 ? ctx.measureText(nt).width + nt.length * 2 : 0;
+        const boxFor = (side: Side, nights: boolean): Box => {
+          if (side === 'below') return [x - nameW / 2, y + 10, x + nameW / 2, y + 10 + fs * 1.1];
+          if (side === 'above') return [x - nameW / 2, y - 10 - fs * 1.1, x + nameW / 2, y - 10];
+          const bw = nights ? Math.max(nameW, nightsW) : nameW;
+          const x0 = side === 'left' ? x - 17 - bw : x + 17;
+          return [x0, y - 18, x0 + bw, y + (nights ? 20 : 4)];
+        };
+        // Beside its dot, each line of a label (the name, the nights) starts
+        // nearer its own dot than any other stop's, or it would read as that
+        // stop's: a dot stacked just over or under this one, say.
+        const nearest = (ax: number, ay: number) =>
+          spots.every(
+            (o, j) =>
+              j === i || Math.hypot(o.xy[0] - ax, o.xy[1] - ay) > Math.hypot(x - ax, y - ay),
+          );
+        const ownLines = (side: Side, nights: boolean) => {
+          const ax = side === 'left' ? x - 17 : x + 17;
+          return nearest(ax, y - 2 - fs / 4) && (!nights || nearest(ax, y + 15 - nfs * 0.36));
+        };
+        const clashes = (side: Side, nights: boolean) => {
+          const b = boxFor(side, nights);
+          return (
+            b[0] < 4 ||
+            b[2] > w - 4 ||
+            (side === 'left' || side === 'right'
+              ? !ownLines(side, nights)
+              : b[1] < 4 || b[3] > h - 4) ||
+            labels.some((q) => q !== dots[i] && meets(b, q))
+          );
+        };
+        const one: Side = left ? 'left' : 'right';
+        const other: Side = left ? 'right' : 'left';
+        const tries: [Side, boolean][] = [
+          [one, s.nights > 0],
+          [other, s.nights > 0],
+          [one, false],
+          [other, false],
+        ];
+        if (i === 0 || i === spots.length - 1) tries.push(['below', false], ['above', false]);
+        const fit = tries.find(([side, n]) => !clashes(side, n));
+        if (!fit) continue;
+        const [side, withNights] = fit;
+        labels.push(boxFor(side, withNights));
+        placed.set(i, { side, withNights });
+      }
+
+      spots.forEach(({ s, xy }, i) => {
+        if (!reached(s.at)) return;
+        const [x, y] = xy;
         ctx.fillStyle = '#fff';
         ctx.strokeStyle = BRAND;
         ctx.lineWidth = 2.5;
@@ -406,45 +509,21 @@ export function HeroCarousel({
         ctx.fill();
         ctx.stroke();
 
-        // Labels never sit on one another: a label tries its side, then the
-        // other, then drops its nights, and on a crowded small map is left
-        // off (the dot stays; the card below names every stop).
-        const nameFont = `400 ${w < 700 ? 15 : 19}px ${serif}`;
-        const nightsFont = `600 ${w < 700 ? 9.5 : 11}px ${sans}`;
-        const nt = `${s.nights} ${s.nights === 1 ? 'NIGHT' : 'NIGHTS'}`;
-        ctx.font = nameFont;
-        const nameW = ctx.measureText(s.name).width;
-        ctx.font = nightsFont;
-        const nightsW = s.nights > 0 ? ctx.measureText(nt).width + nt.length * 2 : 0;
-        const boxFor = (onLeft: boolean, nights: boolean): Box => {
-          const bw = nights ? Math.max(nameW, nightsW) : nameW;
-          const x0 = onLeft ? x - 17 - bw : x + 17;
-          return [x0, y - 18, x0 + bw, y + (nights ? 20 : 4)];
-        };
-        const clashes = (b: Box) =>
-          b[0] < 4 ||
-          b[2] > w - 4 ||
-          labels.some((q) => b[0] < q[2] && b[2] > q[0] && b[1] < q[3] && b[3] > q[1]);
-        const tries: [boolean, boolean][] = [
-          [left, s.nights > 0],
-          [!left, s.nights > 0],
-          [left, false],
-          [!left, false],
-        ];
-        const fit = tries.find(([l, n]) => !clashes(boxFor(l, n)));
-        if (!fit) continue;
-        const [onLeft, withNights] = fit;
-        labels.push(boxFor(onLeft, withNights));
-
-        const tx = x + (onLeft ? -17 : 17);
-        ctx.textAlign = onLeft ? 'right' : 'left';
+        const place = placed.get(i);
+        if (!place) return;
+        const { side, withNights } = place;
+        const nt = nightsOf(s);
+        const tx = side === 'left' ? x - 17 : side === 'right' ? x + 17 : x;
+        const ty =
+          side === 'below' ? y + 10 + fs * 0.8 : side === 'above' ? y - 10 - fs * 0.3 : y - 2;
+        ctx.textAlign = side === 'left' ? 'right' : side === 'right' ? 'left' : 'center';
         ctx.lineJoin = 'round';
         ctx.strokeStyle = 'rgb(255 255 255 / 0.92)';
         ctx.font = nameFont;
         ctx.lineWidth = 4;
-        ctx.strokeText(s.name, tx, y - 2);
+        ctx.strokeText(s.name, tx, ty);
         ctx.fillStyle = '#141d24';
-        ctx.fillText(s.name, tx, y - 2);
+        ctx.fillText(s.name, tx, ty);
         if (withNights) {
           ctx.font = nightsFont;
           if ('letterSpacing' in ctx) (ctx as { letterSpacing: string }).letterSpacing = '2px';
@@ -454,7 +533,7 @@ export function HeroCarousel({
           ctx.fillText(nt, tx, y + 15);
           if ('letterSpacing' in ctx) (ctx as { letterSpacing: string }).letterSpacing = '0px';
         }
-      }
+      });
     };
 
     const compose = () => {

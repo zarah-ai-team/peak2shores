@@ -1,4 +1,10 @@
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { PHASE_DEVELOPMENT_SERVER } from 'next/constants.js';
+
+/* This folder is the project root. Pinned so a stray lockfile in a parent
+   folder cannot make Next pick the wrong workspace root. */
+const projectRoot = dirname(fileURLToPath(import.meta.url));
 
 /*
  * Security headers appropriate to a static marketing site.
@@ -46,6 +52,8 @@ const isProduction = process.env.VERCEL_ENV
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  outputFileTracingRoot: projectRoot,
+  turbopack: { root: projectRoot },
   images: {
     // WebP only. AVIF is smaller but several times slower to encode, and on a
     // small instance with a cold cache that encode is what keeps a page of
@@ -115,6 +123,8 @@ const staticConfig = {
   poweredByHeader: false,
   output: 'export',
   trailingSlash: true,
+  outputFileTracingRoot: projectRoot,
+  turbopack: { root: projectRoot },
   // Its own type check, so the dev server's leftover route types (which still
   // list the form endpoints) cannot fail it.
   typescript: { tsconfigPath: 'tsconfig.static.json' },

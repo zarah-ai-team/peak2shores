@@ -25,6 +25,15 @@
   background: #fff;
   padding: clamp(1rem, 1.67vw, 1.5rem) var(--inset) clamp(3.5rem, 5vw, 5.5rem);
 }
+/* Below 1024px the heading, the promises and the frame start on the page's
+   own gutter, where every other section's heading starts (they sat 8 to 37px
+   further in). */
+@media (max-width: 1023px) {
+  .hc-jr {
+    --inset: 0px;
+    --pad: var(--gut);
+  }
+}
 /* White, like the page around it: the slider's photographs carry the colour. */
 .hc-jr .panel {
   position: relative;
@@ -77,10 +86,13 @@
   border: 1px solid var(--color-brand-deep);
   color: #fff;
 }
-.hc-jr .btn-accent:hover {
-  background: var(--lake);
-  border-color: var(--lake);
-  color: #fff;
+/* Under a pointer only: on a touch screen a hover would stay after the tap. */
+@media (hover: hover) {
+  .hc-jr .btn-accent:hover {
+    background: var(--lake);
+    border-color: var(--lake);
+    color: #fff;
+  }
 }
 
 /* -- The three promises ---------------------------------------------------
@@ -751,8 +763,10 @@
   }
 }
 
-/* -- Tablet and phone: the words, then the controls, under the picture --- */
-@media (max-width: 900px) {
+/* -- Tablet and phone: the words, then the controls, under the picture ---
+      A phone held sideways has this layout whatever its width: above 900px
+      (a 932x430 phone) the words beside the cards do not fit its height. */
+@media (max-width: 900px), (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
   .hc-jr .frame {
     height: auto;
     min-height: min(40rem, 100svh - 6rem);
@@ -901,14 +915,87 @@
   }
 }
 
-/* A small phone: the two view buttons share the width inside the margins. */
+/* A small phone: the two view buttons share the width inside the margins,
+   and the words and buttons keep inside the frame: a button's label may take
+   two lines rather than run past its edge. */
 @media (max-width: 400px) {
   .hc-jr .views {
     right: var(--edge);
   }
   .hc-jr .views button {
     flex: 1 1 0;
-    padding: 0 0.75rem;
+    min-width: 0;
+    padding: 0 0.5rem;
+    letter-spacing: 0.08em;
+  }
+  .hc-jr .copy {
+    min-width: 0;
+  }
+  .hc-jr .acts .btn {
+    min-width: 0;
+    white-space: normal;
+    text-align: center;
+    padding-inline: 1rem;
+    letter-spacing: 0.12em;
+  }
+}
+/* Below 360px "Swiss Elegance," no longer fits a line at 40px. */
+@media (max-width: 359px) {
+  .hc-jr .copy h3 {
+    font-size: clamp(1.875rem, 9.4vw, 2.5rem);
+  }
+}
+
+/* A phone held sideways: the frame holds its words and controls within the
+   screen, the title a step smaller and clear of the view switch, the place
+   words on a deeper shade from the left, and two buttons side by side. */
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 500px),
+  (orientation: landscape) and (max-height: 500px) and (pointer: coarse) {
+  .hc-jr {
+    --edge: 1.25rem;
+  }
+  .hc-jr .frame {
+    min-height: 0;
+  }
+  .hc-jr .stage {
+    padding-top: 4.75rem;
+    padding-bottom: 1rem;
+  }
+  .hc-jr .copy h3 {
+    font-size: clamp(1.75rem, 4.2vw, 2.25rem);
+  }
+  .hc-jr .copy .lead {
+    font-size: 1.0625rem;
+  }
+  .hc-jr .shade {
+    background:
+      linear-gradient(
+        90deg,
+        rgb(8 20 28 / 0.85) 0%,
+        rgb(8 20 28 / 0.55) 50%,
+        rgb(8 20 28 / 0.2) 100%
+      ),
+      linear-gradient(to top, rgb(8 20 28 / 0.7) 0%, rgb(8 20 28 / 0) 45%);
+  }
+  .hc-jr .acts {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: auto;
+  }
+  .hc-jr .acts .btn {
+    flex: 0 1 auto;
+    padding-inline: 1rem;
+    letter-spacing: 0.1em;
+  }
+}
+/* A tablet held sideways with a short screen (960x600): the frame is the
+   screen's height, less a margin, rather than its 38rem floor, so the arrows
+   and Pause stay on the screen. */
+@media (min-width: 901px) and (min-height: 501px) and (max-height: 600px) and (pointer: coarse) {
+  .hc-jr .frame {
+    height: calc(100vh - 1rem);
+    height: calc(100svh - 1rem);
+    min-height: 24rem;
   }
 }
 

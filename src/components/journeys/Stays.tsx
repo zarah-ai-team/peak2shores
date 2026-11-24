@@ -109,7 +109,7 @@ export function Stays({ journey }: { journey: Journey }) {
                   src={card.photo.src}
                   alt={card.photo.alt}
                   fill
-                  sizes="(min-width: 1100px) 33vw, (min-width: 800px) 50vw, 100vw"
+                  sizes="(min-width: 1100px) 33vw, (min-width: 601px) 50vw, 100vw"
                 />
               )}
               <span className="jst-pill">{card.where}</span>
@@ -282,8 +282,11 @@ function HotelPopup({
 
 /**
  * The photographs, one at a time: round Previous and Next buttons, the arrow
- * keys while focus is on them, and a sideways swipe or mouse drag. The count
- * below is read out as the photograph changes.
+ * keys while focus is on them, and a sideways swipe or mouse drag. A swipe may
+ * start anywhere on the gallery, its round buttons included (on a phone they
+ * cover much of the photograph's middle, where a thumb starts a swipe); a
+ * press on a button that does not travel stays a press on it. The count below
+ * is read out as the photograph changes.
  */
 function Gallery({
   photos,
@@ -296,11 +299,15 @@ function Gallery({
   go: (i: number) => void;
   name: string;
 }) {
-  const frame = useRef<HTMLDivElement>(null);
+  const gallery = useRef<HTMLDivElement>(null);
   const many = photos.length > 1;
-  useSwipe(frame, (dir) => {
-    if (many) go(index + dir);
-  });
+  useSwipe(
+    gallery,
+    (dir) => {
+      if (many) go(index + dir);
+    },
+    { fromControls: true },
+  );
 
   const onKey = (event: KeyboardEvent<HTMLDivElement>) => {
     if (!many || (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight')) return;
@@ -310,13 +317,14 @@ function Gallery({
 
   return (
     <div
+      ref={gallery}
       className="hpop-gal"
       role="group"
       aria-roledescription="carousel"
       aria-label={`Photographs of ${name}`}
       onKeyDown={onKey}
     >
-      <div ref={frame} className="hpop-frame">
+      <div className="hpop-frame">
         {photos.map((photo, i) => (
           <div
             key={photo.src}

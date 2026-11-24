@@ -29,26 +29,33 @@ import { MoreToDiscover } from '@/components/journeys/MoreToDiscover';
 import { Stays as HotelStays } from '@/components/journeys/Stays';
 import {
   getJourneyBySlug,
-  getJourneySlugs,
+  getJourneys,
   getMedia,
   getSiteSettings,
   jsonLd,
   pageMetadata,
   type Journey,
 } from '@/lib/content';
+import { ratesOf } from '@/lib/data/journeyRates';
 import { fromPriceLabel } from '@/lib/journeyPrice';
 
 type Params = { params: Promise<{ slug: string }> };
 
 /*
- * Rebuilt hourly. dynamicParams stays at its default (true): a journey whose
- * publishAt passes after the build is rendered on first request. Before then
- * getJourneyBySlug returns null and the page 404s.
+ * Rebuilt hourly. Every journey's address is built ahead, scheduled ones
+ * included, and no other (dynamicParams false): an address that names no
+ * journey answers at once with the site's own 404 page, rendered in full on
+ * the server like /nope, with its header and its words, instead of an empty
+ * page drawn only once the JavaScript has run. A scheduled journey's page is
+ * built as a 404 (getJourneyBySlug returns null until its publishAt); the
+ * hourly rebuild shows it within the hour of its release, as before. A
+ * journey added after the build needs a new build to have a page.
  */
 export const revalidate = 3600;
+export const dynamicParams = false;
 
 export async function generateStaticParams() {
-  return (await getJourneySlugs()).map((slug) => ({ slug }));
+  return (await getJourneys({ includeDrafts: true })).map((j) => ({ slug: j.slug }));
 }
 
 function describe(journey: Journey) {
@@ -176,8 +183,8 @@ export default async function JourneyPage({ params }: Params) {
 
   /* The A&K menu: Overview │ Itinerary │ (extension) │ Stays │ Dates & Rates │
      Essential information. A tab whose section has nothing to show yet is
-     left out rather than linking nowhere. The bar's inquiry block carries the
-     journey's days, group size and from-price, and "Make an inquiry" (Ishika's
+     left out rather than linking nowhere. The bar's enquiry block carries the
+     journey's days, group size and from-price, and "Make an enquiry" (Ishika's
      notes of 9 November 2026, item 17a). */
   const hasStays = flyer
     ? flyer.hotels.length > 0
@@ -187,7 +194,8 @@ export default async function JourneyPage({ params }: Params) {
     ...(days.length || flyer ? [{ id: 'itinerary', label: 'Itinerary' }] : []),
     ...(flyer?.extension ? [{ id: 'extension', label: flyer.extension.tab }] : []),
     ...(hasStays ? [{ id: 'stays', label: 'Stays' }] : []),
-    { id: 'dates', label: 'Dates & Rates' },
+    { id: 'dates', label: 'Dates & Prices' },
+    ...(ratesOf(journey.slug) ? [{ id: 'information', label: 'Additional information' }] : []),
     { id: 'essentials', label: 'Essential information' },
   ];
   const glance = {
@@ -200,7 +208,7 @@ export default async function JourneyPage({ params }: Params) {
   /* The page in the order of Ishika's notes of 9 November 2026: hero, menu,
      overview, itinerary, extension (if any), stays, dates and rates,
      essential information, more to discover, footer. The provider holds the
-     page's pop-up forms: the inquiry, and the group and private booking
+     page's pop-up forms: the enquiry, and the group and private booking
      requests, each already knowing the journey. A journey written before the
      flyers (`detail` or a working day by day) keeps its own sections up to
      its stays; guests' words, where a journey has them, follow the stays. */
@@ -225,7 +233,7 @@ export default async function JourneyPage({ params }: Params) {
         <>
           <JyIntro journey={journey} flyer={flyer} />
           <JyItinerary journey={journey} flyer={flyer} after={<JyExtensionRow flyer={flyer} />} />
-          <JyExtension flyer={flyer} />
+          <JyExtension flyer={flyer} slug={journey.slug} />
           <HotelStays journey={journey} />
         </>
       ) : (

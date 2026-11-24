@@ -66,3 +66,14 @@
     grid-auto-columns: 82%;
   }
 }
+/* A phone held sideways: one card and the edge of the next would make each
+   card two screens tall, so two cards show with the edge of a third, their
+   photographs in a wider cut. */
+@media (max-width: 1100px) and (max-height: 500px) {
+  .mtd-row {
+    grid-auto-columns: calc((100% - var(--mtd-gap)) / 2.2);
+  }
+  .mtd .pc .pcm {
+    aspect-ratio: 16 / 9;
+  }
+}

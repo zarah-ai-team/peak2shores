@@ -41,7 +41,9 @@ export const revalidate = 3600;
  */
 export default async function DestinationsPage() {
   const [places, journeys] = await Promise.all([getDestinations(), getJourneys()]);
-  const story = places.map((place) => storyPlace(place, journeys));
+  const story = [...places]
+    .sort((a, b) => order(a.slug) - order(b.slug))
+    .map((place) => storyPlace(place, journeys));
   const closing = getMedia('dest-private');
 
   return (
@@ -55,11 +57,21 @@ export default async function DestinationsPage() {
           from behind its land; then its journeys and the places they stay. */}
       <PlaceStory places={story} lead />
 
-      {/* The closing invitation, over a photograph. */}
+      {/* The closing invitation, over a photograph. Up to 700px wide the band
+          is narrower than the photograph's shape, so the photograph is drawn
+          by the band's height, about 52rem across: its file is chosen for
+          four-fifths of that, as the countries' photographs are (two-thirds
+          of it again on a screen of three device pixels to the CSS pixel). */}
       <section className="hc-circle dz-close" aria-labelledby="dz-close-title" data-fab-away>
         <div className="bg" aria-hidden>
           {closing.src && (
-            <Image src={closing.src} alt={closing.alt ?? ''} fill sizes="100vw" className="fill" />
+            <Image
+              src={closing.src}
+              alt={closing.alt ?? ''}
+              fill
+              sizes="(max-width: 700px) and (min-resolution: 2.5dppx) 28rem, (max-width: 700px) 42rem, 100vw"
+              className="fill"
+            />
           )}
         </div>
         <div className="in">
@@ -82,6 +94,13 @@ export default async function DestinationsPage() {
     </div>
   );
 }
+
+/** The countries in the story's order (owner's note of 23 Nov 2026); any other after them. */
+const ORDER = ['switzerland', 'italy', 'croatia'];
+const order = (slug: string) => {
+  const i = ORDER.indexOf(slug);
+  return i < 0 ? ORDER.length : i;
+};
 
 /** A line under each country's name, in the journeys' own voice. */
 const TAGLINE: Record<string, string> = {

@@ -78,12 +78,19 @@ export function SmoothScroll() {
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const html = document.documentElement;
-    const pad = parseFloat(getComputedStyle(html).scrollPaddingTop) || 0;
     const l = new Lenis({
       lerp: 0.09,
       wheelMultiplier: 0.9,
-      anchors: { offset: -pad },
+      // In-page links land clear of the header, and of a pinned in-page menu:
+      // the root's scroll padding, read at each click. This one instance
+      // serves every page of the visit, and the padding differs between them
+      // (a page with an in-page menu adds the menu's height) and with the
+      // screen, so a value read once would be the first page's.
+      anchors: {
+        get offset() {
+          return -(parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0);
+        },
+      },
       allowNestedScroll: true,
       autoRaf: true,
     });
@@ -116,9 +123,19 @@ export function SmoothScroll() {
 
   // A new page starts still, with no glide carried over from the last one.
   // (Under the open menu it stays stopped; the menu starts it again as it closes.)
+  // A new visit (a card, a link: not Back or Forward, and not to a section,
+  // #…) opens at the top: Lenis keeps a scroll position of its own, and
+  // would otherwise carry the last page's onto the new one.
+  const visited = useRef<string | null>(null);
   useEffect(() => {
     goal.current = null;
     const l = lenis.current;
+    const fresh = visited.current !== null && !traversed.current && !window.location.hash;
+    visited.current = pathname;
+    if (fresh) {
+      l?.scrollTo(0, { immediate: true, force: true });
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
     if (!l) return;
     l.stop();
     if (!document.documentElement.hasAttribute('data-nav-open')) l.start();

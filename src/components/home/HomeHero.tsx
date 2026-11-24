@@ -1,11 +1,15 @@
 'use client';
 
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useReducedMotion } from 'motion/react';
 import type { ReelClip } from '@/lib/data/home';
-import { forScreen, posterOf } from './HomeMedia';
+import { forScreen } from './HomeMedia';
+
+/** A play() the browser declined by policy (a phone saving power, a data
+    saver), as against one cut short by a pause or a change of clip. */
+const declined = (e: unknown) => e instanceof DOMException && e.name === 'NotAllowedError';
 
 /**
  * 01 — The opening: a reel of four clips in Marc's order (safari, Switzerland,
@@ -14,6 +18,11 @@ import { forScreen, posterOf } from './HomeMedia';
  * fades in. The dashes pick a clip, the button pauses. Under reduced motion
  * the first clip's still holds until the reader presses play. The reel rests
  * while the hero is scrolled away.
+ *
+ * Where the browser will not start a film by itself (an iPhone in Low Power
+ * Mode, a data saver) or the system pauses it, each clip's still holds for
+ * its `hold` and the reel moves on, as a reel of stills does; the button then
+ * offers Play, and a tap on it starts the film.
  */
 export function HomeHero({ reel }: { reel: ReelClip[] }) {
   const reduced = useReducedMotion();
@@ -24,6 +33,15 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
   // clip's still (a priority image) holds the frame, and the clips' megabytes
   // do not compete with the scripts and the headline for the connection.
   const [armed, setArmed] = useState(false);
+  // The film on screen was declined or paused by the browser, not the reader.
+  const [refused, setRefused] = useState(false);
+  // The reader chose the clip on screen, so its place is announced; while the
+  // reel moves on by itself it is not (a change every eight seconds).
+  const [picked, setPicked] = useState(false);
+  // The clips whose stills are in the page: the one on screen, the next, and
+  // every one already shown. The rest wait for their turn, so a phone fetches
+  // two stills with the page rather than four.
+  const [seen, setSeen] = useState<ReadonlySet<number>>(() => new Set([0]));
   const section = useRef<HTMLElement>(null);
   const videos = useRef<(HTMLVideoElement | null)[]>([]);
   const last = useRef(-1);
@@ -35,6 +53,18 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
   // and leaves the device to the menu's own movement.
   const [covered, setCovered] = useState(false);
   const playing = !paused && visible && !covered;
+  // What the button offers: Play whenever no film is moving.
+  const stopped = paused || refused;
+
+  /** Plays a clip, and records whether the browser let it. */
+  const start = useCallback((el: HTMLVideoElement) => {
+    el.play().then(
+      () => setRefused(false),
+      (e: unknown) => {
+        if (declined(e)) setRefused(true);
+      },
+    );
+  }, []);
 
   useEffect(() => {
     const cover = () => setCovered(true);
@@ -63,6 +93,10 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
   }, []);
 
   useEffect(() => {
+    setSeen((had) => (had.has(current) ? had : new Set(had).add(current)));
+  }, [current]);
+
+  useEffect(() => {
     if (!armed) return;
     videos.current.forEach((el, i) => {
       if (!el) return;
@@ -74,18 +108,37 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
         el.currentTime = reel[i].start ?? 0;
         last.current = current;
       }
-      if (playing) el.play().catch(() => {});
+      if (playing) start(el);
       else el.pause();
     });
-  }, [armed, current, playing, reel]);
+  }, [armed, current, playing, reel, start]);
 
-  const next = () => setCurrent((c) => (c + 1) % reel.length);
+  // Back from another tab or app, the film on screen is asked to play again
+  // (a phone pauses it while the page is out of sight).
+  useEffect(() => {
+    if (!armed || !playing) return;
+    const wake = () => {
+      const el = videos.current[current];
+      if (document.visibilityState === 'visible' && el) start(el);
+    };
+    document.addEventListener('visibilitychange', wake);
+    return () => document.removeEventListener('visibilitychange', wake);
+  }, [armed, playing, current, start]);
 
-  // A still without a film holds for its `hold`, then the reel moves on.
-  const hold = reel[current].video ? 0 : (reel[current].hold ?? 8);
+  const next = () => {
+    setPicked(false);
+    setCurrent((c) => (c + 1) % reel.length);
+  };
+
+  // A still without a film, or a film the browser would not play, holds for
+  // its `hold`, then the reel moves on.
+  const hold = reel[current].video && !refused ? 0 : (reel[current].hold ?? 8);
   useEffect(() => {
     if (!armed || !playing || !hold) return;
-    const timer = window.setTimeout(() => setCurrent((c) => (c + 1) % reel.length), hold * 1000);
+    const timer = window.setTimeout(() => {
+      setPicked(false);
+      setCurrent((c) => (c + 1) % reel.length);
+    }, hold * 1000);
     return () => window.clearTimeout(timer);
   }, [armed, playing, hold, current, reel.length]);
 
@@ -104,18 +157,24 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
           }
           aria-hidden
         >
-          <Image
-            src={clip.img}
-            alt={clip.alt}
-            fill
-            sizes="100vw"
-            priority={i === 0}
-            className={clip.video ? 'fill' : 'fill drift'}
-            style={{
-              filter: clip.grade,
-              animationDuration: clip.video ? undefined : `${clip.hold ?? 8}s`,
-            }}
-          />
+          {/* The clip's still: the frame until its film is ready, and the
+              whole clip where the film does not play. On an upright phone or
+              tablet the 16:9 frame covers a tall box, so it is drawn about
+              two and a half times the screen's width. */}
+          {(i === current || i === (current + 1) % reel.length || seen.has(i)) && (
+            <Image
+              src={clip.img}
+              alt={clip.alt}
+              fill
+              sizes="(max-width: 900px) and (orientation: portrait) 160vw, 100vw"
+              priority={i === 0}
+              className={clip.video ? 'fill' : 'fill drift'}
+              style={{
+                filter: clip.grade,
+                animationDuration: clip.video ? undefined : `${clip.hold ?? 8}s`,
+              }}
+            />
+          )}
           {clip.video && (
             <video
               ref={(el) => {
@@ -123,14 +182,18 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
               }}
               className="fill"
               style={{ filter: clip.grade }}
-              poster={posterOf(clip.img)}
               src={armed ? forScreen(clip.video) : undefined}
               muted
               playsInline
               // Only the clip on screen loads; each of the others waits for its
-              // turn, its poster holding the frame until then.
+              // turn, its still holding the frame until then.
               preload={i === current ? 'auto' : 'none'}
               onEnded={() => i === current && next()}
+              // Paused by the system rather than the reader (a phone saving
+              // power, the page in the background): the button says so.
+              onPause={(e) => {
+                if (i === current && playing && !e.currentTarget.ended) setRefused(true);
+              }}
               tabIndex={-1}
             />
           )}
@@ -160,7 +223,7 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
       </div>
 
       <div className="vctl">
-        <span aria-live="polite">{reel[current].place}</span>
+        <span aria-live={picked ? 'polite' : 'off'}>{reel[current].place}</span>
         <span className="vdots">
           {reel.map((clip, i) => (
             <button
@@ -170,6 +233,7 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
               aria-label={`Show ${clip.place}`}
               aria-current={i === current}
               onClick={() => {
+                setPicked(true);
                 setCurrent(i);
                 setChoice('play');
               }}
@@ -181,11 +245,20 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
         <button
           type="button"
           className="circ"
-          aria-label={paused ? 'Play the film' : 'Pause the film'}
-          aria-pressed={paused}
-          onClick={() => setChoice(paused ? 'play' : 'pause')}
+          aria-label={stopped ? 'Play the film' : 'Pause the film'}
+          aria-pressed={stopped}
+          onClick={() => {
+            if (!stopped) {
+              setChoice('pause');
+              return;
+            }
+            // A tap may start a film the browser would not start by itself.
+            const el = videos.current[current];
+            if (refused && el) start(el);
+            setChoice('play');
+          }}
         >
-          {paused ? (
+          {stopped ? (
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden>
               <path d="M8 5v14l11-7z" />
             </svg>

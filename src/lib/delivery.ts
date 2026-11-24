@@ -11,7 +11,7 @@
  * for a form is not set, nothing is sent and the result says so —
  * `delivered: false` — so the route can stay truthful about what happened.
  *
- *   ENQUIRY_WEBHOOK_URL    https endpoint that receives inquiries and booking
+ *   ENQUIRY_WEBHOOK_URL    https endpoint that receives enquiries and booking
  *                          requests (the /plan form and a journey page's
  *                          three pop-ups; `data.form` says which)
  *   SUBSCRIBE_WEBHOOK_URL  https endpoint that receives circle sign-ups
@@ -28,17 +28,17 @@ import { createHmac } from 'node:crypto';
 import type { RoomOption } from './forms';
 
 /**
- * Which form sent a request: the inquiry form on /plan, or one of the three
- * pop-ups on a journey's page ("Make an inquiry", "Book this journey" and
+ * Which form sent a request: the enquiry form on /plan, or one of the three
+ * pop-ups on a journey's page ("Make an enquiry", "Book this journey" and
  * "Book as a private journey").
  */
-export type EnquiryFormId = 'plan' | 'journey-inquiry' | 'group-booking' | 'private-booking';
+export type EnquiryFormId = 'plan' | 'journey-enquiry' | 'group-booking' | 'private-booking';
 
 export type EnquiryPayload = {
   form: EnquiryFormId;
   /**
    * A line that names the request, ready for the subject of the team's email:
-   * "Group booking request: Swiss Elegance", "Inquiry: Swiss Elegance".
+   * "Group booking request: Swiss Elegance", "Enquiry: Swiss Elegance".
    */
   subject: string;
   name: string;

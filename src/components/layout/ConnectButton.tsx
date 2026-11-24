@@ -9,7 +9,7 @@ import './connect.css';
  * "Connect with our team", fixed bottom right on every page: one tap opens the
  * ways to reach the team. Escape or a click outside closes it. Call,
  * WhatsApp and the scheduling link appear only once they are set in site.ts;
- * until a scheduling link exists, "Book a call" opens the inquiry form.
+ * until a scheduling link exists, "Book a call" opens the enquiry form.
  */
 /** The height of the strip at the foot of the screen that the button occupies. */
 const STRIP = 104;
@@ -102,7 +102,9 @@ export function ConnectButton() {
 
   return (
     <div ref={box} className={`hc hc-fab ${open ? 'open' : ''} ${away ? 'away' : ''}`}>
-      <div className="panel" id="expert-panel" aria-hidden={!open}>
+      {/* On a short screen the panel scrolls (connect.css); a wheel scrolls
+          it too, not the page behind it. */}
+      <div className="panel" id="expert-panel" aria-hidden={!open} data-lenis-prevent>
         <div className="lab">Connect with our team</div>
         <p>Our team will help you choose the right journey — or design one around you.</p>
         {site.phone && site.phoneHref && (

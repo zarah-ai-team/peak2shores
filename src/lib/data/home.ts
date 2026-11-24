@@ -149,6 +149,12 @@ export const ways: (HomeVisual & {
   lead?: boolean;
   /** Where the upright tile crops the landscape frame (CSS object-position). */
   pos?: string;
+  /**
+   * A landscape photograph. An upright tile or screen covers it by its
+   * height, so it is drawn about one and a half times the box's height wide,
+   * and asks for a file to match (WaysToTravel, WaysStage).
+   */
+  wide?: boolean;
 })[] = [
   {
     title: 'Small Luxury Group Journeys',
@@ -168,6 +174,7 @@ export const ways: (HomeVisual & {
     alt: 'Two spritzes on a terrace above the Grand Canal in Venice, the Salute dome beyond',
     // Cropped to the right, so both glasses stand in the upright tile (5 Nov).
     pos: '84% 50%',
+    wide: true,
   },
   {
     title: 'Safari',
@@ -199,6 +206,7 @@ export const ways: (HomeVisual & {
     img: '/images/home/way-villas-sunset-pool.jpg',
     alt: 'Loungers beside a private infinity pool above the sea at sunset',
     pos: '70% 50%',
+    wide: true,
   },
 ];
 
@@ -274,7 +282,10 @@ export const peaksShores = {
 
 /* 07b — The founder. */
 export const founderStory = {
-  headline: 'A lifetime of travel. A passion for extraordinary journeys.',
+  /* Two sentences: on a phone or a tablet each starts its own line
+     (home-fixes.css); on a wider screen they run on as one. No-break spaces
+     after each "A", so neither leaves its first word at the end of a line. */
+  headline: ['A\u00a0lifetime of travel.', 'A\u00a0passion for extraordinary journeys.'],
   /** Two short paragraphs; the Our Story page carries the rest. */
   body: [
     'Born and raised in Switzerland and based in Miami for more than 25 years, Peaks2Shores founder Marc Haeni has built an international career spanning three decades in travel and hospitality, including leadership roles with some of the world’s leading travel and cruise brands.',

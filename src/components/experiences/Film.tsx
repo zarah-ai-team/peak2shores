@@ -1,27 +1,24 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import Image, { getImageProps } from 'next/image';
+import Image from 'next/image';
 import { useReducedMotion } from 'motion/react';
 import { forScreen } from '@/components/home/HomeMedia';
 
 export type FilmVisual = {
-  /** The still, and the film's poster. */
+  /** The still, the frame the film opens on. */
   img: string;
   alt: string;
   /** Silent clip, played muted over the still. */
   video?: string;
 };
 
-/** The poster through the image optimizer, so it costs what the still costs. */
-const posterOf = (src: string) =>
-  getImageProps({ src, alt: '', width: 960, height: 540 }).props.src;
-
 /**
  * A still with its film over it. The still carries the alt text and is what a
  * crawler or a capture sees; the film is decoration — muted, looping, fetched
  * only when it first plays, and playing only while it is on screen and
- * `active`. Under reduced motion the still holds.
+ * `active`. Under reduced motion the still holds. The film has no poster: the
+ * still beneath it shows through until its first frame is ready.
  */
 export function Film({
   visual,
@@ -71,7 +68,6 @@ export function Film({
         <video
           ref={video}
           className={`${className} photo-grade`}
-          poster={posterOf(visual.img)}
           muted
           loop
           playsInline

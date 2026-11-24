@@ -78,37 +78,54 @@
   white-space: nowrap;
   cursor: pointer;
 }
+/* On a phone a label too long for the screen (the reader's text set larger)
+   wraps inside its pill rather than push the page sideways. In rem, so it
+   follows the text size. */
+@media (max-width: 30rem) {
+  .jy .btn {
+    white-space: normal;
+    text-align: center;
+  }
+}
 /* The main action on the navy: the blue pill, the brand blue a step deeper
-   so its white label reads (4.9:1); white under the pointer. */
+   so its white label reads (4.9:1); white under the pointer. The pointer's
+   colours here and below are kept to screens with one (`hover: hover`), so a
+   tap never leaves a control looking pressed. */
 .jy .btn-blue {
   background: var(--color-brand-deep);
   border: 1px solid var(--color-brand-deep);
   color: #fff;
   font-weight: 600;
 }
-.jy .btn-blue:hover {
-  background: #fff;
-  border-color: #fff;
-  color: var(--ink);
+@media (hover: hover) {
+  .jy .btn-blue:hover {
+    background: #fff;
+    border-color: #fff;
+    color: var(--ink);
+  }
 }
 .jy .btn-line {
   background: transparent;
   border: 1px solid rgb(255 255 255 / 0.6);
   color: #fff;
 }
-.jy .btn-line:hover {
-  background: #fff;
-  border-color: #fff;
-  color: var(--ink);
+@media (hover: hover) {
+  .jy .btn-line:hover {
+    background: #fff;
+    border-color: #fff;
+    color: var(--ink);
+  }
 }
 .jy .btn-ink {
   background: var(--ink);
   border: 1px solid var(--ink);
   color: #fff;
 }
-.jy .btn-ink:hover {
-  background: var(--color-brand-deep);
-  border-color: var(--color-brand-deep);
+@media (hover: hover) {
+  .jy .btn-ink:hover {
+    background: var(--color-brand-deep);
+    border-color: var(--color-brand-deep);
+  }
 }
 .jy .tlink {
   display: inline-block;
@@ -123,8 +140,10 @@
   color: inherit;
   transition: color 0.4s var(--ease);
 }
-.jy .tlink:hover {
-  color: var(--color-brand-deep);
+@media (hover: hover) {
+  .jy .tlink:hover {
+    color: var(--color-brand-deep);
+  }
 }
 @keyframes jy-rise {
   from {
@@ -190,8 +209,10 @@
     margin-block: -13px;
   }
 }
-.jy .crumb a:hover {
-  color: var(--sky);
+@media (hover: hover) {
+  .jy .crumb a:hover {
+    color: var(--sky);
+  }
 }
 .jy .crumb i {
   width: 1.75rem;
@@ -264,14 +285,14 @@
   width: 0.5625rem;
   height: 0.5625rem;
   border-radius: 50%;
-  background: #4ade80;
-  box-shadow: 0 0 0 0 rgb(74 222 128 / 0.6);
+  background: var(--sky);
+  box-shadow: 0 0 0 0 rgb(122 204 253 / 0.6);
   animation: jy-live 2.4s ease-out infinite;
 }
 @keyframes jy-live {
   70%,
   100% {
-    box-shadow: 0 0 0 0.5rem rgb(74 222 128 / 0);
+    box-shadow: 0 0 0 0.5rem rgb(122 204 253 / 0);
   }
 }
 
@@ -346,8 +367,10 @@
     background-color 0.6s var(--ease),
     color 0.6s var(--ease);
 }
-.jy .tabs button:hover {
-  color: #fff;
+@media (hover: hover) {
+  .jy .tabs button:hover {
+    color: #fff;
+  }
 }
 .jy .tabs button.on {
   background: #fff;
@@ -499,10 +522,12 @@
   background: #fff;
   color: var(--ink);
 }
-.jy .round:hover {
-  background: var(--color-brand-deep);
-  border-color: var(--color-brand-deep);
-  color: #fff;
+@media (hover: hover) {
+  .jy .round:hover {
+    background: var(--color-brand-deep);
+    border-color: var(--color-brand-deep);
+    color: #fff;
+  }
 }
 .jy .round svg {
   width: 1.125rem;
@@ -635,10 +660,15 @@
   color: #dbe6ec;
   text-shadow: 0 1px 8px rgb(8 20 28 / 0.6);
 }
-.jy .hroute li.on button::before,
-.jy .hroute button:hover::before {
+.jy .hroute li.on button::before {
   border-color: var(--brand);
   background: var(--brand);
+}
+@media (hover: hover) {
+  .jy .hroute button:hover::before {
+    border-color: var(--brand);
+    background: var(--brand);
+  }
 }
 .jy .hroute li.on .nm {
   border-color: var(--brand);
@@ -787,8 +817,10 @@
   font-style: normal;
   color: var(--ink);
 }
-.jy.intro .priv .tlink:hover {
-  color: var(--color-brand-deep);
+@media (hover: hover) {
+  .jy.intro .priv .tlink:hover {
+    color: var(--color-brand-deep);
+  }
 }
 /* A finger gets the full 44px, the words still sitting on their rule. */
 @media (pointer: coarse) {
@@ -830,8 +862,10 @@
   color: #2c3741;
   transition: border-color 0.4s var(--ease);
 }
-.jy.intro .hl li:hover {
-  border-top-color: var(--brand);
+@media (hover: hover) {
+  .jy.intro .hl li:hover {
+    border-top-color: var(--brand);
+  }
 }
 .jy.intro .hl svg {
   width: 1.125rem;
@@ -901,6 +935,37 @@
   .jy.intro .hl ul {
     grid-template-columns: minmax(0, 1fr);
   }
+  .jy.intro .nums {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .jy.intro .nums > div:nth-child(3) {
+    padding-left: 0;
+    border-left: 0;
+  }
+  .jy.intro .nums > div:nth-child(n + 3) {
+    border-top: 1px solid var(--rule);
+  }
+}
+/* On a phone the Overview's title takes the size of the page's other section
+   titles, a step smaller again at 320px, so it breaks into even lines rather
+   than leave its last word alone. */
+@media (max-width: 400px) {
+  .jy.intro h2 {
+    font-size: 2.125rem;
+  }
+}
+@media (max-width: 340px) {
+  .jy.intro h2 {
+    font-size: 1.875rem;
+  }
+}
+/* The figures take two rows wherever their column is too narrow for four
+   side by side: beside the journey's line on a tablet, or with the reader's
+   text set larger. In rem, so it follows the text size. */
+.jy.intro .side {
+  container-type: inline-size;
+}
+@container (width < 25.5rem) {
   .jy.intro .nums {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1117,8 +1182,10 @@
     background-color 0.3s var(--ease),
     color 0.3s var(--ease);
 }
-.jy .dopts label:hover {
-  color: var(--lake);
+@media (hover: hover) {
+  .jy .dopts label:hover {
+    color: var(--lake);
+  }
 }
 .jy .dopts label:has(:checked) {
   background: var(--color-brand-deep);
@@ -1210,6 +1277,14 @@
 .jy.dep .circle .tlink {
   padding-top: 0;
 }
+/* A finger gets the full 44px, the words still sitting on their rule. */
+@media (pointer: coarse) {
+  .jy.dep .circle .tlink {
+    display: inline-flex;
+    align-items: flex-end;
+    min-height: 44px;
+  }
+}
 .jy .rate {
   display: flex;
   flex-direction: column;
@@ -1266,78 +1341,7 @@
   color: #a9bcc8;
 }
 
-/* -- 5. Essential information ------------------------------------------------------
-   After Dates and rates, on paper: the topics of the journey's guide in two
-   columns between hairlines, and beside them a white card that says where its
-   PDF will be. */
-.jy.ess {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(18rem, 25rem);
-  gap: clamp(2rem, 4vw, 4rem);
-  align-items: start;
-  padding: clamp(5rem, 9.7vw, 8.75rem) var(--gut);
-  background: var(--paper);
-  color: var(--ink);
-}
-.jy.ess .lab {
-  color: var(--lake);
-}
-.jy.ess .say {
-  margin: clamp(1.5rem, 2.4vw, 2rem) 0 0;
-  font-size: 0.9375rem;
-  line-height: 1.6;
-  color: var(--muted);
-}
-.jy.ess .topics {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 2.25rem;
-  margin: 1.25rem 0 0;
-  padding: 0;
-  list-style: none;
-}
-.jy.ess .topics li {
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  padding: 1.125rem 0 1.25rem;
-  border-top: 1px solid var(--rule);
-  font-family: var(--serif);
-  font-size: clamp(1.125rem, 1.4vw, 1.3125rem);
-  line-height: 1.3;
-}
-.jy.ess .topics li::before {
-  content: '';
-  flex: none;
-  width: 1.125rem;
-  height: 1px;
-  background: var(--brand);
-}
-.jy.ess .guide {
-  padding: clamp(1.75rem, 2.6vw, 2.25rem);
-  border: 1px solid var(--rule);
-  border-radius: 1.25rem;
-  background: #fff;
-}
-.jy.ess .guide svg {
-  display: block;
-  width: 2rem;
-  height: 2rem;
-  fill: none;
-  stroke: var(--brand);
-  stroke-width: 1.4;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.jy.ess .guide .lab {
-  margin-top: 1.25rem;
-}
-.jy.ess .guide .t {
-  margin: 0.625rem 0 0;
-  font-family: var(--serif);
-  font-size: clamp(1.25rem, 1.6vw, 1.5rem);
-  line-height: 1.35;
-}
+/* -- 5. Essential information: in journey-rates.css. -------------------------- */
 /* Followed on the same paper by "More to discover" (`.mtd`), the section
    ends sooner, on a hairline within the gutters. */
 .jy.ess:has(+ .mtd) {
@@ -1352,30 +1356,16 @@
   border-top: 1px solid var(--rule);
 }
 
-/* -- The in-page menu's inquiry (JourneyTabs) ---------------------------------------
+/* -- The in-page menu's enquiry (JourneyTabs) ---------------------------------------
    From 1024px the bar's right end holds the journey at a glance (its days and
-   group size over its from-price) and the "Make an inquiry" pill; on a phone
+   group size over its from-price) and the "Make an enquiry" pill; on a phone
    or a tablet the same facts and pill sit in a slim bar fixed to the foot of
    the screen, so that the tabs keep the menu bar's whole width (beside the
-   inquiry block a tablet showed only two or three of them). On a short
-   screen the pill alone joins the tabs instead (below). These sit outside
-   `.jy`, so they read the site's own tokens. Where the tabs scroll sideways,
-   the end with tabs hidden past it fades out. */
-.jt-tabs[data-edge='end'] {
-  mask-image: linear-gradient(90deg, #000 calc(100% - 2.5rem), transparent);
-}
-.jt-tabs[data-edge='start'] {
-  mask-image: linear-gradient(90deg, transparent, #000 2.5rem);
-}
-.jt-tabs[data-edge='both'] {
-  mask-image: linear-gradient(
-    90deg,
-    transparent,
-    #000 2.5rem,
-    #000 calc(100% - 2.5rem),
-    transparent
-  );
-}
+   enquiry block a tablet showed only two or three of them). On a short
+   screen the facts and the pill join the tabs instead, as from 1024px
+   (below). These sit outside `.jy`, so they read the site's own tokens. The
+   fade at the end of tabs that scroll sideways is with the menu itself, in
+   journey-tabs.css, as the Journeys page carries the menu too. */
 .jt-aside {
   display: none;
 }
@@ -1385,6 +1375,12 @@
     flex: none;
     align-items: center;
     gap: clamp(1rem, 1.4vw, 1.5rem);
+  }
+  /* "Make an enquiry" is 0.375em wider than the label this bar was laid out
+     with: the pill's sides give that back, so the pill keeps its width and
+     the tabs their room. */
+  .jt-aside .jt-pill {
+    padding-inline: calc(var(--pill-px) - 0.1875em);
   }
 }
 .jt-glance {
@@ -1426,6 +1422,13 @@
   text-transform: none;
   color: var(--color-ink);
 }
+/* On a touch screen the days and the group size never fall under 11px (the
+   caps size from 1024px is 10.5px); the price keeps its own size. */
+@media (pointer: coarse) {
+  .jt-glance li:not(.v) {
+    font-size: max(var(--type-kicker), 0.6875rem);
+  }
+}
 .jt-pill {
   display: inline-flex;
   flex: none;
@@ -1449,9 +1452,11 @@
     background-color 0.3s var(--ease-editorial),
     border-color 0.3s var(--ease-editorial);
 }
-.jt-pill:hover {
-  background: var(--color-navy);
-  border-color: var(--color-navy);
+@media (hover: hover) {
+  .jt-pill:hover {
+    background: var(--color-navy);
+    border-color: var(--color-navy);
+  }
 }
 /* The phone's and tablet's bar: off the foot of the screen (and out of reach)
    until the hero has gone, then risen into view; while it shows, anchors and
@@ -1504,6 +1509,12 @@
     white-space: normal;
     text-wrap: pretty;
   }
+  /* The pill's sides are 2px under the house pill's: "Make an enquiry" is
+     4px wider than the label the bar was laid out with, and so the facts keep
+     the same room and the bar its heights below. */
+  .jt-ibar .jt-pill {
+    padding-inline: 1.375rem;
+  }
   /* Anchors and focus keep clear of the bar at its tallest (95px, where the
      facts take three lines; a longer price or a larger text size can make it
      so at any width). */
@@ -1512,15 +1523,19 @@
   }
 }
 /* Under 410px the days and the group size no longer fit side by side next to
-   the pill: each takes its own line, without the hairline. The bar is then
-   73px tall, 95px where the price wraps too. In em, so the switch follows the
-   browser's text size (409.92px at the usual 16px). */
+   the pill: the group size gives way and the days stand over the price (the
+   owner's decision of 19 November 2026), so the bar keeps to two lines, three
+   where the price wraps too. In em, so the switch follows the browser's text
+   size (409.92px at the usual 16px). */
 @media (max-width: 25.62em) {
   .jt-ibar .jt-glance li {
     flex-basis: 100%;
     white-space: normal;
   }
   .jt-ibar .jt-glance li + li:not(.v)::before {
+    display: none;
+  }
+  .jt-ibar .jt-glance li:nth-child(2) {
     display: none;
   }
 }
@@ -1531,7 +1546,7 @@
     gap: 0.75rem;
   }
   .jt-ibar .jt-pill {
-    padding-inline: 1.125rem;
+    padding-inline: 1rem;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1542,11 +1557,13 @@
 }
 /* A short screen under 1024px wide (a phone held sideways, a laptop window
    zoomed in): a third bar would leave the page about half the screen, so the
-   pill moves into the pinned menu bar, where it sits from 1024px, without the
-   days and the price (the hero's facts carry them). The slim bar stays down,
-   and while it would show, so does the floating "Connect with our team"
-   (unless its panel is open), as it does for the bar on a phone held upright.
-   After the rules above, which it overrides. */
+   journey's days, group size and from-price and the pill move into the pinned
+   menu bar, as they sit from 1024px (the owner's decision of 19 November
+   2026), two lines that keep the bar at its height. The tabs keep about
+   210px at 640px wide, more on wider screens, and scroll sideways. The slim
+   bar stays down, and while it would show, so does the floating "Connect
+   with our team" (unless its panel is open), as it does for the bar on a
+   phone held upright. After the rules above, which it overrides. */
 @media (max-width: 1023.98px) and (max-height: 500px) {
   .jt-ibar,
   .jt-ibar[data-on] {
@@ -1556,9 +1573,7 @@
     display: flex;
     flex: none;
     align-items: center;
-  }
-  .jt-aside .jt-glance {
-    display: none;
+    gap: 1rem;
   }
   html:has(.jt-ibar[data-on]) {
     scroll-padding-bottom: 0;
@@ -1574,12 +1589,39 @@
       visibility 0s linear 0.4s;
   }
 }
+/* Under 640px (a small phone held sideways) the facts as above would leave
+   the tabs under 200px: the group size gives way, and the price takes two
+   lines under the days, still within the bar's height, so the tabs keep
+   about 220px. In em, as above (639.84px at 16px). */
+@media (max-width: 39.99em) and (max-height: 500px) {
+  .jt-aside .jt-glance {
+    grid-template-columns: auto;
+  }
+  .jt-aside .jt-glance li + li:not(.v) {
+    display: none;
+  }
+  .jt-aside .jt-glance .v {
+    max-width: 6.5em;
+    margin-top: 0.125rem;
+    font-size: 0.9375rem;
+    line-height: 1.15;
+    white-space: normal;
+  }
+}
+/* Under 560px (narrower than any phone held sideways today: a phone held
+   upright whose browser leaves it a short screen) the facts would leave the
+   tabs too little room, so the pill joins them alone, as before, and the
+   hero's facts carry the days and the price. In em, as above (559.84px at
+   16px). */
+@media (max-width: 34.99em) and (max-height: 500px) {
+  .jt-aside .jt-glance {
+    display: none;
+  }
+}
 
 /* -- Tablet and phone ------------------------------------------------------------------ */
 @media (max-width: 1100px) {
-  .jy.ext,
-  .jy.dep,
-  .jy.ess {
+  .jy.ext {
     grid-template-columns: minmax(0, 1fr);
   }
   /* The facts make two rows from here down, taller than the room the hero's
@@ -1614,6 +1656,15 @@
     display: block;
   }
 }
+/* Dates and rates and Essential information keep the laptop's two columns
+   down to 900px (a tablet held sideways): the table beside the rates box, the
+   topics beside the guide's card. Narrower, the table takes the page's width
+   above the rates box, where its three columns still fit. */
+@media (max-width: 899.98px) {
+  .jy.dep {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
 @media (max-width: 800px) {
   .jy.hero {
     min-height: 100svh;
@@ -1624,9 +1675,6 @@
   .jy .facts > div {
     border-right: 0;
     border-top: 1px solid var(--line);
-  }
-  .jy.ess .topics {
-    grid-template-columns: minmax(0, 1fr);
   }
   .jy .hroute {
     display: grid;
@@ -1661,6 +1709,31 @@
   .jy .pcard {
     transform: translateX(calc(-50% + var(--off) * 100%));
   }
+}
+/* The facts' first column starts on the page's gutter, as the hero's words
+   and every section below do: two columns on a phone held upright, three from
+   560px (a phone held sideways), where the longest fact still fits, so the
+   strip keeps to two rows on a short screen. */
+@media (max-width: 559.98px) {
+  /* Its right side gives back the 4px, so a fact keeps its line. */
+  .jy .facts > div:nth-child(odd) {
+    padding-left: var(--gut);
+    padding-right: 0.75rem;
+  }
+}
+@media (min-width: 560px) and (max-width: 800px) {
+  .jy .facts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .jy .facts > div:nth-child(-n + 3) {
+    border-top: 0;
+  }
+  .jy .facts > div:nth-child(3n + 1) {
+    padding-left: var(--gut);
+  }
+}
+/* A phone: the table's rows stack, each fact under its label. */
+@media (max-width: 600px) {
   .jy .tbl thead {
     display: none;
   }
@@ -1775,6 +1848,16 @@
 @media (max-width: 360px) {
   .jy .hroute .nm {
     letter-spacing: 0.1em;
+  }
+}
+/* At 320px a long name ("Grindelwald") would still run past its column into
+   the next: the columns close up a little and the caps a little more. */
+@media (max-width: 340px) {
+  .jy .hroute {
+    column-gap: 0.5rem;
+  }
+  .jy .hroute .nm {
+    letter-spacing: 0.04em;
   }
 }
 

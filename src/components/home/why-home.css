@@ -87,9 +87,18 @@
   gap: clamp(1rem, 1.5vw, 1.75rem);
 }
 .hc-hw .hw-nav {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 0.75rem;
+}
+/* The floating "Connect" button reaches over Next only on a small phone
+   (up to about 370px wide): there the row's mark shows, and the button steps
+   aside while the arrows are at the foot of the screen (home.css). */
+@media (max-width: 400px) {
+  .hc-hw .hw-nav .fab-mark {
+    display: block;
+  }
 }
 .hc .hc-hw .hw-nav .circ {
   border-color: rgb(20 29 36 / 0.35);
@@ -101,10 +110,14 @@
   color: #fff;
   box-shadow: 0 0.625rem 1.5rem -0.5rem rgb(1 121 171 / 0.55);
 }
-.hc .hc-hw .hw-nav .circ:hover {
-  background: var(--color-brand-deep, var(--brand));
-  border-color: var(--color-brand-deep, var(--brand));
-  color: #fff;
+/* Hover states hold only where a pointer hovers: a touch screen keeps :hover
+   on the last thing tapped, which left it looking pressed. */
+@media (hover: hover) {
+  .hc .hc-hw .hw-nav .circ:hover {
+    background: var(--color-brand-deep, var(--brand));
+    border-color: var(--color-brand-deep, var(--brand));
+    color: #fff;
+  }
 }
 .hc .hc-hw .hw-nav .circ:disabled {
   opacity: 0.35;
@@ -294,9 +307,11 @@
   text-decoration: none;
   transition: background-color 0.5s var(--ease);
 }
-.hc-hw .hw-cta:hover {
-  background: var(--ink);
-  color: #fff;
+@media (hover: hover) {
+  .hc-hw .hw-cta:hover {
+    background: var(--ink);
+    color: #fff;
+  }
 }
 .hc-hw .hw-cta svg {
   width: 1rem;
@@ -304,8 +319,10 @@
   stroke-width: 1.5;
   transition: transform 0.6s var(--ease);
 }
-.hc-hw .hw-cta:hover svg {
-  transform: translateX(0.3125rem);
+@media (hover: hover) {
+  .hc-hw .hw-cta:hover svg {
+    transform: translateX(0.3125rem);
+  }
 }
 .hc-hw .hw-cta:focus-visible {
   outline: 2px solid #fff;
@@ -362,8 +379,10 @@
 .hc-xpi .xpi-photo img {
   transition: scale 1.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.hc-xpi .xpi-photo:hover img {
-  scale: 1.04;
+@media (hover: hover) {
+  .hc-xpi .xpi-photo:hover img {
+    scale: 1.04;
+  }
 }
 .hc-xpi .xpi-photo::after {
   content: '';
@@ -440,12 +459,14 @@
   transform-origin: left;
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.hc-xpi .box:hover {
-  transform: translateY(-0.375rem);
-  box-shadow: 0 1.75rem 3.5rem -1.5rem rgb(11 92 133 / 0.4);
-}
-.hc-xpi .box:hover::before {
-  transform: scaleX(1);
+@media (hover: hover) {
+  .hc-xpi .box:hover {
+    transform: translateY(-0.375rem);
+    box-shadow: 0 1.75rem 3.5rem -1.5rem rgb(11 92 133 / 0.4);
+  }
+  .hc-xpi .box:hover::before {
+    transform: scaleX(1);
+  }
 }
 .hc-xpi .ico {
   display: grid;
@@ -463,9 +484,11 @@
   width: 1.75rem;
   height: 1.75rem;
 }
-.hc-xpi .box:hover .ico {
-  background: linear-gradient(145deg, #2ab4f2, var(--color-brand) 45%, var(--color-brand-deep));
-  color: #fff;
+@media (hover: hover) {
+  .hc-xpi .box:hover .ico {
+    background: linear-gradient(145deg, #2ab4f2, var(--color-brand) 45%, var(--color-brand-deep));
+    color: #fff;
+  }
 }
 .hc-xpi h3 {
   font-family: var(--serif);
@@ -560,9 +583,11 @@
     color 0.7s var(--ease),
     transform 0.7s var(--ease);
 }
-.hc-rh .rw:hover {
-  color: #fff;
-  transform: translateX(0.5rem);
+@media (hover: hover) {
+  .hc-rh .rw:hover {
+    color: #fff;
+    transform: translateX(0.5rem);
+  }
 }
 .hc-rh .rw.on {
   color: #fff;
@@ -699,16 +724,20 @@
 .hc-rh .btn {
   margin-top: 1.875rem;
 }
-.hc-rh .btn:hover {
-  background: var(--blue-lt);
-  border-color: var(--blue-lt);
-  color: var(--ink);
+@media (hover: hover) {
+  .hc-rh .btn:hover {
+    background: var(--blue-lt);
+    border-color: var(--blue-lt);
+    color: var(--ink);
+  }
 }
 .hc-rh .btn svg {
   transition: transform 0.6s var(--ease);
 }
-.hc-rh .btn:hover svg {
-  transform: translateX(0.3125rem);
+@media (hover: hover) {
+  .hc-rh .btn:hover svg {
+    transform: translateX(0.3125rem);
+  }
 }
 
 /* -- Tablet and phone ---------------------------------------------------- */
@@ -794,6 +823,14 @@
   .hc-hw .circ {
     width: 44px;
     height: 44px;
+  }
+}
+/* A phone held sideways (the owner's choice of 19 Nov): the photograph 4:3
+   rather than square, so a card is that much shorter on a short screen. The
+   square stays everywhere else. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .hc-hw .ph {
+    aspect-ratio: 4 / 3;
   }
 }
 

@@ -45,11 +45,11 @@ const COPY: Record<
   }
 > = {
   enquiry: {
-    title: 'Make an inquiry',
-    about: 'Inquiring about',
-    intro: `Inquiring holds nothing and commits you to nothing — it starts a conversation with ${FIRST_NAME}.`,
-    send: 'Send inquiry',
-    email: 'Email your inquiry',
+    title: 'Make an enquiry',
+    about: 'Enquiring about',
+    intro: `Enquiring holds nothing and commits you to nothing\u00a0— it starts a conversation with ${FIRST_NAME}.`,
+    send: 'Send enquiry',
+    email: 'Email your enquiry',
   },
   group: {
     title: 'Book this journey',
@@ -143,7 +143,7 @@ function check(kind: JourneyFormKind, values: Values): Errors {
 
 /**
  * The three pop-up forms of a journey's page, in one dialog: "Make an
- * inquiry", "Book this journey" (the group departure) and "Book as a private
+ * enquiry", "Book this journey" (the group departure) and "Book as a private
  * journey". The button that opens it chooses the form, so the journey and the
  * type are shown at the top and sent with the request, never asked for.
  *
@@ -306,7 +306,7 @@ export function JourneyFormDialog({
     const origin = /^https?:$/.test(window.location.protocol) ? window.location.origin : site.url;
     const subject =
       kind === 'enquiry'
-        ? `Inquiry: ${journey.title}`
+        ? `Enquiry: ${journey.title}`
         : `${kind === 'group' ? 'Group' : 'Private'} booking request: ${journey.title}`;
     const lines = (
       [
@@ -411,7 +411,7 @@ export function JourneyFormDialog({
             label, the journey's name and the type. */}
         <p id={aboutId} className="sr-only">
           {kind === 'enquiry'
-            ? `Inquiring about ${journey.title}.`
+            ? `Enquiring about ${journey.title}.`
             : `${journey.title}, as a ${kind} journey.`}
         </p>
         <p className="jf-about" aria-hidden>
@@ -427,7 +427,7 @@ export function JourneyFormDialog({
             </h3>
             <p>
               {kind === 'enquiry'
-                ? `Your inquiry about ${journey.title} is with us.`
+                ? `Your enquiry about ${journey.title} is with us.`
                 : `Your request for ${journey.title} as a ${kind} journey is with us.`}{' '}
               If anything changes before then, write to{' '}
               <a href={`mailto:${site.email}`}>{site.email}</a>.

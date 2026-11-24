@@ -3277,5 +3277,33 @@
     "bytes": 525972,
     "fileWidth": 1920,
     "fileHeight": 1011
+  },
+  "story-shores-frame": {
+    "slot": "story-shores-frame",
+    "source": "pexels",
+    "title": "Aerial Photography of Boats on Body of Water Near the Shore",
+    "caption": "Butterfly Valley, Fethiye",
+    "description": "Aerial view of a cove with turquoise water, boats, a beach and cliffs",
+    "location": "Fethiye, Turkey",
+    "pageUrl": "https://www.pexels.com/photo/aerial-photography-of-boats-on-body-of-water-near-the-shore-12193796/",
+    "downloadUrl": "",
+    "author": "Rockwell branding agency",
+    "licence": "Pexels License",
+    "licenceUrl": "https://www.pexels.com/license/",
+    "file": "story/shores-frame.jpg"
+  },
+  "story-places-frame": {
+    "slot": "story-places-frame",
+    "source": "pexels",
+    "title": "Grand Canal in Venice Italy",
+    "caption": "A canal in Venice",
+    "description": "A Venetian canal with gondolas moored beside a stone bridge",
+    "location": "Venice, Italy",
+    "pageUrl": "https://www.pexels.com/photo/grand-canal-in-venice-italy-10768371/",
+    "downloadUrl": "",
+    "author": "Sandra Filipe",
+    "licence": "Pexels License",
+    "licenceUrl": "https://www.pexels.com/license/",
+    "file": "story/places-frame.jpg"
   }
 }

@@ -29,9 +29,9 @@ export async function generateMetadata() {
 export const revalidate = 3600;
 
 /* Each photograph loads over the house image ground (stone, the soft lake
-   blue the site's other image frames hold), not its slot's own tone: two of
-   those tones are a khaki and a greige, and the palette has no sand, beige or
-   brown. The cover that lifts off each photograph takes the same blue. */
+   blue the site's other image frames hold), so the journal keeps one ground
+   rather than each slot's own blue-grey. The cover that lifts off each
+   photograph takes the same blue. */
 const ground = '!bg-stone [&_[data-curtain]]:!bg-stone';
 
 /**
@@ -60,23 +60,28 @@ export default async function JournalPage() {
         A place we love. A hotel worth the trip. A table worth booking.
       </PageTitle>
 
-      {/* A list, not a nav: these are the journal's sections, not yet links. */}
+      {/* A list, not a nav: these are the journal's sections, not yet links.
+          Each item is set off from the one before by a dot in its own left
+          padding, and the list starts that padding's width to the left inside
+          a clipping box: the first item on every line has its dot cut off, so
+          a line never starts with one, however the list wraps. */}
       <div className="container-site enter" style={enterAt(0.36)}>
-        <ul
-          aria-label="Journal categories"
-          className="m-0 flex list-none flex-wrap gap-x-4 gap-y-3 border-y border-line px-0 py-5"
-        >
-          {categories.map((category, i) => (
-            <li key={category} className="kicker flex items-center gap-4">
-              {i > 0 && (
-                <span aria-hidden className="text-acqua-deep">
-                  ·
-                </span>
-              )}
-              {category}
-            </li>
-          ))}
-        </ul>
+        <div className="overflow-hidden border-y border-line">
+          <ul
+            aria-label="Journal categories"
+            className={`kicker m-0 flex list-none flex-wrap gap-y-3 px-0 py-5 ${dotRoom.kicker.list}`}
+          >
+            {categories.map((category) => (
+              <li
+                key={category}
+                className={`kicker relative flex items-center ${dotRoom.kicker.item}`}
+              >
+                <Separator className={`text-acqua-deep ${dotRoom.kicker.dot}`} />
+                {category}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
 
       {lead && (
@@ -105,11 +110,16 @@ export default async function JournalPage() {
                 {rest.slice(0, 3).map((entry, i) => (
                   <RevealItem as="li" key={entry.slug} distance={16}>
                     <article>
+                      {/* The photographs are landscape, so in these upright
+                          frames they are drawn up to 1.875 times the frame's
+                          width, and `sizes` asks for that. On a phone held
+                          sideways, where the row is one column, an upright
+                          frame would fill two screens: it is cropped 2:1. */}
                       <Frame
                         media={entry.media}
                         ratio={i === 1 ? '1/1' : '4/5'}
-                        sizes="(min-width: 768px) 33vw, 100vw"
-                        className={`mb-7 opacity-85 grayscale-[.25] ${ground}`}
+                        sizes="(orientation: landscape) and (max-height: 500px) and (max-width: 767px) 100vw, (min-width: 768px) 56vw, 160vw"
+                        className={`mb-7 opacity-85 grayscale-[.25] [@media(orientation:landscape)_and_(max-height:500px)_and_(max-width:767px)]:!aspect-[2/1] ${ground}`}
                       />
                       <Teaser entry={entry} />
                     </article>
@@ -138,7 +148,13 @@ export default async function JournalPage() {
             delay={0.15}
             className="col-span-4 md:col-span-6 lg:col-span-4 lg:col-start-9 lg:self-end"
           >
-            <NewsletterForm variant="large" />
+            {/* `data-fab-away`: the floating "Connect with our team" steps
+                aside while the form is on screen, as it does for the home
+                page's Circle, rather than sit over Join The Circle and the
+                Privacy Policy link. */}
+            <div data-fab-away>
+              <NewsletterForm variant="large" />
+            </div>
           </Reveal>
         </div>
       </Section>
@@ -146,13 +162,52 @@ export default async function JournalPage() {
   );
 }
 
+/**
+ * The room a separating dot takes before an item: the 1rem gap either side of
+ * it that the rows have always had, and the dot itself (its glyph and the
+ * caps' letter-spacing: 0.304em in `.kicker`, 0.284em in `.kicker-sm`). The
+ * item is padded by it, the dot is centred in that padding, and the row starts
+ * that much to the left inside a clipping box.
+ */
+const dotRoom = {
+  kicker: {
+    list: '-ml-[calc(2rem+0.304em)]',
+    item: 'pl-[calc(2rem+0.304em)]',
+    dot: 'w-[calc(2rem+0.304em)]',
+  },
+  kickerSm: {
+    list: '-ml-[calc(2rem+0.284em)]',
+    item: 'pl-[calc(2rem+0.284em)]',
+    dot: 'w-[calc(2rem+0.284em)]',
+  },
+};
+
+/**
+ * The dot between two caps items, centred in the left padding of the item it
+ * precedes (see dotRoom), so the dot of an item that begins a line is cut off
+ * with the padding.
+ */
+function Separator({ className = '' }: { className?: string }) {
+  return (
+    <span aria-hidden className={`absolute left-0 top-0 text-center ${className}`}>
+      ·
+    </span>
+  );
+}
+
 function Teaser({ entry, size = 'row' }: { entry: ForthcomingArticle; size?: 'lead' | 'row' }) {
   return (
     <>
-      <p className="kicker-sm mb-4 flex flex-wrap items-center gap-x-4 gap-y-2">
-        <span>{entry.category}</span>
-        <span aria-hidden>·</span>
-        <span>{entry.date}</span>
+      {/* Category · date, and when the two do not fit on one line, the date
+          starts the next one without its dot (see Separator). */}
+      <p className="kicker-sm mb-4 overflow-hidden">
+        <span className={`flex flex-wrap items-center gap-y-2 ${dotRoom.kickerSm.list}`}>
+          <span className={dotRoom.kickerSm.item}>{entry.category}</span>{' '}
+          <span className={`relative ${dotRoom.kickerSm.item}`}>
+            <Separator className={dotRoom.kickerSm.dot} />
+            {entry.date}
+          </span>
+        </span>
       </p>
       <h3 className={`${size === 'lead' ? 'h3' : 'h4'} mb-4 max-w-[22ch]`}>{entry.title}</h3>
       <p className={`${size === 'lead' ? 'prose-body' : 'prose-body-sm'} measure mb-6`}>

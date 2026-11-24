@@ -20,10 +20,14 @@
   color: #fff;
   box-shadow: 0 1.625rem 3.75rem rgb(20 29 36 / 0.16);
   -webkit-font-smoothing: antialiased;
-  animation: pc-rise 0.9s var(--pc-ease) both;
+  /* `backwards`, not `both`: once the card has risen into place the
+     animation lets go of `transform`, so the hover's lift below can ease in
+     and out instead of jumping. */
+  animation: pc-rise 0.9s var(--pc-ease) backwards;
   transition:
-    transform 0.9s var(--pc-ease),
-    box-shadow 0.9s var(--pc-ease);
+    transform 0.7s var(--pc-ease),
+    box-shadow 0.7s var(--pc-ease);
+  will-change: transform;
 }
 .pc * {
   box-sizing: border-box;
@@ -34,9 +38,23 @@
     transform: translateY(2rem);
   }
 }
-.pc:hover {
-  transform: translateY(-0.5rem);
-  box-shadow: 0 2.5rem 5rem rgb(20 29 36 / 0.24);
+/* Hover only where there is a pointer to rest: on a touch screen a tap on a
+   card's dot would leave the card lifted. */
+@media (hover: hover) {
+  .pc:hover {
+    transform: translateY(-0.625rem);
+    box-shadow:
+      0 2.75rem 5.5rem rgb(20 29 36 / 0.26),
+      0 0 0 1px rgb(255 255 255 / 0.14);
+  }
+  /* The photograph eases in a little closer, and the foot of the card
+     brightens: slow, so it reads as a breath rather than a jump. */
+  .pc:hover .pcm img.on {
+    scale: 1.06;
+  }
+  .pc:hover .pbtn svg {
+    translate: 0.25rem 0;
+  }
 }
 /* The card, after the notes of 5 November 2026: the photograph at the top
    and the words under it in the card's own flow, so a long name is never cut
@@ -48,6 +66,12 @@
   aspect-ratio: 5 / 4;
   overflow: hidden;
 }
+/* On a touch screen a sideways swipe across the photographs changes them
+   (useSwipe marks the frame); scrolling up and down, and zooming, stay the
+   page's. */
+.pc .pcm[data-drag] {
+  touch-action: pan-y pinch-zoom;
+}
 /* The next photograph wipes in over the last, which holds until it is covered. */
 .pc .pcm img {
   object-fit: cover;
@@ -56,13 +80,16 @@
   clip-path: inset(0 0 0 100%);
   transition:
     opacity 0s 0.9s,
-    clip-path 0s 0.9s;
+    clip-path 0s 0.9s,
+    scale 1.2s var(--pc-ease);
 }
 .pc .pcm img.on {
   z-index: 1;
   opacity: 1;
   clip-path: inset(0);
-  transition: clip-path 0.9s cubic-bezier(0.77, 0, 0.18, 1);
+  transition:
+    clip-path 0.9s cubic-bezier(0.77, 0, 0.18, 1),
+    scale 1.2s var(--pc-ease);
 }
 /* The foot of the photograph settling into the colour of the place. */
 .pc .pcg {
@@ -200,6 +227,15 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+/* An upright phone shows one card to a row, so there is no row to keep
+   even: the line is read whole. */
+@media (max-width: 539px) {
+  .pc .d {
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
+  }
+}
 /* The itinerary (chat notes of 9 November 2026, after A&K's cards): a small
    label, then the places in order. Never clamped: every stop is shown. */
 .pc .pit {
@@ -271,26 +307,36 @@
     background-color 0.5s var(--pc-ease),
     color 0.5s var(--pc-ease);
 }
-.pc .pbtn:hover {
-  transform: translateY(-2px);
-  background: var(--color-brand-deep);
-  color: #fff;
+@media (hover: hover) {
+  .pc .pbtn:hover {
+    transform: translateY(-2px);
+    background: var(--color-brand-deep);
+    color: #fff;
+  }
 }
 .pc.soon .pbtn {
   background: var(--color-brand-deep);
   color: #fff;
 }
-.pc.soon .pbtn:hover {
-  background: #fff;
-  color: var(--pc-ink);
+@media (hover: hover) {
+  .pc.soon .pbtn:hover {
+    background: #fff;
+    color: var(--pc-ink);
+  }
 }
 /* Keyboard focus on the dark photo cards: a white ring (about 9:1), not ink. */
 .pc :focus-visible {
   outline-color: #fff;
 }
+.pc .pbtn svg {
+  transition: translate 0.5s var(--pc-ease);
+}
 @media (prefers-reduced-motion: reduce) {
   .pc {
     animation: none;
+  }
+  .pc .pbtn svg {
+    transition: none;
   }
   .pc,
   .pc .pcm img {

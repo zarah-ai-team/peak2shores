@@ -210,6 +210,12 @@ export function JourneyCollection({
 
         {/* The filters stand above both views, so they hold in the Map view too. */}
         <div ref={fbar} className="fbar" role="group" aria-label="Filter journeys">
+          {/* `data-fab-clear`: the floating "Connect with our team" steps aside
+              rather than cover the filters. The mark covers the panel on a
+              short screen only (a phone held sideways, journeys-index.css),
+              where the button would sit on them; elsewhere it is not shown,
+              and the button stays. */}
+          <span className="fbar-clear" data-fab-clear aria-hidden />
           <Menu
             label="Destination"
             value={f.dest}
@@ -339,6 +345,19 @@ function Menu({
      page: it goes back to the menu's own button. */
   useEffect(() => {
     if (!open) return;
+    // On a touch screen a list opening past the foot of the screen (a phone
+    // held sideways) is brought into view with its button: the page moves up
+    // just enough to show the list's last option, and never so far that the
+    // button goes under the header (the page's scroll padding at the top).
+    const list = box.current?.querySelector('.flist')?.getBoundingClientRect();
+    const button = trigger.current?.getBoundingClientRect();
+    if (list && button && window.matchMedia('(pointer: coarse)').matches) {
+      const top = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+      const room = button.top - top;
+      const by =
+        room < 0 ? room : Math.min(Math.max(0, list.bottom - (window.innerHeight - 8)), room);
+      if (by) window.scrollBy({ top: by });
+    }
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return;
       const inside = box.current?.contains(document.activeElement);
@@ -372,7 +391,9 @@ function Menu({
           <path d="M6 9l6 6 6-6" />
         </svg>
       </button>
-      <ul className="flist" id={id} role="list" hidden={!open}>
+      {/* `data-fab-clear`: the floating "Connect with our team" steps aside
+          while the open list is where it would cover the options. */}
+      <ul className="flist" id={id} role="list" hidden={!open} data-fab-clear>
         {options.map((o) => {
           const empty = o.count === 0 && !o.on;
           return (

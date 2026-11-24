@@ -107,8 +107,18 @@ export function useDragScroll(ref: RefObject<HTMLElement | null>) {
  * time: past the threshold it calls `onSwipe(1)` for the next slide (dragged
  * leftward) or `onSwipe(-1)` for the previous. Vertical page scrolling on
  * touch is untouched (the element should have `touch-action: pan-y`).
+ *
+ * A press on a button inside the slider stays a press on that button, unless
+ * `fromControls` is set: then a swipe may start on a button too. One that
+ * travels past the threshold turns the slide and its click is dropped; a
+ * press that does not, a finger's slightly moving tap included, still
+ * presses the button.
  */
-export function useSwipe(ref: RefObject<HTMLElement | null>, onSwipe: (dir: 1 | -1) => void) {
+export function useSwipe(
+  ref: RefObject<HTMLElement | null>,
+  onSwipe: (dir: 1 | -1) => void,
+  { fromControls = false }: { fromControls?: boolean } = {},
+) {
   const latest = useRef(onSwipe);
   latest.current = onSwipe;
 
@@ -119,11 +129,13 @@ export function useSwipe(ref: RefObject<HTMLElement | null>, onSwipe: (dir: 1 | 
     let id = -1;
     let startX = 0;
     let startY = 0;
+    let onControl = false;
 
     const down = (e: PointerEvent) => {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
+      onControl = (e.target as Element).closest('button') !== null;
       // A press on a control stays a press on that control.
-      if ((e.target as Element).closest('button')) return;
+      if (onControl && !fromControls) return;
       id = e.pointerId;
       startX = e.clientX;
       startY = e.clientY;
@@ -133,8 +145,9 @@ export function useSwipe(ref: RefObject<HTMLElement | null>, onSwipe: (dir: 1 | 
       id = -1;
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
-      if (Math.abs(dx) > SLOP) swallowNextClick(el);
-      if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+      const swiped = Math.abs(dx) >= 50 && Math.abs(dx) >= Math.abs(dy) * 1.2;
+      if (onControl ? swiped : Math.abs(dx) > SLOP) swallowNextClick(el);
+      if (!swiped) return;
       latest.current(dx < 0 ? 1 : -1);
     };
     const cancel = () => {
@@ -153,5 +166,5 @@ export function useSwipe(ref: RefObject<HTMLElement | null>, onSwipe: (dir: 1 | 
       el.removeEventListener('pointercancel', cancel);
       el.removeEventListener('dragstart', noNativeDrag);
     };
-  }, [ref]);
+  }, [ref, fromControls]);
 }

@@ -91,23 +91,31 @@ function regions(pins: GlobePin[], fit: number) {
     });
 }
 
-/** Google Maps' road-map colors, which every reader already knows how to read. */
+/**
+ * Google Maps' road-map colors, which every reader already knows how to read,
+ * except the land: a cool pale blue-grey in place of its cream (the site has no
+ * sand or cream, 19 Nov 2026), as light as the cream was, so it stands off the
+ * water as clearly (1.35:1 to the sea, the cream 1.33:1). The journeys'
+ * countries are card blues in place of its park greens (blues like the journey
+ * cards, 19 Nov 2026): calm, so they stand off the brighter sea, deepening on
+ * hover and choice, edged as on the Journeys page's map (HeroCarousel).
+ */
 const MAP = {
   water: '#aadaff',
   waterDeep: '#7fb8ec',
-  land: '#f5f3ec',
+  land: '#f2f5f7',
   border: '#c9c9c9',
-  park: '#d4e9c6',
-  parkHover: '#c1e0ae',
-  parkSelected: '#a8d494',
-  parkEdge: '#93c08a',
+  country: '#e0e9f0',
+  countryHover: '#bdcdd9',
+  countrySelected: '#90a8b9',
+  countryEdge: 'rgb(29 74 102 / 0.6)',
   red: '#ea4335',
   white: '#ffffff',
 };
 
 /**
  * The globe's palette: a road map rather than a print — light blue sea, pale
- * cream land with soft gray borders, the journeys' countries in park green,
+ * blue-grey land with soft gray borders, the journeys' countries in card blues,
  * pins in map red. A lit pin takes the brand blue, read from the stylesheet.
  */
 function readPalette() {
@@ -120,10 +128,10 @@ function readPalette() {
     graticule: hexAlpha(MAP.white, 0.35),
     land: MAP.land,
     landStroke: MAP.border,
-    dest: MAP.park,
-    destHover: MAP.parkHover,
-    destSelected: MAP.parkSelected,
-    destStroke: MAP.parkEdge,
+    dest: MAP.country,
+    destHover: MAP.countryHover,
+    destSelected: MAP.countrySelected,
+    destStroke: MAP.countryEdge,
     limb: hexAlpha('#2a5f8f', 0.14),
     highlight: hexAlpha(MAP.white, 0.3),
     edge: hexAlpha(MAP.waterDeep, 0.6),
@@ -137,8 +145,8 @@ function readPalette() {
  * The destinations globe.
  *
  * An orthographic projection drawn to a canvas, colored like a road map:
- * light blue sea that deepens toward the limb, cream land with gray borders,
- * the journeys' countries in park green, each journey a red pin. It opens
+ * light blue sea that deepens toward the limb, pale blue-grey land with gray borders,
+ * the journeys' countries in card blues, each journey a red pin. It opens
  * framed on the region with the most journeys, close enough that every pin
  * stands apart, and flies — rotate and zoom together, easing out a little in
  * the middle like a camera — to any other journey that is hovered or chosen.
@@ -343,7 +351,7 @@ export function Globe({
       c.lineWidth = 0.6;
       c.stroke();
 
-      // Everywhere without a journey: ivory, for bearings only.
+      // Everywhere without a journey: the pale blue-grey land, for bearings only.
       const destinationSet = new Set(L.destinations);
       c.beginPath();
       for (const country of countries) {

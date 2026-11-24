@@ -26,7 +26,12 @@ export type MediaSlot = {
   brief: string;
   /** Short caps label shown on the placeholder. */
   label: string;
-  /** The color the frame holds before and behind the photograph. */
+  /**
+   * The color the frame holds before and behind the photograph: a calm blue-grey
+   * in the journey cards' family (navy #0e2f42, #1d4a66, teal-blue #0f5767), at
+   * the lightness of the picture it waits for. Never a sand, beige, brown, olive
+   * or green (the owner's decision of 19 Nov 2026: blues like the journey cards).
+   */
   tone: string;
   /** Set this once a real photograph exists. */
   src?: string;
@@ -62,31 +67,31 @@ export const media = {
   'pillar-1': {
     label: 'Personal',
     brief: 'Marc greeting a local host — two people, natural light.',
-    tone: '#c9bea9',
+    tone: '#aec3ce',
     alt: 'A narrow stone lane in an old Italian town, a few people walking towards the castle gate',
   },
   'pillar-2': {
     label: 'Curated',
     brief: 'A single set table on a stone terrace above the water.',
-    tone: '#c9bea9',
+    tone: '#aec3ce',
     alt: 'A taverna terrace of potted plants and old roofs above a calm blue sea',
   },
   'pillar-3': {
     label: 'Connected',
     brief: 'Hands at a market stall — produce, conversation, detail.',
-    tone: '#c9bea9',
+    tone: '#aec3ce',
     alt: 'Oranges, artichokes and greens in crates at an Italian market stall',
   },
   'pillar-4': {
     label: 'Thoughtfully paced',
     brief: 'A single chair or a terrace facing the sea, a book left on it — soft evening light.',
-    tone: '#c9bea9',
+    tone: '#aec3ce',
     alt: 'A single chair on a Mallorcan headland, facing the sea in the last light',
   },
   'feat-1': {
     label: 'Amalfi',
     brief: 'Amalfi — a fishing boat below lemon terraces.',
-    tone: '#8c8f86',
+    tone: '#819098',
     alt: 'Amalfi from the water, the town at the foot of green mountains',
   },
   'feat-2': {
@@ -98,7 +103,7 @@ export const media = {
   'feat-3': {
     label: 'Mallorca',
     brief: 'Mallorca — a stone finca, olive trees, the Tramuntana behind.',
-    tone: '#9a9587',
+    tone: '#8798a1',
     alt: 'A stone house among olive trees in Mallorca, the Tramuntana in evening haze',
   },
   'tr-1': {
@@ -128,25 +133,25 @@ export const media = {
   'ex-1': {
     label: 'Taste',
     brief: 'A long lunch table, half-eaten, sun through vines.',
-    tone: '#9a9587',
+    tone: '#8798a1',
     alt: 'A long table laid for lunch beneath a pergola in the Tuscan hills',
   },
   'ex-2': {
     label: 'Meet',
     brief: 'An artisan at work in a small workshop.',
-    tone: '#8a8478',
+    tone: '#778890',
     alt: 'An artisan’s hands shaping a clay bowl on a potter’s wheel',
   },
   'ex-3': {
     label: 'Discover',
     brief: 'A quiet cloister or hillside village lane.',
-    tone: '#9a9587',
+    tone: '#8798a1',
     alt: 'A quiet stone lane in an old Tuscan village, lined with potted plants',
   },
   'ex-4': {
     label: 'Explore',
     brief: 'A ridge trail or a sailboat, two people, wide.',
-    tone: '#7f8c85',
+    tone: '#7b8b93',
     // Marc's own photograph (Drive), in place of the stock sailboat.
     src: '/images/drive/switzerland-alpine-suspension-bridge.jpg',
     alt: 'A suspension bridge strung across a forested alpine valley above Zermatt',
@@ -154,7 +159,7 @@ export const media = {
   'ex-5': {
     label: 'Stay',
     brief: 'A hotel room with the doors open to a view.',
-    tone: '#a09a8c',
+    tone: '#8c9ea6',
     // Marc's own photograph (Drive) of a lodge the journeys use, in place of stock.
     src: '/images/drive/south-africa-qwabi-lodge-suite.jpg',
     alt: 'A thatched safari suite at Qwabi, its glass doors open onto a pool deck and the bush',
@@ -162,19 +167,19 @@ export const media = {
   'hotel-1': {
     label: 'Amalfi Coast',
     brief: 'Hotel terrace above the sea, umbrella pines, evening light.',
-    tone: '#b9b1a0',
+    tone: '#a2b5bf',
     alt: 'A hotel terrace above the sea at Positano, boats scattered on blue water',
   },
   'hotel-2': {
     label: 'Lake Lucerne',
     brief: 'Belle-époque hotel facade on a lake, mountains behind.',
-    tone: '#b9b1a0',
+    tone: '#a2b5bf',
     alt: 'Belle-époque facades along the Lucerne waterfront, reflected in the lake',
   },
   'hotel-3': {
     label: 'Mallorca',
     brief: 'Stone finca courtyard, olive trees, a long table.',
-    tone: '#b9b1a0',
+    tone: '#a2b5bf',
     alt: 'An arcaded stone courtyard with citrus trees in Palma',
   },
 
@@ -184,7 +189,7 @@ export const media = {
   'home-video-poster': {
     label: 'Hero · reel poster',
     brief: 'The first frame of the hero reel — Marc’s own footage.',
-    tone: '#1f2a26',
+    tone: '#1c2930',
     src: '/video/hero-poster.jpg',
     alt: '',
   },
@@ -205,84 +210,84 @@ export const media = {
   'principle-1': {
     label: 'Personal',
     brief: 'Marc with guests or a local host — real people, natural light.',
-    tone: '#c9bea9',
+    tone: '#aec3ce',
     src: '/images/drive/switzerland-guests-lucerne-chapel-bridge.jpg',
     alt: 'Marc’s small group by the Chapel Bridge, Lucerne',
   },
   'principle-2': {
     label: 'Curated',
     brief: 'One exceptional place — a terrace, a view, nothing extra.',
-    tone: '#c9bea9',
+    tone: '#aec3ce',
     src: '/images/drive/switzerland-pilatus-summit.jpg',
     alt: 'Pilatus summit terrace above a sea of cloud and Lake Lucerne',
   },
   'principle-3': {
     label: 'Connected',
     brief: 'A market, a cellar, a kitchen — access through people.',
-    tone: '#c9bea9',
+    tone: '#aec3ce',
     src: '/images/drive/south-africa-winelands-barrel-cellar.jpg',
     alt: 'Oak barrels lining a Stellenbosch wine cellar',
   },
   'principle-4': {
     label: 'Thoughtfully paced',
     brief: 'A free afternoon — a pool, a lake, a book. Stillness.',
-    tone: '#c9bea9',
+    tone: '#aec3ce',
     src: '/images/drive/south-africa-qwabi-lodge-pool.jpg',
     alt: 'A lodge plunge pool overlooking the bushveld hills, Qwabi',
   },
   'exp-taste': {
     label: 'Taste',
     brief: 'Food, wine, a table worth booking. Wide.',
-    tone: '#9a9587',
+    tone: '#8798a1',
     src: '/images/drive/switzerland-guests-lavaux-vineyards.jpg',
     alt: 'Two guests among the Lavaux vineyards above Lake Geneva',
   },
   'exp-meet': {
     label: 'Meet',
     brief: 'A local host, artisan or guide at work. Wide.',
-    tone: '#8a8478',
+    tone: '#778890',
     src: '/images/drive/switzerland-alpine-cheesemaker.jpg',
     alt: 'Alpine cheesemaker beside his copper cauldron',
   },
   'exp-discover': {
     label: 'Discover',
     brief: 'Architecture, history, a hidden place. Wide.',
-    tone: '#9a9587',
+    tone: '#8798a1',
     src: '/images/drive/switzerland-lucerne-water-tower.jpg',
     alt: 'Chapel Bridge and Water Tower on the clear Reuss, Lucerne',
   },
   'exp-move': {
     label: 'Explore',
     brief: 'On foot, on the water or on safari — the outdoors. Wide.',
-    tone: '#7f8c85',
+    tone: '#7b8b93',
     src: '/images/drive/botswana-chobe-wild-dogs.jpg',
     alt: 'A pack of African wild dogs on the road, Chobe',
   },
   'home-hotel-1': {
     label: 'Hotel · Amalfi Coast',
     brief: 'The hotel itself, large — terrace, view, evening light.',
-    tone: '#b9b1a0',
+    tone: '#a2b5bf',
     src: '/images/hotel-1.jpg',
     alt: 'A hotel terrace above the sea at Positano, boats scattered on blue water',
   },
   'home-hotel-2': {
     label: 'Hotel · Lake Lucerne',
     brief: 'The hotel itself, large — the lake, the mountains behind.',
-    tone: '#b9b1a0',
+    tone: '#a2b5bf',
     src: '/images/drive/switzerland-lake-lucerne-grand-hotel.jpg',
     alt: 'Belle-epoque grand hotel on the green water of Lake Lucerne',
   },
   'home-hotel-3': {
     label: 'Hotel · Mallorca',
     brief: 'The hotel itself, large — stone, olive trees, a long table.',
-    tone: '#b9b1a0',
+    tone: '#a2b5bf',
     src: '/images/hotel-3.jpg',
     alt: 'An arcaded stone courtyard with citrus trees in Palma',
   },
   'svc-private': {
     label: 'Private Travel',
     brief: 'Two or a family, somewhere quiet and beautiful — their own pace.',
-    tone: '#a09a8c',
+    tone: '#8c9ea6',
     src: '/images/drive/switzerland-guests-grindelwald-bench.jpg',
     alt: 'Guests on a bench facing the Grindelwald peaks',
   },
@@ -296,14 +301,14 @@ export const media = {
   'svc-events': {
     label: 'Sports & Special Events',
     brief: 'The atmosphere of a great event — no logos, no identifiable venue.',
-    tone: '#8c8f86',
+    tone: '#819098',
     src: '/images/drive/south-africa-guests-african-feast.jpg',
     alt: 'Guests sharing a long dinner table at an African feast',
   },
   'svc-villas': {
     label: 'Villas',
     brief: 'A house with a strong sense of place — terrace, garden, view.',
-    tone: '#a09a8c',
+    tone: '#8c9ea6',
     src: '/images/drive/switzerland-bettmeralp-snow-chapel.jpg',
     alt: 'Snow-covered chalets and chapel at Bettmeralp',
   },
@@ -331,7 +336,7 @@ export const media = {
   'home-way-villas': {
     label: 'Ways · Private villas',
     brief: 'A private pool and terrace in warm light, the landscape beyond. Upright crop.',
-    tone: '#a59a82',
+    tone: '#8a9faa',
     alt: 'A curved infinity pool and terrace chairs above wooded hills',
   },
   'home-cove': {
@@ -349,7 +354,7 @@ export const media = {
   'client-way-group': {
     label: 'Ways · Small luxury group journeys',
     brief: 'Drive › Destinations › Kenya — the group journeys frame Marc chose. A still, no film.',
-    tone: '#8a7a5c',
+    tone: '#69808c',
     alt: 'Guests together on a small-group journey in Kenya',
   },
   'client-way-cruises': {
@@ -361,13 +366,13 @@ export const media = {
   'client-way-events': {
     label: 'Ways · Sports & events',
     brief: 'Drive › Sport & Event — the events frame Marc chose.',
-    tone: '#6f7a63',
+    tone: '#657983',
     alt: 'Guests at a sporting event',
   },
   'client-way-villas': {
     label: 'Ways · Private villas',
     brief: 'Drive › Private Villas — the villa frame Marc chose.',
-    tone: '#a59a82',
+    tone: '#8a9faa',
     alt: 'A private villa in an extraordinary setting',
   },
   'client-why-curated': {
@@ -379,19 +384,19 @@ export const media = {
   'client-why-paced': {
     label: 'Why · Thoughtfully paced',
     brief: 'Drive › Egypt — the frame Marc chose.',
-    tone: '#b39e74',
+    tone: '#89a6b4',
     alt: 'An unhurried moment in Egypt',
   },
   'client-why-moments': {
     label: 'Why · Meaningful experiences',
     brief: 'Drive › Morocco — the frame Marc chose.',
-    tone: '#a8785a',
+    tone: '#6b8a99',
     alt: 'An experience in Morocco',
   },
   'client-why-local': {
     label: 'Why · Local connections',
     brief: 'Drive › Kenya — the frame Marc chose.',
-    tone: '#8a7a5c',
+    tone: '#69808c',
     alt: 'Guests with local friends in Kenya',
   },
   'client-peaks': {
@@ -443,7 +448,7 @@ export const media = {
     label: 'Stay · Cardamom House, Vipingo',
     brief:
       'Drive — "Cardamom_House_2023_Area_View_Manda_Toto_with_pool" (Marc, 9 Nov), cropped to the pool and the bougainvillea as proposed in the chat forwarded on 13 Nov. Upright crop holds the two guests.',
-    tone: '#a59a82',
+    tone: '#8a9faa',
     src: '/images/home/hotel-cardamom-pool.jpg',
     alt: 'The pool at Cardamom House, Vipingo, beneath a pergola of pink bougainvillea, two guests at the water’s edge',
   },
@@ -460,7 +465,7 @@ export const media = {
     label: 'Home slider · Italy Uncovered',
     brief:
       'The salumeria frame again (8 Nov), from the client: a traveler with a board of prosciutto and an aperitivo in an Italian food hall. Wide.',
-    tone: '#a0583a',
+    tone: '#537484',
     src: '/images/home/italian-experience.jpg',
     alt: 'A smiling traveler holding a board of prosciutto and an aperitivo in an Italian food hall',
   },
@@ -482,7 +487,7 @@ export const media = {
   'home-jr-horizon': {
     label: 'Home slider · More journeys coming',
     brief: 'A traveller among the columns of Karnak. Wide.',
-    tone: '#a06a3a',
+    tone: '#5c7d8e',
     src: '/images/home/jr-horizon-karnak-temple.jpg',
     alt: 'A traveller in a long white dress among the carved columns of Karnak temple, Luxor',
   },
@@ -532,7 +537,7 @@ export const media = {
   'dest-italy': {
     label: 'Destination · Italy',
     brief: 'An Italian town, its lanes and its people. Wide.',
-    tone: '#8c8f86',
+    tone: '#819098',
     src: '/images/pillar-1.jpg',
     alt: 'A narrow stone lane in an old Italian town, a few people walking towards the castle gate',
   },
@@ -546,7 +551,7 @@ export const media = {
   'dest-spain': {
     label: 'Destination · Spain',
     brief: 'The Mallorcan coast at the end of the day. Wide.',
-    tone: '#9a9587',
+    tone: '#8798a1',
     src: '/images/pillar-4.jpg',
     alt: 'A single chair on a Mallorcan headland, facing the sea in the last light',
   },
@@ -600,21 +605,21 @@ export const media = {
   'se-grindelwald': {
     label: 'Swiss Elegance · Grindelwald',
     brief: 'The Eiger above Grindelwald.',
-    tone: '#55663f',
+    tone: '#496371',
     src: '/images/drive/switzerland-grindelwald-eiger.jpg',
     alt: 'The Eiger above Grindelwald, Switzerland, a gondola crossing green meadows and chalets',
   },
   'se-montreux': {
     label: 'Swiss Elegance · Montreux',
     brief: 'The Lavaux vineyards above Lake Geneva.',
-    tone: '#5b6a4a',
+    tone: '#506874',
     src: '/images/drive/switzerland-guests-lavaux-vineyards.jpg',
     alt: 'Two travelers among the Lavaux vineyards above Lake Geneva',
   },
   'se-zermatt': {
     label: 'Swiss Elegance · Zermatt',
     brief: 'Zermatt village.',
-    tone: '#5a4a3c',
+    tone: '#3f5059',
     src: '/images/drive/switzerland-zermatt-chalets.jpg',
     alt: 'Old larch chalets with geraniums on a lane in Zermatt',
   },
@@ -628,7 +633,7 @@ export const media = {
   'se-milan': {
     label: 'Swiss Elegance · Milan',
     brief: 'The Duomo.',
-    tone: '#7a6d64',
+    tone: '#62737b',
     alt: 'The marble facade of Milan’s Duomo on the cathedral square under an evening sky',
   },
   'ie-hero': {
@@ -640,7 +645,7 @@ export const media = {
   'ie-list': {
     label: 'The Italian Experience',
     brief: 'Bologna’s arcades. Upright.',
-    tone: '#a0583a',
+    tone: '#537484',
     alt: 'Ocher arcades along a busy street in Bologna in the sun',
   },
   'ie-card': {
@@ -652,7 +657,7 @@ export const media = {
   'ie-bologna': {
     label: 'The Italian Experience · Bologna',
     brief: 'Bologna’s porticoes.',
-    tone: '#a0583a',
+    tone: '#537484',
     alt: 'Looking along the vaulted ocher porticoes of a street in Bologna',
   },
   'ie-garda': {
@@ -670,7 +675,7 @@ export const media = {
   'dep-italian-experience': {
     label: 'Departures · The Italian Experience',
     brief: 'A gondola in Venice. Small landscape crop.',
-    tone: '#6a5a4c',
+    tone: '#4e616a',
     alt: 'A gondolier steering a gondola with passengers along a Venice canal',
   },
   'ac-hero': {
@@ -745,28 +750,28 @@ export const media = {
   'ce-list': {
     label: 'Como & the Engadin',
     brief: 'A villa on Lake Como, the mountains behind. Upright.',
-    tone: '#5f6f6a',
+    tone: '#5e6e76',
     alt: 'A lakeside villa and its gardens on Lake Como, a motor launch passing',
   },
   // The Instagram links page leads with this, not a photograph from the site.
   'links-amalfi': {
     label: 'Amalfi, Slowly',
     brief: 'The Amalfi coast from the water.',
-    tone: '#8c8f86',
+    tone: '#819098',
     src: '/images/home-hero.jpg',
     alt: 'A sailing boat at anchor off the Amalfi Coast, a cliffside town and the coast fading into haze behind',
   },
   'plan-private': {
     label: 'Bespoke private travel',
     brief: 'Guests on their own journey, somewhere memorable. Upright.',
-    tone: '#a09a8c',
+    tone: '#8c9ea6',
     src: '/images/drive/switzerland-guests-jungfraujoch.jpg',
     alt: 'Guests with the Swiss flag on the Jungfraujoch snowfield',
   },
   'not-found': {
     label: 'Not found',
     brief: 'A quiet path through open country. Upright.',
-    tone: '#7a8a7a',
+    tone: '#758892',
     src: '/images/drive/switzerland-gstaad-meadow.jpg',
     alt: 'Alpine meadow and footpath above Gstaad',
   },
@@ -775,7 +780,7 @@ export const media = {
   'jl-1': {
     label: 'Amalfi, Slowly',
     brief: 'Amalfi — a fishing boat below lemon terraces.',
-    tone: '#8c8f86',
+    tone: '#819098',
     alt: 'Positano rising from the sea beneath steep mountains, seen from a boat',
   },
   'jl-2': {
@@ -787,19 +792,19 @@ export const media = {
   'jl-3': {
     label: 'Mallorca',
     brief: 'Mallorca — a stone finca, olive trees, the Tramuntana behind.',
-    tone: '#9a9587',
+    tone: '#8798a1',
     alt: 'Valldemossa among the wooded slopes of the Tramuntana',
   },
   'jl-4': {
     label: 'The Cape',
     brief: 'Cape winelands — vines, mountains, a farmhouse in warm light.',
-    tone: '#7a6a55',
+    tone: '#5c707b',
     alt: 'A Franschhoek wine farm among vineyards beneath the mountains',
   },
   'jl-5': {
     label: 'Como & the Engadin',
     brief: 'Lake Como — a villa garden meeting the water.',
-    tone: '#5f6f6a',
+    tone: '#5e6e76',
     alt: 'A lakeside villa garden meeting the water at Varenna on Lake Como',
   },
 
@@ -807,43 +812,43 @@ export const media = {
   'am-hero': {
     label: 'Hero · Amalfi from the water',
     brief: 'Amalfi coast from the water, a single boat, early light — no crowds, no landmarks.',
-    tone: '#5d6a63',
+    tone: '#5a6971',
     alt: 'Amalfi from the water, the town stacked against terraced cliffs, boats in the harbor',
   },
   'am-why': {
     label: 'Lemon terraces',
     brief: 'Lemon terraces above the sea, a person picking, warm light.',
-    tone: '#a58f6a',
+    tone: '#7c97a5',
     alt: 'Terraced hillsides falling to the sea below Ravello',
   },
   'am-map': {
     label: 'Map · Sorrento peninsula',
     brief: 'Sorrento peninsula, hand-drawn or muted — Positano, Nerano, Ravello, Capri marked.',
-    tone: '#dcd6c6',
+    tone: '#c7dae3',
     alt: 'The Sorrento coast and harbor from above, the peninsula stretching into the bay',
   },
   'am-h1': {
     label: 'Above Positano',
     brief: 'Hotel terrace above the sea, umbrella pines, evening light.',
-    tone: '#b9b1a0',
+    tone: '#a2b5bf',
     alt: 'A tiled hotel terrace above Positano, table and chairs facing the sea',
   },
   'am-h2': {
     label: 'The quiet side',
     brief: 'Cloister courtyard with citrus trees and stone arches.',
-    tone: '#a9a394',
+    tone: '#95a7b0',
     alt: 'Cloister arches around a quiet courtyard garden',
   },
   d1: {
     label: 'Day 01',
     brief: 'Hotel terrace, first evening, glasses on a table.',
-    tone: '#7f8c85',
+    tone: '#7b8b93',
     alt: 'Glasses of prosecco and a candle on a terrace table in Positano, first evening',
   },
   d2: {
     label: 'Day 02',
     brief: 'Steep lane in Positano, morning shade, one figure.',
-    tone: '#a58f6a',
+    tone: '#7c97a5',
     alt: 'A steep stepped lane in Positano, a glimpse of blue sea at its end',
   },
   d3: {
@@ -855,7 +860,7 @@ export const media = {
   d4: {
     label: 'Day 04',
     brief: 'Lemon grove path, dappled light, a set table below.',
-    tone: '#8a9a6a',
+    tone: '#7a98a7',
     alt: 'A historic villa garden in Ravello under umbrella pines',
   },
   d5: {
@@ -873,19 +878,19 @@ export const media = {
   d7: {
     label: 'Day 07',
     brief: 'Hands stretching fresh mozzarella, farmhouse kitchen.',
-    tone: '#9a8a6a',
+    tone: '#78909d',
     alt: 'Hands stretching fresh mozzarella in a Campanian dairy',
   },
   d8: {
     label: 'Day 08',
     brief: 'Coastal footpath high above the sea, two walkers.',
-    tone: '#7a8a7a',
+    tone: '#758892',
     alt: 'Walkers on the Path of the Gods high above the Amalfi Coast',
   },
   d9: {
     label: 'Day 09',
     brief: 'Breakfast table on a terrace, morning light.',
-    tone: '#b0a690',
+    tone: '#96abb5',
     alt: 'Coffee and sugared pastries on a marble table, morning',
   },
   g1: {
@@ -897,19 +902,19 @@ export const media = {
   g2: {
     label: 'Detail',
     brief: 'Lemons in a crate.',
-    tone: '#a58f6a',
+    tone: '#7c97a5',
     alt: 'Ripe lemons, some halved, in wooden crates',
   },
   g3: {
     label: 'Human',
     brief: 'Two guests laughing at a table.',
-    tone: '#7f8c85',
+    tone: '#7b8b93',
     alt: 'A white tablecloth laid with crystal glasses, plates and lemons in dappled light',
   },
   g4: {
     label: 'Architecture',
     brief: 'A cloister arch.',
-    tone: '#8a9a6a',
+    tone: '#7a98a7',
     alt: 'A cloister arcade of stone columns and greenery',
   },
   g5: {
@@ -941,7 +946,7 @@ export const media = {
   'sl-4': {
     label: 'Day 04',
     brief: 'The Albula line — a viaduct in the forest.',
-    tone: '#5f6f63',
+    tone: '#5c6d76',
     alt: 'A red Rhaetian Railway train crossing the Landwasser Viaduct in the forest',
   },
   'sl-5': {
@@ -953,7 +958,7 @@ export const media = {
   'sl-6': {
     label: 'Day 06',
     brief: 'An Engadin village lane, sgraffito houses.',
-    tone: '#9a9587',
+    tone: '#8798a1',
     alt: 'Sgraffito walls and flower boxes on an Engadin house in Guarda',
   },
   'sl-7': {
@@ -973,13 +978,13 @@ export const media = {
   'ma-1': {
     label: 'Day 01',
     brief: 'The Tramuntana from the road, olives below.',
-    tone: '#8a8a6a',
+    tone: '#748c97',
     alt: 'The Tramuntana mountains from a high pass, ridges fading towards the sea',
   },
   'ma-2': {
     label: 'Day 02',
     brief: 'Deià on its hill, the sea behind.',
-    tone: '#9a9587',
+    tone: '#8798a1',
     alt: 'Deià on its hill beneath the Tramuntana, terracotta roofs in the foreground',
   },
   'ma-3': {
@@ -991,25 +996,25 @@ export const media = {
   'ma-4': {
     label: 'Day 04',
     brief: 'Old olive trees on a terrace.',
-    tone: '#8a8a6a',
+    tone: '#748c97',
     alt: 'Old olive trees in a dry field, cloud on the Mallorcan mountains',
   },
   'ma-5': {
     label: 'Day 05',
     brief: 'The wooden train to Sóller, orange groves.',
-    tone: '#a58f6a',
+    tone: '#7c97a5',
     alt: 'Boats in the bay at Port de Sóller, the town on the hill',
   },
   'ma-6': {
     label: 'Day 06',
     brief: 'A finca pool at noon, empty.',
-    tone: '#9a9587',
+    tone: '#8798a1',
     alt: 'A long stone-edged pool at a Mallorcan finca, palms and mountains behind',
   },
   'ma-7': {
     label: 'Day 07',
     brief: 'Palma’s old town, morning.',
-    tone: '#b0a690',
+    tone: '#96abb5',
     alt: 'Palma Cathedral reflected in calm water',
   },
 
@@ -1029,25 +1034,25 @@ export const media = {
   'cp-3': {
     label: 'Day 03',
     brief: 'Vineyards and a Cape Dutch farmhouse.',
-    tone: '#7a6a55',
+    tone: '#5c707b',
     alt: 'A whitewashed Cape Dutch farmhouse at the end of a brick path under old oaks',
   },
   'cp-4': {
     label: 'Day 04',
     brief: 'Vines in rows under the mountains.',
-    tone: '#7a7a55',
+    tone: '#637c88',
     alt: 'Rows of vines beneath the mountains near Stellenbosch',
   },
   'cp-5': {
     label: 'Day 05',
     brief: 'A long table laid outdoors at dusk.',
-    tone: '#9a8a6a',
+    tone: '#78909d',
     alt: 'A wine estate terrace and lawn beneath the mountains, Stellenbosch',
   },
   'cp-6': {
     label: 'Day 06',
     brief: 'Sunset over the winelands.',
-    tone: '#a58f6a',
+    tone: '#7c97a5',
     alt: 'Vineyards climbing towards a mountain in the Stellenbosch winelands',
   },
   'cp-7': {
@@ -1071,7 +1076,7 @@ export const media = {
   'cp-10': {
     label: 'Day 10',
     brief: 'A fire on the beach, evening.',
-    tone: '#7a6a55',
+    tone: '#5c707b',
     alt: 'Dune grass on Noordhoek beach in warm evening light',
   },
   'cp-11': {
@@ -1085,7 +1090,7 @@ export const media = {
   'ce-1': {
     label: 'Day 01',
     brief: 'A villa garden meeting Lake Como.',
-    tone: '#5f6f6a',
+    tone: '#5e6e76',
     alt: 'Stone arches and potted plants on a villa balcony above Lake Como',
   },
   'ce-2': {
@@ -1097,7 +1102,7 @@ export const media = {
   'ce-3': {
     label: 'Day 03',
     brief: 'Bellagio’s point and its gardens.',
-    tone: '#6f7a63',
+    tone: '#657983',
     alt: 'Bellagio on its point between the arms of Lake Como',
   },
   'ce-4': {
@@ -1109,7 +1114,7 @@ export const media = {
   'ce-5': {
     label: 'Day 05',
     brief: 'The Bernina line crossing a viaduct.',
-    tone: '#5f6f63',
+    tone: '#5c6d76',
     alt: 'A red Bernina train crossing a stone viaduct in Valposchiavo',
   },
   'ce-6': {
@@ -1121,7 +1126,7 @@ export const media = {
   'ce-7': {
     label: 'Day 07',
     brief: 'Val Roseg larches in October gold.',
-    tone: '#a58f6a',
+    tone: '#7c97a5',
     alt: 'Engadin larch needles turned gold in October',
   },
   'ce-8': {
@@ -1133,7 +1138,7 @@ export const media = {
   'ce-9': {
     label: 'Day 09',
     brief: 'Soglio on its ledge, granite behind.',
-    tone: '#6f7a63',
+    tone: '#657983',
     alt: 'Soglio at night on its ledge in Val Bregaglia',
   },
   'ce-10': {
@@ -1157,7 +1162,7 @@ export const media = {
   'story-hero': {
     label: 'Our story · the opening',
     brief: 'The Bachalpsee trail above Grindelwald: a path, an alpine lake, the peaks beyond.',
-    tone: '#4f7a4a',
+    tone: '#527283',
     src: '/images/story-hero.jpg',
     alt: 'A gravel trail through green alpine meadows to the Bachalpsee above Grindelwald, Switzerland, snow-capped peaks beyond',
   },
@@ -1173,7 +1178,7 @@ export const media = {
   'jn-1': {
     label: 'The Engadin',
     brief: 'A high valley in larch-gold light, late autumn.',
-    tone: '#6f7a63',
+    tone: '#657983',
     alt: 'Golden larches framing Lake Sils in the Engadin, late autumn',
   },
   'jn-2': {
@@ -1185,13 +1190,13 @@ export const media = {
   'jn-3': {
     label: 'At the table',
     brief: 'A family table mid-meal, plates and hands, no faces.',
-    tone: '#9a8a6a',
+    tone: '#78909d',
     alt: 'A long table laid outdoors in the shade of a great tree',
   },
   'jn-4': {
     label: 'A hotel worth the trip',
     brief: 'A hotel corridor or reading room, nobody in it.',
-    tone: '#a9a394',
+    tone: '#95a7b0',
     alt: 'Two wooden chairs on a whitewashed terrace above the sea',
   },
 } as const satisfies Record<string, MediaSlot>;

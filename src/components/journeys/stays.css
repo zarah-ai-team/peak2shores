@@ -70,6 +70,12 @@
   line-height: 1.4;
   text-transform: uppercase;
 }
+/* On a phone or a tablet the pill's words keep 11px. */
+@media (max-width: 1023.98px), (pointer: coarse) {
+  .jst-pill {
+    font-size: 0.6875rem;
+  }
+}
 .jst-body {
   display: flex;
   flex: 1;
@@ -159,12 +165,13 @@
     text-underline-offset: 0.3em;
   }
 }
+/* Two cards across on a tablet, one on a phone. */
 @media (max-width: 1100px) {
   .jst-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-@media (max-width: 800px) {
+@media (max-width: 600px) {
   .jst-grid {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -190,9 +197,12 @@
   font-weight: 500;
 }
 
-/* The gallery: one photograph at a time, crossfading. */
+/* The gallery: one photograph at a time, crossfading. A sideways swipe
+   anywhere on it, its arrows included, turns the photograph; an up or down
+   one scrolls the pop-up. */
 .hpop-gal {
   position: relative;
+  touch-action: pan-y;
 }
 .hpop-frame {
   position: relative;
@@ -200,7 +210,15 @@
   overflow: hidden;
   border-radius: 0.75rem;
   background: var(--color-stone);
-  touch-action: pan-y;
+}
+/* On a short screen (a phone held sideways) a 3:2 photograph would be taller
+   than the pop-up, its arrows at or past its foot: the frame takes a wider
+   cut of it instead, so the whole photograph and its arrows show. */
+@media (max-height: 500px) {
+  .hpop-frame {
+    aspect-ratio: auto;
+    height: min(45svh, 15rem);
+  }
 }
 .hpop-slide {
   position: absolute;
@@ -293,12 +311,16 @@
 }
 
 /* The tabs: a row of caps labels on a hairline, the chosen one underlined in
-   the brand blue; on a phone the row takes two lines. */
+   the brand blue; on a phone the row takes two lines. Where it scrolls, it
+   scrolls sideways only: an up or down swipe that starts on it scrolls the
+   pop-up, rather than the row's last pixel (the tabs' rules overlap its
+   hairline). */
 .hpop-tabs {
   display: flex;
   gap: 1.5rem;
   margin: 1.5rem 0 0;
   overflow-x: auto;
+  overflow-y: hidden;
   border-bottom: 1px solid var(--color-line);
   scrollbar-width: none;
 }
@@ -310,7 +332,7 @@
   .hpop-tabs {
     flex-wrap: wrap;
     row-gap: 0;
-    overflow-x: visible;
+    overflow: visible;
   }
 }
 .hpop-tab {

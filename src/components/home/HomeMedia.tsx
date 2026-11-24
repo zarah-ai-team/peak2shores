@@ -1,30 +1,29 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import Image, { getImageProps } from 'next/image';
+import Image from 'next/image';
 import { useReducedMotion } from 'motion/react';
 import type { HomeVisual } from '@/lib/data/home';
 
 /**
- * A film's poster: its still, through the image optimizer (WebP, about 1920px
- * wide), so the poster costs what the <Image> beneath it costs rather than the
- * original JPEG. The video shows it until the first frame is ready.
- */
-export const posterOf = (src: string) =>
-  getImageProps({ src, alt: '', width: 960, height: 540 }).props.src;
-
-/**
  * The film to load on this screen: on a phone or small tablet, its 720px cut
  * (`name-m.mp4`, a fraction of the bytes and of the decoding), otherwise the
- * full one. Browser only; the server renders no film source.
+ * full one. A phone held sideways counts as a phone however wide it is (a
+ * 932px-wide one would otherwise take the 1920px cut); a short desktop window
+ * keeps the full one. Browser only; the server renders no film source.
  */
 export const forScreen = (src: string) =>
-  window.matchMedia('(max-width: 900px)').matches ? src.replace(/\.mp4$/, '-m.mp4') : src;
+  window.matchMedia('(max-width: 900px), (max-height: 500px) and (pointer: coarse)').matches
+    ? src.replace(/\.mp4$/, '-m.mp4')
+    : src;
 
 /**
  * A full-bleed still, with Marc's film over it when there is one. The film is
  * muted, loops, and plays only while it is on screen (and `active`, when the
  * caller hides it behind another layer); under reduced motion the still holds.
+ * The film has no poster: the still beneath it is the same frame at the same
+ * crop, and shows through until the first frame is ready (a poster was a
+ * second, 1920px copy of it, fetched with the page whatever the screen).
  */
 export function HomeMedia({
   visual,
@@ -77,7 +76,6 @@ export function HomeMedia({
           className={className}
           // The film crops where its still does, so the two never jump apart.
           style={visual.pos ? { objectPosition: visual.pos } : undefined}
-          poster={posterOf(visual.img)}
           muted
           loop
           playsInline

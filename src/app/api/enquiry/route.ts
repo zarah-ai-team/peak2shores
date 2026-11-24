@@ -12,13 +12,13 @@ import {
 } from '@/lib/forms';
 
 /**
- * Inquiries and booking requests.
+ * Enquiries and booking requests.
  *
  * Two kinds of form post here:
- * - the inquiry form on /plan, which sends no `form` field, and `consent: true`
+ * - the enquiry form on /plan, which sends no `form` field, and `consent: true`
  *   for its Privacy Policy tick box;
  * - a journey page's three pop-ups, which send `form`: 'enquiry' ("Make an
- *   inquiry"), 'group' ("Book this journey") or 'private' ("Book as a
+ *   enquiry"), 'group' ("Book this journey") or 'private' ("Book as a
  *   private journey"), with the journey's `slug`, the `page` they were sent
  *   from and `consent: true` for the Privacy Policy tick box.
  *
@@ -43,7 +43,7 @@ const PARTY = new Set(['Couple', 'Friends', 'Family', 'Solo']);
 
 /** The journey forms' `form` values, and what each is called in the payload. */
 const JOURNEY_FORMS = {
-  enquiry: 'journey-inquiry',
+  enquiry: 'journey-enquiry',
   group: 'group-booking',
   private: 'private-booking',
 } as const satisfies Record<string, EnquiryFormId>;
@@ -114,7 +114,7 @@ export async function POST(request: Request) {
 }
 
 /**
- * The inquiry form on /plan. As with the pop-ups, a request without the
+ * The enquiry form on /plan. As with the pop-ups, a request without the
  * Privacy Policy box ticked is refused before anything is delivered.
  */
 async function planEnquiry(data: Record<string, unknown>) {
@@ -155,7 +155,7 @@ async function planEnquiry(data: Record<string, unknown>) {
 
   const result = await deliver('enquiry', {
     form: 'plan',
-    subject: `Inquiry: ${journey ?? 'a private journey'}`,
+    subject: `Enquiry: ${journey ?? 'a private journey'}`,
     name,
     email,
     phone,
@@ -170,9 +170,9 @@ async function planEnquiry(data: Record<string, unknown>) {
     source,
   });
 
-  // Logs carry no personal data — only that an inquiry arrived, for what,
+  // Logs carry no personal data — only that an enquiry arrived, for what,
   // which channel brought the traveler in, and whether it went anywhere.
-  console.info('[peaks2shores] inquiry received', {
+  console.info('[peaks2shores] enquiry received', {
     form: 'plan',
     journey: journey ?? 'private',
     party,
@@ -255,7 +255,7 @@ async function journeyRequest(
   const form = JOURNEY_FORMS[kind];
   const subject =
     kind === 'enquiry'
-      ? `Inquiry: ${journey.title}`
+      ? `Enquiry: ${journey.title}`
       : `${kind === 'group' ? 'Group' : 'Private'} booking request: ${journey.title}`;
 
   const result = await deliver('enquiry', {

@@ -102,10 +102,14 @@
   color: var(--ink);
   border: 1px solid #fff;
 }
-.hc .btn-light:hover {
-  background: var(--color-brand-deep);
-  border-color: var(--color-brand-deep);
-  color: #fff;
+/* Every hover below holds only where a pointer hovers: a touch screen keeps
+   :hover on the last thing tapped, which left it looking pressed. */
+@media (hover: hover) {
+  .hc .btn-light:hover {
+    background: var(--color-brand-deep);
+    border-color: var(--color-brand-deep);
+    color: #fff;
+  }
 }
 /* The second action on a film: an outline that fills with the blue. */
 .hc .btn-line {
@@ -113,10 +117,12 @@
   color: #fff;
   border: 1px solid rgb(255 255 255 / 0.6);
 }
-.hc .btn-line:hover {
-  background: var(--color-brand-deep);
-  border-color: var(--color-brand-deep);
-  color: #fff;
+@media (hover: hover) {
+  .hc .btn-line:hover {
+    background: var(--color-brand-deep);
+    border-color: var(--color-brand-deep);
+    color: #fff;
+  }
 }
 /* On paper. */
 .hc .btn-ink {
@@ -124,9 +130,11 @@
   color: #fff;
   border: 1px solid var(--ink);
 }
-.hc .btn-ink:hover {
-  background: var(--color-brand-deep);
-  border-color: var(--color-brand-deep);
+@media (hover: hover) {
+  .hc .btn-ink:hover {
+    background: var(--color-brand-deep);
+    border-color: var(--color-brand-deep);
+  }
 }
 .hc .circ {
   width: 3.375rem;
@@ -142,10 +150,12 @@
   transition: all 0.8s var(--ease);
   flex: 0 0 auto;
 }
-.hc .circ:hover {
-  background: var(--color-brand-deep);
-  border-color: var(--color-brand-deep);
-  color: #fff;
+@media (hover: hover) {
+  .hc .circ:hover {
+    background: var(--color-brand-deep);
+    border-color: var(--color-brand-deep);
+    color: #fff;
+  }
 }
 .hc .circ svg {
   width: 1rem;
@@ -155,10 +165,12 @@
   border-color: rgb(20 29 36 / 0.45);
   color: var(--ink);
 }
-.hc .dk .circ:hover {
-  background: var(--color-brand-deep);
-  border-color: var(--color-brand-deep);
-  color: #fff;
+@media (hover: hover) {
+  .hc .dk .circ:hover {
+    background: var(--color-brand-deep);
+    border-color: var(--color-brand-deep);
+    color: #fff;
+  }
 }
 .hc .ctarow {
   display: flex;
@@ -183,14 +195,18 @@
   padding: 0.75rem 0 0.25rem;
   transition: color 0.4s var(--ease);
 }
-.hc .tlink:hover {
-  color: var(--brand);
+@media (hover: hover) {
+  .hc .tlink:hover {
+    color: var(--brand);
+  }
 }
 .hc .tlink.light {
   color: #fff;
 }
-.hc .tlink.light:hover {
-  color: var(--sky);
+@media (hover: hover) {
+  .hc .tlink.light:hover {
+    color: var(--sky);
+  }
 }
 .hc .hint {
   font-family: var(--sans);
@@ -496,9 +512,11 @@
 .hc-ways .wt img {
   transition: transform 1.8s var(--ease);
 }
-.hc-ways .wt:hover video,
-.hc-ways .wt:hover img {
-  transform: none;
+@media (hover: hover) {
+  .hc-ways .wt:hover video,
+  .hc-ways .wt:hover img {
+    transform: none;
+  }
 }
 .hc-ways .ws {
   position: absolute;
@@ -538,8 +556,10 @@
   justify-content: center;
   transition: opacity 0.6s var(--ease);
 }
-.hc-ways .wt:hover .wplay {
-  opacity: 0;
+@media (hover: hover) {
+  .hc-ways .wt:hover .wplay {
+    opacity: 0;
+  }
 }
 .hc-ways .badge {
   position: absolute;
@@ -554,6 +574,13 @@
   color: #fff;
   padding: 0.4375rem 0.75rem;
   border-radius: 999px;
+}
+/* 11px wherever the page is not at its laptop density (a phone, a tablet, any
+   touch screen): at 10px the caps were below the site's smallest label. */
+@media not all and (min-width: 1024px) and (pointer: fine) {
+  .hc-ways .badge {
+    font-size: 0.6875rem;
+  }
 }
 .hc-ways .wb {
   position: absolute;
@@ -585,12 +612,18 @@
     opacity 0.8s var(--ease),
     margin 0.8s var(--ease);
 }
-.hc-ways .wt:hover .wl,
 .hc-ways .wt:focus-visible .wl,
 .hc-ways .wt.playing .wl {
   max-height: 8.75rem;
   opacity: 1;
   margin-top: 0.75rem;
+}
+@media (hover: hover) {
+  .hc-ways .wt:hover .wl {
+    max-height: 8.75rem;
+    opacity: 1;
+    margin-top: 0.75rem;
+  }
 }
 .hc-ways .more {
   display: inline-block;
@@ -1044,6 +1077,12 @@
   color: var(--muted);
   margin-bottom: 0.375rem;
 }
+/* 11px away from the laptop's density, as the signature badge. */
+@media not all and (min-width: 1024px) and (pointer: fine) {
+  .hc-hot dt {
+    font-size: 0.6875rem;
+  }
+}
 .hc-hot dd {
   margin: 0;
   font-family: var(--serif);
@@ -1096,8 +1135,25 @@
   margin-top: 0;
 }
 .hc-hot .fnav {
+  position: relative;
   display: none;
   gap: 0.625rem;
+}
+/* A row's mark for the floating "Connect" button (`data-fab-clear`): the
+   row's own box, out of sight. Shown only where the button would sit over
+   the row, so only there does the button step aside: the hotels' arrows on a
+   touch screen (on a desktop the pointer can scroll them clear), and How We
+   Travel's arrows on a small phone (why-home.css). */
+.hc .fab-mark {
+  display: none;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+@media (pointer: coarse) {
+  .hc-hot .fnav .fab-mark {
+    display: block;
+  }
 }
 
 /* -- 09 The circle ------------------------------------------------------- */
@@ -1236,8 +1292,9 @@
     flex-basis: 80vw;
     height: 28.75rem;
   }
+  /* The whole line, never cut: nothing animates it here. */
   .hc-ways .wl {
-    max-height: 8.75rem;
+    max-height: none;
     opacity: 1;
     margin-top: 0.625rem;
   }
@@ -1266,14 +1323,30 @@
 /* A touch screen has no hover: every tile's line shows. */
 @media (hover: none) {
   .hc-ways .wl {
-    max-height: 8.75rem;
+    max-height: none;
     opacity: 1;
     margin-top: 0.625rem;
   }
 }
 @media (max-width: 600px) {
+  /* The playing clip's name stays in the page for screen readers (it is the
+     reel's live region), out of sight: on a phone the dashes stand alone. */
   .hc-hero .vctl > span:first-child {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  /* The dashes and the pause ring on a ground of their own, like the place
+     name's pill above 600px, so they read over a bright clip. */
+  .hc-hero .vctl {
+    padding-left: 0.5rem;
+    border-radius: 999px;
+    background: rgb(8 20 28 / 0.45);
   }
   /* On a phone the copy runs to the bottom, so the film controls move to the
      top right, under the header, clear of the buttons and the expert button. */
@@ -1316,6 +1389,22 @@
   .hc-hero .vctl {
     bottom: auto;
     top: calc(var(--nav-h) + 0.75rem);
+  }
+}
+/* A phone held sideways (the owner's choice of 19 Nov): a tile or a hotel
+   card no taller than the screen, so each is seen whole while swiping. The
+   hotel card keeps 19rem, so its turned side holds its notes on a 320px
+   screen; turned, it shows its words without the photograph's band. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .hc-ways .wt {
+    height: min(28.75rem, calc(100svh - 4.5rem));
+  }
+  .hc-hot .flip {
+    flex-basis: min(26rem, 50vw);
+    height: max(19rem, min(28.75rem, calc(100svh - 3rem)));
+  }
+  .hc-hot .back .bimg {
+    display: none;
   }
 }
 

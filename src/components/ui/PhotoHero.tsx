@@ -40,7 +40,9 @@ const heights = {
   compact: 'h-[68svh] min-h-[32.5rem] max-h-[45rem]',
 } as const;
 
-/* Desktop only: below 1024px the split stacks at 70svh (see the Frame). */
+/* Desktop only: below 1024px the split stacks, the photograph at 56svh (45svh
+   on a screen held sideways) and the words straight under it, so the
+   headline shares the first screen with the photograph (see the Frame). */
 const splitHeights = {
   full: 'h-[calc(100svh-var(--nav-h))] min-h-[32.5rem]',
   tall: 'h-[calc(92svh-var(--nav-h))] min-h-[32.5rem]',
@@ -88,14 +90,21 @@ export function PhotoHero({
   if (layout === 'split') {
     return (
       <section id={id} className={`grid bg-ivory lg:grid-cols-12 ${className}`}>
+        {/* Upright, the photograph is cropped by its height, so its file is
+            chosen by that: drawn about as wide as the screen is tall (on a
+            screen of three device pixels to the CSS pixel, the file a
+            two-pixel one takes, no softer to the eye and far lighter). */}
         <Frame
           media={media}
           priority
           drift={drift}
-          sizes={sizes ?? '(min-width: 1024px) 58vw, 100vw'}
-          className={`lg:col-span-7 ${splitHeights[height]} max-lg:h-[70svh] max-lg:min-h-[26.25rem]`}
+          sizes={
+            sizes ??
+            '(min-width: 1024px) and (orientation: portrait) 90vh, (min-width: 1024px) 58vw, (orientation: portrait) and (min-resolution: 2.5dppx) 67vh, (orientation: portrait) 100vh, 100vw'
+          }
+          className={`lg:col-span-7 ${splitHeights[height]} max-lg:h-[56svh] max-lg:min-h-[17.5rem] max-lg:landscape:h-[45svh] max-lg:landscape:min-h-[10rem]`}
         />
-        <div className="container-site flex flex-col justify-end gap-8 pb-block pt-[calc(var(--nav-h)+3rem)] lg:col-span-5 lg:max-w-none lg:gap-[clamp(1.25rem,1.695vw,2rem)] lg:pl-[var(--grid-gap)]">
+        <div className="container-site flex flex-col justify-end gap-8 pb-block pt-block lg:col-span-5 lg:max-w-none lg:gap-[clamp(1.25rem,1.695vw,2rem)] lg:pl-[var(--grid-gap)] lg:pt-[calc(var(--nav-h)+3rem)]">
           {kicker && (
             <p className="kicker enter m-0" style={enterAt(heroTiming.kicker)}>
               {kicker}

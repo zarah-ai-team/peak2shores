@@ -26,7 +26,7 @@ export const site = {
   /**
    * A scheduling link for "Book a call" (Calendly, Cal.com, Google
    * appointment page…). Unset until Marc chooses one; until then the button
-   * falls back to the inquiry form on /plan.
+   * falls back to the enquiry form on /plan.
    */
   bookingUrl: null as string | null,
   /**
@@ -80,7 +80,11 @@ export type NavItem = { label: string; href: string };
  * `data-hero` — sit in one place.
  */
 export function isHeroRoute(pathname: string) {
-  return pathname === '/' || pathname === '/experiences' || /^\/journeys\/[^/]+$/.test(pathname);
+  return (
+    pathname === '/' ||
+    /^\/experiences(\/[^/]+)?$/.test(pathname) ||
+    /^\/journeys\/[^/]+$/.test(pathname)
+  );
 }
 
 export const primaryNav: NavItem[] = [

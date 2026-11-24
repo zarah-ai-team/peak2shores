@@ -24,14 +24,10 @@
   --dz-h: calc(100vh - var(--nav-h-compact));
   --dz-hs: calc(100vh - var(--nav-h-compact));
   /* Each country's length, in stage heights: its name settles this far after
-     its photograph has, then holds; the details take this long to open, and
-     stay open this long before the next country (their row of photographs
-     drifts in between, for as long as the row needs: --dz-drift × --dz-k). */
+     its photograph has, then holds before the next country. The details are
+     not in the scroll: they open from the pill (PlaceStory). */
   --dz-rest: 0.2;
-  --dz-hold: 0.25;
-  --dz-reveal: 0.8;
-  --dz-dwell: 0.3;
-  --dz-k: 0.8;
+  --dz-hold: 0.35;
   /* The stage starts this far above its article, so the article's own top
      reaches the scroll padding (the header and 1.5rem) just as the name
      settles: that is where /destinations#italy lands. */
@@ -42,7 +38,6 @@
   --dz-colgap: clamp(2rem, 4.5vw, 5.5rem);
   --dz-cw: clamp(14.5rem, 21vw, 28rem);
   --dz-gap: clamp(0.75rem, 1.06vw, 1.25rem);
-  --dz-x0: calc(var(--dz-side) + var(--dz-colw) + var(--dz-colgap));
   /* The name's widest: clear of the progress line at the right. */
   --dz-room: min(74vw, 100vw - 2 * var(--dz-side) - 4rem);
   position: relative;
@@ -66,19 +61,14 @@
 html:has(.dz-story) {
   scroll-behavior: auto;
 }
+/* A country's details open: the page holds still under them (SmoothScroll
+   stops as well), and the wheel moves the row of photographs instead. */
+html[data-dz-open] {
+  overflow: hidden;
+  overflow: clip;
+}
 .dz-place {
-  /* How far the row of photographs travels to show its last card. */
-  --dz-drift: max(
-    0px,
-    calc(
-      var(--dz-x0) + var(--dz-n) * (var(--dz-cw) + var(--dz-gap)) - var(--dz-gap) - 100vw +
-        var(--dz-side)
-    )
-  );
-  --dz-len: calc(
-    var(--dz-h) * (1 + var(--dz-rest) + var(--dz-hold) + var(--dz-reveal) + var(--dz-dwell)) +
-      var(--dz-drift) * var(--dz-k)
-  );
+  --dz-len: calc(var(--dz-h) * (1 + var(--dz-rest) + var(--dz-hold)));
   /* Where the photograph's skyline falls on this screen (object-fit: cover),
      and the name's size: as wide as the screen allows, no taller than a third
      of it. Its letters are 0.71875em tall, so its line is set to exactly that. */
@@ -295,8 +285,12 @@ html:has(.dz-story) {
   line-height: 1.2;
   transition: color 0.3s var(--ease);
 }
-.dz-j:hover .dz-j-title {
-  color: var(--sky);
+/* Hover colours only where there is a pointer to hover with: after a tap on
+   a touch screen they would stay until the next tap elsewhere. */
+@media (hover: hover) {
+  .dz-j:hover .dz-j-title {
+    color: var(--sky);
+  }
 }
 .dz-j-facts {
   display: flex;
@@ -320,27 +314,39 @@ html:has(.dz-story) {
   flex: none;
   transition: transform 0.5s var(--ease);
 }
-.dz-j:hover .dz-arrow,
-.dz-card-a:hover .dz-arrow {
-  transform: translateX(0.25rem);
+@media (hover: hover) {
+  .dz-j:hover .dz-arrow,
+  .dz-card-a:hover .dz-arrow {
+    transform: translateX(0.25rem);
+  }
 }
 
-/* The row of photographs. Cards leaving at its left edge fade (PlaceStory);
-   the edge itself is clipped, so no card ever passes under the words. */
+/* The row of photographs: a sideways scroller bleeding off the right edge,
+   clipped at its left, so no card ever passes under the words. */
 .dz-cards {
   position: relative;
   min-width: 0;
   opacity: 0.001;
-  clip-path: inset(-1.5rem -100vw -2.5rem 0);
   will-change: opacity;
+}
+.dz-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-padding-inline: 0 var(--dz-side);
+  scrollbar-width: none;
+}
+.dz-scroll::-webkit-scrollbar {
+  display: none;
 }
 .dz-row {
   position: relative;
   display: flex;
   align-items: stretch;
   gap: var(--dz-gap);
+  width: max-content;
   margin: 0;
-  padding: 0;
+  padding: 0 var(--dz-side) 0 0;
   list-style: none;
   will-change: transform;
 }
@@ -413,8 +419,10 @@ html:has(.dz-story) {
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
-.dz-card-a:hover .dz-card-t {
-  color: var(--sky);
+@media (hover: hover) {
+  .dz-card-a:hover .dz-card-t {
+    color: var(--sky);
+  }
 }
 .dz-card-a:focus-visible {
   outline-offset: -0.25rem;
@@ -435,6 +443,47 @@ html:has(.dz-story) {
   background: #fff;
   transform: scaleX(0);
   transform-origin: 0 50%;
+}
+/* Closes the details, at the top right of the stage. */
+.hc .dz-shut {
+  position: absolute;
+  top: clamp(1rem, 3.5vh, 2.25rem);
+  right: var(--dz-side);
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-height: 2.75rem;
+  padding: 0 1.125rem;
+  border: 1px solid rgb(255 255 255 / 0.5);
+  border-radius: 999px;
+  background: rgb(11 26 36 / 0.35);
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity 0.4s var(--ease),
+    background-color 0.3s var(--ease),
+    border-color 0.3s var(--ease);
+}
+.dz-place[data-open] .dz-shut {
+  opacity: 1;
+  transition-delay: 0.5s, 0s, 0s;
+}
+@media (hover: hover) {
+  .hc .dz-shut:hover {
+    background: rgb(255 255 255 / 0.14);
+    border-color: #fff;
+  }
+}
+.hc .dz-shut:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 0.25rem;
 }
 .dz-mark {
   position: absolute;
@@ -501,14 +550,32 @@ html:has(.dz-story) {
 }
 
 /* -- 04 Closing ---------------------------------------------------------- */
-.dz-close h2 {
+/* Under the page's own class, so these win over the shared band's rules in
+   home.css (.hc-circle h2, .hc .ctarow) whichever stylesheet loads last. */
+.dz .dz-close h2 {
   max-width: 16ch;
 }
-.dz-close .ctarow {
+.dz .dz-close .ctarow {
   margin-top: 0.5rem;
 }
 .dz-close :focus-visible {
   outline-color: var(--color-acqua);
+}
+/* To a finger, "Connect with our team" is a 44px target, as tall as the
+   button beside it: an invisible band centred on its words, so the underline
+   stays where it is. */
+@media (pointer: coarse) {
+  .dz-close .tlink {
+    position: relative;
+  }
+  .dz-close .tlink::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+  }
 }
 
 /* -- Smaller screens ----------------------------------------------------- */
@@ -516,7 +583,6 @@ html:has(.dz-story) {
    photographs beneath them, starting at the gutter. */
 @media (max-width: 899px), (max-aspect-ratio: 4/5) {
   .dz-story {
-    --dz-x0: var(--dz-side);
     --dz-cw: min(70vw, 21rem);
     --dz-colw: auto;
   }
@@ -560,18 +626,49 @@ html:has(.dz-story) {
     font-size: 1.1875rem;
   }
 }
+/* A short screen held sideways that keeps the pinned story (a small tablet,
+   960 × 600): the details keep a slimmer margin above and below, so the
+   heading, the line and the row of photographs all stand inside the stage. */
+@media (min-width: 900px) and (max-height: 640px) {
+  .dz-detail {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+}
+/* So does a short phone held upright (320 × 568), its words and row set a
+   little closer, so that Italy's details, the longest, clear the header and
+   the bottom edge. */
+@media (prefers-reduced-motion: no-preference) and (max-width: 600px) and (max-height: 640px) and (orientation: portrait) {
+  .dz-detail {
+    row-gap: 0.75rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  .dz-tl {
+    margin-top: 0.75rem;
+  }
+  .dz-bar {
+    margin-top: 0.75rem;
+  }
+}
 
-/* -- Reduced motion ------------------------------------------------------ */
+/* -- In the flow: reduced motion, and a phone held sideways -------------- */
 /* Nothing pinned and nothing moving: each country is its photograph with its
-   name (the land still in front of it), then its details, in the flow. */
+   name (the land still in front of it), then its details, in the flow, its
+   row of photographs a rail that swipes. For readers who ask for less motion,
+   and on a phone held sideways, whose screen is too short for a country's
+   details to stand in the stage (PlaceStory reads the same query). */
 @media (prefers-reduced-motion: reduce) {
   .dz-j-title,
   .dz-arrow {
     transition: none;
   }
+}
+@media (prefers-reduced-motion: reduce), (orientation: landscape) and (max-height: 500px) {
   .dz-ui,
   .dz-mark,
-  .dz-bar {
+  .dz-bar,
+  .hc .dz-shut {
     display: none;
   }
   .dz-place,
@@ -579,7 +676,10 @@ html:has(.dz-story) {
     height: auto;
     padding: 0;
   }
-  .dz-ui + .dz-place {
+  /* The first country is not pulled up, whether or not the story opens the
+     page. */
+  .dz-ui + .dz-place,
+  .dz-story[data-lead] .dz-ui + .dz-place {
     margin-top: 0;
   }
   .dz-stage {
@@ -606,13 +706,8 @@ html:has(.dz-story) {
   .dz-cards {
     opacity: 1;
   }
-  .dz-cards {
-    clip-path: none;
-    overflow-x: auto;
+  .dz-scroll {
     padding-bottom: 0.75rem;
-    scroll-padding-inline: var(--dz-side);
-  }
-  .dz-row {
-    padding-right: var(--dz-side);
+    scrollbar-width: auto;
   }
 }

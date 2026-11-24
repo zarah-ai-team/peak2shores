@@ -31,7 +31,12 @@ export function Statement() {
   return (
     <section className="hc-pause" aria-label="A word from our founder">
       <div className="bg" aria-hidden>
-        <HomeMedia visual={statement.film} sizes="100vw" />
+        {/* Upright, the band is taller than the 16:9 frame is wide, so the
+            still is drawn about two and a half times the screen's width. */}
+        <HomeMedia
+          visual={statement.film}
+          sizes="(max-width: 900px) and (orientation: portrait) 160vw, 100vw"
+        />
       </div>
       <div className="in">
         <span className="mark" aria-hidden>
@@ -60,13 +65,23 @@ export function FounderStory() {
           height={founderStory.portrait.height}
           sizes="(max-width: 900px) 24rem, 30vw"
         />
+        {/* His name and what he is: one line where the column has room, two
+            (without the bar) where it is narrow (home-fixes.css). */}
         <figcaption>
-          {site.founder.name} <span aria-hidden>|</span> Founder, {site.name}
+          <span className="part">{site.founder.name}</span> <span aria-hidden>|</span>{' '}
+          <span className="part">Founder, {site.name}</span>
         </figcaption>
       </figure>
       <div className="c">
         <p className="eyebrow">The Peaks2Shores story</p>
-        <h2 id="founder-title">{founderStory.headline}</h2>
+        <h2 id="founder-title">
+          {founderStory.headline.map((line, i) => (
+            <span key={line} className="line">
+              {i > 0 && ' '}
+              {line}
+            </span>
+          ))}
+        </h2>
         {founderStory.body.map((p) => (
           <p key={p.slice(0, 24)} className="body">
             {p}

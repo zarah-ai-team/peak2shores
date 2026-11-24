@@ -8,7 +8,7 @@
    between: two columns on a phone, three on a tablet, one row of six from
    1280px. The rules are drawn per grid so no cell ever carries a stray one. */
 .journey-facts {
-  --fact-rule: rgb(244 241 234 / 0.22);
+  --fact-rule: rgb(255 255 255 / 0.22);
 }
 .journey-fact {
   min-width: 0;

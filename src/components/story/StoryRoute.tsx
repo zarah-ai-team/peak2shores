@@ -38,7 +38,9 @@ export function StoryRoute({ stops }: { stops: RouteStop[] }) {
     return () => window.clearTimeout(timer);
   }, [active, visible, held, reduced, stops.length]);
 
-  const fill = stops.length > 1 ? (active / (stops.length - 1)) * 100 : 100;
+  // Each stop's dot stands at the left of its quarter of the line, so the
+  // blue reaches the current stop's dot and goes no further.
+  const fill = (active / stops.length) * 100;
   const current = stops[active];
 
   return (
@@ -52,11 +54,16 @@ export function StoryRoute({ stops }: { stops: RouteStop[] }) {
     >
       <div>
         <div className="relative">
-          {/* The route: one ruled line, filled in blue as far as the current stop. */}
-          <span aria-hidden className="absolute inset-x-0 top-[0.1875rem] h-px bg-line" />
+          {/* The route: one ruled line, filled in blue as far as the current
+              stop. On a phone the stops sit two by two, off any one line, so
+              the dots alone mark them. */}
           <span
             aria-hidden
-            className="absolute left-0 top-[2px] h-[0.1875rem] bg-acqua transition-[width] duration-700 ease-out motion-reduce:transition-none"
+            className="absolute inset-x-0 top-[0.1875rem] h-px bg-line max-sm:hidden"
+          />
+          <span
+            aria-hidden
+            className="absolute left-0 top-[2px] h-[0.1875rem] bg-acqua transition-[width] duration-700 ease-out motion-reduce:transition-none max-sm:hidden"
             style={{ width: `${fill}%` }}
           />
           <ol className="relative m-0 grid list-none grid-cols-2 gap-y-10 p-0 sm:grid-cols-4">
@@ -65,11 +72,16 @@ export function StoryRoute({ stops }: { stops: RouteStop[] }) {
               const passed = i <= active;
               return (
                 <li key={stop.label} className="relative pr-4">
+                  {/* Pointing at a stop chooses it with a mouse; a finger
+                      chooses by a tap, so a scroll that starts on a stop
+                      leaves the route alone. */}
                   <button
                     type="button"
                     aria-pressed={on}
                     onClick={() => setActive(i)}
-                    onPointerEnter={() => setActive(i)}
+                    onPointerEnter={(event) => {
+                      if (event.pointerType === 'mouse') setActive(i);
+                    }}
                     className="group block w-full cursor-pointer pt-9 text-left"
                   >
                     <span

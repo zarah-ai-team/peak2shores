@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useReducedMotion } from 'motion/react';
 import { ways } from '@/lib/data/home';
-import { Chevron, posterOf } from './HomeMedia';
+import { Chevron, forScreen } from './HomeMedia';
 import { useDragScroll } from '@/components/ui/useDrag';
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -24,6 +24,12 @@ const pad = (n: number) => String(n).padStart(2, '0');
  * end. Pointing at the rail pauses it; using the arrows or swiping stops it.
  */
 const AUTO_MS = 5000;
+
+/** Starts a tile's film, its cut chosen for the screen the first time it plays. */
+const roll = (el: HTMLVideoElement, film?: string) => {
+  if (film && !el.getAttribute('src')) el.src = forScreen(film);
+  el.play().catch(() => {});
+};
 
 export function WaysToTravel() {
   const rail = useRef<HTMLDivElement>(null);
@@ -89,7 +95,7 @@ export function WaysToTravel() {
   useEffect(() => {
     films.current.forEach((film, i) => {
       if (!film) return;
-      if (i === inView) film.play().catch(() => {});
+      if (i === inView) roll(film, ways[i].video);
       else film.pause();
     });
   }, [inView]);
@@ -103,7 +109,7 @@ export function WaysToTravel() {
   };
   const play = (i: number) => {
     const el = films.current[i];
-    if (el && !reduced) el.play().catch(() => {});
+    if (el && !reduced) roll(el, ways[i].video);
   };
   const stop = (i: number) => films.current[i]?.pause();
 
@@ -147,7 +153,12 @@ export function WaysToTravel() {
               src={way.img}
               alt={way.alt}
               fill
-              sizes="(max-width: 900px) 80vw, 460px"
+              // A landscape photograph covers the upright tile by its height,
+              // so on a phone or tablet it is drawn about 700px wide whatever
+              // the tile's width (460px tall, 1.5 times as wide).
+              sizes={
+                way.wide ? '(max-width: 900px) 700px, 460px' : '(max-width: 900px) 80vw, 460px'
+              }
               className="fill"
               style={way.pos ? { objectPosition: way.pos } : undefined}
             />
@@ -156,9 +167,9 @@ export function WaysToTravel() {
                 ref={(el) => {
                   films.current[i] = el;
                 }}
+                // No poster: the still beneath is the same frame. The source is
+                // set when the film first plays, cut for the screen.
                 className="fill"
-                poster={posterOf(way.img)}
-                src={way.video}
                 muted
                 loop
                 playsInline

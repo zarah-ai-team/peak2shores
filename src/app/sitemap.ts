@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { getJourneys, getPublishedArticles, getSiteSettings } from '@/lib/content';
+import { wayPages } from '@/lib/data/ways';
 
 /* Rebuilt hourly, so a journey is listed within the hour of its release. */
 export const revalidate = 3600;
@@ -35,6 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/plan', priority: 0.9 },
     { path: '/destinations', priority: 0.8 },
     { path: '/experiences', priority: 0.8 },
+    ...wayPages.map((w) => ({ path: `/experiences/${w.slug}`, priority: 0.7 })),
     { path: '/where-we-stay', priority: 0.7 },
     { path: '/our-story', priority: 0.7 },
     ...(articles.length ? [{ path: '/journal', priority: 0.6 }] : []),

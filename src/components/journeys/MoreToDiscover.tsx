@@ -10,6 +10,10 @@ const LIMIT = 3;
 /** A journey's countries, in the order its name gives them: 'Switzerland & Italy'. */
 const countriesOf = (j: Pick<Journey, 'country'>) => j.country.split(/\s*&\s*/);
 
+/** A journey's own country: its `mainCountry`, else the first of its countries. */
+const ownCountry = (j: Pick<Journey, 'country' | 'mainCountry'>) =>
+  j.mainCountry ?? countriesOf(j)[0];
+
 /**
  * The row under a journey's page, in place of the questions (Ishika's notes
  * of 9 November 2026, items 25 and 26, after A&K's "More South Africa
@@ -17,11 +21,14 @@ const countriesOf = (j: Pick<Journey, 'country'>) => j.country.split(/\s*&\s*/);
  * compact form (the lead photograph, the name, the itinerary, the days, the
  * price line and "View journey"; no status label).
  *
- * The heading names the country the journey shares with every journey in
- * the row, the first of its own countries that they all visit: "More to
- * discover in Italy" on each of the three launch journeys. When they share
- * none it reads "More journeys to discover". The journeys sharing a country
- * with this one come first, then the rest, each group in Marc's order.
+ * The heading names the journey's own country, with the place name changing
+ * from journey to journey (the designer's notes; the owner's decision of
+ * 19 November 2026): "More to discover in Switzerland" under Swiss Elegance,
+ * "in Italy" under Italy Uncovered and "in Croatia" under The Adriatic
+ * Collection. A journey without a `mainCountry` names the first of its
+ * countries, and one without a country reads "More journeys to discover".
+ * The journeys sharing a country with this one come first, then the rest,
+ * each group in Marc's order.
  *
  * Three cards across on a laptop and wider. On a tablet the row is swiped
  * sideways with two cards across, and on a phone with one card and the edge
@@ -38,8 +45,10 @@ export async function MoreToDiscover({ current }: { current: Journey }) {
     .slice(0, LIMIT);
   if (others.length === 0) return null;
 
-  const country = own.find((c) => others.every((j) => countriesOf(j).includes(c)));
-  const heading = country ? `More to discover in ${country}` : 'More journeys to discover';
+  const country = ownCountry(current);
+  // "to discover" stays together, so on a phone every page breaks the same
+  // way: "More to discover / in Italy".
+  const heading = country ? `More to discover in ${country}` : 'More journeys to discover';
 
   return (
     <section className="mtd" aria-labelledby="mtd-h">

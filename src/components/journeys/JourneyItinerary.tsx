@@ -174,7 +174,8 @@ export function JyItinerary({
       legend={modes.map((mode) => ({ mode, label: modeLabel[mode] }))}
       after={after}
     >
-      <rect x={0} y={0} width={W} height={H} fill="#dfe7e0" />
+      {/* The ground the tiles load over, as .jr-frame's: a calm blue-grey. */}
+      <rect x={0} y={0} width={W} height={H} fill="#dde6eb" />
       {tiles.map((t) => (
         <image
           key={t.key}

@@ -86,11 +86,14 @@ export default async function JourneysPage() {
         </div>
       </section>
 
+      {/* On a phone and a tablet the questions start on the page's own
+          gutter, in line with every section above them (a laptop keeps the
+          site container's). */}
       <Faq
         items={journeysFaq}
         label="Good to know"
         title="Frequently asked questions"
-        className="pt-section-sm"
+        className="pt-section-sm max-lg:px-[clamp(1.25rem,3.39vw,4rem)] pointer-coarse:px-[clamp(1.25rem,3.39vw,4rem)]"
       />
     </>
   );

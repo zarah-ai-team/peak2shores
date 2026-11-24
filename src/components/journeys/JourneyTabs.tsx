@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ButtonLink } from '@/components/ui/Button';
 import { OpenJourneyForm } from './forms/JourneyForms';
+import './journey-tabs.css';
 
 export type JourneyTab = { id: string; label: string };
 
@@ -21,18 +22,20 @@ type Edge = 'start' | 'end' | 'both';
  * than their room they scroll sideways: the current one is kept in view, and
  * the end with tabs hidden past it fades out.
  *
- * With `glance` (a journey's own page), the bar also carries the inquiry
+ * With `glance` (a journey's own page), the bar also carries the enquiry
  * (Ishika's notes of 9 November 2026, item 17a; the owner's decisions of
  * 18 November): from 1024px, at its right end, the journey's days, group size
- * and from-price and the "Make an inquiry" button; on a phone or a tablet, a
- * slim bar fixed to the foot of the screen with the days, the group size, the
- * from-price and the same button, shown once the hero has gone and hidden
- * while the footer is on the screen, so that there the tabs keep the menu
- * bar's whole width. That bar is marked `data-fab-away`, so the floating
- * "Connect with our team" steps aside while it shows. On a short screen (a
- * phone held sideways) the slim bar stays down and the button joins the tabs
- * instead, as from 1024px (journey-editorial.css). The button opens the page's
- * inquiry pop-up, so it must sit inside the page's `JourneyFormsProvider`.
+ * and from-price and the "Make an enquiry" button; on a phone or a tablet, a
+ * slim bar fixed to the foot of the screen with the days, the group size (not
+ * under 410px wide), the from-price and the same button, shown once the hero
+ * has gone and hidden while the footer is on the screen, so that there the
+ * tabs keep the menu bar's whole width. That bar is marked `data-fab-away`,
+ * so the floating "Connect with our team" steps aside while it shows. On a
+ * short screen (a phone held sideways) the slim bar stays down and the facts
+ * and the button join the tabs instead, as from 1024px (journey-editorial.css:
+ * under 640px wide without the group size; under 560px, a phone held upright
+ * on a short screen, the button alone). The button opens the page's enquiry
+ * pop-up, so it must sit inside the page's `JourneyFormsProvider`.
  *
  * Without `glance`, a link button sits at the right of the bar only where
  * `cta` is given.
@@ -50,11 +53,11 @@ export function JourneyTabs({
   label = 'This journey',
 }: {
   tabs: JourneyTab[];
-  /** The journey's days, group size and from-price, for its inquiry block. */
+  /** The journey's days, group size and from-price, for its enquiry block. */
   glance?: JourneyGlance;
   /** The button's label. Leave it out and the bar carries the tabs alone. */
   cta?: string;
-  /** Where the button goes: the inquiry form on the Plan page by default. */
+  /** Where the button goes: the enquiry form on the Plan page by default. */
   ctaHref?: string;
   label?: string;
 }) {
@@ -138,7 +141,7 @@ export function JourneyTabs({
     });
   }, [current]);
 
-  // The phone's and tablet's inquiry bar: on once the hero has gone up off
+  // The phone's and tablet's enquiry bar: on once the hero has gone up off
   // the screen or under the fixed header, off again while the footer is on
   // the screen. The header hides the strip of the screen it covers, so the
   // hero counts as gone once it has passed beneath it: the Overview tab,
@@ -184,7 +187,7 @@ export function JourneyTabs({
             data-edge={edge ?? undefined}
             className={`jt-tabs relative -mx-1 m-0 flex min-w-0 list-none scroll-px-10 gap-1 overflow-x-auto p-0 [scrollbar-width:none] ${
               // On a journey's page the tabs sit closer below 1280px: there
-              // they share the bar with the inquiry block, or (on a tablet)
+              // they share the bar with the enquiry block, or (on a tablet)
               // are too many for its width.
               glance ? 'xl:gap-4' : 'md:gap-4'
             }`}
@@ -198,7 +201,7 @@ export function JourneyTabs({
                   <a
                     href={`#${tab.id}`}
                     aria-current={on ? 'location' : undefined}
-                    className={`nav-label relative flex min-h-14 items-center px-1.5 transition-colors focus-visible:-outline-offset-2 duration-300 max-md:!text-[0.65625rem] max-md:!tracking-[0.12em] after:absolute after:inset-x-2 after:bottom-0 after:h-0.5 after:transition-transform after:duration-300 ${
+                    className={`nav-label relative flex min-h-14 items-center px-1.5 transition-colors focus-visible:-outline-offset-2 duration-300 max-md:!text-[0.6875rem] max-md:!tracking-[0.1em] after:absolute after:inset-x-2 after:bottom-0 after:h-0.5 after:transition-transform after:duration-300 ${
                       glance ? 'md:px-2.5 xl:px-3' : 'md:px-3'
                     } ${
                       on
@@ -220,7 +223,7 @@ export function JourneyTabs({
                 <li className="v">{glance.price}</li>
               </ul>
               <OpenJourneyForm kind="enquiry" className="jt-pill">
-                Make an inquiry
+                Make an enquiry
               </OpenJourneyForm>
             </div>
           ) : (
@@ -242,7 +245,7 @@ export function JourneyTabs({
             <li className="v">{glance.price}</li>
           </ul>
           <OpenJourneyForm kind="enquiry" className="jt-pill">
-            Make an inquiry
+            Make an enquiry
           </OpenJourneyForm>
         </div>
       )}

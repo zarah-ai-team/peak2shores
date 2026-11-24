@@ -111,8 +111,40 @@
   font-family: var(--font-display);
   font-size: clamp(1.25rem, 2vw, 1.6rem);
 }
+/* "Request details": the home page's ink pill (`.hc .btn-ink` in home.css,
+   which this page does not load), 44px to a finger. */
+.wws-end .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: var(--pill-h);
+  padding: 0 var(--pill-px);
+  border-radius: 999px;
+  font-family: var(--font-ui);
+  font-size: var(--pill-fs);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  background: #141d24;
+  color: #fff;
+  border: 1px solid #141d24;
+}
+/* Only under a pointer that hovers: on a touch screen a tap would leave it blue. */
+@media (hover: hover) {
+  .wws-end .btn:hover {
+    background: var(--color-brand-deep);
+    border-color: var(--color-brand-deep);
+  }
+}
 
-@media (max-width: 900px) {
+/* One column on a phone held upright: from 560px (any phone held sideways, a
+   tablet) the photographs stay beside the words, as on a laptop, so the pair
+   fits a short screen and the lines keep a reading length. */
+@media (max-width: 559px) {
   .wws-item {
     grid-template-columns: 1fr;
     gap: 2rem;

@@ -58,8 +58,8 @@ export const planFaq: FaqItem[] = [
       'Yes. Tell us what you have in mind in the form, and we’ll shape it around the way you like to travel.',
   },
   {
-    question: 'Does sending an inquiry commit me to anything?',
-    answer: 'No. Inquiring holds nothing and commits you to nothing.',
+    question: 'Does sending an enquiry commit me to anything?',
+    answer: 'No. Enquiring holds nothing and commits you to nothing.',
   },
 ];
 

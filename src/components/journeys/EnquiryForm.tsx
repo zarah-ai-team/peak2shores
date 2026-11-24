@@ -1,132 +1,116 @@
 'use client';
 
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
-import { Reveal } from '@/components/motion/Reveal';
-import { Button, ButtonLink } from '@/components/ui/Button';
-import { SectionLabel, Tick } from '@/components/ui/Editorial';
-import { site } from '@/lib/site';
+import Image from 'next/image';
+import { useEffect, useId, useRef, useState } from 'react';
 import { failureMessage, postForm, privacyConsent } from '@/lib/forms';
 import { track } from '@/lib/analytics';
 import { readFirstTouch } from '@/lib/attribution';
+import { site } from '@/lib/site';
+import { RateIcon, type RateIconName } from './RateIcon';
+import './plan-enquiry.css';
 
 const PARTY_OPTIONS = ['Couple', 'Friends', 'Family', 'Solo'] as const;
+const NOT_SURE = 'Not sure yet';
 
 /**
  * idle → sending → one of:
- *   sent       the API accepted it AND forwarded it (`delivered: true`)
+ *   sent        the API accepted it AND forwarded it (`delivered: true`)
  *   undelivered the API accepted it but no delivery is configured
- *              (`delivered: false`) — nothing reached anyone, so we say so
- *              and hand the reader a prefilled email instead
- *   error      refused (422/429) or the provider failed (502)
+ *               (`delivered: false`) — nothing reached anyone, so we say so
+ *               and hand the reader a prefilled email instead
+ *   error       refused (422/429) or the provider failed (502)
  */
 type Status = 'idle' | 'sending' | 'sent' | 'undelivered' | 'error';
+type Path = 'departure' | 'private';
 
-type Submitted = Record<string, string>;
-
-export type EnquiryFormProps = {
-  /** The journey being inquired about, if any. */
-  journeyTitle?: string;
-  /** e.g. "12 – 20 September 2027". */
-  departure?: string;
-  spotsLeft?: number;
-  groupMax?: number;
-  /** The caps label above the headline. */
-  kicker?: string;
-  headline?: string;
-  intro?: string;
-  /**
-   * For the general form (no journeyTitle): the journeys a visitor can pick
-   * from. A private journey is always offered as well.
-   */
-  journeyOptions?: string[];
-  /**
-   * Journey addresses to their titles, so "Request details" on a journey page
-   * (/plan?journey=swiss-elegance#contact) arrives with that journey chosen.
-   */
-  journeySlugs?: Record<string, string>;
-  /** Extra content under the intro, e.g. contact lines. */
-  children?: ReactNode;
+/** A journey as the form offers it: a card with its photograph. */
+export type EnquiryJourney = {
+  slug: string;
+  title: string;
+  /** '13 days · Lucerne to Milan' */
+  line: string;
+  img?: string;
+  alt?: string;
 };
 
-/* A field: a white box with a hairline edge that turns brand blue, with a
-   soft blue halo, while it has focus — the halo is its focus indicator. */
-const control =
-  'block w-full rounded-[0.25rem] border border-[rgb(20_29_36/0.16)] bg-white px-3.5 font-ui text-[0.9375rem] text-ink outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-muted hover:border-[rgb(20_29_36/0.32)] focus:border-brand focus:shadow-[0_0_0_0.1875rem_rgb(17_144_203/0.18)]';
-const inputClass = `${control} h-12`;
+export type EnquiryFormProps = {
+  /** The journeys a visitor can join, as cards. */
+  journeys: EnquiryJourney[];
+  /** The countries a private journey can go to, as chips. */
+  destinations: string[];
+  /** Marc's portrait, beside "A personal reply". */
+  portrait?: { src: string; alt: string };
+};
 
-/* A field's name: the site's caps label, a step larger and darker than a
-   kicker, so it reads at a glance in a form. */
-const labelClass = 'font-ui text-[0.6875rem] font-medium uppercase tracking-[0.14em] text-body';
-
-/* The Privacy Policy tick box, as on a journey page's pop-ups. The box is
-   named by the sentence alone, since the label around it also holds the
-   link's "(opens in a new tab)". The error is the one /api/enquiry gives. */
 const consentName = `${privacyConsent.before} ${privacyConsent.policy.label}`;
-const consentError = privacyConsent.unticked;
 
 /**
- * "Tell us a little. We'll call you, not the other way round."
+ * Plan your journey: the page's opening, after the client's reference (the
+ * design sample "Plan your journey", November 2026). A large "Let's talk."
+ * sits behind the section. On the left, the title, the line and the two
+ * ways to travel as large pill choices (join a departure, or design a
+ * private journey), with Marc's portrait and the ways to reach us. On the
+ * right, a frosted card: the chosen way and a progress rule that fills as
+ * the reader writes, underlined fields, "Traveling as" as a segmented
+ * control, guests as a stepper, then the journeys as photograph cards (to
+ * join a departure) or the destinations as chips with the lead-time note (for
+ * a private journey), the Privacy Policy tick box and a round send button.
+ * Sent, the card thanks the reader and repeats what they asked for.
  *
- * On the soft blue ground (so the page never runs dark into the dark footer):
- * the headline, the line and the ways to talk in the first five columns; the
- * form in the last six, as a white card. On a journey's page the card opens
- * on the journey and its dates, so it is clear what is being asked about.
- * Fields are boxes with a caps label above; "traveling as" is a row of
- * choices; the Privacy Policy tick box is the last field, and the note and
- * the button close the card.
- *
- * The browser checks the name and the email. The tick box starts clear and
- * nothing sends until it is ticked: a send that finds it clear puts an error
- * line under it, and focus moves to the box unless the browser has a name or
- * an email to point to first. The line is read out politely, so it waits for
- * what the browser says about those fields. It goes as soon as the box is
- * ticked.
- *
- * The status line is a persistent live region so failures are announced; on
- * success focus moves to the confirmation heading. The confirmation never
- * claims more than the server confirmed: when the API reports the inquiry was
- * not delivered anywhere, the reader is told so and offered an email with
- * their details already written.
+ * "Request details" on a journey page (/plan?journey=swiss-elegance#contact)
+ * arrives with that journey chosen. The sending, the tick box, the honeypot
+ * and the undelivered fallback are as before: the browser checks the name and
+ * the email; nothing sends until the box is ticked; the confirmation never
+ * claims more than the server confirmed.
  */
-export function EnquiryForm({
-  journeyTitle,
-  departure,
-  spotsLeft,
-  groupMax = site.maxGuests,
-  kicker = 'Plan your journey',
-  headline = 'Tell us a little. We’ll call you, not the other way round.',
-  intro,
-  journeyOptions,
-  journeySlugs,
-  children,
-}: EnquiryFormProps) {
-  const journeySelect = useRef<HTMLSelectElement>(null);
-  useEffect(() => {
-    const slug = new URLSearchParams(window.location.search).get('journey');
-    const title = slug ? journeySlugs?.[slug] : undefined;
-    if (title && journeySelect.current) journeySelect.current.value = title;
-  }, [journeySlugs]);
+export function EnquiryForm({ journeys, destinations, portrait }: EnquiryFormProps) {
+  const id = useId();
+  const [path, setPath] = useState<Path>('departure');
+  const [journey, setJourney] = useState(journeys[0]?.slug ?? '');
+  const [where, setWhere] = useState<string[]>([]);
   const [party, setParty] = useState<string>('Couple');
+  const [guests, setGuests] = useState(2);
+  const [filled, setFilled] = useState({ name: false, email: false, when: false });
   const [status, setStatus] = useState<Status>('idle');
   const [errorText, setErrorText] = useState('');
-  const [submitted, setSubmitted] = useState<Submitted>({});
+  const [summary, setSummary] = useState('');
+  const [mailto, setMailto] = useState('');
   const doneRef = useRef<HTMLHeadingElement>(null);
   const [consent, setConsent] = useState(false);
-  /** True once a send has found the box clear: from then on its error follows the box. */
   const [consentTried, setConsentTried] = useState(false);
   const consentRef = useRef<HTMLInputElement>(null);
-  const consentErrorId = `${useId()}-consent-error`;
+  const consentErrorId = `${id}-consent-error`;
   const consentMissing = consentTried && !consent;
+
+  /* A journey named in the address opens the form on it. */
+  useEffect(() => {
+    const slug = new URLSearchParams(window.location.search).get('journey');
+    if (slug && journeys.some((j) => j.slug === slug)) {
+      setPath('departure');
+      setJourney(slug);
+    }
+  }, [journeys]);
 
   useEffect(() => {
     if (status === 'sent' || status === 'undelivered') doneRef.current?.focus();
   }, [status]);
 
-  /* The box is `required`, so the browser's check before a send finds it
-     clear. Its own error line answers instead of the browser's bubble, and the
-     form's state follows the box, which a browser can change behind React's
-     back. The browser moves focus to a name or an email it found wrong; when
-     the box is the only field wrong, focus moves to the box. */
+  const isDep = path === 'departure' && journeys.length > 0;
+  const chosen = journeys.find((j) => j.slug === journey);
+  const steps = [filled.name, filled.email, filled.when, isDep ? !!chosen : where.length > 0];
+  const progress = 20 + steps.filter(Boolean).length * 20;
+
+  const toggleWhere = (w: string) =>
+    setWhere((c) => (c.includes(w) ? c.filter((x) => x !== w) : [...c, w]));
+
+  function onInput(event: React.FormEvent<HTMLFormElement>) {
+    const f = event.currentTarget.elements;
+    const val = (n: string) => ((f.namedItem(n) as HTMLInputElement | null)?.value ?? '').trim();
+    const next = { name: !!val('name'), email: !!val('email'), when: !!val('travelWindow') };
+    if (next.name !== filled.name || next.email !== filled.email || next.when !== filled.when)
+      setFilled(next);
+  }
+
   function onConsentInvalid(event: React.FormEvent<HTMLInputElement>) {
     event.preventDefault();
     setConsent(false);
@@ -137,17 +121,9 @@ export function EnquiryForm({
     }
   }
 
-  const firstName = site.founder.name.split(' ')[0];
-  const defaultIntro =
-    journeyTitle && departure && typeof spotsLeft === 'number'
-      ? `${journeyTitle} departs ${departure} with ${spotsLeft} ${spotsLeft === 1 ? 'place' : 'places'} remaining. Inquiring holds nothing and commits you to nothing — it starts a conversation with ${firstName}.`
-      : `Tell us where you’d like to go and who you’re traveling with. Inquiring holds nothing and commits you to nothing — it starts a conversation with ${firstName}.`;
-
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (status === 'sending') return;
-    // Nothing sends without the tick, even where the browser skipped its check.
-    // The box as it shows decides, and the form's state follows it.
     const ticked = consentRef.current?.checked ?? consent;
     if (ticked !== consent) setConsent(ticked);
     if (!ticked) {
@@ -161,7 +137,10 @@ export function EnquiryForm({
       const value = data.get(name);
       return typeof value === 'string' ? value.trim() : '';
     };
-    const journey = journeyTitle ?? (field('journey') || undefined);
+    const title = isDep ? chosen?.title : undefined;
+    const places = !isDep && where.length ? `Where: ${where.join(', ')}` : '';
+    const notes = [places, field('notes')].filter(Boolean).join('\n\n');
+    const guestLine = `${guests} ${guests === 1 ? 'guest' : 'guests'}`;
     setStatus('sending');
 
     try {
@@ -169,18 +148,14 @@ export function EnquiryForm({
         name: data.get('name'),
         email: data.get('email'),
         phone: data.get('phone'),
-        guests: data.get('guests'),
+        guests: String(guests),
         travelWindow: data.get('travelWindow'),
         heardFrom: data.get('heardFrom'),
-        notes: data.get('notes'),
+        notes,
         party,
-        journey,
-        // The Privacy Policy box, ticked: the route refuses a request without it.
+        journey: title,
         consent: ticked,
-        // Where this visitor first came from — stored with the enquiry.
         source: readFirstTouch(),
-        // Honeypot: a field no person sees or fills. The server drops
-        // submissions where it has a value.
         website: data.get('website'),
       });
       if (res.ok) {
@@ -192,21 +167,40 @@ export function EnquiryForm({
         } catch {
           delivered = false;
         }
-        track('enquiry_sent', { journey: journey ?? 'private', delivered });
+        track('enquiry_sent', { journey: title ?? 'private', delivered });
+        setSummary(
+          [
+            title ??
+              (where.length ? `A private journey to ${where.join(', ')}` : 'A private journey'),
+            party,
+            guestLine,
+            field('travelWindow'),
+          ]
+            .filter(Boolean)
+            .join(' · '),
+        );
         if (delivered) {
           setStatus('sent');
         } else {
-          setSubmitted({
+          const lines = {
             Name: field('name'),
             Email: field('email'),
             Phone: field('phone'),
-            Journey: journey ?? 'A private journey, or not sure yet',
+            Journey: title ?? 'A private journey',
+            Where: where.join(', '),
             'Traveling as': party,
-            Guests: field('guests'),
+            Guests: String(guests),
             When: field('travelWindow'),
             'Heard about us': field('heardFrom'),
             Notes: field('notes'),
-          });
+          };
+          const body = Object.entries(lines)
+            .filter(([, v]) => v)
+            .map(([k, v]) => `${k}: ${v}`)
+            .join('\n');
+          setMailto(
+            `mailto:${site.email}?subject=${encodeURIComponent(`Enquiry: ${lines.Journey}`)}&body=${encodeURIComponent(body)}`,
+          );
           setStatus('undelivered');
         }
       } else {
@@ -219,449 +213,435 @@ export function EnquiryForm({
     }
   }
 
-  const mailto = (() => {
-    const subject = `Enquiry: ${submitted.Journey ?? 'a journey'}`;
-    const body = Object.entries(submitted)
-      .filter(([, value]) => value)
-      .map(([label, value]) => `${label}: ${value}`)
-      .join('\n');
-    return `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  })();
+  function reset() {
+    setStatus('idle');
+    setFilled({ name: false, email: false, when: false });
+    setConsent(false);
+    setConsentTried(false);
+  }
+
+  const done = steps.filter(Boolean).length;
 
   return (
-    <section
-      id="enquire"
-      aria-label={headline}
-      className="relative bg-stone py-section-sm text-ink"
-    >
-      {/* `#contact`, where the site's Contact and "Book a call" links land:
-          an empty mark where the content begins, so from 1024px the top of
-          the form, with the words beside it. Not the "Prefer to talk?" lines
-          there: they stay pinned beside the form, so a jump to them would
-          land wherever they were pinned, past the top of the form. The mark
-          is kept out of the slide-in that blocks get as they scroll into view
-          (`data-no-settle`): a jump from far up the page then lands on where
-          the content rests, not where its slide-in still holds it.
-          On a touch screen below 1024px, where the words come first and
-          nothing slides in, CSS anchor positioning moves the mark onto the
-          "Prefer to talk?" lines, so the ways to talk and the start of the
-          form share the screen, on a phone held sideways too. A browser
-          without anchor positioning keeps the mark where the content
-          begins. */}
-      <div
-        id="contact"
-        data-no-settle
-        className="max-lg:pointer-coarse:absolute max-lg:pointer-coarse:inset-x-0 max-lg:pointer-coarse:top-[anchor(--prefer-to-talk_top)]"
-      />
-      {/* `data-fab-clear`: the floating "Connect with our team" steps aside
-          while the form and the ways to talk pass under it, rather than sit
-          over their fields and links. */}
-      <div data-tone="stone" className="container-site grid-site gap-y-block" data-fab-clear>
-        {/* On a desktop the words stay beside the card while the form is filled
-            in, clear of the header and a journey's pinned tab bar. */}
-        <Reveal className="col-span-4 flex flex-col gap-stack md:col-span-8 lg:sticky lg:top-[calc(var(--nav-h-compact)+6rem)] lg:col-span-5 lg:self-start">
-          <SectionLabel tone="stone" className="flex items-center gap-3.5">
-            <Tick />
-            {kicker}
-          </SectionLabel>
-          <h2 className="h2">{headline}</h2>
-          <p className="prose-body measure-lead">{intro ?? defaultIntro}</p>
-          <div className="mt-2 flex flex-col gap-3 border-t border-[rgb(20_29_36/0.14)] pt-6 [anchor-name:--prefer-to-talk]">
-            <span className="kicker-sm">Prefer to talk?</span>
-            <a
-              href={`mailto:${site.email}`}
-              className="inline-flex items-center gap-3 self-start font-ui text-[0.9375rem] text-ink transition-colors hover:text-brand-deep"
-            >
-              <ContactIcon kind="email" />
-              {site.email}
-            </a>
-            {site.phone && site.phoneHref && (
-              <a
-                href={`tel:${site.phoneHref}`}
-                className="inline-flex items-center gap-3 self-start font-ui text-[0.9375rem] text-ink transition-colors hover:text-brand-deep"
+    <section className="pe" id="enquire" aria-labelledby={`${id}-h`}>
+      {/* `#contact`, where the site's Contact and "Book a call" links land. */}
+      <div id="contact" className="pe-anchor" data-no-settle />
+      <p className="pe-giant" aria-hidden>
+        Let’s <em>talk.</em>
+      </p>
+
+      <div className="pe-g" data-fab-clear>
+        <div className="pe-side">
+          <p className="pe-lab">Plan your journey</p>
+          <h1 id={`${id}-h`}>Start with a conversation.</h1>
+          <p className="pe-intro">
+            Join one of our upcoming departures, or design a private journey on your own dates.
+            Either way it begins the same way: you tell us a little, and we take it from there.
+          </p>
+
+          <div className="pe-path" role="radiogroup" aria-label="How would you like to travel">
+            {PATHS.map((p) => (
+              <button
+                key={p.value}
+                type="button"
+                role="radio"
+                aria-checked={path === p.value}
+                className={path === p.value ? 'on' : ''}
+                onClick={() => setPath(p.value)}
               >
-                <ContactIcon kind="phone" />
-                {site.phone}
+                <span className="pe-pi" aria-hidden>
+                  <RateIcon name={p.icon} />
+                </span>
+                <span className="pe-pt">
+                  {p.t}
+                  <small>{p.s}</small>
+                </span>
+                <span className="pe-pc" aria-hidden>
+                  <RateIcon name="check" />
+                </span>
+              </button>
+            ))}
+          </div>
+
+          <div className="pe-who">
+            {portrait && (
+              <span className="pe-av">
+                <Image src={portrait.src} alt="" width={120} height={120} sizes="60px" />
+              </span>
+            )}
+            <div>
+              <b>A personal reply.</b>
+              <span>From Marc and our team, within two days.</span>
+            </div>
+          </div>
+          <ul className="pe-reach">
+            <li>
+              <a href={`mailto:${site.email}`}>
+                <span className="pe-ri" aria-hidden>
+                  <RateIcon name="mail" />
+                </span>
+                {site.email}
               </a>
+            </li>
+            {site.phone && site.phoneHref && (
+              <li>
+                <a href={`tel:${site.phoneHref}`}>
+                  <span className="pe-ri" aria-hidden>
+                    <RateIcon name="phone" />
+                  </span>
+                  {site.phone}
+                </a>
+              </li>
             )}
-          </div>
-          {children}
-        </Reveal>
+          </ul>
+        </div>
 
-        <div className="col-span-4 md:col-span-8 lg:col-span-6 lg:col-start-7">
-          <div
-            data-tone="light"
-            className="rounded-lg border border-[rgb(20_29_36/0.08)] bg-white p-6 shadow-[0_1.875rem_3.75rem_-2.25rem_rgb(10_34_50/0.45)] md:p-8 lg:p-10"
-          >
-            {status === 'sent' ? (
-              <div role="status">
-                <h3 ref={doneRef} tabIndex={-1} className="h3 mb-stack outline-none">
-                  Thank you. Marc will be in touch within two days.
-                </h3>
-                <p className="prose-body measure">
-                  If anything changes before then, write to{' '}
-                  <a href={`mailto:${site.email}`} className="prose-link">
-                    {site.email}
-                  </a>
-                  .
+        <div className="pe-card" data-tone="light">
+          {status === 'sent' || status === 'undelivered' ? (
+            <div className="pe-done" role="status">
+              <span className="pe-tick" aria-hidden>
+                <RateIcon name="check" />
+              </span>
+              <h2 ref={doneRef} tabIndex={-1}>
+                {status === 'sent' ? 'Thank you. Marc will be in touch.' : 'One more step, please.'}
+              </h2>
+              <p className="pe-sum">{summary}</p>
+              {status === 'sent' ? (
+                <p>
+                  We reply within two days. Nothing is held and nothing is committed until you have
+                  spoken with us.
                 </p>
-              </div>
-            ) : status === 'undelivered' ? (
-              <div role="status">
-                <h3 ref={doneRef} tabIndex={-1} className="h3 mb-stack outline-none">
-                  One more step, please.
-                </h3>
-                <p className="prose-body measure mb-stack">
-                  Your details were not sent to us automatically. Please email them to {site.email}{' '}
-                  — the button below opens a message with what you have written already filled in.
-                </p>
-                <ButtonLink href={mailto} variant="navy" arrow className="rounded-[0.25rem]">
-                  Email your inquiry
-                </ButtonLink>
-              </div>
-            ) : (
-              <Reveal delay={0.1}>
-                {/* The page's script sends the form. Pressed before it has
-                    run, or without it, the browser sends the form itself:
-                    `method="post"` keeps what was typed out of the address
-                    (a GET would put it there, in the history and in the
-                    host's logs), and it comes back to this form. Nothing is
-                    delivered that way, so without a script the form says so
-                    first. */}
-                <form onSubmit={onSubmit} method="post" action="#contact" className="flex flex-col">
-                  <noscript>
-                    <p className="prose-body-sm mb-7">
-                      This form needs JavaScript to send. Please email{' '}
-                      <a href={`mailto:${site.email}`} className="prose-link">
-                        {site.email}
-                      </a>{' '}
-                      instead.
-                    </p>
-                  </noscript>
-                  {journeyTitle && (
-                    <p className="mb-7 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-[rgb(20_29_36/0.08)] pb-5">
-                      <span className="kicker-sm">Inquiring about</span>
-                      <span className="font-display text-[1.25rem] leading-tight text-ink">
-                        {journeyTitle}
-                      </span>
-                      {departure && <span className="meta text-muted">{departure}</span>}
-                    </p>
-                  )}
-
-                  <div className="grid gap-x-5 gap-y-5 sm:grid-cols-2">
-                    <Field label="Name">
-                      <input
-                        name="name"
-                        required
-                        maxLength={200}
-                        autoComplete="name"
-                        placeholder="Your name"
-                        className={inputClass}
-                      />
-                    </Field>
-
-                    <Field label="Email">
-                      <input
-                        name="email"
-                        type="email"
-                        required
-                        maxLength={254}
-                        pattern="[^\s@]+@[^\s@]+\.[^\s@]{2,}"
-                        title="An address like name@example.com"
-                        autoComplete="email"
-                        placeholder="you@example.com"
-                        className={inputClass}
-                      />
-                    </Field>
-
-                    <Field label="Phone" optional>
-                      <input
-                        name="phone"
-                        type="tel"
-                        maxLength={40}
-                        autoComplete="tel"
-                        placeholder="+1 305 000 0000"
-                        className={inputClass}
-                      />
-                    </Field>
-
-                    <Field label="Guests">
-                      <input
-                        name="guests"
-                        type="number"
-                        inputMode="numeric"
-                        min={1}
-                        max={groupMax}
-                        placeholder="2"
-                        className={inputClass}
-                      />
-                    </Field>
-
-                    <fieldset className="m-0 min-w-0 border-0 p-0 sm:col-span-2">
-                      <legend className={`${labelClass} mb-2 p-0`}>Traveling as</legend>
-                      <div className="flex flex-wrap gap-2">
-                        {PARTY_OPTIONS.map((option) => {
-                          const on = party === option;
-                          return (
-                            <button
-                              key={option}
-                              type="button"
-                              aria-pressed={on}
-                              onClick={() => setParty(option)}
-                              className={`h-11 rounded-[0.25rem] border px-5 font-ui text-[0.875rem] transition-colors duration-200 ${
-                                on
-                                  ? 'border-navy bg-navy text-white'
-                                  : 'border-[rgb(20_29_36/0.16)] bg-white text-body hover:border-brand-deep hover:text-brand-deep'
-                              }`}
-                            >
-                              {option}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </fieldset>
-
-                    {!journeyTitle && journeyOptions && (
-                      <Field label="Journey of interest" className="sm:col-span-2">
-                        <span className="relative block">
-                          <select
-                            name="journey"
-                            ref={journeySelect}
-                            defaultValue=""
-                            className={`${inputClass} appearance-none pr-10`}
-                          >
-                            <option value="" className="text-ink">
-                              A private journey, or not sure yet
-                            </option>
-                            {journeyOptions.map((title) => (
-                              <option key={title} value={title} className="text-ink">
-                                {title}
-                              </option>
-                            ))}
-                          </select>
-                          <svg
-                            aria-hidden
-                            width="12"
-                            height="8"
-                            viewBox="0 0 12 8"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.2"
-                            className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-muted"
-                          >
-                            <path d="M1 1.5l5 5 5-5" />
-                          </svg>
-                        </span>
-                      </Field>
-                    )}
-
-                    <Field label="When would you like to travel">
-                      <input
-                        name="travelWindow"
-                        maxLength={120}
-                        placeholder="September 2027, or flexible"
-                        className={inputClass}
-                      />
-                    </Field>
-
-                    <Field label="How did you hear about us">
-                      <input
-                        name="heardFrom"
-                        maxLength={120}
-                        placeholder="Instagram, a friend, Google…"
-                        className={inputClass}
-                      />
-                    </Field>
-
-                    <Field label="Anything we should know" className="sm:col-span-2">
-                      <textarea
-                        name="notes"
-                        rows={4}
-                        maxLength={2000}
-                        placeholder="Dates, dietary notes, whether you’ve traveled with us before…"
-                        className={`${control} min-h-[7rem] resize-y py-3`}
-                      />
-                    </Field>
-
-                    {/* The Privacy Policy tick box: a quiet line, 44px tall to
-                        a finger, only as wide as the box and its words, so a
-                        press on the empty space beside them ticks nothing. The
-                        box starts clear on every visit, as in the pop-ups:
-                        `autoComplete="off"` keeps a browser that reloads the
-                        page on Back from bringing back a tick the form's state
-                        cannot see. Under a finger the link is a 44px target of
-                        its own, centred on its words, so a press just above or
-                        below them opens the policy rather than ticking the
-                        box. Its error line stays in the page while empty, so
-                        what it comes to say is read out, politely, after what
-                        the browser says about a name or an email. */}
-                    <div className="flex min-w-0 flex-col sm:col-span-2">
-                      <label className="flex min-h-11 cursor-pointer items-center gap-3 self-start font-ui text-[0.875rem] leading-[1.5] text-body pointer-coarse:min-h-[44px]">
-                        <input
-                          ref={consentRef}
-                          type="checkbox"
-                          name="consent"
-                          required
-                          autoComplete="off"
-                          aria-label={consentName}
-                          checked={consent}
-                          onChange={(e) => setConsent(e.target.checked)}
-                          onInvalid={onConsentInvalid}
-                          aria-invalid={consentMissing}
-                          aria-describedby={consentMissing ? consentErrorId : undefined}
-                          className={`m-0 size-5 shrink-0 cursor-pointer accent-navy ${
-                            consentMissing
-                              ? 'outline-2 outline-offset-2 outline-error focus-visible:outline-ink'
-                              : ''
-                          }`}
-                        />
-                        <span>
-                          {privacyConsent.before}{' '}
-                          <a
-                            href={privacyConsent.policy.href}
-                            target="_blank"
-                            rel="noopener"
-                            className="relative inline-flex items-baseline gap-1 text-ink underline decoration-acqua-deep decoration-1 underline-offset-[0.22em] transition-colors duration-300 hover:text-acqua-text hover:decoration-current pointer-coarse:after:absolute pointer-coarse:after:inset-x-0 pointer-coarse:after:top-1/2 pointer-coarse:after:h-11 pointer-coarse:after:-translate-y-1/2"
-                          >
-                            {privacyConsent.policy.label}
-                            <span className="sr-only"> (opens in a new tab)</span>
-                            <NewTab />
-                          </a>
-                        </span>
-                      </label>
-                      <p
-                        id={consentErrorId}
-                        aria-live="polite"
-                        className="m-0 flex items-start gap-[0.4375rem] font-ui text-[0.8125rem] leading-[1.45] text-error [&:not(:empty)]:mt-2"
-                      >
-                        {consentMissing && (
-                          <>
-                            <svg
-                              aria-hidden
-                              focusable="false"
-                              width="14"
-                              height="14"
-                              viewBox="0 0 16 16"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="1.5"
-                              className="mt-0.5 shrink-0"
-                            >
-                              <circle cx="8" cy="8" r="6.75" />
-                              <path d="M8 4.5v4.25M8 10.75v.75" strokeLinecap="round" />
-                            </svg>
-                            {consentError}
-                          </>
-                        )}
-                      </p>
-                    </div>
-
-                    {/* Honeypot. `hidden` takes it off the page, out of the
-                        accessibility tree and out of page captures; bots reading
-                        the markup still fill it, and autofill ignores the name. */}
-                    <div hidden aria-hidden>
-                      <label>
-                        Leave this empty
-                        <input name="website" type="text" tabIndex={-1} autoComplete="off" />
-                      </label>
-                    </div>
-                  </div>
-
-                  <div className="mt-8 flex flex-col-reverse gap-4 border-t border-[rgb(20_29_36/0.08)] pt-6 sm:flex-row sm:items-center sm:justify-between">
-                    <span className="prose-body-sm max-w-[34ch] !text-muted">
-                      We reply personally. No newsletters unless you ask.
-                    </span>
-                    <Button
-                      type="submit"
-                      variant="navy"
-                      arrow
-                      aria-disabled={status === 'sending'}
-                      className="!justify-center rounded-[0.25rem] sm:min-w-[12.5rem]"
-                    >
-                      {status === 'sending' ? 'Sending' : 'Send inquiry'}
-                    </Button>
-                  </div>
-
-                  <p role="alert" aria-live="assertive" className="prose-body-sm mt-4 !text-error">
-                    {status === 'error'
-                      ? errorText || `That didn’t send. Please try again, or email ${site.email}.`
-                      : ''}
+              ) : (
+                <>
+                  <p>
+                    Your details were not sent to us automatically. Please email them to{' '}
+                    {site.email}: the button below opens a message with them already written.
                   </p>
-                </form>
-              </Reveal>
-            )}
-          </div>
+                  <a className="pe-send" href={mailto}>
+                    <span className="pe-si" aria-hidden>
+                      <RateIcon name="mail" />
+                    </span>
+                    Email your enquiry
+                  </a>
+                </>
+              )}
+              {status === 'sent' && (
+                <button type="button" className="pe-again" onClick={reset}>
+                  Send another enquiry
+                </button>
+              )}
+            </div>
+          ) : (
+            <>
+              <div className="pe-head">
+                <span className="pe-hi" aria-hidden>
+                  <RateIcon name={isDep ? 'group' : 'compass'} />
+                </span>
+                <div className="pe-steps">
+                  <b>{isDep ? 'Join a departure' : 'Design a private journey'}</b>
+                  <span>Tell us a little; it takes two minutes.</span>
+                </div>
+                <span className="pe-count" aria-hidden>
+                  {done} / {steps.length}
+                </span>
+              </div>
+              <div className="pe-bar" aria-hidden>
+                <i style={{ width: `${progress}%` }} />
+              </div>
+
+              <form
+                className="pe-form"
+                onSubmit={onSubmit}
+                onInput={onInput}
+                method="post"
+                action="#contact"
+              >
+                <noscript>
+                  <p className="pe-full">
+                    This form needs JavaScript to send. Please email{' '}
+                    <a href={`mailto:${site.email}`}>{site.email}</a> instead.
+                  </p>
+                </noscript>
+
+                <Group n="01" t="About you" />
+                <Text id={`${id}-n`} icon="single" label="Name">
+                  <input
+                    id={`${id}-n`}
+                    name="name"
+                    required
+                    maxLength={200}
+                    autoComplete="name"
+                    placeholder="Your name"
+                  />
+                </Text>
+                <Text id={`${id}-e`} icon="mail" label="Email">
+                  <input
+                    id={`${id}-e`}
+                    name="email"
+                    type="email"
+                    required
+                    maxLength={254}
+                    pattern="[^\s@]+@[^\s@]+\.[^\s@]{2,}"
+                    title="An address like name@example.com"
+                    autoComplete="email"
+                    placeholder="you@example.com"
+                  />
+                </Text>
+                <Text id={`${id}-p`} icon="phone" label="Phone" optional>
+                  <input
+                    id={`${id}-p`}
+                    name="phone"
+                    type="tel"
+                    maxLength={40}
+                    autoComplete="tel"
+                    placeholder="+1 305 000 0000"
+                  />
+                </Text>
+                <Text id={`${id}-w`} icon="calendar" label="When would you like to travel">
+                  <input
+                    id={`${id}-w`}
+                    name="travelWindow"
+                    maxLength={120}
+                    placeholder="September 2027, or flexible"
+                  />
+                </Text>
+
+                <Group n="02" t="Your party" />
+                <fieldset className="pe-f">
+                  <legend>Traveling as</legend>
+                  <div className="pe-seg">
+                    {PARTY_OPTIONS.map((o) => (
+                      <button
+                        key={o}
+                        type="button"
+                        aria-pressed={party === o}
+                        className={party === o ? 'on' : ''}
+                        onClick={() => setParty(o)}
+                      >
+                        {o}
+                      </button>
+                    ))}
+                  </div>
+                </fieldset>
+                <fieldset className="pe-f">
+                  <legend>Guests</legend>
+                  <div className="pe-step">
+                    <button
+                      type="button"
+                      aria-label="Fewer guests"
+                      disabled={guests <= 1}
+                      onClick={() => setGuests((g) => Math.max(1, g - 1))}
+                    >
+                      −
+                    </button>
+                    <output aria-live="polite" aria-label={`${guests} guests`}>
+                      {guests}
+                    </output>
+                    <button
+                      type="button"
+                      aria-label="More guests"
+                      disabled={guests >= site.maxGuests}
+                      onClick={() => setGuests((g) => Math.min(site.maxGuests, g + 1))}
+                    >
+                      +
+                    </button>
+                  </div>
+                </fieldset>
+
+                <Group n="03" t="Your journey" />
+                {isDep ? (
+                  <fieldset className="pe-f pe-full">
+                    <legend>Journey of interest</legend>
+                    <div className="pe-jsel">
+                      {journeys.map((j) => (
+                        <label key={j.slug} className={`pe-jc${journey === j.slug ? ' on' : ''}`}>
+                          <input
+                            className="sr-only"
+                            type="radio"
+                            name="journey"
+                            value={j.slug}
+                            checked={journey === j.slug}
+                            onChange={() => setJourney(j.slug)}
+                          />
+                          {j.img && (
+                            <Image src={j.img} alt="" width={128} height={128} sizes="64px" />
+                          )}
+                          <span className="pe-jt">
+                            {j.title}
+                            <small>{j.line}</small>
+                          </span>
+                          <span className="pe-jk" aria-hidden>
+                            <RateIcon name="check" />
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </fieldset>
+                ) : (
+                  <fieldset className="pe-f pe-full">
+                    <legend>Where would you like to go</legend>
+                    <div className="pe-chips">
+                      {[...destinations, NOT_SURE].map((w) => (
+                        <button
+                          key={w}
+                          type="button"
+                          aria-pressed={where.includes(w)}
+                          className={where.includes(w) ? 'on' : ''}
+                          onClick={() => toggleWhere(w)}
+                        >
+                          <RateIcon name={where.includes(w) ? 'check' : 'route'} />
+                          {w}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="pe-info">
+                      <span className="pe-ii" aria-hidden>
+                        <RateIcon name="clock" />
+                      </span>
+                      <span>
+                        <b>Lead time.</b> Six months is comfortable; less is often possible.
+                      </span>
+                    </p>
+                  </fieldset>
+                )}
+
+                <Group n="04" t="A little more" />
+                <Text id={`${id}-h`} icon="chat" label="How did you hear about us">
+                  <input
+                    id={`${id}-h`}
+                    name="heardFrom"
+                    maxLength={120}
+                    placeholder="Instagram, a friend, Google…"
+                  />
+                </Text>
+                <Text id={`${id}-x`} icon="pen" label="Anything we should know" full>
+                  <textarea
+                    id={`${id}-x`}
+                    name="notes"
+                    rows={2}
+                    maxLength={1800}
+                    placeholder="Dates, dietary notes, a milestone you’re celebrating…"
+                  />
+                </Text>
+
+                <div className="pe-consent pe-full">
+                  <label>
+                    <input
+                      ref={consentRef}
+                      type="checkbox"
+                      name="consent"
+                      required
+                      autoComplete="off"
+                      aria-label={consentName}
+                      checked={consent}
+                      onChange={(e) => setConsent(e.target.checked)}
+                      onInvalid={onConsentInvalid}
+                      aria-invalid={consentMissing}
+                      aria-describedby={consentMissing ? consentErrorId : undefined}
+                    />
+                    <span>
+                      {privacyConsent.before}{' '}
+                      <a href={privacyConsent.policy.href} target="_blank" rel="noopener">
+                        {privacyConsent.policy.label}
+                        <span className="sr-only"> (opens in a new tab)</span>
+                      </a>
+                    </span>
+                  </label>
+                  <p id={consentErrorId} aria-live="polite" className="pe-err">
+                    {consentMissing ? privacyConsent.unticked : ''}
+                  </p>
+                </div>
+
+                {/* Honeypot: a field no person sees or fills. */}
+                <div hidden aria-hidden>
+                  <label>
+                    Leave this empty
+                    <input name="website" type="text" tabIndex={-1} autoComplete="off" />
+                  </label>
+                </div>
+
+                <div className="pe-end pe-full">
+                  <ul className="pe-promise">
+                    <li>
+                      <RateIcon name="shield" /> Holds nothing, commits you to nothing
+                    </li>
+                    <li>
+                      <RateIcon name="single" /> A personal reply, never a newsletter
+                    </li>
+                  </ul>
+                  <button className="pe-send" type="submit" aria-disabled={status === 'sending'}>
+                    <span className="pe-si" aria-hidden>
+                      <RateIcon name="arrow" />
+                    </span>
+                    {status === 'sending' ? 'Sending' : 'Send enquiry'}
+                  </button>
+                </div>
+                <p role="alert" aria-live="assertive" className="pe-err pe-full">
+                  {status === 'error'
+                    ? errorText || `That didn’t send. Please try again, or email ${site.email}.`
+                    : ''}
+                </p>
+              </form>
+            </>
+          )}
         </div>
       </div>
     </section>
   );
 }
 
-function Field({
+/** The two ways to travel, each with its icon. */
+const PATHS: { value: Path; t: string; s: string; icon: RateIconName }[] = [
+  {
+    value: 'departure',
+    t: 'Join a departure',
+    s: 'Take a place on a journey already planned',
+    icon: 'group',
+  },
+  {
+    value: 'private',
+    t: 'Design a private journey',
+    s: 'Only your names on the list, on your dates',
+    icon: 'compass',
+  },
+];
+
+/** A numbered part of the form: "01 About you". */
+function Group({ n, t }: { n: string; t: string }) {
+  return (
+    <p className="pe-grp pe-full">
+      <span>{n}</span>
+      {t}
+    </p>
+  );
+}
+
+/** A text field: its serif label above, its icon at the start of the underline. */
+function Text({
+  id,
+  icon,
   label,
-  optional = false,
+  optional,
+  full,
   children,
-  className = '',
 }: {
+  id: string;
+  icon: RateIconName;
   label: string;
-  /** Marks the field optional beside its label. */
   optional?: boolean;
-  children: ReactNode;
-  className?: string;
+  full?: boolean;
+  children: React.ReactNode;
 }) {
   return (
-    <label className={`flex min-w-0 flex-col gap-2 ${className}`}>
-      <span className={labelClass}>
+    <div className={`pe-f${full ? ' pe-full' : ''}`}>
+      <label htmlFor={id}>
         {label}
-        {optional && (
-          <span className="font-normal normal-case tracking-normal text-muted"> (optional)</span>
-        )}
-      </span>
-      {children}
-    </label>
-  );
-}
-
-/** The small arrow that marks a link opening in a new tab, as on the pop-ups. */
-function NewTab() {
-  return (
-    <svg
-      aria-hidden
-      focusable="false"
-      width="10"
-      height="10"
-      viewBox="0 0 10 10"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.1"
-    >
-      <path d="M3 1.5h5.5V7M8.5 1.5L1.5 8.5" />
-    </svg>
-  );
-}
-
-function ContactIcon({ kind }: { kind: 'email' | 'phone' }) {
-  return (
-    <span
-      aria-hidden
-      className="inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-[rgb(20_29_36/0.16)] bg-white text-brand"
-    >
-      <svg
-        width="15"
-        height="15"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        {kind === 'email' ? (
-          <path d="M3 6h18v12H3zM3 7l9 6 9-6" />
-        ) : (
-          <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" />
-        )}
-      </svg>
-    </span>
+        {optional && <small>optional</small>}
+      </label>
+      <div className="pe-in">
+        <RateIcon name={icon} className="pe-fi" />
+        {children}
+      </div>
+    </div>
   );
 }

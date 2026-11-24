@@ -87,8 +87,10 @@ export type DialogProps = {
 
 /**
  * A modal dialog: an ivory panel over the page dimmed in navy, centred on a
- * tablet or a desktop and a full-height sheet on a phone. The title and a close
- * button stay at the top while the panel's body scrolls.
+ * tablet or a desktop and a full-height sheet on a phone. The card needs height
+ * as well as width (`card:` in globals.css), so a phone held sideways gets the
+ * sheet too and its short screen goes to the form, not to margins. The title
+ * and a close button stay at the top while the panel's body scrolls.
  *
  * It is the browser's own <dialog>, opened with `showModal()`, and placed at the
  * end of <body>, so no page style reaches it and it sits above the header and
@@ -249,14 +251,14 @@ export function Dialog({
         onClick={() => latest.current.onClose()}
         className="absolute inset-0 touch-none bg-[rgb(10_34_50/0.62)] opacity-0 transition-opacity duration-300 ease-editorial group-data-[state=leave]/dialog:duration-200 group-data-[state=open]/dialog:opacity-100"
       />
-      <div className="pointer-events-none absolute inset-0 flex items-stretch justify-center sm:items-center sm:p-6">
+      <div className="pointer-events-none absolute inset-0 flex items-stretch justify-center card:items-center card:p-6">
         {/* Under forced colours (Windows high contrast) the dimmed page is not
             drawn, so the panel takes a 1px edge in the system's text colour. */}
         <div
           data-tone="light"
-          className="pointer-events-auto relative flex h-full w-full translate-y-6 flex-col overflow-hidden bg-ivory opacity-0 shadow-[0_2rem_4rem_-1.5rem_rgb(10_34_50/0.5)] transition-[opacity,translate] duration-500 ease-reveal group-data-[state=leave]/dialog:duration-200 group-data-[state=leave]/dialog:ease-exit group-data-[state=open]/dialog:translate-y-0 group-data-[state=open]/dialog:opacity-100 motion-reduce:translate-y-0 forced-colors:border forced-colors:border-[color:CanvasText] sm:h-auto sm:max-h-full sm:w-[min(44rem,100%)] sm:rounded-[1.25rem]"
+          className="pointer-events-auto relative flex h-full w-full translate-y-6 flex-col overflow-hidden bg-ivory opacity-0 shadow-[0_2rem_4rem_-1.5rem_rgb(10_34_50/0.5)] transition-[opacity,translate] duration-500 ease-reveal group-data-[state=leave]/dialog:duration-200 group-data-[state=leave]/dialog:ease-exit group-data-[state=open]/dialog:translate-y-0 group-data-[state=open]/dialog:opacity-100 motion-reduce:translate-y-0 forced-colors:border forced-colors:border-[color:CanvasText] card:h-auto card:max-h-full card:w-[min(44rem,100%)] card:rounded-[1.25rem]"
         >
-          <div className="flex shrink-0 items-start justify-between gap-4 border-b border-line pt-[max(0.75rem,env(safe-area-inset-top))] pr-3 pb-3 pl-5 sm:pt-5 sm:pr-5 sm:pb-4 sm:pl-8">
+          <div className="flex shrink-0 items-start justify-between gap-4 border-b border-line pt-[max(0.75rem,env(safe-area-inset-top))] pr-3 pb-3 pl-5 sm:pr-5 sm:pl-8 card:pt-5 card:pb-4">
             <h2 ref={titleRef} id={titleId} tabIndex={-1} className="h3 pt-2 outline-none">
               {title}
             </h2>
@@ -283,7 +285,7 @@ export function Dialog({
           </div>
           <div
             ref={bodyRef}
-            className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pt-6 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:px-8 sm:pt-7 sm:pb-8"
+            className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pt-6 pb-[max(1.75rem,env(safe-area-inset-bottom))] sm:px-8 card:pt-7 card:pb-8"
           >
             {children}
           </div>

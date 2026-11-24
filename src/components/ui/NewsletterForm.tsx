@@ -54,6 +54,7 @@ export function NewsletterForm({
 }) {
   const variant: NewsletterVariant = variantProp ?? (compact ? 'compact' : 'large');
   const invite = variant === 'invite';
+  const large = variant === 'large';
   const dark = variant === 'dark' || invite;
   const [email, setEmail] = useState('');
   const [website, setWebsite] = useState('');
@@ -161,7 +162,7 @@ export function NewsletterForm({
   // indicator (`.field-rule`), so they drop the outline and it keeps one.
   const fieldText = invite
     ? 'prose-body min-h-(--pill-h) rounded-full border border-white/60 bg-[rgb(8_20_28/0.42)] px-5 text-[16px] leading-[1.25] text-white caret-white outline-2 outline-offset-2 outline-transparent placeholder:text-white/80 focus:bg-[rgb(8_20_28/0.55)] focus:outline-white'
-    : variant === 'large'
+    : large
       ? 'font-display text-[clamp(1.375rem,1.48vw,1.75rem)] font-normal leading-[1.2] py-3 placeholder:text-muted'
       : variant === 'dark'
         ? 'prose-body text-[1rem] py-3 text-on-dark placeholder:text-on-dark-muted'
@@ -173,8 +174,8 @@ export function NewsletterForm({
   // photograph, as the other forms fade on paper, "Sending" could not be read.
   const submit = invite
     ? 'min-h-(--pill-h) shrink-0 rounded-full bg-brand-deep px-(--pill-px) text-(length:--pill-fs) font-medium tracking-[0.16em] text-white transition-colors duration-300 hover:bg-white hover:text-ink focus-visible:outline-white aria-disabled:cursor-progress aria-disabled:bg-brand-deep aria-disabled:text-white sm:min-w-[160px]'
-    : variant === 'large'
-      ? 'btn ml-5 shrink-0 bg-ink px-[calc(var(--btn-px)-0.25rem)] py-[calc(var(--btn-py)-2px)] text-ivory hover:bg-brand-deep'
+    : large
+      ? 'btn ml-5 shrink-0 bg-ink px-[calc(var(--btn-px)-0.25rem)] py-[calc(var(--btn-py)-2px)] text-ivory hover:bg-brand-deep @max-[26rem]:ml-0 @max-[26rem]:mt-4'
       : `shrink-0 py-3 pl-5 transition-colors duration-300 ${
           dark ? 'text-on-dark hover:text-acqua' : 'hover:text-brand'
         }`;
@@ -207,12 +208,40 @@ export function NewsletterForm({
           tick: 'text-white',
         };
 
+  const field = (
+    <input
+      id={id}
+      type="email"
+      required
+      maxLength={254}
+      pattern="[^\s@]+@[^\s@]+\.[^\s@]{2,}"
+      title="An address like name@example.com"
+      autoComplete="email"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      placeholder="Your email"
+      aria-describedby={failed ? `${id}-error` : undefined}
+      aria-invalid={failed ? true : undefined}
+      className={`min-w-0 ${
+        invite ? 'sm:flex-1' : `${large ? 'w-full' : 'flex-1'} border-0 bg-transparent outline-none`
+      } ${fieldText}`}
+    />
+  );
+
   return (
     <div
-      className={`w-full ${variant === 'compact' ? '' : invite ? 'mx-auto max-w-[30rem]' : 'max-w-[32.5rem]'} ${className}`}
+      className={`w-full ${variant === 'compact' ? '' : invite ? 'mx-auto max-w-[30rem]' : 'max-w-[32.5rem]'} ${
+        large ? 'pointer-coarse:@container max-lg:@container' : ''
+      } ${className}`}
     >
       {/* `.field-rule` re-rules the line in water-blue while the field has
-          focus; the invitation's field takes a white outline instead. */}
+          focus; the invitation's field takes a white outline instead.
+          The large form keeps its 22px field beside the button while it is
+          26rem wide or more. Narrower, on a phone held upright or beside the
+          Circle's words on a touch tablet, the field takes the whole width
+          with a rule of its own and the button goes under it. The query is
+          on the form's own width, and only under a finger or below 1024px:
+          a laptop keeps its one row. */}
       <form
         onSubmit={onSubmit}
         className={
@@ -220,27 +249,23 @@ export function NewsletterForm({
             ? 'relative flex flex-col gap-2 sm:flex-row'
             : `field-rule relative flex items-center border-b ${
                 dark ? 'border-on-dark/40' : 'border-ink'
-              } ${variant === 'large' ? 'pb-2' : ''}`
+              } ${
+                large
+                  ? 'pb-2 @max-[26rem]:flex-wrap @max-[26rem]:border-b-0 @max-[26rem]:pb-0 @max-[26rem]:after:hidden'
+                  : ''
+              }`
         }
       >
         <label htmlFor={id} className="sr-only">
           Your email address
         </label>
-        <input
-          id={id}
-          type="email"
-          required
-          maxLength={254}
-          pattern="[^\s@]+@[^\s@]+\.[^\s@]{2,}"
-          title="An address like name@example.com"
-          autoComplete="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Your email"
-          aria-describedby={failed ? `${id}-error` : undefined}
-          aria-invalid={failed ? true : undefined}
-          className={`min-w-0 ${invite ? 'sm:flex-1' : 'flex-1 border-0 bg-transparent outline-none'} ${fieldText}`}
-        />
+        {large ? (
+          <div className="field-rule min-w-0 flex-1 after:hidden @max-[26rem]:basis-full @max-[26rem]:border-b @max-[26rem]:border-ink @max-[26rem]:pb-2 @max-[26rem]:after:block">
+            {field}
+          </div>
+        ) : (
+          field
+        )}
         {/* Honeypot: hidden from people, screen readers and page captures;
             bots reading the markup still fill it. */}
         <div hidden aria-hidden>

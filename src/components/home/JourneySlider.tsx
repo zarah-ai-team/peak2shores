@@ -63,7 +63,9 @@ const arrived = (img: HTMLImageElement) => img.complete && img.naturalWidth > 0;
  * first slide is rendered on the server, so it reads without JavaScript.
  *
  * A slide never moves ahead of its photograph (17 Nov). The first slide's
- * photograph is fetched with the page; the one after the slide on show is
+ * photograph is fetched as the slider nears the screen (the browser's own
+ * lazy loading, well ahead of it, rather than a preload with the page: on a
+ * phone the slider is two or three screens down); the one after the slide on show is
  * fetched while that slide plays; and a change of slide — by the clock, an
  * arrow, a card, a swipe or the view switch — waits until the photograph it
  * needs has loaded and decoded, so the wipe always opens on a finished
@@ -227,13 +229,21 @@ export function JourneySlider({
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) setPlaying(false);
   }, []);
 
-  // Whether the cards are on show at this width.
+  // Whether the cards are on show: above 900px, except on a phone held
+  // sideways, which has the phone's layout (journeys-home.css).
   useEffect(() => {
     const wide = window.matchMedia('(min-width: 901px)');
-    const read = () => setCardsShown(wide.matches);
+    const sideways = window.matchMedia(
+      '(orientation: landscape) and (max-height: 500px) and (pointer: coarse)',
+    );
+    const read = () => setCardsShown(wide.matches && !sideways.matches);
     read();
     wide.addEventListener('change', read);
-    return () => wide.removeEventListener('change', read);
+    sideways.addEventListener('change', read);
+    return () => {
+      wide.removeEventListener('change', read);
+      sideways.removeEventListener('change', read);
+    };
   }, []);
 
   // On screen (and nearly so), and the tab in front.
@@ -295,17 +305,24 @@ export function JourneySlider({
   };
 
   /** One slide's photograph, behind everything: fetched when wanted, shown when in. */
-  const backdrop = (id: string, src: string, first: boolean, pos?: string) => (
+  const backdrop = (id: string, src: string, pos?: string) => (
     <Image
       src={src}
       alt=""
       fill
       // On a phone or tablet the frame is taller than it is wide, so the
-      // landscape photograph is cropped by height and needs a wider file.
-      sizes="(max-width: 600px) 150vw, (max-width: 900px) 125vw, 92vw"
+      // landscape photograph is cropped by height and needs a wider file. On
+      // an upright phone it is drawn about three times the screen's width:
+      // 190vw asks for a file twice as wide as before, sharp to about 0.7 of
+      // a screen pixel (the owner's choice of 19 Nov), and never more than
+      // 2560px, as 220vw would on a 3x iPhone (the 3840px file is up to
+      // twice the bytes again).
+      sizes="(max-width: 440px) 190vw, (max-width: 600px) 150vw, (max-width: 900px) 125vw, 92vw"
       quality={85}
-      // The slide the page opens on is fetched with the page; the rest when wanted.
-      loading={first || wanted.has(id) ? 'eager' : 'lazy'}
+      // Each when wanted; the slide the page opens on (the only one in view)
+      // as the frame nears the screen, rather than with the page's own first
+      // requests (it no longer has a preload in the head).
+      loading={wanted.has(id) ? 'eager' : 'lazy'}
       data-photo={id}
       // next/image calls this once the picture has loaded and decoded.
       onLoad={() => settle(id)}
@@ -347,7 +364,7 @@ export function JourneySlider({
               className={`bg${v === view && i === index ? ' on' : ''}${waits(id)}`}
               aria-hidden
             >
-              {s.photo.src && backdrop(id, s.photo.src, v === 'now' && i === 0, s.photo.pos)}
+              {s.photo.src && backdrop(id, s.photo.src, s.photo.pos)}
             </div>
           );
         }),
@@ -356,7 +373,7 @@ export function JourneySlider({
         className={`bg hzbg${horizon?.src ? ' photo' : ''}${onFin ? ' on' : ''}${waits(FINALE)}`}
         aria-hidden
       >
-        {horizon?.src && backdrop(FINALE, horizon.src, false)}
+        {horizon?.src && backdrop(FINALE, horizon.src)}
       </div>
       <div className="shade" aria-hidden />
       {/* Every card's photograph, fetched ahead once the frame is near, so a

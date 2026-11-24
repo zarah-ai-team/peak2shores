@@ -27,7 +27,7 @@ export default function CookiesPage() {
         {
           heading: 'Cookies we set ourselves',
           body: [
-            'p2s_src — remembers how you first reached the site (for example an Instagram post or an advertisement) for 90 days, so an inquiry can be credited to it. Contains no name or email.',
+            'p2s_src — remembers how you first reached the site (for example an Instagram post or an advertisement) for 90 days, so an enquiry can be credited to it. Contains no name or email.',
             'p2s:preloader-at (browser storage) — remembers that you have seen the opening animation today, so it does not play on every page.',
           ],
         },

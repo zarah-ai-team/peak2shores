@@ -66,9 +66,13 @@
   width: 1rem;
   height: 1rem;
 }
-.hc-fab .fab-btn:hover {
-  background: var(--lake);
-  transform: translateY(-2px);
+/* Under a pointer that can hover only: after a tap a touch screen keeps the
+   button "hovered", which would leave it raised and pale. */
+@media (hover: hover) {
+  .hc-fab .fab-btn:hover {
+    background: var(--lake);
+    transform: translateY(-2px);
+  }
 }
 /* Near the circle and the footer, which carry every way to reach us, the
    button steps aside so it never sits over their fields and links. */
@@ -90,6 +94,12 @@
 }
 .hc-fab .panel {
   width: 19.375rem;
+  /* Never taller than the room above the button (the screen less the 44px
+     button, the gap and the margins): on a short screen, or with large text,
+     it scrolls rather than running off the top. */
+  max-height: calc(100dvh - 44px - 0.625rem - 2 * 1.5rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background: var(--paper);
   color: var(--ink);
   border-radius: 0.875rem;
@@ -146,8 +156,10 @@
   text-transform: none;
   color: var(--muted);
 }
-.hc-fab .panel a:hover span {
-  color: var(--brand);
+@media (hover: hover) {
+  .hc-fab .panel a:hover span {
+    color: var(--brand);
+  }
 }
 
 @media (pointer: coarse) {
@@ -162,9 +174,33 @@
   }
   .hc-fab .panel {
     width: calc(100vw - 1.75rem);
+    max-height: calc(100dvh - 44px - 0.625rem - 2 * 0.875rem);
   }
   .hc-fab .fab-btn {
     padding: 0 1rem 0 0.875rem;
+  }
+}
+/* A narrow phone (360px wide and under) or a short screen (a phone held
+   sideways): the button is its round 44px icon alone, so it covers as little
+   of the page as it can. Its words stay as its name for a screen reader, and
+   the panel opens above it as before (the owner's choice A, 19 Nov 2026). */
+@media (max-width: 360px), (max-height: 500px) {
+  .hc-fab .fab-btn {
+    justify-content: center;
+    width: 44px;
+    min-height: 44px;
+    padding: 0;
+  }
+  .hc-fab .fab-btn span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border-width: 0;
   }
 }
 @media (prefers-reduced-motion: reduce) {

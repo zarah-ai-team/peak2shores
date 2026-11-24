@@ -110,7 +110,8 @@ html[data-nav-open] {
      edges and of the fade, so its focus ring is whole. */
   scroll-padding-block: 8px 32px;
   scrollbar-width: thin;
-  scrollbar-color: rgb(244 241 234 / 0.3) transparent;
+  /* White, as every hairline on the dark grounds (it was a cream). */
+  scrollbar-color: rgb(255 255 255 / 0.3) transparent;
 }
 .menu-scroller[data-tone='light'] {
   /* Room for the scrollbar is kept on both sides whether or not it shows, so
@@ -272,8 +273,16 @@ html[data-nav-open] {
   transform-origin: right center;
   transition: transform 0.3s var(--ease-exit);
 }
-.menu-chapter:is(:hover, :focus-visible, [aria-selected='true'], [aria-expanded='true']) {
+/* Hover styles in this sheet answer a pointer that can hover only: after a
+   tap a touch screen keeps the element "hovered" until the next tap
+   elsewhere, which would leave the style standing. */
+.menu-chapter:is(:focus-visible, [aria-selected='true'], [aria-expanded='true']) {
   color: var(--color-on-dark);
+}
+@media (hover: hover) {
+  .menu-chapter:hover {
+    color: var(--color-on-dark);
+  }
 }
 .menu-chapter:is([aria-selected='true'], [aria-expanded='true']) .menu-chapter-label::after {
   transform: scaleX(1);
@@ -285,9 +294,13 @@ html[data-nav-open] {
   margin-right: 4px;
   transition: transform 0.3s var(--ease-editorial);
 }
-.menu-chapter:is(:hover, :focus-visible, [aria-selected='true'], [aria-expanded='true'])
-  .menu-chevron {
+.menu-chapter:is(:focus-visible, [aria-selected='true'], [aria-expanded='true']) .menu-chevron {
   transform: translateX(4px);
+}
+@media (hover: hover) {
+  .menu-chapter:hover .menu-chevron {
+    transform: translateX(4px);
+  }
 }
 /* The small square before the section the page being read belongs to. */
 .menu-here {
@@ -320,12 +333,21 @@ html[data-nav-open] {
 .menu-page .nav-link::after {
   background: currentColor;
 }
-.menu-page:is(:hover, :focus-visible) .nav-link {
+.menu-page:focus-visible .nav-link {
   color: var(--color-on-dark);
 }
-.menu-page:is(:hover, :focus-visible, [aria-current='page']) .nav-link::after {
+.menu-page:is(:focus-visible, [aria-current='page']) .nav-link::after {
   transform: scaleX(1);
   transform-origin: left center;
+}
+@media (hover: hover) {
+  .menu-page:hover .nav-link {
+    color: var(--color-on-dark);
+  }
+  .menu-page:hover .nav-link::after {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
 }
 /* The button's label at the size of the links around it: the site's own
    button label is under 10px on a laptop, too small beside them. */
@@ -337,9 +359,11 @@ html[data-nav-open] {
 }
 /* On the blue the white button answers the pointer by paling, not by
    turning the ground's own blue, which would make it disappear. */
-.site-menu .menu-plan:hover {
-  background: var(--color-acqua);
-  color: var(--color-ink);
+@media (hover: hover) {
+  .site-menu .menu-plan:hover {
+    background: var(--color-acqua);
+    color: var(--color-ink);
+  }
 }
 .menu-contact {
   display: flex;
@@ -357,10 +381,17 @@ html[data-nav-open] {
   color: var(--color-on-dark-body);
   transition: color 0.3s var(--ease-editorial);
 }
-.menu-contact-line:is(:hover, :focus-visible) {
+.menu-contact-line:focus-visible {
   color: var(--color-on-dark);
   text-decoration: underline;
   text-underline-offset: 0.25em;
+}
+@media (hover: hover) {
+  .menu-contact-line:hover {
+    color: var(--color-on-dark);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+  }
 }
 /* Under a finger every link is a full 44px. */
 @media (pointer: coarse) {
@@ -492,11 +523,19 @@ html[data-nav-open] {
   transition: color 0.3s var(--ease-editorial);
 }
 /* The one blue that is text-safe on paper (6.4:1). */
-.menu-row:is(:hover, :focus-visible, [aria-current='page']) .menu-row-title {
+.menu-row:is(:focus-visible, [aria-current='page']) .menu-row-title {
   color: var(--color-acqua-text);
 }
-.menu-row:is(:hover, :focus-visible) .menu-row-arrow {
+.menu-row:focus-visible .menu-row-arrow {
   color: var(--color-ink);
+}
+@media (hover: hover) {
+  .menu-row:hover .menu-row-title {
+    color: var(--color-acqua-text);
+  }
+  .menu-row:hover .menu-row-arrow {
+    color: var(--color-ink);
+  }
 }
 /* Under the journeys: the dates, said once. */
 .menu-note {
@@ -560,6 +599,16 @@ html[data-nav-open] {
 }
 .menu-two .menu-contact {
   margin-top: 10px;
+}
+/* Under a finger the button keeps the touch sizes' 20px sides and 12px gap,
+   which left "Plan your journey" on two lines in the 216px sidebar of an
+   iPad 1024-1194px wide. Slightly tighter sides keep it on one, at the
+   tracking of every other button. */
+@media (pointer: coarse) {
+  .menu-two .menu-plan {
+    padding-inline: 16px;
+    gap: 10px;
+  }
 }
 .menu-stage {
   --menu-ground: var(--menu-panel);
@@ -781,8 +830,13 @@ html[data-nav-open] {
   cursor: pointer;
   transition: color 0.3s var(--ease-editorial);
 }
-.menu-back:is(:hover, :focus-visible) {
+.menu-back:focus-visible {
   color: var(--color-acqua);
+}
+@media (hover: hover) {
+  .menu-back:hover {
+    color: var(--color-acqua);
+  }
 }
 /* A phone on its side: the foot gives the height back. */
 @media (max-height: 479px) {

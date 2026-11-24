@@ -108,7 +108,7 @@ export function JourneyHero({ journey }: { journey: Journey }) {
         {/* From a tablet up the tab bar carries the way to enquire. */}
         <p className="enter col-span-4 m-0 md:hidden" style={enterAt(0.5)}>
           <ButtonLink href="#enquire" variant="light" arrow>
-            Inquire
+            Enquire
           </ButtonLink>
         </p>
       </div>
@@ -343,13 +343,13 @@ function availability(journey: Journey) {
     default:
       return journey.detail?.spotsLeft
         ? `${journey.detail.spotsLeft} places left`
-        : 'Open for inquiries';
+        : 'Open for enquiries';
   }
 }
 
 /**
  * Dates & Rates, A&K-style: each departure as a row — dates, length, group,
- * the rate and where it stands — with the way to inquire on the row. Below
+ * the rate and where it stands — with the way to enquire on the row. Below
  * it, what the rate includes and what it does not.
  */
 export function DatesAndRates({ journey, cta }: { journey: Journey; cta: string }) {
@@ -375,7 +375,7 @@ export function DatesAndRates({ journey, cta }: { journey: Journey; cta: string 
                 </th>
               ))}
               <th scope="col" className="pb-3">
-                <span className="sr-only">Inquire</span>
+                <span className="sr-only">Enquire</span>
               </th>
             </tr>
           </thead>

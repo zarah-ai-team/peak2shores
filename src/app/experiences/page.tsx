@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import '@/components/home/home.css';
 import '@/components/experiences/experiences.css';
+import { ExperienceCollage } from '@/components/experiences/ExperienceCollage';
 import { ExperiencePanels } from '@/components/experiences/ExperiencePanels';
 import { Film } from '@/components/experiences/Film';
-import { WaysStage } from '@/components/experiences/WaysStage';
 import { experiences as homeExperiences, ways } from '@/lib/data/home';
 import { getPageContent, pageMetadata } from '@/lib/content';
+import { wayPages } from '@/lib/data/ways';
 import { getMedia } from '@/lib/media';
 
 export const metadata = pageMetadata({
@@ -15,25 +16,23 @@ export const metadata = pageMetadata({
   path: '/experiences',
 });
 
-const pad = (n: number) => String(n).padStart(2, '0');
-
 /* The opening film: the street piano by the Chapel Bridge in Lucerne. */
 const opening = homeExperiences.find((x) => x.word === 'Meet') ?? homeExperiences[0];
 
 /**
  * Experiences, in the homepage's language (home.css supplies the .hc tokens,
  * labels and buttons; experiences.css the rest):
- *   01 a full-bleed film with the five experiences as a way in along its foot ·
- *   02 the five as a row of tall photographs, one open at a time ·
- *   03 the ways to travel as a list beside a framed film screen ·
+ *   01 a full-bleed film ·
+ *   02 the ways to travel as a row of tall photographs, one open at a time ·
+ *   03 the five experiences as a collage of photographs ·
  *   04 one call to action: plan your journey.
  * Everything is on the page from the first paint; the motion only changes
- * which photograph has the room. Anchors (#taste, #meet…) are kept: the
- * homepage index links to them.
+ * which photograph has the room. Each experience keeps its anchor (#taste,
+ * #meet…) on its print in the collage.
  */
 export default async function ExperiencesPage() {
   const { experiences } = await getPageContent('experiences');
-  const panels = experiences.map((x) => {
+  const prints = experiences.map((x) => {
     const slot = getMedia(x.media);
     return {
       slug: x.slug,
@@ -41,7 +40,20 @@ export default async function ExperiencesPage() {
       body: x.body,
       img: slot.src,
       alt: slot.alt ?? slot.label,
-      tone: slot.tone,
+    };
+  });
+  // Each way's photograph from the homepage's list; its words and its page
+  // from the ways' own pages (/experiences/<slug>).
+  const panels = wayPages.map((page) => {
+    const way = ways.find((w) => w.title === page.title);
+    return {
+      slug: page.slug,
+      title: page.title,
+      body: page.short,
+      img: way?.img ?? page.hero.src,
+      alt: way?.alt ?? page.hero.alt,
+      pos: way?.pos ?? page.hero.pos,
+      href: `/experiences/${page.slug}`,
     };
   });
 
@@ -61,42 +73,35 @@ export default async function ExperiencesPage() {
           <h1 id="xp-title">The things worth your time.</h1>
           <p className="intro">Five kinds of experience shape every journey.</p>
         </div>
-        <nav className="xp-index" aria-label="Experiences on this page" data-fab-clear>
-          {experiences.map((x, i) => (
-            <a key={x.slug} href={`#${x.slug}`}>
-              <span>{pad(i + 1)}</span>
-              {x.title}
-            </a>
-          ))}
-        </nav>
       </section>
 
-      {/* 02 — The five. */}
-      <div className="xp-kinds">
-        <div className="xp-head">
-          <p className="lab">Five kinds of experience</p>
-          <p className="sub">
-            Not a menu to choose from — the balance we build each itinerary around.
-          </p>
-        </div>
-        <ExperiencePanels items={panels} />
-      </div>
-
-      {/* 03 — The ways to travel. */}
-      <section className="xp-ways" aria-labelledby="ways-title">
+      {/* 02 — The ways to travel. */}
+      <section className="xp-kinds" aria-labelledby="ways-title">
         <div className="xp-head">
           <div>
             <p className="lab">Ways to travel</p>
             <h2 id="ways-title">From a small group to a yacht of your own.</h2>
           </div>
           <p className="sub">
-            Every experience above can be shaped into any of these — with the same people on the
-            ground and the same care behind each day.
+            Every one is built from the five experiences below, with the same people on the ground
+            and the same care behind each day.
           </p>
         </div>
-        <WaysStage
-          ways={ways.map(({ title, line, img, alt, video }) => ({ title, line, img, alt, video }))}
-        />
+        <ExperiencePanels items={panels} />
+      </section>
+
+      {/* 03 — The five. */}
+      <section className="xp-five" aria-labelledby="five-title">
+        <div className="xp-head">
+          <div>
+            <p className="lab">Five kinds of experience</p>
+            <h2 id="five-title">What fills the days of every journey.</h2>
+          </div>
+          <p className="sub">
+            Not a menu to choose from, but the balance we build each itinerary around.
+          </p>
+        </div>
+        <ExperienceCollage items={prints} />
       </section>
 
       {/* 04 — The one way on. */}

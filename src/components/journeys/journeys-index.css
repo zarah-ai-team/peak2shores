@@ -126,6 +126,25 @@
     padding: 2.25rem var(--gut) 2.75rem;
   }
 }
+/* A phone held sideways keeps the half and half, the words on the navy at
+   the left and the photograph filling the right half, so the name is on the
+   first screen and not under a photograph taller than the screen. */
+@media (max-width: 760px) and (orientation: landscape) {
+  .jxh {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  .jxh-photo {
+    order: 0;
+    aspect-ratio: auto;
+  }
+  .jxh-text {
+    padding: 1.75rem 1.5rem 1.75rem var(--gut);
+  }
+  /* "Group Journeys" holds one line at 568px. */
+  .jxh h1 {
+    font-size: clamp(1.875rem, 5.4vw, 2.25rem);
+  }
+}
 
 /* -- 1. The globe and its carousel (the Collection's Map view) ------------- */
 /* The globe. */
@@ -258,8 +277,12 @@
     width 0.4s var(--ease),
     background-color 0.4s;
 }
-.jxh-dots button:hover i {
-  background: rgb(20 29 36 / 0.7);
+/* Hover only where there is a pointer to rest: on a touch screen a hover
+   would stay on what was tapped. */
+@media (hover: hover) {
+  .jxh-dots button:hover i {
+    background: rgb(20 29 36 / 0.7);
+  }
 }
 .jxh-dots button.on i {
   width: 1.75rem;
@@ -517,8 +540,12 @@
   font-size: var(--h2);
   line-height: 1.06;
   letter-spacing: -0.012em;
+  /* No word left alone on the last line ("difference."). */
+  text-wrap: balance;
 }
-.xpd-head p {
+/* The line under the heading; the label above it keeps the shared label's
+   size and blue. */
+.xpd-head p:not(.xpd-lab) {
   margin: 0;
   font-size: 0.9375rem;
   color: var(--muted);
@@ -562,8 +589,10 @@
   transform-origin: left;
   transition: transform 0.7s var(--ease);
 }
-.xpd-grid li:hover::before {
-  transform: scaleX(1);
+@media (hover: hover) {
+  .xpd-grid li:hover::before {
+    transform: scaleX(1);
+  }
 }
 .xpd-top {
   display: flex;
@@ -588,8 +617,10 @@
   color: var(--ink);
   transition: color 0.5s var(--ease);
 }
-.xpd-grid li:hover .ico {
-  color: var(--brand);
+@media (hover: hover) {
+  .xpd-grid li:hover .ico {
+    color: var(--brand);
+  }
 }
 .xpd-grid .ico svg {
   display: block;
@@ -616,6 +647,11 @@
 @media (max-width: 1100px) {
   .xpd-head {
     position: static;
+  }
+  /* The heading has the width of the page here: balanced, it takes two
+     lines on a phone and one on a tablet. */
+  .xpd-head h2 {
+    max-width: none;
   }
 }
 @media (max-width: 760px) {
@@ -668,6 +704,21 @@
   border: 1px solid var(--rule);
   box-shadow: 0 1.125rem 2.75rem rgb(20 29 36 / 0.06);
 }
+/* The mark the floating "Connect with our team" steps aside for
+   (`data-fab-clear`, JourneyCollection): over the whole panel on a short
+   screen (a phone held sideways), where the button would sit on the filters;
+   not shown elsewhere, so there the button stays on the first screen. */
+.jx .fbar-clear {
+  display: none;
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  .jx .fbar-clear {
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+}
 .jx .fmenu {
   position: relative;
 }
@@ -691,9 +742,13 @@
   cursor: pointer;
   transition: border-color 0.3s;
 }
-.jx .fbtn:hover,
 .jx .fmenu.open .fbtn {
   border-color: var(--ink);
+}
+@media (hover: hover) {
+  .jx .fbtn:hover {
+    border-color: var(--ink);
+  }
 }
 /* What the menu filters, set as a button's label; the choice beside it reads
    as a sentence would. */
@@ -703,6 +758,13 @@
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--muted);
+}
+/* 11px on a phone or a tablet, where the root stays 16px (a laptop's
+   smaller root keeps the label as it was). */
+@media (max-width: 1023px), (pointer: coarse) {
+  .jx .fbtn small {
+    font-size: 0.6875rem;
+  }
 }
 .jx .fbtn svg {
   width: 0.875rem;
@@ -727,6 +789,12 @@
   background: #fff;
   border: 1px solid var(--rule);
   box-shadow: 0 1.25rem 3rem rgb(20 29 36 / 0.16);
+  /* Never taller than the screen leaves under the header and the pinned
+     menu (a phone held sideways has its own measure, below): the list
+     scrolls within itself, and a swipe on it moves the list, not the page. */
+  max-height: max(9rem, calc(100svh - var(--nav-h-compact) - 3.5rem - 7rem));
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 .jx .flist[hidden] {
   display: none;
@@ -747,8 +815,10 @@
   text-align: left;
   cursor: pointer;
 }
-.jx .flist button:hover:not(:disabled) {
-  background: var(--color-stone);
+@media (hover: hover) {
+  .jx .flist button:hover:not(:disabled) {
+    background: var(--color-stone);
+  }
 }
 .jx .flist button.on {
   color: var(--lake);
@@ -824,6 +894,8 @@
   font-size: clamp(1.625rem, 2.3vw, 2.375rem);
   line-height: 1.12;
   letter-spacing: -0.008em;
+  /* No word left alone on the last line ("list."). */
+  text-wrap: balance;
 }
 .jxb-in p:not(.jxb-lab) {
   max-width: 52ch;
@@ -861,10 +933,12 @@
     color 0.3s,
     border-color 0.3s;
 }
-.jxb-btn:hover {
-  background: #fff;
-  border-color: #fff;
-  color: var(--ink);
+@media (hover: hover) {
+  .jxb-btn:hover {
+    background: #fff;
+    border-color: #fff;
+    color: var(--ink);
+  }
 }
 .jxb-btn.solid {
   background: var(--color-brand-deep);
@@ -872,14 +946,26 @@
   color: #fff;
   font-weight: 600;
 }
-.jxb-btn.solid:hover {
-  background: #fff;
-  border-color: #fff;
-  color: var(--ink);
+@media (hover: hover) {
+  .jxb-btn.solid:hover {
+    background: #fff;
+    border-color: #fff;
+    color: var(--ink);
+  }
 }
 /* An ink ring is lost on the blue: the pale sky is the one that shows. */
 .jxb-btn:focus-visible {
   outline-color: var(--sky);
+}
+/* Text set larger in the browser: the label may take two lines rather than
+   widen the page. The query is in rem, so it follows the reader's text size:
+   319px at the default 16px, so no phone wraps the label at the default size
+   (at 320px it stays on one line, as before), and about 399px at 20px. */
+@media (max-width: 19.9375rem) {
+  .jxb-btn {
+    white-space: normal;
+    text-align: center;
+  }
 }
 @media (pointer: coarse) {
   .jxb-btn,
@@ -904,13 +990,11 @@
     scroll-padding-inline: var(--gut);
   }
 }
-@media (max-width: 760px) {
-  .jxh-map {
-    aspect-ratio: 1.25;
-  }
-  /* On a phone the caption would lie over the route's first stops, and the
-     chosen card right under the globe names the journey: the caption is kept
-     for screen readers only, which still hear it as the journey changes. */
+/* On a phone or a tablet the caption would lie over the route's first stops
+   (Venice), and the chosen card right under the globe names the journey: the
+   caption is kept for screen readers only, which still hear it as the
+   journey changes. Wider, the globe keeps its names clear of it. */
+@media (max-width: 1023px) {
   .jxh-pill {
     width: 1px;
     height: 1px;
@@ -919,6 +1003,11 @@
     overflow: hidden;
     clip-path: inset(50%);
     white-space: nowrap;
+  }
+}
+@media (max-width: 760px) {
+  .jxh-map {
+    aspect-ratio: 1.25;
   }
   .jxh-soon {
     left: 1rem;
@@ -942,8 +1031,10 @@
   .jxh-dots {
     display: none;
   }
+  /* One filter to a line on an upright phone; two side by side where there
+     is room (a phone held sideways, a small tablet). */
   .jx .fmenu {
-    flex: 1 1 100%;
+    flex: 1 1 14rem;
   }
   .jx .fbtn {
     width: 100%;
@@ -958,6 +1049,54 @@
     flex: 1 1 100%;
     justify-content: space-between;
     margin-left: 0;
+  }
+}
+/* A phone held sideways (a short screen). The owner's decision of 19
+   November 2026: on this page the in-page menu scrolls away with the page,
+   and only the header stays pinned. The menu follows the hero directly only
+   here, so a journey's page (where this stylesheet can still be loaded after
+   a step from here) keeps its pinned bar; anchors and the menu's current
+   tab follow the header alone. The globe takes the height left under the
+   header, less its arrows, so the globe and the arrows that turn it are on
+   screen together (the canvas follows its box, and the route is framed
+   again to the new height), and an open filter list fits under the header
+   with its button. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .jxh + nav[data-journey-tabs] {
+    position: static;
+  }
+  html:has(.jxh + nav[data-journey-tabs]) {
+    scroll-padding-top: calc(var(--nav-h) + 1rem);
+  }
+  .jxh-map {
+    aspect-ratio: auto;
+    height: max(8rem, calc(100svh - var(--nav-h) - 6.5rem));
+  }
+  .jx .colmap-hint {
+    margin-bottom: 0.75rem;
+  }
+  .jx .flist {
+    max-height: max(9rem, calc(100svh - var(--nav-h-compact) - 7rem));
+  }
+}
+/* There, 760px wide or less: "Stay tuned" beside the turning earth, as on a
+   wider screen, where under it there is no room on so short a globe. */
+@media (max-width: 760px) and (orientation: landscape) and (max-height: 500px) {
+  .jxh-soon {
+    left: auto;
+    right: clamp(1rem, 4vw, 7rem);
+    top: 50%;
+    bottom: auto;
+    max-width: 13ch;
+    font-size: 1.5rem;
+    text-align: left;
+    transform: translateY(-40%);
+  }
+  .jxh-map.is-soon .jxh-soon {
+    transform: translateY(-50%);
+  }
+  .jxh-soon em {
+    display: block;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -980,12 +1119,14 @@
   flex: none;
 }
 
-/* Phone: the banner's button takes its own line, the full width. */
+/* Phone: the banner's button takes its own line, the full width of an
+   upright phone, and no wider than 22rem on a phone held sideways. */
 @media (max-width: 760px) {
   .jxb-ctas {
     flex: 1 1 100%;
   }
   .jxb-btn {
     flex: 1 1 auto;
+    max-width: 22rem;
   }
 }

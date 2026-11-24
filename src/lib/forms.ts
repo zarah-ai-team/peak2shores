@@ -42,8 +42,8 @@ export async function postForm(path: string, body: unknown): Promise<Response> {
 }
 
 /**
- * The tick box at the foot of the inquiry form on /plan and of a journey
- * page's pop-up forms (the inquiry and the two booking requests), in the words
+ * The tick box at the foot of the enquiry form on /plan and of a journey
+ * page's pop-up forms (the enquiry and the two booking requests), in the words
  * the visitor reads. The forms build their label from these parts and show
  * `unticked` under the box when a request is sent without the tick;
  * /api/enquiry refuses such a request with the same words, and sends the

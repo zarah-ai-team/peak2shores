@@ -50,6 +50,23 @@ const instrumentSans = Instrument_Sans({
  */
 const boot = `(function(){var d=document.documentElement;d.setAttribute('data-js','');var reduce=false;try{reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches}catch(e){}if(reduce)return;var seen=false;try{seen=Date.now()-Number(localStorage.getItem('p2s:preloader-at'))<864e5}catch(e){}if(seen)return;d.setAttribute('data-preload','');setTimeout(function(){if(!d.hasAttribute('data-preload'))return;d.removeAttribute('data-preload');try{localStorage.setItem('p2s:preloader-at',String(Date.now()))}catch(e){}},2400)})();`;
 
+/**
+ * Development only: keeps attributes the browser writes into the page out of
+ * React's hydration check.
+ *
+ * Microsoft Edge's autofill stamps `fdprocessedid` on every button and field.
+ * In development the bundle arrives after it has, so React reports each one as
+ * a hydration mismatch, although the markup is ours and correct. Production
+ * builds do not compare attributes, so none of this ships. The observer removes
+ * the listed attributes as they are written and stands down five seconds after
+ * `load`, by when hydration is long over and the browser may mark the fields
+ * again. To cover another injected attribute, add its name to the list.
+ *
+ * Attributes written onto <html> and <body> (Grammarly's, for one) are covered
+ * by `suppressHydrationWarning` on those two elements instead.
+ */
+const scrubInjected = `(function(){var names=['fdprocessedid'];var mo=new MutationObserver(function(list){for(var i=0;i<list.length;i++){var el=list[i].target,name=list[i].attributeName;if(name&&el.hasAttribute(name))el.removeAttribute(name)}});mo.observe(document.documentElement,{subtree:true,attributes:true,attributeFilter:names});window.addEventListener('load',function(){setTimeout(function(){mo.disconnect()},5000)})})();`;
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
@@ -111,14 +128,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   // here and handed to the header as plain data.
   const [nav, menu] = await Promise.all([getNavigation(), getSiteMenu()]);
   return (
-    // The boot script writes attributes onto <html> before hydration; React
-    // must not treat them as a mismatch.
+    // The boot script writes attributes onto <html> before hydration, and
+    // browser extensions write their own onto <body> (Grammarly, among
+    // others); React must not treat either as a mismatch.
     <html
       lang="en"
       className={`${newsreader.variable} ${instrumentSans.variable}`}
       suppressHydrationWarning
     >
-      <body>
+      <body suppressHydrationWarning>
+        {/* First, so it is watching before any button or field is parsed. */}
+        {process.env.NODE_ENV === 'development' && (
+          <script dangerouslySetInnerHTML={{ __html: scrubInjected }} />
+        )}
         <script dangerouslySetInnerHTML={{ __html: boot }} />
         {/* Consent Mode defaults must exist before Tag Manager loads. */}
         {process.env.NEXT_PUBLIC_GTM_ID && (

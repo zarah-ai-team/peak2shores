@@ -119,6 +119,10 @@ export function HowWeTravel() {
       <div className="hw-foot">
         <div className="hw-ctl">
           <div className="hw-nav">
+            {/* `data-fab-clear`: on a small phone the floating "Connect"
+                button steps aside while the arrows are at the foot of the
+                screen, rather than sit over Next (shown there only: why-home.css). */}
+            <span className="fab-mark" data-fab-clear aria-hidden />
             <button
               type="button"
               className="circ"

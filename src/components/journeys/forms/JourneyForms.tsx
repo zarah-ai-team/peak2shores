@@ -13,7 +13,7 @@ import { JourneyFormDialog, type FormRequest } from './JourneyFormDialog';
 
 /**
  * The journey page's forms, opened as pop-ups (Ishika's notes of 9 Nov, items
- * 17-21): an inquiry ("Make an inquiry"), and two booking requests, one for the
+ * 17-21): an enquiry ("Make an enquiry"), and two booking requests, one for the
  * group journey ("Book this journey") and one for the same trip as a private
  * journey ("Book as a private journey").
  *

@@ -206,7 +206,15 @@ export type Journey = {
   eyebrow?: string;
   lead: string;
   blurb: string;
+  /** The countries it visits, joined by '&': 'Switzerland & Italy'. */
   country: string;
+  /**
+   * The journey's own country, the one "More to discover in …" names under
+   * its page (the owner's decision of 19 November 2026): 'Croatia' for The
+   * Adriatic Collection, though it sets out from Venice. Falls back to the
+   * first of `country`.
+   */
+  mainCountry?: string;
   region: string;
   /** Where the journey sits on the globe: [longitude, latitude]. */
   coords: [number, number];
@@ -266,7 +274,7 @@ export type Journey = {
   detail?: JourneyDetail;
   /**
    * The working day-by-day for a journey whose full write-up (hotels, pacing,
-   * inclusions) is still being confirmed. Rendered above the inquiry form on
+   * inclusions) is still being confirmed. Rendered above the enquiry form on
    * the in-preparation page.
    */
   itineraryHeadline?: string;
@@ -306,6 +314,7 @@ const allJourneys: Journey[] = [
     blurb:
       'From storybook Swiss villages and the high Alps to the shimmering Italian Lakes, ending in stylish Milan. Fewer places, more time to truly be there.',
     country: 'Switzerland & Italy',
+    mainCountry: 'Switzerland',
     region: 'Lucerne to Milan',
     coords: [8.31, 47.05],
     route: [
@@ -504,6 +513,7 @@ const allJourneys: Journey[] = [
     blurb:
       'Bologna’s culinary traditions, Italy’s supercar heritage, the villages of Lake Garda and a Venetian finale. Join it after Swiss Elegance, or travel it as a journey of its own.',
     country: 'Italy',
+    mainCountry: 'Italy',
     region: 'Bologna to Venice',
     coords: [11.34, 44.49],
     route: [
@@ -648,6 +658,7 @@ const allJourneys: Journey[] = [
     blurb:
       'From Venice’s enchanting canals through Istria’s coastal charm and the sun-kissed Dalmatian Coast to the timeless beauty of Dubrovnik.',
     country: 'Italy & Croatia',
+    mainCountry: 'Croatia',
     region: 'Venice to Dubrovnik',
     coords: [15.97, 43.51],
     route: [

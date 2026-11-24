@@ -43,7 +43,7 @@ export default function WhereWeStayPage() {
           <Reveal as="li" key={h.name} className="wws-item">
             <div className={standsRight(h.pos) ? 'wws-photos mirrored' : 'wws-photos'}>
               <div className="wws-main">
-                <Image src={h.img} alt={h.alt} fill sizes="(max-width: 900px) 100vw, 40vw" />
+                <Image src={h.img} alt={h.alt} fill sizes="(max-width: 559px) 100vw, 40vw" />
               </div>
               {/* The second view is a landscape photograph in an upright frame:
                   it is drawn about twice as wide as the frame, which is the
@@ -56,7 +56,7 @@ export default function WhereWeStayPage() {
                     src={h.back}
                     alt={h.backAlt ?? h.alt}
                     fill
-                    sizes="(max-width: 900px) 72vw, 36vw"
+                    sizes="(max-width: 559px) 72vw, 36vw"
                     style={h.backPos ? { objectPosition: h.backPos } : undefined}
                   />
                 </div>
