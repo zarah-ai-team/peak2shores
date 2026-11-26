@@ -2,18 +2,22 @@
 
 import { useRef, useState } from 'react';
 import Image from 'next/image';
-import { hotels } from '@/lib/data/home';
+import { homeHotels as hotels, staysNote } from '@/lib/data/homeHotels';
 import { Chevron, HomeMedia } from './HomeMedia';
 import { useDragScroll } from '@/components/ui/useDrag';
+import './hotel-flips.css';
 
 /**
- * 08 — Hotels & lodges: five tall cards that turn over on hover or
- * tap to show the one detail that earns the place its booking and what lies
- * near it. Five across on a wide screen, a rail below that: swiped on a touch
- * screen, moved with the arrows beside the hint on a desktop. The section
- * ends on the hint and the arrows, with no button: /where-we-stay is reached
- * from the site menu. A bracketed value is still to come from Marc and is set
- * in the lake blue, in the sans face, so it cannot ship unnoticed.
+ * 08 — Hotels & lodges: tall cards that turn over on hover or tap to show the
+ * one detail that earns the place its booking and what lies near it, under
+ * Marc's note that the final hotels may vary by departure (his review of
+ * 23 Nov 2026). Four since that review (src/lib/data/homeHotels.ts): a row of
+ * four from 1140px, 1280px on a touch screen (hotel-flips.css), a rail below
+ * that, swiped on a touch screen and moved with the arrows beside the hint on
+ * a desktop. The section ends on the hint (and the
+ * arrows), with no button: /where-we-stay is reached from the site menu. A
+ * bracketed value is still to come from Marc and is set in the lake blue, in
+ * the sans face, so it cannot ship unnoticed.
  *
  * Where a mouse turns a card by resting on it (CSS), its click does nothing:
  * a click that also toggled the card left it stuck turned, or turning back
@@ -55,9 +59,10 @@ export function HotelFlips() {
       <div className="head solo">
         <h2 id="hotels-title">Hotels &amp; Lodges</h2>
         <p className="sub-h">Exceptional Places to Stay. Extraordinary Experiences to Remember.</p>
+        <p className="hot-note">{staysNote}</p>
       </div>
 
-      <div className="flips" ref={rail} data-rail>
+      <div className="flips" ref={rail} data-rail data-count={hotels.length}>
         {hotels.map((h, i) => {
           const placeholder = (v: string) => (v.startsWith('[') ? 'ph' : undefined);
           const id = `hotel-${i}`;

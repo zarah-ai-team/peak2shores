@@ -86,7 +86,9 @@ export function HowWeTravel() {
                   {!last && <span className="rule" aria-hidden />}
                   <p className="note">{b.body}</p>
                   {last && (
-                    <Link className="hw-cta" href="/plan">
+                    // The Plan Your Journey form itself, for a departure or a
+                    // private journey alike (Marc's review of 23 Nov).
+                    <Link className="hw-cta" href="/plan#contact">
                       Plan Your Journey
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden>
                         <path d="M5 12h14M13 6l6 6-6 6" />

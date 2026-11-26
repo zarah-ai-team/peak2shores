@@ -18,6 +18,8 @@ import {
   type Destination,
   type Journey,
 } from '@/lib/content';
+import { horizon } from '@/lib/data/copy';
+import { PRIVATE_TRAVEL_HREF } from '@/lib/links';
 import { getMedia, type MediaKey } from '@/lib/media';
 import { RATES_TBA } from '@/lib/journeys';
 
@@ -36,7 +38,9 @@ export const revalidate = 3600;
  * Destinations, in the homepage's language: the countries as one story told
  * by scrolling, starting with the first country on the first screen
  * (PlaceStory: each country's photograph with its name standing in it, then
- * its journeys and places), and a closing invitation over a photograph. Every fact is derived from the catalog —
+ * its journeys and places), the destinations of the journeys in the making
+ * (coming soon, after the Journey Book) and a closing invitation over a
+ * photograph. Every fact is derived from the catalog or the Journey Book —
  * nothing here is invented.
  */
 export default async function DestinationsPage() {
@@ -56,6 +60,52 @@ export default async function DestinationsPage() {
           each photograph slides up with the last, the country's name rising
           from behind its land; then its journeys and the places they stay. */}
       <PlaceStory places={story} lead />
+
+      {/* On the horizon: the destinations of the journeys in the making
+          (Ishika's notes of 24 Nov 2026), each with its Journey Book
+          photograph and marked coming soon. They have no page yet, so
+          nothing here is a link but the last place: the way to hear first. */}
+      <section className="dz-soon" aria-labelledby="dz-soon-title">
+        <div className="dz-soon-head">
+          <div>
+            <p className="lab">On the horizon</p>
+            <h2 id="dz-soon-title">Journeys in the making.</h2>
+          </div>
+          <p>The places our next journeys will take you. Each one is coming soon.</p>
+        </div>
+        <ul className="dz-soon-list">
+          {horizon.map((journey) => (
+            <li key={journey.slug} className="dz-soon-card">
+              <span className="dz-soon-pic">
+                <Image
+                  src={journey.photo.src}
+                  alt={journey.photo.alt}
+                  fill
+                  // An upright 4:5 crop of a landscape photograph is drawn
+                  // by its height, nearly twice the card's width: the file is
+                  // chosen at about 1.4 times the card (four to a row from
+                  // 900px; two below, 4:3 on a tablet, 4:5 on a phone).
+                  sizes="(min-width: 900px) 34vw, (min-width: 641px) 50vw, 64vw"
+                  className="fill photo-grade"
+                  style={journey.photo.pos ? { objectPosition: journey.photo.pos } : undefined}
+                />
+              </span>
+              <span className="dz-soon-k">Coming soon</span>
+              <h3 className="dz-soon-t">{journey.place}</h3>
+              <span className="dz-soon-f">{journey.title}</span>
+            </li>
+          ))}
+          <li className="dz-soon-more">
+            <p className="lab">And more</p>
+            <p className="dz-soon-more-t">More journeys are taking shape.</p>
+            {/* `data-fab-clear`: the floating "Connect with our team" steps
+                aside rather than sit over the link at the foot of the screen. */}
+            <Link className="tlink light" href="/#circle" data-fab-clear>
+              Hear first in The Circle →
+            </Link>
+          </li>
+        </ul>
+      </section>
 
       {/* The closing invitation, over a photograph. Up to 700px wide the band
           is narrower than the photograph's shape, so the photograph is drawn
@@ -82,7 +132,7 @@ export default async function DestinationsPage() {
             dates. Start with a conversation, not a form.
           </p>
           <div className="ctarow">
-            <Link className="btn btn-light" href="/plan#private">
+            <Link className="btn btn-light" href={PRIVATE_TRAVEL_HREF}>
               Bespoke Private Travel
             </Link>
             <Link className="tlink light" href="/plan#contact">

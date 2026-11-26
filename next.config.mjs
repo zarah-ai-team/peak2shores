@@ -32,6 +32,9 @@ const securityHeaders = [
  * that has no page of the same name here. Permanent, so search rankings and
  * existing links carry over. /destinations and /experiences keep their names.
  * Point the three destinations at their own pages once those exist.
+ *
+ * And the journeys renamed since: Italy Uncovered's first address, so that
+ * links already shared still arrive (Ishika's notes of 24 November 2026).
  */
 export const legacyRedirects = [
   { source: '/home', destination: '/' },
@@ -40,6 +43,7 @@ export const legacyRedirects = [
   { source: '/switzerland', destination: '/destinations' },
   { source: '/mexico', destination: '/destinations' },
   { source: '/miami', destination: '/destinations' },
+  { source: '/journeys/the-italian-experience', destination: '/journeys/italy-uncovered' },
 ];
 
 /* Preview and staging copies (Vercel previews, Netlify deploy previews) —

@@ -10,8 +10,18 @@
  * Marriott's own Traveler magazine); nothing in them comes from anywhere else.
  * The photographs come from the hotel's official website or its group's
  * official image servers, saved under public/images/hotels/<id>/ at up to
- * 2400px wide; each carries the credit the hotel gives and the page it was
- * taken from, and each is listed on /credits.
+ * 2400px wide (2560px for the three added on 25 Nov); each carries the credit
+ * the hotel gives and the page it was taken from, and each is listed on
+ * /credits.
+ *
+ * Marc's review of 23 Nov 2026: on Swiss Elegance, Hotel Schweizerhof Luzern
+ * replaces the Mandarin Oriental Palace in Lucerne, The Omnia replaces the
+ * Grand Hotel Zermatterhof in Zermatt, and Villa e Palazzo Aminta replaces
+ * Hotel La Palma in Stresa. Their photographs are from their own websites
+ * (the owner's approval of 25 Nov; the hotels' own approval is pending
+ * through Ishika). Villa e Palazzo Aminta's site offers its photographs at
+ * 1024px (its view of the villa at 1600px), so they are shown at that size
+ * until the hotel sends larger ones.
  *
  * The Hotel Excelsior Dubrovnik is the exception: its own photographs have not
  * been saved here yet (from its page on adriaticluxuryhotels.com, or the
@@ -56,8 +66,6 @@ export type HotelRecord = {
   country: string;
   /** The hotel's official website. */
   url: string;
-  /** Marc has still to confirm the hotel (from the journey data). */
-  unconfirmed?: boolean;
   /** The tabs the hotel's official information supports, each one to three sentences. */
   tabs: { id: HotelTabId; text: string }[];
   /** The first photograph is the hotel's card on the journey page. */
@@ -73,80 +81,79 @@ const shots = (credit: string, source: string, list: Shot[]): HotelPhoto[] =>
 export const hotels: HotelRecord[] = [
   /* -- Swiss Elegance, Italian Lakes & Milanese Flair --------------------------- */
   {
-    id: 'mandarin-oriental-luzern',
-    name: 'Mandarin Oriental Palace, Luzern',
+    id: 'schweizerhof-luzern',
+    name: 'Hotel Schweizerhof Luzern',
     place: 'Lucerne',
     country: 'Switzerland',
-    url: 'https://www.mandarinoriental.com/en/luzern/palace',
+    url: 'https://www.schweizerhof-luzern.ch/en',
     tabs: [
       {
         id: 'hotel',
-        text: 'A Belle Époque palace on the shore of Lake Lucerne, its historic architecture paired with contemporary interiors. Afternoon tea is served in the Belle Époque veranda, which looks across the lake to the mountains.',
+        text: 'A five-star hotel on the shore of Lake Lucerne, opened in 1845 and run by the Hauser family for more than 180 years. Mark Twain, Leo Tolstoy and Richard Wagner all stayed here, and the hotel is host and partner to many of Lucerne’s festivals.',
       },
       {
         id: 'rooms',
-        text: 'Rooms and suites in calm Swiss and Mediterranean colors, the suites with bespoke artworks of their own. Many lake-side rooms have a balcony or a terrace, and the duplex rooftop terrace suites look out over the water to the peaks.',
+        text: '101 rooms and suites of 25 to 65 m², each telling the story of someone who stayed here. The Lucerne Luxury Suites look straight out over the lake to the mountains, some from a balcony.',
       },
       {
         id: 'dining',
-        text: 'Four restaurants and the Palace bar, led by executive chef Gilad Peled. Colonnade (modern French) and Minamo (an eight-seat Japanese omakase) both hold a Michelin star, and Mediterranean cooking is served through the day, including on a terrace by the lake.',
+        text: 'Brasserie VICO brings French brasserie classics and Swiss and international dishes to the hotel’s historic rooms, and the Schweizerhof Bar has piano music every day and a sun terrace in summer. VILLA Schweizerhof, the hotel’s restaurant in a lakeside park, holds 13 Gault&Millau points.',
       },
       {
         id: 'spa',
-        text: 'Tailored face and body treatments at the hotel’s Ambassade Biologique Recherche, with a gym, a sauna and a steam bath.',
+        text: 'A wellness area on the fifth floor with a Finnish sauna, a bio sauna and experience showers looking out over Lake Lucerne, massages by appointment and a Technogym fitness room.',
       },
       {
         id: 'nearby',
-        text: 'The hotel stands on Haldenstrasse by the lake, five minutes by taxi from Lucerne station; Zurich is about an hour away by direct train.',
+        text: 'The hotel stands on the Schweizerhofquai: the car-free Old Town, the Chapel Bridge, the KKL and the lake steamers toward Mount Rigi and Mount Pilatus are all a walk away.',
       },
     ],
-    photos: shots(
-      '© Mandarin Oriental Hotel Group',
-      'https://www.mandarinoriental.com/en/luzern/palace/gallery',
-      [
-        {
-          src: '/images/hotels/mandarin-oriental-luzern/01-lakeside-palace.jpg',
-          alt: 'Mandarin Oriental Palace, Luzern, its domed corner tower above the lakeside promenade, Lake Lucerne and the mountains beyond',
-          width: 1985,
-          height: 1486,
-          tab: 'hotel',
-        },
-        {
-          src: '/images/hotels/mandarin-oriental-luzern/02-lake-view-junior-suite.jpg',
-          alt: 'A Lake View Junior Suite: a wide bed, a parquet floor and doors open to a balcony over the lake',
-          width: 2400,
-          height: 1601,
-          tab: 'rooms',
-        },
-        {
-          src: '/images/hotels/mandarin-oriental-luzern/03-lake-view-suite-terrace.jpg',
-          alt: 'A suite terrace laid for dinner at dusk, Lake Lucerne and the mountains beyond',
-          width: 2400,
-          height: 1601,
-        },
-        {
-          src: '/images/hotels/mandarin-oriental-luzern/04-colonnade-restaurant.jpg',
-          alt: 'The Colonnade restaurant: marble columns, a checkered floor and tables set beneath chandeliers',
-          width: 2400,
-          height: 1601,
-          tab: 'dining',
-        },
-        {
-          src: '/images/hotels/mandarin-oriental-luzern/05-spa-treatment-room.jpg',
-          alt: 'A treatment room for two in the spa, its massage beds in soft daylight',
-          width: 2400,
-          height: 1601,
-          tab: 'spa',
-        },
-        {
-          src: '/images/hotels/mandarin-oriental-luzern/06-lucerne-at-dusk.jpg',
-          alt: 'Lucerne’s lakefront lit up at dusk, swans on the still water',
-          width: 2400,
-          height: 1601,
-          tab: 'nearby',
-        },
-      ],
-    ),
+    photos: shots('© Hotel Schweizerhof Luzern', 'https://www.schweizerhof-luzern.ch/en', [
+      {
+        src: '/images/hotels/schweizerhof-luzern/01-hotel-at-blue-hour.jpg',
+        alt: 'Hotel Schweizerhof Luzern lit up at dusk on the Schweizerhofquai, its facade and the Swiss flag reflected in Lake Lucerne',
+        width: 2560,
+        height: 1702,
+        tab: 'hotel',
+      },
+      {
+        src: '/images/hotels/schweizerhof-luzern/02-lucerne-luxury-suite.jpg',
+        alt: 'A Lucerne Luxury Suite: a chandelier, a chaise longue and balcony doors open to the lake',
+        width: 2560,
+        height: 1706,
+        tab: 'rooms',
+        source: 'https://www.schweizerhof-luzern.ch/en/rooms/lucerne-luxury-suite',
+      },
+      {
+        src: '/images/hotels/schweizerhof-luzern/03-lifestyle-junior-suite.jpg',
+        alt: 'A Lifestyle Junior Suite, a line about music written on the wall above the bed, an arched window onto the lake',
+        width: 2560,
+        height: 1706,
+        source: 'https://www.schweizerhof-luzern.ch/en/rooms/lifestyle-junior-suite',
+      },
+      {
+        src: '/images/hotels/schweizerhof-luzern/04-brasserie-vico.jpg',
+        alt: 'Brasserie VICO beneath stucco ceilings and chandeliers, velvet banquettes along the laid tables',
+        width: 2560,
+        height: 1707,
+        tab: 'dining',
+        source: 'https://www.schweizerhof-luzern.ch/en/restaurants-bar',
+      },
+      {
+        src: '/images/hotels/schweizerhof-luzern/05-staircase.jpg',
+        alt: 'The hotel’s historic staircase from above, a red runner winding down beside a wrought-iron balustrade',
+        width: 2560,
+        height: 1612,
+      },
+      {
+        src: '/images/hotels/schweizerhof-luzern/06-chapel-bridge.jpg',
+        alt: 'Lucerne’s Chapel Bridge and Water Tower on the Reuss at dusk, the old town behind',
+        width: 2560,
+        height: 1612,
+        tab: 'nearby',
+        source: 'https://www.schweizerhof-luzern.ch/en/luzern',
+      },
+    ]),
   },
   {
     id: 'bergwelt-grindelwald',
@@ -300,159 +307,159 @@ export const hotels: HotelRecord[] = [
     ),
   },
   {
-    id: 'zermatterhof',
-    name: 'Grand Hotel Zermatterhof',
+    id: 'the-omnia-zermatt',
+    name: 'The Omnia',
     place: 'Zermatt',
     country: 'Switzerland',
-    // The English version of the hotel's site; its plain address opens in German.
-    url: 'https://www.zermatterhof.ch/?lang=en',
-    unconfirmed: true,
+    url: 'https://the-omnia.com/en',
     tabs: [
       {
         id: 'hotel',
-        text: 'A historic grand hotel in the heart of car-free Zermatt, built as a community project by the village’s own families and run by the local burgher community since 1920.',
+        text: 'A mountain lodge perched on a rock in the center of car-free Zermatt, where the service is personal and informal. It has been named Switzerland’s Leading Boutique Hotel ten years running.',
       },
       {
         id: 'rooms',
-        text: 'Rooms and suites in a classic alpine style, the suites paneled in Swiss pine, many with a view of the Matterhorn and some with a balcony or a fireplace. Each room has its own locker in the ski room.',
+        text: 'Light-filled rooms and suites, each with a balcony facing the village, the Matterhorn or the rock, furnished with 20th-century design classics and pieces made in the Valais. Some have an open fireplace, a cedar tub, a bay-window bath or a private sauna.',
       },
       {
         id: 'dining',
-        text: 'Alpine Gourmet Prato Borni, under chef Stefan Lünse, pairs Valais produce with international technique. Lusi is a French-style brasserie, saycheese! serves fondue and raclette, and the Stars Bar has live piano music in the winter season.',
+        text: 'Dinner in the restaurant feels like an evening at a friend’s home, with seasonal Alpine cooking by chef Markian Barmettler (three forks from Falstaff). The sun terrace has the Matterhorn for a neighbor, and the lounge has art books and an open fire.',
       },
       {
         id: 'spa',
-        text: 'The Vita Borni spa has a 15-meter indoor pool, two whirlpools with Matterhorn views, saunas, a steam bath, experience showers and an ice fountain.',
+        text: 'A spa kept for hotel guests: an indoor-outdoor pool, saunas, floral and herbal steam rooms and an outdoor whirlpool facing the village and the Matterhorn, with treatments using Aesop and Farfalla products.',
       },
       {
         id: 'nearby',
-        text: 'Zermatt is free of cars, and the Gornergrat railway and the cable cars toward the Matterhorn leave from the village.',
+        text: 'The lodge stands on its rock high above Zermatt’s rooftops, and its own taxi brings guests up from the railway station, the taxi terminal or the heliport.',
       },
     ],
-    photos: shots('© Grand Hotel Zermatterhof', 'https://www.zermatterhof.ch/', [
+    photos: shots('© THE OMNIA AG', 'https://the-omnia.com/en/gallery', [
       {
-        src: '/images/hotels/zermatterhof/01-carriage-and-hotel.jpg',
-        alt: 'A horse-drawn carriage in front of the Grand Hotel Zermatterhof, the village church beside it',
-        width: 1920,
-        height: 1372,
+        src: '/images/hotels/the-omnia-zermatt/01-lodge-above-zermatt.jpg',
+        alt: 'The Omnia on its rock above the old timber chalets of Zermatt, a sheer cliff and larch forest behind',
+        width: 2560,
+        height: 1807,
         tab: 'hotel',
       },
       {
-        src: '/images/hotels/zermatterhof/02-guest-room.jpg',
-        alt: 'A guest room in warm tones, a double bed and a tall window onto a balcony',
-        width: 1920,
-        height: 1299,
+        src: '/images/hotels/the-omnia-zermatt/02-whirlpool-and-matterhorn.jpg',
+        alt: 'A guest in the lodge’s outdoor whirlpool, looking across Zermatt to the Matterhorn',
+        width: 2560,
+        height: 1707,
+        source: 'https://the-omnia.com/en/relax',
+      },
+      {
+        src: '/images/hotels/the-omnia-zermatt/03-suite-living-room.jpg',
+        alt: 'A suite’s living room, a curved sofa in the sunlight and tall windows onto the snowy roofs of Zermatt',
+        width: 2560,
+        height: 1715,
         tab: 'rooms',
-        source: 'https://www.zermatterhof.ch/sleep/',
       },
       {
-        src: '/images/hotels/zermatterhof/03-matterhorn-window.jpg',
-        alt: 'The Matterhorn seen through the window of a guest room',
-        width: 1920,
-        height: 1276,
-        source: 'https://www.zermatterhof.ch/sleep/',
-      },
-      {
-        src: '/images/hotels/zermatterhof/04-prato-borni.jpg',
-        alt: 'A round table laid with white linen in the Prato Borni restaurant, arched windows on the garden',
-        width: 1920,
-        height: 1295,
+        src: '/images/hotels/the-omnia-zermatt/04-restaurant.jpg',
+        alt: 'The restaurant’s wooden tables beneath a timber ceiling, a fire burning in a stone wall',
+        width: 2560,
+        height: 1707,
         tab: 'dining',
-        source: 'https://www.zermatterhof.ch/restaurants-and-bars/',
+        source: 'https://the-omnia.com/en/dine',
       },
       {
-        src: '/images/hotels/zermatterhof/05-spa-pool.jpg',
-        alt: 'The spa’s indoor pool, loungers along a wall of warm stone and timber',
-        width: 2400,
-        height: 1600,
+        src: '/images/hotels/the-omnia-zermatt/05-indoor-pool.jpg',
+        alt: 'The indoor pool lit turquoise at night, glass walls looking out to the lights of the village',
+        width: 2560,
+        height: 1707,
         tab: 'spa',
-        source: 'https://www.zermatterhof.ch/spa/',
+        source: 'https://the-omnia.com/en/relax',
       },
       {
-        src: '/images/hotels/zermatterhof/06-matterhorn.jpg',
-        alt: 'The Matterhorn under a blue sky, a green alpine meadow below',
-        width: 1920,
-        height: 1080,
+        src: '/images/hotels/the-omnia-zermatt/06-zermatt-at-night.jpg',
+        alt: 'Zermatt at night under falling snow, its lit church and snowy chalet roofs seen from above',
+        width: 2560,
+        height: 1715,
         tab: 'nearby',
       },
     ]),
   },
   {
-    id: 'la-palma-stresa',
-    name: 'Hotel La Palma',
+    id: 'villa-aminta-stresa',
+    name: 'Villa e Palazzo Aminta',
     place: 'Stresa',
     country: 'Italy',
-    url: 'https://www.hlapalma.it/en/',
+    url: 'https://www.villa-aminta.it/',
     tabs: [
       {
         id: 'hotel',
-        text: 'A contemporary, family-run hotel on the shore of Lake Maggiore, a few minutes’ walk from the center of Stresa. A flower garden lies between the hotel and the water.',
+        text: 'A five-star member of The Leading Hotels of the World on the shore of Lake Maggiore, looking across the Gulf of the Borromean Islands. Beatrice, Roberto and Daniela Zanetta welcome guests to the villa and its park of palms, azaleas, camellias and rhododendrons.',
       },
       {
         id: 'rooms',
-        text: 'All rooms and suites open through French windows onto a balcony or a terrace. The Junior Suites, the hotel’s signature rooms, look over the lake toward the Borromean Islands.',
+        text: 'Rooms and suites look out over the centuries-old park or, from a balcony or a terrace, over the lake to the Borromean Islands. The Liz Taylor Suites remember the actress, a guest of the villa in the 1960s.',
       },
       {
         id: 'dining',
-        text: 'The restaurant looks onto the garden and the lake and cooks seasonal dishes with Piedmontese roots. From April to October the rooftop Sky Bar serves aperitifs and cocktails with a view across the lake.',
+        text: 'Two restaurants cook the regional dishes of Lake Maggiore: I Mori, an Italian bistro of tradition and invention, and the gourmet Le Isole, for breakfast and dinner, with a terrace over the lake.',
       },
       {
         id: 'spa',
-        text: 'A lakefront infinity pool of about 22 meters with whirlpools, and a rooftop Sky Pool joined to the spa, which has a jacuzzi, a sauna, a salt room and treatments. The gym is equipped by Technogym.',
+        text: 'A pool above the lake with a sun terrace facing the Borromean Islands, and the Grotta Aminta spa, with a steam bath, sensory showers, a whirlpool, massages and beauty treatments.',
       },
       {
         id: 'nearby',
-        text: 'Boats from Stresa reach the three Borromean Islands: Isola Bella, Isola dei Pescatori and Isola Madre. The Mottarone and Orta San Giulio are close by.',
+        text: 'Private boat trips to the Borromean Islands leave from the hotel’s own pier, and the concierge books Palazzo Borromeo on Isola Bella and Isola Madre and the gardens of Villa Taranto. Mount Mottarone and the Val Grande National Park are close by for walks.',
       },
     ],
-    photos: shots('© Hotel La Palma', 'https://www.hlapalma.it/en/', [
-      {
-        src: '/images/hotels/la-palma-stresa/01-garden-and-hotel.jpg',
-        alt: 'The garden of Hotel La Palma: lawn, flower beds and armchairs under a spreading tree',
-        width: 1600,
-        height: 1067,
-        tab: 'hotel',
-      },
-      {
-        src: '/images/hotels/la-palma-stresa/02-lake-view-room.jpg',
-        alt: 'A guest room opening onto a balcony over Lake Maggiore',
-        width: 1400,
-        height: 934,
-        tab: 'rooms',
-        source: 'https://www.hlapalma.it/en/rooms/',
-      },
-      {
-        src: '/images/hotels/la-palma-stresa/03-restaurant.jpg',
-        alt: 'The restaurant’s glass wall onto the garden, tables laid for lunch',
-        width: 2000,
-        height: 1333,
-        tab: 'dining',
-        source: 'https://www.hlapalma.it/en/concept/',
-      },
-      {
-        src: '/images/hotels/la-palma-stresa/04-sky-bar.jpg',
-        alt: 'The rooftop Sky Bar terrace, sofas and low tables above Lake Maggiore',
-        width: 2109,
-        height: 1406,
-        tab: 'nearby',
-        source: 'https://www.hlapalma.it/en/sky-bar/',
-      },
-      {
-        src: '/images/hotels/la-palma-stresa/05-lakeside-pool.jpg',
-        alt: 'An infinity pool at the water’s edge, a row of parasols along Lake Maggiore',
-        width: 2000,
-        height: 1333,
-        tab: 'spa',
-        source: 'https://www.hlapalma.it/en/concept/',
-      },
-      {
-        src: '/images/hotels/la-palma-stresa/06-sky-pool.jpg',
-        alt: 'The rooftop pool and sun loungers looking over the lake and the hills',
-        width: 2000,
-        height: 1334,
-        source: 'https://www.hlapalma.it/en/concept/',
-      },
-    ]),
+    photos: shots(
+      '© Villa e Palazzo Aminta',
+      'https://www.villa-aminta.it/en/gallery-lake-maggiore-luxury-resorts',
+      [
+        {
+          src: '/images/hotels/villa-aminta-stresa/01-villa-and-isola-bella.jpg',
+          alt: 'Villa e Palazzo Aminta above Lake Maggiore, Isola Bella and the mountains across the water',
+          width: 1600,
+          height: 824,
+          tab: 'hotel',
+          source: 'https://www.villa-aminta.it/',
+        },
+        {
+          src: '/images/hotels/villa-aminta-stresa/02-junior-suite-lake-view.jpg',
+          alt: 'A Junior Suite with painted walls, a balcony door open to the lake and the islands',
+          width: 1024,
+          height: 768,
+          tab: 'rooms',
+          source:
+            'https://www.villa-aminta.it/en/luxury-hotel-rooms-lake-maggiore-view/junior-suite-lake-view',
+        },
+        {
+          src: '/images/hotels/villa-aminta-stresa/03-veranda.jpg',
+          alt: 'A salon beneath a crystal chandelier, pink velvet sofas and floral curtains framing the lake',
+          width: 1023,
+          height: 768,
+        },
+        {
+          src: '/images/hotels/villa-aminta-stresa/04-i-mori-restaurant.jpg',
+          alt: 'The I Mori restaurant, its tables laid inside a wrought-iron glass veranda above the lake',
+          width: 1024,
+          height: 682,
+          tab: 'dining',
+        },
+        {
+          src: '/images/hotels/villa-aminta-stresa/05-pool.jpg',
+          alt: 'The pool among palms and flowering terraces below the villa’s balconies',
+          width: 1024,
+          height: 768,
+          tab: 'spa',
+        },
+        {
+          src: '/images/hotels/villa-aminta-stresa/06-isola-bella-at-night.jpg',
+          alt: 'Isola Bella and the Borromeo palace lit up at dusk on Lake Maggiore',
+          width: 1024,
+          height: 768,
+          tab: 'nearby',
+          source: 'https://www.villa-aminta.it/',
+        },
+      ],
+    ),
   },
   {
     id: 'palazzo-cordusio-milan',

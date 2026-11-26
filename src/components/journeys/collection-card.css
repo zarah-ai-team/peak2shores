@@ -66,6 +66,22 @@
   aspect-ratio: 5 / 4;
   overflow: hidden;
 }
+/* Each card fits within one screen (the owner's decision of 25 November
+   2026): the photograph gives way to the words, down to 9rem, so that the
+   card is no taller than the room its page gives it (`--pc-room`, set on the
+   list: the screen less the pinned menu bar and a breath; without it there is
+   no limit). The words' height comes from CollectionCard (`--pc-words`, the
+   tallest of the list), so the photographs of a row stay one height. Until it
+   has been measured the photograph is only held to the room itself. The room
+   is a registered length, so CollectionCard reads it in pixels. */
+@property --pc-room {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 10000px;
+}
+.pc .pcm {
+  max-height: max(9rem, calc(var(--pc-room) - var(--pc-words, 0px)));
+}
 /* On a touch screen a sideways swipe across the photographs changes them
    (useSwipe marks the frame); scrolling up and down, and zooming, stay the
    page's. */
@@ -105,8 +121,11 @@
     var(--tint) 100%
   );
 }
-/* The region and the booking state, each on one line: where the two do not
-   fit side by side (a narrow phone), the state takes the line below. */
+/* The region and the booking state, each on one line: side by side on a
+   laptop. Below 1024px, where the two would share a line on one card and not
+   on the next, the state always takes the line below the region, so it
+   stands in the same place on every card (Marc's review of 23 November 2026:
+   "consistent ... positioning"). */
 .pc .pctop {
   position: absolute;
   z-index: 3;
@@ -118,6 +137,12 @@
   justify-content: space-between;
   align-items: center;
   gap: 0.5rem;
+}
+@media (max-width: 1023.98px) {
+  .pc .pctop {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 .pc .pctop span {
   display: inline-flex;
@@ -144,6 +169,16 @@
   height: 0.4375rem;
   border-radius: 50%;
   background: var(--pc-sky);
+}
+/* The dot as AvailabilityTag draws it on the journey pages: ringed once the
+   departure is guaranteed, muted once sold out. */
+.pc .pctop .st[data-status='guaranteed'] i {
+  box-shadow:
+    0 0 0 2px rgb(8 20 28 / 0.62),
+    0 0 0 3.5px var(--pc-sky);
+}
+.pc .pctop .st[data-status='sold-out'] i {
+  background: #9fb1bc;
 }
 .pc .pcb {
   position: relative;
@@ -227,14 +262,20 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-/* An upright phone shows one card to a row, so there is no row to keep
-   even: the line is read whole. */
-@media (max-width: 539px) {
-  .pc .d {
-    display: block;
-    -webkit-line-clamp: unset;
-    overflow: visible;
-  }
+/* Three lines on an upright phone too, so the card keeps within one screen
+   with its photograph; the journey's page has the rest. Where even the
+   smallest photograph would leave a card taller than the screen (a small
+   phone: CollectionCard marks the list `data-tight`), the line gives way. */
+[data-tight] .pc .d {
+  display: none;
+}
+/* A small phone, upright (320x568) or held sideways: the tagline gives way
+   too, and the itinerary keeps a step of its own below the name. */
+[data-tight] .pc .tl {
+  display: none;
+}
+[data-tight] .pc .pit {
+  margin-top: 0.75rem;
 }
 /* The itinerary (chat notes of 9 November 2026, after A&K's cards): a small
    label, then the places in order. Never clamped: every stop is shown. */
@@ -322,6 +363,77 @@
   .pc.soon .pbtn:hover {
     background: #fff;
     color: var(--pc-ink);
+  }
+}
+/* A phone held sideways (a short screen): there a photograph over the words
+   leaves a card two screens tall, so the card is set out side by side, the
+   photograph at the left and the words at the right, and the whole card is on
+   the screen at once. The lines under the tagline give way (the journey's
+   page has them), the dots sit over the photograph's foot and the region and
+   the state over its top, and the price stands beside the button. */
+@media (orientation: landscape) and (max-height: 500px) and (max-width: 1100px) {
+  .pc {
+    flex-direction: row;
+  }
+  .pc .pcm {
+    flex: 0 0 44%;
+    aspect-ratio: auto;
+    max-height: none;
+  }
+  /* The foot of the photograph darkens a little under the dots, and its
+     right edge settles into the card's colour. */
+  .pc .pcg {
+    background:
+      linear-gradient(180deg, transparent 70%, rgb(0 0 0 / 0.28) 100%),
+      linear-gradient(
+        90deg,
+        rgb(0 0 0 / 0.16) 0%,
+        transparent 30%,
+        transparent 72%,
+        var(--tint) 100%
+      );
+  }
+  .pc .pctop {
+    left: 1rem;
+    right: calc(56% + 1rem);
+    top: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .pc .pcb,
+  .pc.compact .pcb {
+    position: static;
+    min-width: 0;
+    margin-top: 0;
+    padding: 1.125rem 1.375rem 1.25rem;
+  }
+  .pc .dots {
+    position: absolute;
+    z-index: 3;
+    left: 0;
+    bottom: 0;
+    width: 44%;
+    margin: 0;
+  }
+  .pc .d {
+    display: none;
+  }
+  .pc .pfoot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 0.875rem;
+    border-top: 1px solid rgb(255 255 255 / 0.18);
+  }
+  .pc .pprice {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+  .pc .pbtn {
+    flex: none;
+    padding-inline: 1.25rem;
   }
 }
 /* Keyboard focus on the dark photo cards: a white ring (about 9:1), not ink. */

@@ -54,9 +54,9 @@
   line-height: 1.4;
   max-width: 36ch;
   margin: 0 0 2rem;
-  /* The water-blue (17 Nov review): the brighter cyan fell to 3.4:1 over
-     the Seville clip. */
-  color: var(--sky);
+  /* White, like the headline (Marc's review of 23 Nov: "still blue; we
+     asked for white"). */
+  color: #fff;
   text-shadow: 0 1px 16px rgb(8 20 28 / 0.55);
 }
 .hc .hc-hero .copy.left .ctas {
@@ -675,18 +675,21 @@
   }
 }
 
-/* -- 02 Philosophy, as a slim band (8 Nov) ---------------------------------
+/* -- 02 Philosophy, as a band (8 Nov) ---------------------------------------
       No longer a full screen: a quiet band, the statement in two or three
       wide lines between the blue rules, on a phone as on a desktop. Room
       above and below (9 Nov: at a quarter of the screen it read cramped
-      between the hero and The Art of Travel): the page's own section space,
-      which makes the band about a third of the screen. The type keeps its
-      8 Nov size; the full-screen version read too big. */
+      between the hero and The Art of Travel), and more of it since Marc's
+      review of 23 Nov ("a little more space on top and below; not as a full
+      section but somewhere in between"): 140px above and below on a 1440px
+      laptop instead of 80px, so the band is about half the screen rather
+      than a third. The type keeps its 8 Nov size; the full-screen version
+      read too big. */
 .hc .hc-intro {
   /* Sized by its words, never clipped; at least a fifth of the screen. */
   min-height: 20svh;
   gap: clamp(1rem, 1.38vw, 1.5rem);
-  padding: clamp(4rem, 5.56vw, 6.5rem) var(--gut);
+  padding: clamp(5.5rem, 9.72vw, 10rem) var(--gut);
 }
 .hc .hc-intro p {
   /* Three lines at every desktop width (17 Nov). The measure is in em, so it
@@ -700,7 +703,7 @@
 }
 @media (max-width: 600px) {
   .hc .hc-intro {
-    padding: 3.5rem 1.25rem;
+    padding: 5.25rem 1.25rem;
     gap: 1rem;
   }
   .hc .hc-intro p {

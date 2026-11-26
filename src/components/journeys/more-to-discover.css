@@ -7,6 +7,9 @@
 .mtd {
   --mtd-gut: clamp(1.25rem, 3.39vw, 4rem);
   --mtd-gap: clamp(1.25rem, 1.94vw, 1.75rem);
+  /* Each card fits within one screen: the room under the pinned menu bar
+     (its 3.5rem tabs and 1px rule), less a breath (collection-card.css). */
+  --pc-room: calc(100svh - 5rem - 1px);
   box-sizing: border-box;
   padding: clamp(4.5rem, 7.2vw, 7rem) var(--mtd-gut) clamp(5rem, 7.8vw, 8rem);
   background: var(--color-ivory);
@@ -66,14 +69,19 @@
     grid-auto-columns: 82%;
   }
 }
-/* A phone held sideways: one card and the edge of the next would make each
-   card two screens tall, so two cards show with the edge of a third, their
-   photographs in a wider cut. */
-@media (max-width: 1100px) and (max-height: 500px) {
-  .mtd-row {
-    grid-auto-columns: calc((100% - var(--mtd-gap)) / 2.2);
+/* Under 1024px (a short screen aside) the journey's booking bar holds the
+   foot of the screen while the row is read (journey-editorial.css), so each
+   card keeps clear of it as well as of the menu bar at the top. */
+@media (max-width: 1023.98px) and (min-height: 500.02px) {
+  .mtd {
+    --pc-room: calc(100svh - 9.5rem - 1px);
   }
-  .mtd .pc .pcm {
-    aspect-ratio: 16 / 9;
+}
+/* A phone held sideways: each card is set out side by side, its photograph
+   beside its words (collection-card.css), so one card shows with the edge of
+   the next and the whole card is on the screen at once. */
+@media (max-width: 1100px) and (orientation: landscape) and (max-height: 500px) {
+  .mtd-row {
+    grid-auto-columns: 82%;
   }
 }

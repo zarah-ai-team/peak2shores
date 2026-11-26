@@ -9,7 +9,7 @@ export type CollageItem = {
 };
 
 /**
- * The five experiences as one collage of photographs, laid like prints on a
+ * The four experiences as one collage of photographs, laid like prints on a
  * travel table: one tall print leading, the others stepping around it at
  * different sizes and heights, each with its name and line. Nothing
  * moves but a slow lift under the pointer, and each print rises into place
@@ -31,16 +31,19 @@ export function ExperienceCollage({ items }: { items: CollageItem[] }) {
             <div className="pic">
               {x.img && (
                 // The leading print is about two-fifths of the measure, the
-                // others a quarter to a third; below 1100px they run half the
-                // width, or the full width on a phone.
+                // others a quarter to a third; below 1100px they run two by
+                // two at half the width, upright (4:5), so a landscape
+                // photograph is drawn by the print's height, nearly twice
+                // its width: the file is chosen at 60vw. The full width on
+                // a phone.
                 <Image
                   src={x.img}
                   alt={x.alt}
                   fill
                   sizes={
                     i === 0
-                      ? '(min-width: 1100px) 36rem, 100vw'
-                      : '(min-width: 1100px) 28rem, (min-width: 561px) 50vw, 100vw'
+                      ? '(min-width: 1100px) 36rem, (min-width: 561px) 60vw, 100vw'
+                      : '(min-width: 1100px) 28rem, (min-width: 561px) 60vw, 100vw'
                   }
                   className="fill photo-grade"
                 />

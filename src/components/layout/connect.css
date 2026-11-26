@@ -180,11 +180,13 @@
     padding: 0 1rem 0 0.875rem;
   }
 }
-/* A narrow phone (360px wide and under) or a short screen (a phone held
-   sideways): the button is its round 44px icon alone, so it covers as little
-   of the page as it can. Its words stay as its name for a screen reader, and
-   the panel opens above it as before (the owner's choice A, 19 Nov 2026). */
-@media (max-width: 360px), (max-height: 500px) {
+/* A phone, upright (600px wide and under) or held sideways (a short screen):
+   the button is its round 44px icon alone, so it covers as little of the
+   page as it can (the owner's choice A of 19 November 2026 for the narrowest
+   phones, on every phone since Ishika's notes of 24 November 2026: the long
+   pill sat over text and buttons all the way down a page). Its words stay as
+   its name for a screen reader, and the panel opens above it as before. */
+@media (max-width: 600px), (max-height: 500px) {
   .hc-fab .fab-btn {
     justify-content: center;
     width: 44px;

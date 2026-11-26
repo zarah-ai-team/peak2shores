@@ -570,7 +570,7 @@ export function RouteLive({
                             src={x.img}
                             alt={x.alt}
                             fill
-                            sizes="(max-width: 599.98px) and (orientation: portrait) 80vw, (max-width: 1279.98px) 40vw, 15rem"
+                            sizes="(max-width: 599.98px) and (orientation: portrait) 110vw, (max-width: 1279.98px) 56vw, 21rem"
                           />
                         </span>
                       )}

@@ -14,7 +14,11 @@ export function ExpertPanel() {
       ? { label: 'Call', value: site.phone, href: `tel:${site.phoneHref}` }
       : null,
     wa ? { label: 'WhatsApp', value: 'Message us', href: wa } : null,
-    { label: 'Book a call', value: 'Choose a time', href: site.bookingUrl ?? '/plan#contact' },
+    // A time to choose only once a scheduling link is set; until then the
+    // form, named for what it is.
+    site.bookingUrl
+      ? { label: 'Book a call', value: 'Choose a time', href: site.bookingUrl }
+      : { label: 'Write to us', value: 'Send us your dates', href: '/plan#contact' },
     { label: 'Email', value: site.email, href: `mailto:${site.email}` },
   ].filter((r): r is { label: string; value: string; href: string } => Boolean(r));
 

@@ -4,6 +4,7 @@ import { useMemo, useRef, useState } from 'react';
 import * as m from 'motion/react-m';
 import { ButtonLink } from '@/components/ui/Button';
 import { filterGroups, type FilterKey, type JourneySummary } from '@/lib/journeys';
+import { PRIVATE_TRAVEL_HREF } from '@/lib/links';
 import { ease } from '@/lib/motion';
 import { JourneyListing } from './JourneyCard';
 import { JourneyGlobe } from './JourneyGlobe';
@@ -193,7 +194,7 @@ export function JourneyExplorer({ journeys }: { journeys: JourneySummary[] }) {
                   >
                     Clear filters
                   </button>
-                  <ButtonLink href="/plan#private" variant="rule" arrow>
+                  <ButtonLink href={PRIVATE_TRAVEL_HREF} variant="rule" arrow>
                     Ask about private travel
                   </ButtonLink>
                 </div>

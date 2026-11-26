@@ -417,8 +417,11 @@
   cursor: pointer;
 }
 
-/* The grid of product cards. */
+/* The grid of product cards. Each card fits within one screen: the room
+   under the pinned menu bar (its 3.5rem tabs and 1px rule; the header steps
+   aside on a scroll down), less a breath (collection-card.css). */
 .jx .grid {
+  --pc-room: calc(100svh - 5rem - 1px);
   list-style: none;
   margin: 0;
   padding: 0;
@@ -514,11 +517,12 @@
     margin-top: 0.5rem;
   }
 }
-/* A phone held sideways: two cards to a row, so a card's photograph is not
-   taller than the screen. */
-@media (min-width: 540px) and (max-width: 760px) and (orientation: landscape) {
+/* A phone held sideways (a short screen): one card to a row, each set out
+   side by side, its photograph beside its words (collection-card.css), so
+   the whole card is on the screen at once. */
+@media (orientation: landscape) and (max-height: 500px) and (max-width: 1100px) {
   .jx .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 @media (prefers-reduced-motion: reduce) {

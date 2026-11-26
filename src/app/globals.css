@@ -26,7 +26,7 @@
   --color-ivory: #fafcfe;
   --color-panel: #ecf2f7;
   /* A soft lake blue (it was a warm stone; the name stays so every use follows):
-     founder blocks, image grounds, the private-travel and enquiry bands. */
+     founder blocks, image grounds, the private-travel and inquiry bands. */
   --color-stone: #dfecf5;
   --color-stone-text: #3d5a6c; /* Caps labels on stone — 6.1:1 */
 
@@ -213,12 +213,27 @@
   }
   /* A page with an in-page menu (a journey's page, the Journeys page) pins
      its tab bar under the header, and anchors land flush under both: the
-     header's height, then the bar's 3.5rem tabs and its 1px rule. The first
-     section after the bar lands with the bar just pinned, and no strip of the
+     header's height, then the bar's 3.5rem tabs and its 1px rule. The room
+     is the header's full height even while the header is away (below, after
+     the header), so a control reached with Tab, or with Shift+Tab, which can
+     bring the header back, is never left under the header and the bar. An
+     in-page link lands for the state the header will be in once it has moved
+     the page (JourneyTabs sets the landing for each click, under the bar
+     alone when the header steps aside), and an arrival from another page is
+     brought flush under the bar once the page is still. The first section
+     after the bar lands with the bar just pinned, and no strip of the
      section before shows above any of them; each section's own top padding
      keeps its words clear of the bar. */
   html:has([data-journey-tabs]) {
-    scroll-padding-top: calc(var(--nav-h-compact) + 3.5rem + 1px);
+    scroll-padding-top: calc(var(--nav-h) + 3.5rem + 1px);
+  }
+  /* The bar's own controls (its tabs; the booking pill on a journey's page)
+     are not anchor targets but sit in the pinned bar, inside that room: a Tab
+     onto one must not move the page, as the room above would have it (each
+     Tab along the bar moved the page up 330px; the independent check of 26
+     Nov 2026). */
+  [data-journey-tabs] :is(a, button) {
+    scroll-margin-top: calc(-1 * (var(--nav-h) + 3.5rem + 1px));
   }
 
   body {
@@ -966,9 +981,9 @@
     color 0.45s var(--ease-editorial),
     border-color 0.45s var(--ease-editorial);
 }
-.site-header[data-compact] {
-  height: var(--nav-h-compact);
-}
+/* (A moved page, `data-compact`, keeps the bar's height: `--nav-h-compact`
+   is the same value, and reads as nothing while the header is away on a page
+   with an in-page menu, below, where the bar must not fold.) */
 /* Once the page is read the bar is plain paper: solid, not frosted. */
 .site-header[data-solid] {
   color: var(--color-ink);
@@ -986,22 +1001,39 @@
   transform: translateY(-100%);
 }
 /* A header that has stepped aside comes back the moment keyboard focus lands
-   in it, so tabbing into the navigation never puts focus off-screen. */
-.site-header[data-hidden]:focus-within {
+   in it, so tabbing into the navigation never puts focus off-screen. Only
+   keyboard focus (`data-keyed`, Header.tsx): a link clicked with the mouse
+   keeps focus too, and must not hold the header in place (26 Nov 2026). */
+.site-header[data-hidden][data-keyed] {
   transform: none;
 }
-/* A journey's page on a short screen (a phone held sideways): the header steps
-   aside on a scroll down (Header.tsx) and the journey's menu bar, with its
-   enquiry pill, moves up into its place, so only the bar holds the top of the
-   screen. It steps back down when the header returns, keyboard focus in the
-   header included. (Under reduced motion the header never moves, so neither
-   does the bar.) */
-@media (max-height: 31.25rem) and (prefers-reduced-motion: no-preference) {
+/* The Journeys page and a journey's page, at every size (the owner's decision
+   of 25 November 2026): on a scroll down the header steps aside (Header.tsx)
+   and the in-page menu bar (JourneyTabs), with a journey's facts and its
+   booking pill, moves up to the very top of the screen in its place, so only
+   the bar holds the top. It steps back down when the header returns, keyboard
+   focus in the header included. While the header is away its height reads as
+   nothing on these pages, so the bar and every part pinned under the bar
+   (the itinerary's map, the details' heading) move up with it; an in-page
+   link's landing is set by JourneyTabs for the same state. (Under reduced motion the
+   header never moves, so neither does the bar.) */
+/* A very short window (a laptop at 400% zoom: about 320 by 200): the room the
+   anchors keep at the top for the header and the bar (125px) and at the foot
+   for "Connect with our team" (80px) would leave nothing between them, and a
+   control reached with Tab could land wholly under the pinned bar (WCAG
+   2.4.11; the independent check of 26 Nov 2026). Under 300px of height the
+   room at the foot shrinks with the window. Phones held sideways are taller. */
+@media (max-height: 18.75rem) {
+  html:has([data-journey-tabs]) {
+    scroll-padding-bottom: min(5rem, 10vh);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.site-header[data-hidden]:not([data-keyed])):has([data-journey-tabs]) {
+    --nav-h-compact: 0px;
+  }
   [data-journey-tabs] {
     transition: top 0.45s var(--ease-editorial);
-  }
-  html:has(.site-header[data-hidden]:not(:focus-within)) [data-journey-tabs] {
-    top: 0;
   }
 }
 

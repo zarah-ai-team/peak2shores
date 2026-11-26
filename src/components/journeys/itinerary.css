@@ -942,3 +942,13 @@
     display: none;
   }
 }
+
+/* The pinned map moves up with the in-page menu bar when the header steps
+   aside on a scroll down (globals.css), and glides as the bar does rather
+   than jump. */
+@media (prefers-reduced-motion: no-preference) {
+  .jr-stick,
+  .jr-side {
+    transition: top 0.45s var(--ease-editorial);
+  }
+}

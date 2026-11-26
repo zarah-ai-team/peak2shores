@@ -25,11 +25,20 @@ const views: [View, string][] = [
   ['map', 'Map'],
 ];
 
+/* The journeys open for reservations (booking now or guaranteed, in Marc's
+   wording: lib/availability.ts), or still to come. */
 const shows: [Show, string][] = [
   ['all', 'All'],
-  ['now', 'Now booking'],
+  ['now', 'Reservations open'],
   ['soon', 'Coming soon'],
 ];
+
+/**
+ * The filters show from this many journeys. Fewer are seen at a glance, and
+ * four filters for three journeys pushed the first journey below a phone's
+ * screen (Ishika's notes of 24 November 2026).
+ */
+const FILTER_FROM = 6;
 /** Lengths, by days. Only the ones some journey falls in are offered. */
 const lengths: [string, (d: number) => boolean][] = [
   ['Up to 9 days', (d) => d <= 9],
@@ -69,6 +78,10 @@ const toggle = (v: string[], x: string) => (v.includes(x) ? v.filter((y) => y !=
  * really leave in, earliest first, then `tba` ("Dates to be announced") for
  * the journeys without dates, and it is not shown at all until some journey
  * has a month.
+ *
+ * The panel of filters stays out until there are six journeys (FILTER_FROM;
+ * Ishika's notes of 24 November 2026): until then every journey is shown, in
+ * both views, and the cards follow the heading directly.
  */
 export function JourneyCollection({
   cards,
@@ -129,6 +142,7 @@ export function JourneyCollection({
     );
   };
   const count = (over: Partial<Filters>) => cards.filter((c) => pass(c, over)).length;
+  const filtering = cards.length >= FILTER_FROM;
 
   // In the order the cards arrive: Marc's own.
   const shown = cards.filter((c) => pass(c));
@@ -208,72 +222,75 @@ export function JourneyCollection({
           )}
         </div>
 
-        {/* The filters stand above both views, so they hold in the Map view too. */}
-        <div ref={fbar} className="fbar" role="group" aria-label="Filter journeys">
-          {/* `data-fab-clear`: the floating "Connect with our team" steps aside
-              rather than cover the filters. The mark covers the panel on a
-              short screen only (a phone held sideways, journeys-index.css),
-              where the button would sit on them; elsewhere it is not shown,
-              and the button stays. */}
-          <span className="fbar-clear" data-fab-clear aria-hidden />
-          <Menu
-            label="Destination"
-            value={f.dest}
-            options={one('dest', opts.dests)}
-            onPick={(dest) => set({ dest })}
-          />
-          {opts.lens.length > 0 && (
+        {/* The filters stand above both views, so they hold in the Map view
+            too; they show from six journeys (FILTER_FROM). */}
+        {filtering && (
+          <div ref={fbar} className="fbar" role="group" aria-label="Filter journeys">
+            {/* `data-fab-clear`: the floating "Connect with our team" steps
+                aside rather than cover the filters. The mark covers the panel
+                on a short screen only (a phone held sideways,
+                journeys-index.css), where the button would sit on them;
+                elsewhere it is not shown, and the button stays. */}
+            <span className="fbar-clear" data-fab-clear aria-hidden />
             <Menu
-              label="Length"
-              value={f.len}
-              options={one('len', opts.lens)}
-              onPick={(len) => set({ len })}
+              label="Destination"
+              value={f.dest}
+              options={one('dest', opts.dests)}
+              onPick={(dest) => set({ dest })}
             />
-          )}
-          {opts.whens.length > 0 && (
+            {opts.lens.length > 0 && (
+              <Menu
+                label="Length"
+                value={f.len}
+                options={one('len', opts.lens)}
+                onPick={(len) => set({ len })}
+              />
+            )}
+            {opts.whens.length > 0 && (
+              <Menu
+                label="Month"
+                value={departures.find(([key]) => key === f.when)?.[1] ?? 'All'}
+                options={departures.map(([key, label]) => ({
+                  key,
+                  label,
+                  count: count({ when: key }),
+                  on: key === f.when,
+                }))}
+                onPick={(when) => set({ when })}
+              />
+            )}
+            {opts.insps.length > 0 && (
+              <Menu
+                label="What inspires you"
+                multi
+                value={chosen(f.insp)}
+                options={many('insp', opts.insps)}
+                onPick={(x) => set({ insp: toggle(f.insp, x) })}
+              />
+            )}
             <Menu
-              label="Month"
-              value={departures.find(([key]) => key === f.when)?.[1] ?? 'All'}
-              options={departures.map(([key, label]) => ({
-                key,
-                label,
-                count: count({ when: key }),
-                on: key === f.when,
+              label="Availability"
+              value={shows.find(([k]) => k === f.show)?.[1] ?? 'All'}
+              options={shows.map(([k, t]) => ({
+                key: k,
+                label: t,
+                count: count({ show: k }),
+                on: k === f.show,
               }))}
-              onPick={(when) => set({ when })}
+              onPick={(k) => set({ show: k as Show })}
             />
-          )}
-          {opts.insps.length > 0 && (
-            <Menu
-              label="What inspires you"
-              multi
-              value={chosen(f.insp)}
-              options={many('insp', opts.insps)}
-              onPick={(x) => set({ insp: toggle(f.insp, x) })}
-            />
-          )}
-          <Menu
-            label="Availability"
-            value={shows.find(([k]) => k === f.show)?.[1] ?? 'All'}
-            options={shows.map(([k, t]) => ({
-              key: k,
-              label: t,
-              count: count({ show: k }),
-              on: k === f.show,
-            }))}
-            onPick={(k) => set({ show: k as Show })}
-          />
-          {anyOn && (
-            <button type="button" className="fclear" onClick={clearAll}>
-              Clear
-            </button>
-          )}
-          <div className="fend">
-            <span role="status" aria-live="polite">
-              Showing {shown.length} of {cards.length} journeys
-            </span>
+            {anyOn && (
+              <button type="button" className="fclear" onClick={clearAll}>
+                Clear
+              </button>
+            )}
+            <div className="fend">
+              <span role="status" aria-live="polite">
+                Showing {shown.length} of {cards.length} journeys
+              </span>
+            </div>
           </div>
-        </div>
+        )}
 
         {map && (
           <div

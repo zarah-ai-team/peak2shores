@@ -26,6 +26,15 @@
   line-height: 1.6;
   color: var(--muted, #5a646d);
 }
+/* Marc's note that the final hotels may vary by departure (23 Nov 2026):
+   close under the section's line, a step smaller, at a reading length. */
+.jy.jst .jst-note {
+  max-width: 68ch;
+  margin: -0.375rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--muted, #5a646d);
+}
 .jst-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -117,12 +126,6 @@
   outline: 2px solid var(--color-ink);
   outline-offset: 3px;
 }
-/* "[Marc to confirm]": the house lake blue, never a warm tone. */
-.jst-tbc {
-  margin: 0.375rem 0 0;
-  font-size: 0.75rem;
-  color: var(--color-acqua-text);
-}
 .jst-more,
 .jst-site {
   display: inline-flex;
@@ -190,11 +193,6 @@
   line-height: 1.5;
   text-transform: uppercase;
   color: var(--color-acqua-text);
-}
-.hpop-tbc {
-  letter-spacing: 0.04em;
-  text-transform: none;
-  font-weight: 500;
 }
 
 /* The gallery: one photograph at a time, crossfading. A sideways swipe

@@ -1,13 +1,16 @@
 'use client';
 
 import { useId, useState } from 'react';
+import { AvailabilityTag } from '@/components/ui/AvailabilityTag';
+import type { DepartureAvailability } from '@/lib/availability';
 
 /** A row of the Dates and rates table, in words: "Jun 19 – Jul 1, 2027", its price and status. */
 export type DepartureRow = {
   id: string;
   dates: string;
   price: string;
-  status: string;
+  /** Where it stands, from its confirmed guests (Booking Now, Guaranteed, Sold Out). */
+  availability: DepartureAvailability;
   /** The filter option the row belongs to: its year ('2027') or month ('2027-06'). */
   key: string;
 };
@@ -24,7 +27,7 @@ const count = (n: number) => `${n} ${n === 1 ? 'departure' : 'departures'}`;
 
 /**
  * The Dates and rates table of a journey's page: dates, price and status for
- * each departure, after A&K's. Above it, when the departures start in more
+ * each departure, after A&K's, the status drawn as everywhere (AvailabilityTag). Above it, when the departures start in more
  * than one year (or month), a small filter by year (by month when every
  * departure starts in the same year): native radio buttons drawn as pills, so
  * the arrow keys move between them, and a polite status line that says how
@@ -89,10 +92,7 @@ export function JourneyDepartures({
               </th>
               <td data-k="Price">{r.price}</td>
               <td data-k="Status">
-                <span className="status">
-                  <i aria-hidden />
-                  {r.status}
-                </span>
+                <AvailabilityTag status={r.availability.status} limited={r.availability.limited} />
               </td>
             </tr>
           ))}

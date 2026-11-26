@@ -36,8 +36,10 @@ import {
   pageMetadata,
   type Journey,
 } from '@/lib/content';
+import { availability, limitedAvailability } from '@/lib/availability';
 import { ratesOf } from '@/lib/data/journeyRates';
 import { fromPriceLabel } from '@/lib/journeyPrice';
+import { journeyAvailabilityOf } from '@/lib/journeys';
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -61,7 +63,7 @@ export async function generateStaticParams() {
 function describe(journey: Journey) {
   return (
     journey.seo?.description ??
-    `${journey.lead} ${journey.days} days, ${journey.region}, ${journey.departureWindow}. A small group journey.`
+    `${journey.lead} ${journey.days} days, ${journey.region}, ${journey.departureWindow}, for no more than 18 guests.`
   );
 }
 
@@ -102,6 +104,10 @@ export default async function JourneyPage({ params }: Params) {
   const site = await getSiteSettings();
 
   const url = `${site.url}/journeys/${journey.slug}`;
+  /* Where it stands for booking: the best of its departures (Marc's review of
+     23 November 2026), for its header, its menu bar's button, its inquiry
+     pop-up and its structured data. */
+  const status = journeyAvailabilityOf(journey);
   const days = journey.detail?.days ?? journey.itinerary ?? [];
   const heroMedia = getMedia(journey.detail?.heroMedia ?? journey.heroMedia ?? journey.listMedia);
   const price = journey.priceFrom?.replace(/[$,]/g, '');
@@ -159,7 +165,7 @@ export default async function JourneyPage({ params }: Params) {
             availability:
               journey.status === 'past'
                 ? 'https://schema.org/Discontinued'
-                : journey.status === 'sold-out' || journey.status === 'waitlist'
+                : status.status === 'sold-out'
                   ? 'https://schema.org/SoldOut'
                   : 'https://schema.org/LimitedAvailability',
             ...(journey.departureISO ? { validThrough: journey.departureISO } : {}),
@@ -183,9 +189,10 @@ export default async function JourneyPage({ params }: Params) {
 
   /* The A&K menu: Overview │ Itinerary │ (extension) │ Stays │ Dates & Rates │
      Essential information. A tab whose section has nothing to show yet is
-     left out rather than linking nowhere. The bar's enquiry block carries the
-     journey's days, group size and from-price, and "Make an enquiry" (Ishika's
-     notes of 9 November 2026, item 17a). */
+     left out rather than linking nowhere. The bar's booking block carries the
+     journey's days, group size and from-price, and the button its status
+     names, "Request your place" while booking now (Ishika's notes of 9
+     November 2026, item 17a; Marc's review of 23 November 2026). */
   const hasStays = flyer
     ? flyer.hotels.length > 0
     : !!detail || !!journey.itinerary?.some((d) => d.stay && d.stay !== '—');
@@ -198,18 +205,23 @@ export default async function JourneyPage({ params }: Params) {
     ...(ratesOf(journey.slug) ? [{ id: 'information', label: 'Additional information' }] : []),
     { id: 'essentials', label: 'Essential information' },
   ];
+  // A journey that has run offers no booking: its button leads to the others.
+  const past = journey.status === 'past';
+  const bookable = !past && status.status !== 'sold-out';
   const glance = {
     days: `${journey.days} days`,
     group: site.groupSize,
     price: fromPriceLabel(journey),
+    status: past ? ('sold-out' as const) : status.status,
   };
   const departures = departureOptions(journey);
 
   /* The page in the order of Ishika's notes of 9 November 2026: hero, menu,
      overview, itinerary, extension (if any), stays, dates and rates,
      essential information, more to discover, footer. The provider holds the
-     page's pop-up forms: the enquiry, and the group and private booking
-     requests, each already knowing the journey. A journey written before the
+     page's pop-up forms: the inquiry (titled with the status's call to
+     action, as the menu bar's button that opens it), and the group and
+     private booking requests, each already knowing the journey. A journey written before the
      flyers (`detail` or a working day by day) keeps its own sections up to
      its stays; guests' words, where a journey has them, follow the stays. */
   return (
@@ -218,6 +230,14 @@ export default async function JourneyPage({ params }: Params) {
         slug: journey.slug,
         title: journey.title,
         departures: departures.length ? departures : undefined,
+        // Once sold out the button leads elsewhere and the pop-up keeps its own title.
+        cta: bookable ? availability[status.status].cta : undefined,
+        // What the status means (Booking Now: confirmed once 10 guests have
+        // booked; Marc's review of 23 November 2026, para 73), at the top of
+        // the pop-up the bar's button opens.
+        statusNote: bookable
+          ? `${availability[status.status].wording}${status.limited ? ` ${limitedAvailability.wording}` : ''}`
+          : undefined,
       }}
     >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(trip) }} />

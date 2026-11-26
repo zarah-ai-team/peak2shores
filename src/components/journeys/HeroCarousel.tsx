@@ -23,6 +23,8 @@ import {
 import { feature } from 'topojson-client';
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
 import type { GeometryCollection, Topology } from 'topojson-specification';
+import { AvailabilityTag } from '@/components/ui/AvailabilityTag';
+import type { DepartureAvailability } from '@/lib/availability';
 import { ShownSlugs } from './shownSlugs';
 
 type LonLat = [number, number];
@@ -40,6 +42,8 @@ export type HeroJourney = {
   slug: string;
   title: string;
   country: string;
+  /** Where it stands (its best departure), as its card in the list shows it. */
+  availability: DepartureAvailability;
   /** One line under the name, point by point: "13 days", "Lucerne to Milan". */
   facts: string[];
   photo: CardPhoto;
@@ -845,7 +849,17 @@ export function HeroCarousel({
               aria-labelledby={`jxh-c-${x.slug}`}
             >
               <Photo photo={x.photo} />
-              <p className="top">{x.country}</p>
+              {/* The region, then its status, as on every journey card (Marc's
+                  review of 23 November 2026): one row of the card's five, so
+                  the cards' rows still line up across the rail. */}
+              <div>
+                <p className="top">{x.country}</p>
+                <AvailabilityTag
+                  className="jxh-st"
+                  status={x.availability.status}
+                  limited={x.availability.limited}
+                />
+              </div>
               <h3 id={`jxh-c-${x.slug}`}>{x.title}</h3>
               <p className="facts">
                 {x.facts.map((fact, i) => (
@@ -873,7 +887,14 @@ export function HeroCarousel({
             aria-labelledby="jxh-c-soon"
           >
             <Photo photo={soonPhoto} />
-            <p className="top">Stay tuned</p>
+            {/* The journeys' status line is kept here as empty room, so this
+                card's name starts in line with theirs on a phone too. */}
+            <div>
+              <p className="top">Stay tuned</p>
+              <span className="jxh-st-room" aria-hidden>
+                <AvailabilityTag className="jxh-st" status="booking-now" />
+              </span>
+            </div>
             <h3 id="jxh-c-soon">More journeys are on the way</h3>
             <p className="facts">New destinations are being prepared now.</p>
             <p className="foot">

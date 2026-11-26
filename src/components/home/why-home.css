@@ -132,7 +132,9 @@
   font-size: 0.8125rem;
   font-weight: 500;
   letter-spacing: 0.14em;
-  color: rgb(20 29 36 / 0.6);
+  /* The page's muted ink, 5.9:1 on the paper: the ink at 60% measured 4.47:1,
+     the one colour on the homepage below 4.5:1 (Lighthouse, 24 Nov). */
+  color: var(--muted);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }

@@ -1,3 +1,10 @@
+import {
+  availabilityOf,
+  groupSizeLabel,
+  MAX_GUESTS,
+  type DepartureAvailability,
+} from './availability';
+import { statusDepartures } from './data/journeyRates';
 import type { MediaKey } from './media';
 
 /**
@@ -121,7 +128,10 @@ export type JourneyFlyer = {
   /** Shown only once Marc has approved the wording. */
   marcNote?: { quote: string; approved: boolean };
   parts: { title?: string; subtitle?: string; stays: FlyerStay[] }[];
-  /** `unconfirmed`: Marc has still to confirm the hotel; the page marks it. */
+  /**
+   * `unconfirmed`: Marc has still to confirm the hotel. A note for the team
+   * only: the page no longer shows it (Ishika's note of 24 Nov 2026).
+   */
   hotels: { place: string; name: string; url?: string; credit?: string; unconfirmed?: boolean }[];
   /** The overview's starred highlights, two columns (launch brief stay texts). */
   highlights?: string[];
@@ -165,9 +175,12 @@ export type JourneyFlyer = {
 };
 
 /**
- * Where a journey stands for booking. A journey is never deleted: once it is
- * full or has departed it keeps its page, marked, so links and search rankings
- * survive.
+ * Whether a journey has departed ('past'). A journey is never deleted: once it
+ * has departed it keeps its page, marked, so links and search rankings
+ * survive. Its booking status (Booking Now, Guaranteed, Sold Out) is not set
+ * here: it follows its departures' confirmed guests (availabilityOf in
+ * lib/availability.ts). 'waitlist' and 'sold-out' are the old labels, no
+ * longer set on any journey.
  */
 export type JourneyStatus = 'open' | 'waitlist' | 'sold-out' | 'past';
 
@@ -184,8 +197,18 @@ export type JourneyDeparture = {
   end: string;
   /** The rate for this departure per person, e.g. '$12,400'. Absent: the journey's from-price. */
   price?: string;
-  /** Where this departure stands for booking. Absent: the journey's own status. */
-  status?: JourneyStatus;
+  /**
+   * The guests confirmed on this departure: reservations that meet the agreed
+   * booking criteria, never inquiries or requested places. Its status follows
+   * (Marc's review of 23 November 2026): 0-9 Booking Now, 10-17 Guaranteed,
+   * 18 Sold Out. Absent: none yet.
+   */
+  confirmed?: number;
+  /**
+   * Limited Availability set by hand on a guaranteed departure: true shows
+   * it, false never. Absent, it shows once no more than 4 places remain.
+   */
+  limited?: boolean;
 };
 
 export type Journey = {
@@ -198,7 +221,7 @@ export type Journey = {
    * Omit for a journey that is already live.
    */
   publishAt?: string;
-  /** Booking state. Defaults to open. */
+  /** 'past' once it has departed. Its booking status comes from its `departures`. */
   status?: JourneyStatus;
   n: string;
   title: string;
@@ -242,12 +265,20 @@ export type Journey = {
    * Absent or empty until Marc confirms them: the table then shows a single
    * "Dates to be announced" row. Never enter a departure he has not confirmed.
    *
-   * Only the table, the booking form and the Journeys page's Month filter read
-   * this list: when departures are entered, update `departure`,
+   * Each departure carries its confirmed guests (`confirmed`), which set its
+   * status and, with the others, the journey's: the status on its card, on
+   * the home slider and in its page's header (journeyAvailabilityOf). Without
+   * departures a journey is Booking Now. A journey whose Dates & Prices rows
+   * (data/journeyRates.ts) are Marc's rather than samples takes its status
+   * from those rows instead, so its guest counts are kept there, in one place.
+   *
+   * The table, the booking form, the Journeys page's Month filter and the
+   * status read this list: when departures are entered, update `departure`,
    * `departureWindow` and `departureISO` with them too, since the hero's
-   * Departure fact, the cards' facts and the journey's status read those.
+   * Departure fact and the cards' facts read those.
    */
   departures?: JourneyDeparture[];
+  /** How the size of its group is shown: "10–18 guests" (groupSizeLabel). */
   group: string;
   groupMax: number;
   /** e.g. '$12,400'. Absent until Marc sets the rate. */
@@ -274,7 +305,7 @@ export type Journey = {
   detail?: JourneyDetail;
   /**
    * The working day-by-day for a journey whose full write-up (hotels, pacing,
-   * inclusions) is still being confirmed. Rendered above the enquiry form on
+   * inclusions) is still being confirmed. Rendered above the inquiry form on
    * the in-preparation page.
    */
   itineraryHeadline?: string;
@@ -328,8 +359,8 @@ const allJourneys: Journey[] = [
     days: 13,
     departure: DATES_TBA,
     departureWindow: DATES_TBA,
-    group: 'Small group',
-    groupMax: 18,
+    group: groupSizeLabel,
+    groupMax: MAX_GUESTS,
     hostedByMarc: false,
     who: [],
     inspire: ['Mountains & Lakes', 'Culture', 'Food & Wine'],
@@ -341,7 +372,7 @@ const allJourneys: Journey[] = [
     seo: {
       title: 'Swiss Elegance, Italian Lakes & Milanese Flair',
       description:
-        '13 days from Lucerne to Milan for a small group: Swiss lakes and Alps, Lake Maggiore and Milan, with an optional 8-night Italian extension.',
+        '13 days from Lucerne to Milan for no more than 18 guests: Swiss lakes and Alps, Lake Maggiore and Milan, with an optional 8-night Italian extension.',
     },
     flyer: {
       included: experience,
@@ -425,17 +456,19 @@ const allJourneys: Journey[] = [
                 'Explore elegant boutiques, stylish neighborhoods and the city’s vibrant cultural scene.',
                 'Celebrate the journey with a memorable farewell evening in the heart of Milan.',
               ],
-              media: 'se-milan',
+              media: 'se-milan-flyer',
             },
           ],
         },
       ],
-      // Zermatt: Marc to confirm the hotel.
+      // Marc's review of 23 Nov 2026: Hotel Schweizerhof Luzern, The Omnia and
+      // Villa e Palazzo Aminta in place of the Mandarin Oriental Palace, the
+      // Grand Hotel Zermatterhof and Hotel La Palma.
       hotels: [
         {
           place: 'Lucerne',
-          name: 'Mandarin Oriental Palace, Luzern',
-          url: 'https://www.mandarinoriental.com/en/luzern/palace',
+          name: 'Hotel Schweizerhof Luzern',
+          url: 'https://www.schweizerhof-luzern.ch/en',
         },
         {
           place: 'Grindelwald',
@@ -448,13 +481,8 @@ const allJourneys: Journey[] = [
           name: 'Fairmont Le Montreux Palace',
           url: 'https://www.fairmont.com/montreux/',
         },
-        {
-          place: 'Zermatt',
-          name: 'Grand Hotel Zermatterhof',
-          url: 'https://www.zermatterhof.ch/',
-          unconfirmed: true,
-        },
-        { place: 'Stresa', name: 'Hotel La Palma', url: 'https://www.hlapalma.it/' },
+        { place: 'Zermatt', name: 'The Omnia', url: 'https://the-omnia.com/en' },
+        { place: 'Stresa', name: 'Villa e Palazzo Aminta', url: 'https://www.villa-aminta.it/' },
         {
           place: 'Milan',
           name: 'Palazzo Cordusio Gran Meliá',
@@ -484,17 +512,17 @@ const allJourneys: Journey[] = [
         ],
         adds: 'Adds 9 days · 8 nights',
         combo: 'Swiss Elegance + Italy Uncovered',
-        slug: 'the-italian-experience',
+        slug: 'italy-uncovered',
         cta: 'Explore Italy Uncovered',
         photos: [
-          { media: 'home-jr-italy', label: 'Bologna' },
+          { media: 'ie-bologna-flyer', label: 'Bologna' },
           { media: 'ie-garda', label: 'Lake Garda' },
-          { media: 'ie-venice', label: 'Venice' },
+          { media: 'ac-venice-flyer', label: 'Venice' },
         ],
       },
       link: {
         kicker: 'Optional 8-Night Italian Extension',
-        slug: 'the-italian-experience',
+        slug: 'italy-uncovered',
         title: 'Italy Uncovered: Emilia-Romagna, Lake Garda & Venice',
         places: 'Bologna, Motor Valley, Lake Garda and Venice',
         text: 'Continue from Milan into Bologna’s culinary traditions, Italy’s supercar heritage, Lake Garda and a Venetian finale. Also available as a journey on its own.',
@@ -505,7 +533,7 @@ const allJourneys: Journey[] = [
     },
   },
   {
-    slug: 'the-italian-experience',
+    slug: 'italy-uncovered',
     n: 'No. 02',
     title: 'Italy Uncovered: Emilia-Romagna, Lake Garda & Venice',
     eyebrow: 'Optional 8-Night Italian Extension · or a journey on its own',
@@ -526,8 +554,8 @@ const allJourneys: Journey[] = [
     days: 9,
     departure: DATES_TBA,
     departureWindow: DATES_TBA,
-    group: 'Small group',
-    groupMax: 18,
+    group: groupSizeLabel,
+    groupMax: MAX_GUESTS,
     hostedByMarc: false,
     who: [],
     inspire: ['Food & Wine', 'Culture', 'Art & Design'],
@@ -539,7 +567,7 @@ const allJourneys: Journey[] = [
     seo: {
       title: 'Italy Uncovered: Emilia-Romagna, Lake Garda & Venice',
       description:
-        '9 days through Bologna, Motor Valley, Lake Garda and Venice for a small group, on its own or after Swiss Elegance.',
+        '9 days through Bologna, Motor Valley, Lake Garda and Venice for no more than 18 guests, on its own or after Swiss Elegance.',
     },
     flyer: {
       included: experience,
@@ -555,7 +583,7 @@ const allJourneys: Journey[] = [
                 'Savor Parmigiano Reggiano, Parma ham and Modena’s balsamic vinegar.',
                 'Enjoy Ferrari driving thrills or exclusive Pagani discoveries.',
               ],
-              media: 'ie-bologna',
+              media: 'ie-bologna-flyer',
             },
             {
               place: 'Lake Garda',
@@ -577,7 +605,7 @@ const allJourneys: Journey[] = [
                 'Meet master gondola makers and enjoy an iconic gondola ride.',
                 'Savor local wines and cicchetti on a traditional bacari tour.',
               ],
-              media: 'ie-venice',
+              media: 'ac-venice-flyer',
             },
           ],
         },
@@ -592,6 +620,7 @@ const allJourneys: Journey[] = [
                 'Explore Ferrari’s legendary heritage and racing excellence at its museum.',
                 'Discover the artistry of Pagani, where innovation meets extraordinary design.',
               ],
+              media: 'ie-motor-valley',
             },
             {
               place: 'Valpolicella & Verona',
@@ -601,6 +630,7 @@ const allJourneys: Journey[] = [
                 'Savor an exceptional wine-paired lunch overlooking the vineyards.',
                 'Explore romantic Verona, from its Roman Arena to Juliet’s home.',
               ],
+              media: 'ie-verona',
             },
           ],
         },
@@ -672,8 +702,8 @@ const allJourneys: Journey[] = [
     days: 11,
     departure: DATES_TBA,
     departureWindow: DATES_TBA,
-    group: 'Small group',
-    groupMax: 18,
+    group: groupSizeLabel,
+    groupMax: MAX_GUESTS,
     hostedByMarc: false,
     who: [],
     inspire: ['Coast & Islands', 'Culture', 'Food & Wine'],
@@ -685,7 +715,7 @@ const allJourneys: Journey[] = [
     seo: {
       title: 'The Adriatic Collection: Venice to Dubrovnik',
       description:
-        'An 11-day small luxury group journey from Venice to Dubrovnik through Istria and the Dalmatian Coast, for a small group of travelers.',
+        'An 11-day small luxury group journey from Venice to Dubrovnik through Istria and the Dalmatian Coast, for no more than 18 guests.',
     },
     flyer: {
       included: experience,
@@ -708,7 +738,7 @@ const allJourneys: Journey[] = [
                 'Discover Venice’s iconic treasures and hidden corners with your private guide.',
                 'Step inside a traditional gondola workshop and meet the artisans preserving this centuries-old craft.',
               ],
-              media: 'ac-venice',
+              media: 'ac-venice-flyer',
             },
             {
               place: 'Rovinj & Istria',
@@ -721,6 +751,7 @@ const allJourneys: Journey[] = [
               ],
               moment:
                 'Join a local truffle hunter and his dog in search of Istria’s prized treasures, followed by a memorable countryside lunch.',
+              media: 'ac-istria',
             },
           ],
         },
@@ -737,6 +768,7 @@ const allJourneys: Journey[] = [
                 'Step back 1,700 years exploring Split’s remarkable Diocletian’s Palace.',
                 'Set sail on a private speedboat adventure to glamorous Hvar and the stunning Pakleni Islands.',
               ],
+              media: 'ac-split',
             },
             {
               place: 'Dubrovnik',
@@ -747,6 +779,7 @@ const allJourneys: Journey[] = [
                 'Raise a glass atop Mount Srđ, with spectacular views over Dubrovnik and the Adriatic.',
                 'Enjoy time to explore at your leisure before a memorable farewell dinner within Dubrovnik’s ancient walls.',
               ],
+              media: 'ac-dubrovnik',
             },
           ],
         },
@@ -790,6 +823,18 @@ export function isNew(journey: Journey, now = new Date()) {
   if (!journey.publishAt) return false;
   const age = now.getTime() - new Date(journey.publishAt).getTime();
   return age >= 0 && age < NEW_FOR_DAYS * 24 * 60 * 60 * 1000;
+}
+
+/**
+ * A journey's booking status: the best of its departures (availabilityOf),
+ * read from the departures that set it (statusDepartures): Booking Now while
+ * none is confirmed yet. What its card, the home slider, its page's header and
+ * the Plan page show.
+ */
+export function journeyAvailabilityOf(
+  journey: Pick<Journey, 'slug' | 'departures'>,
+): DepartureAvailability {
+  return availabilityOf(statusDepartures(journey.slug, journey.departures));
 }
 
 /** The short label shown before a journey's place name, if it needs one. */
@@ -837,7 +882,12 @@ export type JourneySummary = Pick<
   | 'cardMedia'
   | 'promoMedia'
   | 'status'
-> & { isNew: boolean; stays: JourneyStay[] };
+> & {
+  isNew: boolean;
+  stays: JourneyStay[];
+  /** Its booking status, the best of its departures' (availabilityOf). */
+  availability: DepartureAvailability;
+};
 
 /** One stop of a journey: where we sleep, and for how long. */
 export type JourneyStay = { name: string; nights: string };
@@ -924,6 +974,7 @@ export function toSummary(journey: Journey): JourneySummary {
     status,
     isNew: isNew(journey),
     stays: journeyStays(journey),
+    availability: journeyAvailabilityOf(journey),
   };
 }
 

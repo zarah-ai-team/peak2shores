@@ -10,15 +10,12 @@ import { enterAt } from '@/lib/motion';
 import { MenuWarm } from './menu/MenuParts';
 import { SiteMenu } from './SiteMenu';
 
-/** Past this the header steps aside on a scroll down. */
-const HIDE_AFTER = 480;
-
 /**
- * A short screen (a phone held sideways), where the header and a journey's
- * menu bar together would hold a third of the screen: there the bar takes the
- * header's place while it is away (globals.css), so the header steps aside.
+ * Past this the header steps aside on a scroll down. JourneyTabs reads it too,
+ * to land an in-page link flush under its menu bar in the state the header
+ * will be in once the page has moved.
  */
-const SHORT = '(max-height: 31.25rem)';
+export const HIDE_AFTER = 480;
 
 /** How long the bar takes to return to the page's own state after the menu closes. */
 const CLOSING_MS = 400;
@@ -32,9 +29,13 @@ const CLOSING_MS = 400;
  *   moves, so the bar never lies over that hero's title
  * - one size everywhere: the same bar, logo and links on every page and at
  *   every scroll position (`data-compact` marks a moved page but changes no size)
- * - out of the way on a long scroll down, back on any scroll up (`data-hidden`),
- *   unless the page pins a bar beneath it (`[data-pin-header]`); on a short
- *   screen a journey's menu bar moves up into its place instead
+ * - out of the way on a long scroll down, back on any scroll up (`data-hidden`)
+ *   and while keyboard focus is in it (`data-keyed`), unless the page pins a
+ *   bar beneath it (`[data-pin-header]`). On the
+ *   Journeys page and a journey's page the in-page menu bar (JourneyTabs)
+ *   does not hold it: there the header steps aside on a scroll down at every
+ *   size and the bar moves up to the very top of the screen in its place
+ *   (globals.css; the owner's decision of 25 November 2026)
  * - on-dark over the open menu (`data-menu`), and for the moment after it
  *   closes (`data-nav-closing`) holding that state until the sheet has
  *   cleared the bar
@@ -69,11 +70,18 @@ export function Header({
   const pathname = usePathname() ?? '/';
   const route = `/${useSelectedLayoutSegments().join('/')}`;
   const overHero = isHeroRoute(route);
-  /** A journey's own page (not the Journeys page), whose menu bar can take the header's place. */
-  const journeyPage = /^\/journeys\/[^/]+$/.test(route);
   const [scrolled, setScrolled] = useState(!overHero);
   const [compact, setCompact] = useState(false);
   const [hidden, setHidden] = useState(false);
+  /**
+   * Keyboard focus is in the bar (it arrived there with Tab, Shift+Tab or the
+   * like, as `:focus-visible` tells): a bar that has stepped aside comes back
+   * while it is, so focus is never off-screen. A link clicked with the mouse
+   * keeps focus too, but that must not hold the bar: after "Journeys" in the
+   * bar was clicked, the bar stayed in place on the whole Journeys page (the
+   * owner's report of 26 Nov 2026), as `:focus-within` would have it.
+   */
+  const [keyed, setKeyed] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [closing, setClosing] = useState(false);
   /** Set the first time the button is pointed at, focused or touched. */
@@ -85,6 +93,10 @@ export function Header({
 
   useEffect(() => {
     let lastY = window.scrollY;
+    /** How far the page has moved one way since it last turned (down is positive). */
+    let run = 0;
+    /** The page this is set up for: it is set up again for the next one. */
+    const page = window.location.pathname;
     let frame = 0;
     const measure = () => {
       frame = 0;
@@ -113,19 +125,28 @@ export function Header({
 
       setCompact(y > 40);
 
-      // A page that pins a bar beneath the header (the journeys filters) keeps
-      // the header in place; hiding it would leave that bar floating. On a
-      // short screen a journey's menu bar moves up into the header's place
-      // instead (globals.css), so there the header steps aside as it does on
-      // any other page.
-      const short = journeyPage && window.matchMedia(SHORT).matches;
-      const pinned = [...document.querySelectorAll('[data-pin-header]')].some(
-        (bar) => !(short && bar.hasAttribute('data-journey-tabs')),
-      );
+      // A page that pins a bar beneath the header (a destination's story)
+      // keeps the header in place; hiding it would leave that bar floating.
+      // The in-page menu of the Journeys page and of a journey's page is not
+      // such a bar: it moves up into the header's place (globals.css).
+      const pinned = document.querySelector('[data-pin-header]') !== null;
 
       const delta = y - lastY;
-      if (pinned || y < HIDE_AFTER || delta < -4) setHidden(false);
-      else if (delta > 8) setHidden(true);
+      if (delta) run = Math.sign(delta) === Math.sign(run) ? run + delta : delta;
+      // Elsewhere the speed of a frame's move decides. On a page with an
+      // in-page menu (the Journeys page, a journey's page) the distance
+      // does, so the header steps aside however slowly the page is scrolled
+      // down and at any frame rate (a 120Hz screen halves a frame's move),
+      // and the bar takes the top as the owner decided on 25 November 2026.
+      const step = document.querySelector('[data-journey-tabs]') ? run : delta;
+      // The jump of a move to another page (to its top, or to the part its
+      // address names, such as /journeys#availability from a journey's page)
+      // is not a scroll up or down: until this is set up for the new page the
+      // header keeps its state, so the landing, made with the scroll padding
+      // of that state (globals.css), stays clear of it.
+      const moved = window.location.pathname !== page;
+      if (pinned || y < HIDE_AFTER || (!moved && step < -4)) setHidden(false);
+      else if (!moved && step > 8) setHidden(true);
       lastY = y;
     };
 
@@ -142,10 +163,24 @@ export function Header({
       window.removeEventListener('resize', onScroll);
       if (frame) window.cancelAnimationFrame(frame);
     };
-  }, [overHero, journeyPage, pathname, menuOpen]);
+  }, [overHero, pathname, menuOpen]);
 
   // Close the menu whenever the route changes.
   useEffect(() => setMenuOpen(false), [pathname]);
+
+  // A link in the bar was followed (by mouse, touch or keyboard): focus goes
+  // into the new page, as the menu's links send it (SiteMenu), so it is not
+  // left in a bar that steps aside, holding the bar in place (the owner's
+  // report of 26 Nov 2026 and the independent check of the same day). The
+  // page's <main> takes it without a ring and without moving the page.
+  const shownPath = useRef(pathname);
+  useEffect(() => {
+    if (shownPath.current === pathname) return;
+    shownPath.current = pathname;
+    if (barRef.current?.contains(document.activeElement)) {
+      document.getElementById('main')?.focus({ preventScroll: true });
+    }
+  }, [pathname]);
 
   // Back or Forward to another part of the same page changes no route, but
   // the page moves all the same: the menu closes for that too.
@@ -187,6 +222,11 @@ export function Header({
         data-nav-closing={closing ? '' : undefined}
         data-compact={compact && !menuOpen ? '' : undefined}
         data-hidden={hidden && !menuOpen ? '' : undefined}
+        data-keyed={keyed ? '' : undefined}
+        onFocus={(e) => setKeyed(e.target.matches(':focus-visible'))}
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setKeyed(false);
+        }}
       >
         {/* The entrance sits on the inner row, not the bar: an animation's fill
             would otherwise pin the bar's transform and defeat the hide. */}

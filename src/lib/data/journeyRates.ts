@@ -4,23 +4,29 @@
  * the additional information beneath: price notes, what is included and not,
  * and the deposit and payment terms.
  *
+ * Each departure's status follows its confirmed guests (`confirmed`; Marc's
+ * review of 23 November 2026): 0-9 Booking Now, 10-17 Guaranteed, 18 Sold
+ * Out, and Limited Availability beside Guaranteed once no more than 4 places
+ * remain (or where `limited` sets it by hand). Only confirmed reservations
+ * count, never inquiries or requested places.
+ *
  * SAMPLE VALUES. Marc has not confirmed any dates or prices yet. The entries
  * below are invented so the layout can be reviewed with real-looking rows,
  * and `sample: true` makes the page say so above the table. They are read by
- * the Dates & Prices section only: the journey's hero, cards, filters,
- * structured data and booking forms still read `departures` and `priceFrom`
- * in journeys.ts, which stay "to be announced". Replace every value with
- * Marc's and set `sample: false` (or remove it) before launch; once the dates
- * are confirmed, copy them into the journey's `departures` in journeys.ts too.
+ * the Dates & Prices section only: the journey's hero, status, cards,
+ * filters, structured data and booking forms still read `departures` and
+ * `priceFrom` in journeys.ts, which stay "to be announced". Replace every
+ * value with Marc's and set `sample: false` (or remove it) before launch:
+ * from then on these rows, with their confirmed guests, also set the
+ * journey's status everywhere (statusDepartures); copy the confirmed dates
+ * into the journey's `departures` in journeys.ts too, for its booking form.
  */
 
 import type { RateIconName } from '@/components/journeys/RateIcon';
+import { isUpcoming, type GuestCount } from '@/lib/availability';
 
 /** A line of the additional information, with its icon. */
 export type RateItem = { icon: RateIconName; text: string };
-
-/** Where a departure stands, as its row says it. */
-export type Availability = 'available' | 'limited' | 'waitlist' | 'sold-out';
 
 export type RateDeparture = {
   /** The first day, 'YYYY-MM-DD'. */
@@ -33,11 +39,10 @@ export type RateDeparture = {
   single: string;
   /** With the journey's extension, per person sharing, where it runs on this departure. */
   withExtension?: string;
-  availability: Availability;
-  /** Places left, shown with "limited": "4 places left". */
-  placesLeft?: number;
-  /** The departure runs whatever the number booked. */
-  guaranteed?: boolean;
+  /** The guests confirmed on it, which set its status: 0-9 Booking Now, 10-17 Guaranteed, 18 Sold Out. */
+  confirmed: number;
+  /** Limited Availability set by hand on a guaranteed departure (true shows it, false never). */
+  limited?: boolean;
   /** Notes for this departure alone: a different hotel, a festival, a host. */
   notes?: string[];
 };
@@ -66,8 +71,7 @@ export const journeyRates: Record<string, JourneyRates> = {
         price: '$14,950',
         single: '$4,650',
         withExtension: '$25,400',
-        availability: 'available',
-        guaranteed: true,
+        confirmed: 12,
         notes: ['Spring departure: wildflowers in the Alpine meadows, quieter lakes.'],
       },
       {
@@ -76,9 +80,7 @@ export const journeyRates: Record<string, JourneyRates> = {
         price: '$15,450',
         single: '$4,850',
         withExtension: '$26,200',
-        availability: 'limited',
-        placesLeft: 4,
-        guaranteed: true,
+        confirmed: 14,
         notes: ['Midsummer: the longest days for walks in the high Alps.'],
       },
       {
@@ -86,7 +88,7 @@ export const journeyRates: Record<string, JourneyRates> = {
         end: '2027-07-23',
         price: '$15,950',
         single: '$4,950',
-        availability: 'sold-out',
+        confirmed: 18,
         notes: ['The Italian extension does not run on this departure.'],
       },
       {
@@ -95,7 +97,7 @@ export const journeyRates: Record<string, JourneyRates> = {
         price: '$15,450',
         single: '$4,850',
         withExtension: '$26,200',
-        availability: 'available',
+        confirmed: 6,
         notes: ['Grape harvest in the Lavaux vineyards.'],
       },
       {
@@ -104,10 +106,8 @@ export const journeyRates: Record<string, JourneyRates> = {
         price: '$14,950',
         single: '$4,650',
         withExtension: '$25,400',
-        availability: 'waitlist',
-        notes: [
-          'Days 7–8 at Mont Cervin Palace, Zermatt, in place of the Grand Hotel Zermatterhof.',
-        ],
+        confirmed: 18,
+        notes: ['Days 7–8 at Mont Cervin Palace, Zermatt, in place of The Omnia.'],
       },
       {
         start: '2028-05-21',
@@ -115,7 +115,7 @@ export const journeyRates: Record<string, JourneyRates> = {
         price: '$15,450',
         single: '$4,850',
         withExtension: '$26,400',
-        availability: 'available',
+        confirmed: 2,
       },
       {
         start: '2028-06-18',
@@ -123,7 +123,7 @@ export const journeyRates: Record<string, JourneyRates> = {
         price: '$15,950',
         single: '$4,950',
         withExtension: '$26,900',
-        availability: 'available',
+        confirmed: 0,
       },
     ],
     priceNotes: [
@@ -139,7 +139,11 @@ export const journeyRates: Record<string, JourneyRates> = {
       { icon: 'info', text: 'Prices are confirmed when you book and may change until then.' },
       {
         icon: 'group',
-        text: 'A group departs with a minimum of 6 guests. A guaranteed departure runs whatever the number booked.',
+        text: 'Each departure travels with a minimum of 10 and a maximum of 18 guests.',
+      },
+      {
+        icon: 'check',
+        text: 'Places can be requested while the group comes together; once 10 guests have confirmed, the departure is guaranteed to go ahead.',
       },
     ],
     included: [
@@ -192,7 +196,7 @@ export const journeyRates: Record<string, JourneyRates> = {
    * in Milan, and the price for both together is the same on both pages.
    * The April departure is Italy Uncovered on its own.
    */
-  'the-italian-experience': {
+  'italy-uncovered': {
     sample: true,
     currency: 'USD',
     departures: [
@@ -201,7 +205,7 @@ export const journeyRates: Record<string, JourneyRates> = {
         end: '2027-04-26',
         price: '$11,250',
         single: '$3,250',
-        availability: 'available',
+        confirmed: 4,
         notes: [
           'Italy Uncovered on its own; Swiss Elegance does not run before this departure.',
           'Spring in Emilia-Romagna, before the summer crowds in Venice.',
@@ -213,8 +217,7 @@ export const journeyRates: Record<string, JourneyRates> = {
         price: '$11,250',
         single: '$3,250',
         withExtension: '$25,400',
-        availability: 'available',
-        guaranteed: true,
+        confirmed: 11,
         notes: ['Continues from the Swiss Elegance departure of May 16, 2027.'],
       },
       {
@@ -223,9 +226,7 @@ export const journeyRates: Record<string, JourneyRates> = {
         price: '$11,650',
         single: '$3,450',
         withExtension: '$26,200',
-        availability: 'limited',
-        placesLeft: 3,
-        guaranteed: true,
+        confirmed: 15,
         notes: ['Continues from the Swiss Elegance departure of June 13, 2027.'],
       },
       {
@@ -234,7 +235,7 @@ export const journeyRates: Record<string, JourneyRates> = {
         price: '$11,650',
         single: '$3,450',
         withExtension: '$26,200',
-        availability: 'available',
+        confirmed: 7,
         notes: [
           'Continues from the Swiss Elegance departure of September 5, 2027.',
           'Harvest time in the Valpolicella vineyards.',
@@ -246,9 +247,9 @@ export const journeyRates: Record<string, JourneyRates> = {
         price: '$11,250',
         single: '$3,250',
         withExtension: '$25,400',
-        availability: 'available',
+        confirmed: 5,
         notes: [
-          'Continues from the Swiss Elegance departure of September 26, 2027, which has a waitlist; Italy Uncovered alone has places.',
+          'Continues from the Swiss Elegance departure of September 26, 2027, which is sold out; Italy Uncovered alone has places.',
         ],
       },
       {
@@ -257,7 +258,7 @@ export const journeyRates: Record<string, JourneyRates> = {
         price: '$11,650',
         single: '$3,450',
         withExtension: '$26,400',
-        availability: 'available',
+        confirmed: 0,
         notes: ['Continues from the Swiss Elegance departure of May 21, 2028.'],
       },
       {
@@ -266,7 +267,7 @@ export const journeyRates: Record<string, JourneyRates> = {
         price: '$11,950',
         single: '$3,550',
         withExtension: '$26,900',
-        availability: 'available',
+        confirmed: 0,
         notes: ['Continues from the Swiss Elegance departure of June 18, 2028.'],
       },
     ],
@@ -283,7 +284,11 @@ export const journeyRates: Record<string, JourneyRates> = {
       { icon: 'info', text: 'Prices are confirmed when you book and may change until then.' },
       {
         icon: 'group',
-        text: 'A group departs with a minimum of 6 guests. A guaranteed departure runs whatever the number booked.',
+        text: 'Each departure travels with a minimum of 10 and a maximum of 18 guests.',
+      },
+      {
+        icon: 'check',
+        text: 'Places can be requested while the group comes together; once 10 guests have confirmed, the departure is guaranteed to go ahead.',
       },
     ],
     included: [
@@ -352,8 +357,7 @@ export const journeyRates: Record<string, JourneyRates> = {
         end: '2027-05-19',
         price: '$12,950',
         single: '$3,950',
-        availability: 'available',
-        guaranteed: true,
+        confirmed: 10,
         notes: ['Early season: quiet Old Towns, and the islands before the summer.'],
       },
       {
@@ -361,9 +365,7 @@ export const journeyRates: Record<string, JourneyRates> = {
         end: '2027-06-16',
         price: '$13,750',
         single: '$4,250',
-        availability: 'limited',
-        placesLeft: 2,
-        guaranteed: true,
+        confirmed: 16,
         notes: ['Early summer: the speedboat day to Hvar in the long June light.'],
       },
       {
@@ -371,7 +373,7 @@ export const journeyRates: Record<string, JourneyRates> = {
         end: '2027-09-22',
         price: '$13,750',
         single: '$4,250',
-        availability: 'waitlist',
+        confirmed: 18,
         notes: ['Late summer: the warmest sea of the year, and the Istrian grape harvest.'],
       },
       {
@@ -379,7 +381,7 @@ export const journeyRates: Record<string, JourneyRates> = {
         end: '2027-10-13',
         price: '$12,950',
         single: '$3,950',
-        availability: 'available',
+        confirmed: 8,
         notes: [
           'White truffle season in Istria.',
           'Days 5–7 at Le Méridien Grand Hotel Lav, near Split, in place of Hotel Ambasador.',
@@ -390,14 +392,14 @@ export const journeyRates: Record<string, JourneyRates> = {
         end: '2028-05-24',
         price: '$13,250',
         single: '$3,950',
-        availability: 'available',
+        confirmed: 0,
       },
       {
         start: '2028-09-17',
         end: '2028-09-27',
         price: '$13,950',
         single: '$4,350',
-        availability: 'available',
+        confirmed: 0,
       },
     ],
     priceNotes: [
@@ -413,7 +415,11 @@ export const journeyRates: Record<string, JourneyRates> = {
       { icon: 'info', text: 'Prices are confirmed when you book and may change until then.' },
       {
         icon: 'group',
-        text: 'A group departs with a minimum of 6 guests. A guaranteed departure runs whatever the number booked.',
+        text: 'Each departure travels with a minimum of 10 and a maximum of 18 guests.',
+      },
+      {
+        icon: 'check',
+        text: 'Places can be requested while the group comes together; once 10 guests have confirmed, the departure is guaranteed to go ahead.',
       },
     ],
     included: [
@@ -475,4 +481,20 @@ export const journeyRates: Record<string, JourneyRates> = {
 
 export function ratesOf(slug: string): JourneyRates | undefined {
   return journeyRates[slug];
+}
+
+/**
+ * The departures whose confirmed guests set a journey's status (its card, the
+ * home slider, its page's header): its Dates & Prices rows once they are
+ * Marc's (no longer `sample`), else its own `departures` from journeys.ts.
+ * Sample rows never set a status outside their table, and a departure that
+ * has already run never sets one.
+ */
+export function statusDepartures(
+  slug: string,
+  departures?: readonly (GuestCount & { start: string })[],
+): readonly GuestCount[] {
+  const rates = journeyRates[slug];
+  const from = rates && !rates.sample ? rates.departures : (departures ?? []);
+  return from.filter((d) => isUpcoming(d));
 }

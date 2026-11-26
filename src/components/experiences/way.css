@@ -386,6 +386,53 @@
   align-items: center;
   gap: 1rem 1.75rem;
 }
+/* The ways to reach us, written into the close's line: the phone and the
+   email as quiet underlined links. */
+.xp-ask p a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: color 0.4s var(--ease);
+}
+/* On a touch screen the phone number and the email, on lines next to each
+   other, are each a 44px target that cannot overlap the other. */
+@media (pointer: coarse) {
+  .xp-ask p a {
+    display: inline-block;
+    padding-block: 0.625rem;
+  }
+}
+@media (hover: hover) {
+  .xp-ask p a:hover {
+    color: var(--lake);
+  }
+}
+
+/* -- The journeys in the making (the safaris) ----------------------------- */
+/* As the small group page's journeys, but not links: no page exists yet, so
+   nothing moves under the pointer. Two to a row from a tablet up. */
+.wy-jcard-soon .t {
+  margin: 0;
+}
+@media (hover: hover) {
+  .wy-jcard-soon:hover img {
+    transform: none;
+  }
+  .wy-jcard-soon:hover .t {
+    color: inherit;
+  }
+}
+@media (min-width: 641px) {
+  .wy-jlist-soon {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  /* Two to a row, a little wider than tall, so a card and its words fit
+     on one screen of a laptop. */
+  .wy-jlist-soon .wy-jcard .pic {
+    aspect-ratio: 3 / 2;
+  }
+}
 
 /* -- Narrower screens ---------------------------------------------------- */
 @media (max-width: 1099px) {
@@ -455,6 +502,25 @@
   }
   .wy-mlist {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+/* To a finger, the links set as words are 44px targets, as on /destinations:
+   "Ways to travel" over the name, "All journeys", "Hear first in The Circle"
+   and "Connect with our team". An invisible band centred on the words, so
+   the underline stays where it is. */
+@media (pointer: coarse) {
+  .wy-hero .eb a,
+  .wy .tlink {
+    position: relative;
+  }
+  .wy-hero .eb a::after,
+  .wy .tlink::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
   }
 }
 @media (prefers-reduced-motion: reduce) {

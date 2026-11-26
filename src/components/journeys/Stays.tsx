@@ -11,6 +11,7 @@ import {
   type HotelRecord,
   type HotelTabId,
 } from '@/lib/data/hotels';
+import { staysNote } from '@/lib/data/homeHotels';
 import type { Journey } from '@/lib/journeys';
 import { placePhotos } from './placePhotos';
 import './stays.css';
@@ -20,7 +21,9 @@ import './stays.css';
  * for each (Ishika's notes of 9 Nov 2026, item 23, after A&K's): the hotel's
  * name as the title, its photographs with arrows, tabs for what the hotel
  * offers, its website and the photographs' credits at the foot. The cards and
- * the write-ups come from src/lib/data/hotels.ts.
+ * the write-ups come from src/lib/data/hotels.ts. Marc's note that the final
+ * hotels may vary by departure opens the section (his review of 23 Nov 2026),
+ * and a hotel still to be confirmed is no longer marked on the page.
  */
 
 type StayCard = {
@@ -28,7 +31,6 @@ type StayCard = {
   name: string;
   /** "Lucerne · 3 nights" */
   where: string;
-  unconfirmed: boolean;
   /** The hotel's own first photograph, else the photograph of its town. */
   photo?: { src: string; alt: string };
   url?: string;
@@ -52,7 +54,6 @@ function cardsOf(journey: Journey): StayCard[] {
       key: `${h.place}-${h.name}`,
       name: h.name,
       where: length ? `${h.place} · ${length}` : h.place,
-      unconfirmed: Boolean(h.unconfirmed || hotel?.unconfirmed),
       photo: lead ? { src: lead.src, alt: lead.alt } : placePhotos[h.place],
       url: hotel?.url ?? h.url,
       hotel,
@@ -98,6 +99,7 @@ export function Stays({ journey }: { journey: Journey }) {
           Handpicked luxury properties, selected for their character, outstanding hospitality, and
           sense of place.
         </p>
+        <p className="jst-note">{staysNote}</p>
       </div>
       <ul className="jst-grid">
         {cards.map((card) => (
@@ -134,7 +136,6 @@ export function Stays({ journey }: { journey: Journey }) {
                   card.name
                 )}
               </h3>
-              {card.unconfirmed && <p className="jst-tbc">[Marc to confirm]</p>}
               {card.hotel ? (
                 <p className="jst-more" aria-hidden>
                   More about the hotel
@@ -155,23 +156,25 @@ export function Stays({ journey }: { journey: Journey }) {
         ))}
       </ul>
 
-      {cards.some((card) => card.hotel) && (
+      {/* The pop-up is placed only once a hotel is opened, already open (as
+          the journey forms' is), so the page never carries its title empty
+          (Ishika's notes of 24 Nov 2026: "an empty heading at the bottom").
+          It stays placed afterwards, since `active` is never cleared. */}
+      {active?.hotel && (
         <Dialog
           open={open}
           onClose={() => setOpen(false)}
-          title={active?.hotel?.name ?? ''}
+          title={active.hotel.name}
           describedBy={whereId}
           returnFocus={opener}
           closeLabel="Close hotel details"
         >
-          {active?.hotel && (
-            <HotelPopup
-              key={`${active.key}-${opened}`}
-              card={active}
-              hotel={active.hotel}
-              whereId={whereId}
-            />
-          )}
+          <HotelPopup
+            key={`${active.key}-${opened}`}
+            card={active}
+            hotel={active.hotel}
+            whereId={whereId}
+          />
         </Dialog>
       )}
     </section>
@@ -225,7 +228,6 @@ function HotelPopup({
     <div className="hpop">
       <p className="hpop-where" id={whereId}>
         {card.where}
-        {card.unconfirmed && <span className="hpop-tbc"> [Marc to confirm]</span>}
       </p>
 
       {photos.length > 0 && <Gallery photos={photos} index={index} go={go} name={hotel.name} />}

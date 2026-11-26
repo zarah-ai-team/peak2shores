@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useReducedMotion } from 'motion/react';
 import type { ReelClip } from '@/lib/data/home';
-import { forScreen } from './HomeMedia';
+import { forScreen, posterOf, shown } from './HomeMedia';
 
 /** A play() the browser declined by policy (a phone saving power, a data
     saver), as against one cut short by a pause or a change of clip. */
@@ -42,6 +42,9 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
   // every one already shown. The rest wait for their turn, so a phone fetches
   // two stills with the page rather than four.
   const [seen, setSeen] = useState<ReadonlySet<number>>(() => new Set([0]));
+  // The clips whose films have played: until then a film is transparent, so
+  // its still shows rather than its small poster.
+  const [played, setPlayed] = useState<ReadonlySet<number>>(() => new Set());
   const section = useRef<HTMLElement>(null);
   const videos = useRef<(HTMLVideoElement | null)[]>([]);
   const last = useRef(-1);
@@ -181,8 +184,10 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
                 videos.current[i] = el;
               }}
               className="fill"
-              style={{ filter: clip.grade }}
+              style={{ filter: clip.grade, ...shown(played.has(i)) }}
               src={armed ? forScreen(clip.video) : undefined}
+              poster={posterOf(clip.img)}
+              onPlaying={() => setPlayed((had) => (had.has(i) ? had : new Set(had).add(i)))}
               muted
               playsInline
               // Only the clip on screen loads; each of the others waits for its

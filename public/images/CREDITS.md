@@ -14,11 +14,11 @@ source page itself. None of it was shot for Peaks2Shores; see
   attribution required (credited here and on `/credits` anyway). The licence
   does not allow selling the photos unaltered or compiling them into a
   competing image service.
-- **5** frames and films from Pexels under the
+- **7** frames and films from Pexels under the
   [Pexels License](https://www.pexels.com/license/) (credited here and on
   `/credits`).
-- **7** frames remain from Wikimedia Commons.
-  6 of them are CC BY / CC BY-SA and **require visible
+- **5** frames remain from Wikimedia Commons.
+  5 of them are CC BY / CC BY-SA and **require visible
   attribution** while in use (the `/credits` page provides it).
 
 ## Before launch
@@ -121,8 +121,6 @@ source page itself. None of it was shot for Peaks2Shores; see
 | `jy-montreux-chillon` | journeys/jy-montreux-chillon.jpg | [Commons](https://commons.wikimedia.org/wiki/File:Ch%C3%A2teau_de_Chillon(Chillon_Castle)_on_the_Lake_Geneva_Shore_(Ank_Kumar)_05.jpg) | Ank Kumar | CC BY-SA 4.0 |
 | `jy-motor-valley-ferrari` | journeys/jy-motor-valley-ferrari.jpg | [Commons](https://commons.wikimedia.org/wiki/File:Ferrari-Museum_Maranello_8.JPG) | Wistula | CC BY-SA 3.0 |
 | `jy-rovinj` | journeys/jy-rovinj.jpg | [Commons](https://commons.wikimedia.org/wiki/File:Rovinj-drone-2022.jpg) | Tom Salmon | CC BY-SA 4.0 |
-| `jy-stresa-isola-bella` | journeys/jy-stresa-isola-bella.jpg | [Commons](https://commons.wikimedia.org/wiki/File:Isola_Bella_(Stresa)_-_DSC03945.JPG) | Daderot | Public domain |
-| `jy-verona-arena` | journeys/jy-verona-arena.jpg | [Commons](https://commons.wikimedia.org/wiki/File:The_Arena,_Piazza_Bra,_Verona_(4809401837).jpg) | Elliott Brown from Birmingham, United Kingdom | CC BY 2.0 |
 | `ma-1` | ma-1.jpg | [Unsplash](https://unsplash.com/photos/a-view-of-the-mountains-from-a-high-point-of-view-hiabrcnKUJ0) | Muzykalne Podróże | Unsplash License |
 | `ma-2` | ma-2.jpg | [Unsplash](https://unsplash.com/photos/a-picturesque-village-nestled-amidst-majestic-mountains-F6JYz0q_hKE) | Raymond Petrik | Unsplash License |
 | `ma-3` | ma-3.jpg | [Unsplash](https://unsplash.com/photos/green-trees-near-blue-sea-under-blue-sky-and-white-clouds-during-daytime-ncca-EipewU) | Carlos Coronado | Unsplash License |
@@ -144,6 +142,8 @@ source page itself. None of it was shot for Peaks2Shores; see
 | `sl-6` | sl-6.jpg | [Unsplash](https://unsplash.com/photos/a-group-of-windows-with-flowers-in-them-IcmoAlwTVkE) | Janesca | Unsplash License |
 | `sl-7` | sl-7.jpg | [Unsplash](https://unsplash.com/photos/brown-wooden-dock-on-lake-near-green-trees-under-white-clouds-and-blue-sky-during-daytime-G3gmQEMd2qM) | Renato Muolo | Unsplash License |
 | `sl-8` | sl-8.jpg | [Unsplash](https://unsplash.com/photos/a-group-of-boats-floating-on-top-of-a-lake-I9ytvxlvv-c) | Pascal Debrunner | Unsplash License |
+| `story-places-frame` | story/places-frame.jpg | [Pexels](https://www.pexels.com/photo/grand-canal-in-venice-italy-10768371/) | Sandra Filipe | Pexels License |
+| `story-shores-frame` | story/shores-frame.jpg | [Pexels](https://www.pexels.com/photo/aerial-photography-of-boats-on-body-of-water-near-the-shore-12193796/) | Rockwell branding agency | Pexels License |
 | `tr-1` | tr-1.jpg | [Unsplash](https://unsplash.com/photos/snow-covered-mountain-during-daytime-ct4MF6XoLzY) | Sven Piek | Unsplash License |
 | `tr-2` | tr-2.jpg | [Unsplash](https://unsplash.com/photos/snow-capped-mountains-reflected-in-lake-o75824r-9HE) | Martin Leitgeb | Unsplash License |
 | `tr-3` | tr-3.jpg | [Unsplash](https://unsplash.com/photos/green-trees-on-brown-mountain-near-body-of-water-during-daytime-kJ2_a03Bp-M) | Henrique Ferreira | Unsplash License |
@@ -195,24 +195,12 @@ The Hotel Excelsior Dubrovnik shows the licensed Pexels frame
 | `hotel-jw-marriott-venice-04` | hotels/jw-marriott-venice/04-spa-pool.jpg | [traveler.marriott.com](https://traveler.marriott.com/venice/jw-venice-design/) | Marriott International |
 | `hotel-jw-marriott-venice-05` | hotels/jw-marriott-venice/05-olive-grove.jpg | [traveler.marriott.com](https://traveler.marriott.com/venice/jw-venice-design/) | Marriott International |
 | `hotel-jw-marriott-venice-06` | hotels/jw-marriott-venice/06-venice-across-the-lagoon.jpg | [traveler.marriott.com](https://traveler.marriott.com/venice/jw-venice-design/) | Marriott International |
-| `hotel-la-palma-stresa-01` | hotels/la-palma-stresa/01-garden-and-hotel.jpg | [hlapalma.it](https://www.hlapalma.it/en/) | Hotel La Palma |
-| `hotel-la-palma-stresa-02` | hotels/la-palma-stresa/02-lake-view-room.jpg | [hlapalma.it](https://www.hlapalma.it/en/rooms/) | Hotel La Palma |
-| `hotel-la-palma-stresa-03` | hotels/la-palma-stresa/03-restaurant.jpg | [hlapalma.it](https://www.hlapalma.it/en/concept/) | Hotel La Palma |
-| `hotel-la-palma-stresa-04` | hotels/la-palma-stresa/04-sky-bar.jpg | [hlapalma.it](https://www.hlapalma.it/en/sky-bar/) | Hotel La Palma |
-| `hotel-la-palma-stresa-05` | hotels/la-palma-stresa/05-lakeside-pool.jpg | [hlapalma.it](https://www.hlapalma.it/en/concept/) | Hotel La Palma |
-| `hotel-la-palma-stresa-06` | hotels/la-palma-stresa/06-sky-pool.jpg | [hlapalma.it](https://www.hlapalma.it/en/concept/) | Hotel La Palma |
 | `hotel-majestic-bologna-01` | hotels/majestic-bologna/01-terrace-over-bologna.jpg | [grandhotelmajestic.duetorrihotels.com](https://grandhotelmajestic.duetorrihotels.com/en/luxury-hotel-italy-5-stars-bologna/rooms-suites) | Grand Hotel Majestic già Baglioni |
 | `hotel-majestic-bologna-02` | hotels/majestic-bologna/02-junior-suite.jpg | [grandhotelmajestic.duetorrihotels.com](https://grandhotelmajestic.duetorrihotels.com/en/luxury-hotel-italy-5-stars-bologna/rooms-suites) | Grand Hotel Majestic già Baglioni |
 | `hotel-majestic-bologna-03` | hotels/majestic-bologna/03-frescoed-ceiling.jpg | [grandhotelmajestic.duetorrihotels.com](https://grandhotelmajestic.duetorrihotels.com/en/luxury-hotel-italy-5-stars-bologna/hotel) | Grand Hotel Majestic già Baglioni |
 | `hotel-majestic-bologna-04` | hotels/majestic-bologna/04-i-carracci.jpg | [grandhotelmajestic.duetorrihotels.com](https://grandhotelmajestic.duetorrihotels.com/en/luxury-hotel-italy-5-stars-bologna/i-carracci-restaurant) | Grand Hotel Majestic già Baglioni |
 | `hotel-majestic-bologna-05` | hotels/majestic-bologna/05-majestic-terraces.jpg | [grandhotelmajestic.duetorrihotels.com](https://grandhotelmajestic.duetorrihotels.com/en/luxury-hotel-italy-5-stars-bologna/majestic-terraces) | Grand Hotel Majestic già Baglioni |
 | `hotel-majestic-bologna-06` | hotels/majestic-bologna/06-bologna-from-above.jpg | [grandhotelmajestic.duetorrihotels.com](https://grandhotelmajestic.duetorrihotels.com/en/luxury-hotel-italy-5-stars-bologna/hotel) | Grand Hotel Majestic già Baglioni |
-| `hotel-mandarin-oriental-luzern-01` | hotels/mandarin-oriental-luzern/01-lakeside-palace.jpg | [mandarinoriental.com](https://www.mandarinoriental.com/en/luzern/palace/gallery) | Mandarin Oriental Hotel Group |
-| `hotel-mandarin-oriental-luzern-02` | hotels/mandarin-oriental-luzern/02-lake-view-junior-suite.jpg | [mandarinoriental.com](https://www.mandarinoriental.com/en/luzern/palace/gallery) | Mandarin Oriental Hotel Group |
-| `hotel-mandarin-oriental-luzern-03` | hotels/mandarin-oriental-luzern/03-lake-view-suite-terrace.jpg | [mandarinoriental.com](https://www.mandarinoriental.com/en/luzern/palace/gallery) | Mandarin Oriental Hotel Group |
-| `hotel-mandarin-oriental-luzern-04` | hotels/mandarin-oriental-luzern/04-colonnade-restaurant.jpg | [mandarinoriental.com](https://www.mandarinoriental.com/en/luzern/palace/gallery) | Mandarin Oriental Hotel Group |
-| `hotel-mandarin-oriental-luzern-05` | hotels/mandarin-oriental-luzern/05-spa-treatment-room.jpg | [mandarinoriental.com](https://www.mandarinoriental.com/en/luzern/palace/gallery) | Mandarin Oriental Hotel Group |
-| `hotel-mandarin-oriental-luzern-06` | hotels/mandarin-oriental-luzern/06-lucerne-at-dusk.jpg | [mandarinoriental.com](https://www.mandarinoriental.com/en/luzern/palace/gallery) | Mandarin Oriental Hotel Group |
 | `hotel-palazzo-cordusio-milan-01` | hotels/palazzo-cordusio-milan/01-palazzo-facade.jpg | [melia.com](https://www.melia.com/en/hotels/italy/milan/palazzo-cordusio-gran-melia) | Meliá Hotels International |
 | `hotel-palazzo-cordusio-milan-02` | hotels/palazzo-cordusio-milan/02-junior-suite.jpg | [melia.com](https://www.melia.com/en/hotels/italy/milan/palazzo-cordusio-gran-melia) | Meliá Hotels International |
 | `hotel-palazzo-cordusio-milan-03` | hotels/palazzo-cordusio-milan/03-giardino-cordusio.jpg | [melia.com](https://www.melia.com/en/hotels/italy/milan/palazzo-cordusio-gran-melia) | Meliá Hotels International |
@@ -225,9 +213,21 @@ The Hotel Excelsior Dubrovnik shows the licensed Pexels frame
 | `hotel-quellenhof-lazise-04` | hotels/quellenhof-lazise/04-panorama-restaurant.jpg | [quellenhof-lazise.it](https://www.quellenhof-lazise.it/en/quellenhof-lazise/impressions) | Quellenhof Luxury Resort Lazise |
 | `hotel-quellenhof-lazise-05` | hotels/quellenhof-lazise/05-onda-spa.jpg | [quellenhof-lazise.it](https://www.quellenhof-lazise.it/en/quellenhof-lazise/impressions) | Quellenhof Luxury Resort Lazise |
 | `hotel-quellenhof-lazise-06` | hotels/quellenhof-lazise/06-bathing-lake.jpg | [quellenhof-lazise.it](https://www.quellenhof-lazise.it/en/quellenhof-lazise/impressions) | Quellenhof Luxury Resort Lazise |
-| `hotel-zermatterhof-01` | hotels/zermatterhof/01-carriage-and-hotel.jpg | [zermatterhof.ch](https://www.zermatterhof.ch/) | Grand Hotel Zermatterhof |
-| `hotel-zermatterhof-02` | hotels/zermatterhof/02-guest-room.jpg | [zermatterhof.ch](https://www.zermatterhof.ch/sleep/) | Grand Hotel Zermatterhof |
-| `hotel-zermatterhof-03` | hotels/zermatterhof/03-matterhorn-window.jpg | [zermatterhof.ch](https://www.zermatterhof.ch/sleep/) | Grand Hotel Zermatterhof |
-| `hotel-zermatterhof-04` | hotels/zermatterhof/04-prato-borni.jpg | [zermatterhof.ch](https://www.zermatterhof.ch/restaurants-and-bars/) | Grand Hotel Zermatterhof |
-| `hotel-zermatterhof-05` | hotels/zermatterhof/05-spa-pool.jpg | [zermatterhof.ch](https://www.zermatterhof.ch/spa/) | Grand Hotel Zermatterhof |
-| `hotel-zermatterhof-06` | hotels/zermatterhof/06-matterhorn.jpg | [zermatterhof.ch](https://www.zermatterhof.ch/) | Grand Hotel Zermatterhof |
+| `hotel-schweizerhof-luzern-01` | hotels/schweizerhof-luzern/01-hotel-at-blue-hour.jpg | [schweizerhof-luzern.ch](https://www.schweizerhof-luzern.ch/en) | Hotel Schweizerhof Luzern |
+| `hotel-schweizerhof-luzern-02` | hotels/schweizerhof-luzern/02-lucerne-luxury-suite.jpg | [schweizerhof-luzern.ch](https://www.schweizerhof-luzern.ch/en/rooms/lucerne-luxury-suite) | Hotel Schweizerhof Luzern |
+| `hotel-schweizerhof-luzern-03` | hotels/schweizerhof-luzern/03-lifestyle-junior-suite.jpg | [schweizerhof-luzern.ch](https://www.schweizerhof-luzern.ch/en/rooms/lifestyle-junior-suite) | Hotel Schweizerhof Luzern |
+| `hotel-schweizerhof-luzern-04` | hotels/schweizerhof-luzern/04-brasserie-vico.jpg | [schweizerhof-luzern.ch](https://www.schweizerhof-luzern.ch/en/restaurants-bar) | Hotel Schweizerhof Luzern |
+| `hotel-schweizerhof-luzern-05` | hotels/schweizerhof-luzern/05-staircase.jpg | [schweizerhof-luzern.ch](https://www.schweizerhof-luzern.ch/en) | Hotel Schweizerhof Luzern |
+| `hotel-schweizerhof-luzern-06` | hotels/schweizerhof-luzern/06-chapel-bridge.jpg | [schweizerhof-luzern.ch](https://www.schweizerhof-luzern.ch/en/luzern) | Hotel Schweizerhof Luzern |
+| `hotel-the-omnia-zermatt-01` | hotels/the-omnia-zermatt/01-lodge-above-zermatt.jpg | [the-omnia.com](https://the-omnia.com/en/gallery) | THE OMNIA AG |
+| `hotel-the-omnia-zermatt-02` | hotels/the-omnia-zermatt/02-whirlpool-and-matterhorn.jpg | [the-omnia.com](https://the-omnia.com/en/relax) | THE OMNIA AG |
+| `hotel-the-omnia-zermatt-03` | hotels/the-omnia-zermatt/03-suite-living-room.jpg | [the-omnia.com](https://the-omnia.com/en/gallery) | THE OMNIA AG |
+| `hotel-the-omnia-zermatt-04` | hotels/the-omnia-zermatt/04-restaurant.jpg | [the-omnia.com](https://the-omnia.com/en/dine) | THE OMNIA AG |
+| `hotel-the-omnia-zermatt-05` | hotels/the-omnia-zermatt/05-indoor-pool.jpg | [the-omnia.com](https://the-omnia.com/en/relax) | THE OMNIA AG |
+| `hotel-the-omnia-zermatt-06` | hotels/the-omnia-zermatt/06-zermatt-at-night.jpg | [the-omnia.com](https://the-omnia.com/en/gallery) | THE OMNIA AG |
+| `hotel-villa-aminta-stresa-01` | hotels/villa-aminta-stresa/01-villa-and-isola-bella.jpg | [villa-aminta.it](https://www.villa-aminta.it/) | Villa e Palazzo Aminta |
+| `hotel-villa-aminta-stresa-02` | hotels/villa-aminta-stresa/02-junior-suite-lake-view.jpg | [villa-aminta.it](https://www.villa-aminta.it/en/luxury-hotel-rooms-lake-maggiore-view/junior-suite-lake-view) | Villa e Palazzo Aminta |
+| `hotel-villa-aminta-stresa-03` | hotels/villa-aminta-stresa/03-veranda.jpg | [villa-aminta.it](https://www.villa-aminta.it/en/gallery-lake-maggiore-luxury-resorts) | Villa e Palazzo Aminta |
+| `hotel-villa-aminta-stresa-04` | hotels/villa-aminta-stresa/04-i-mori-restaurant.jpg | [villa-aminta.it](https://www.villa-aminta.it/en/gallery-lake-maggiore-luxury-resorts) | Villa e Palazzo Aminta |
+| `hotel-villa-aminta-stresa-05` | hotels/villa-aminta-stresa/05-pool.jpg | [villa-aminta.it](https://www.villa-aminta.it/en/gallery-lake-maggiore-luxury-resorts) | Villa e Palazzo Aminta |
+| `hotel-villa-aminta-stresa-06` | hotels/villa-aminta-stresa/06-isola-bella-at-night.jpg | [villa-aminta.it](https://www.villa-aminta.it/) | Villa e Palazzo Aminta |

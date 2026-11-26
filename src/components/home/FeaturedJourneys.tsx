@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { Arrow } from '@/components/ui/Button';
+import { availabilityText } from '@/lib/availability';
 import type { JourneySummary } from '@/lib/content';
 import { fromPriceLabel } from '@/lib/journeyPrice';
 import { DATES_TBA } from '@/lib/journeys';
-import { comingSoon, flipbook, journeyRank, statusLabel } from '@/lib/data/flipbook';
+import { comingSoon, flipbook, journeyRank } from '@/lib/data/flipbook';
 import { getMedia, type MediaKey } from '@/lib/media';
 import { JourneySlider, type JourneySlide } from './JourneySlider';
 import './journeys-home.css';
@@ -13,7 +14,7 @@ import './journeys-home.css';
    A journey without one falls back to its list frame, then its card frame. */
 const homeFrames: Record<string, MediaKey> = {
   'swiss-elegance': 'home-jr-swiss',
-  'the-italian-experience': 'home-jr-italy',
+  'italy-uncovered': 'home-jr-italy',
   // Dubrovnik, the journey's finale, in golden light (8 Nov).
   'adriatic-collection': 'home-jr-adriatic',
 };
@@ -95,14 +96,15 @@ function PromiseIcon({ kind }: { kind: (typeof promises)[number]['icon'] }) {
    to its countries, where they appear in its title. */
 const titlePlaces: Record<string, string[]> = {
   'swiss-elegance': ['Swiss', 'Italian'],
-  'the-italian-experience': ['Italy'],
+  'italy-uncovered': ['Italy'],
   'adriatic-collection': ['Adriatic'],
 };
 
 /* Where a wide crop of the frame centres, when the middle would cut a face. */
 const homePos: Record<string, string> = {
-  // The traveler's face sits high in the frame (8 Nov: it was cut in half).
-  'the-italian-experience': '50% 4%',
+  // The traveler's face sits high in the frame (8 Nov: it was cut in half);
+  // 14% keeps her chin above the up-next cards in a short laptop window.
+  'italy-uncovered': '50% 14%',
 };
 
 /** The journey's photograph: the first of its frames that has a file. */
@@ -149,7 +151,12 @@ export function FeaturedJourneys({ journeys }: { journeys: JourneySummary[] }) {
         ...(j.departure && j.departure !== DATES_TBA ? [j.departure] : []),
         ...(j.priceFrom ? [fromPriceLabel(j)] : []),
       ],
-      status: statusLabel[j.status ?? 'open'],
+      // The slide's one status (the owner's request of 26 Nov): "Now booking"
+      // while its bookings are open, in the words of the switch above; Marc's
+      // status, the best of its departures, once one is guaranteed or every
+      // one is sold out.
+      status:
+        j.availability.status === 'booking-now' ? 'Now booking' : availabilityText(j.availability),
       photo: slidePhoto(j),
     };
   });

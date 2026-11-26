@@ -1,7 +1,8 @@
 import { placePhotos } from '@/components/journeys/placePhotos';
-import { flipbook, journeyTint, statusLabel } from '@/lib/data/flipbook';
+import { availabilityText, type DepartureAvailability } from '@/lib/availability';
+import { flipbook, journeyTint } from '@/lib/data/flipbook';
 import { fromPriceLabel } from '@/lib/journeyPrice';
-import { DATES_TBA, type Journey } from '@/lib/journeys';
+import { DATES_TBA, journeyAvailabilityOf, type Journey } from '@/lib/journeys';
 
 /**
  * One journey as a card, the same on the Journeys page (The Collection) and
@@ -27,29 +28,70 @@ export type CollectionCardData = {
   facts: string[];
   /** The price line, from fromPriceLabel(): "From $12,400 per person" or "Rates to be announced". */
   price: string;
+  /**
+   * Where it stands for booking, in Marc's words: the best of its departures
+   * ("Booking Now", "Guaranteed · Limited Availability", "Sold Out").
+   */
   status: string;
+  /** The same as data, for a label drawn by its status. */
+  availability: DepartureAvailability;
   soon?: boolean;
   tint: string;
   /** The photographs to browse on the card, the lead one first. */
-  imgs: { src: string; alt: string }[];
+  imgs: CardPhoto[];
 };
 
-/* Each card's photographs (notes of 5 November 2026): real photographs of
-   places the journey visits, the client's own first where we have them. */
-const cardPhotos: Record<string, { src: string; alt: string }[]> = {
-  'swiss-elegance': ['Lucerne', 'Zermatt', 'Grindelwald', 'Montreux', 'Stresa'].map(
-    (p) => placePhotos[p],
-  ),
-  'the-italian-experience': [
+/**
+ * A card's photograph. `pos` is where its crop centres (CSS object-position),
+ * for a photograph whose subject is not in its middle.
+ */
+export type CardPhoto = { src: string; alt: string; pos?: string };
+
+/* Each card's photographs, in the order of Marc's review of 23 November
+   2026: real photographs of places the journey visits, the client's own where
+   we have them (the journey flyers, the Journey Book, Marc's Drive). Most are
+   the place's own (placePhotos); a card that shows another names it here. */
+const cardPhotos: Record<string, CardPhoto[]> = {
+  // Lucerne, Zermatt's lake and the Matterhorn, the Jungfrau region's train,
+  // Montreux, and Isola Bella off Stresa. Montreux keeps Chillon until a Lake
+  // Geneva photograph large enough for a card is supplied (the flyer prints
+  // its own, the Lavaux vineyards, at 946x458 under its label).
+  'swiss-elegance': [
+    placePhotos.Lucerne,
     {
-      src: '/images/ie-hero.jpg',
-      alt: 'The Scaliger Castle at Sirmione rising from the clear water of Lake Garda',
+      src: '/images/journeys/jy-zermatt-matterhorn-lake.jpg',
+      alt: 'The Matterhorn mirrored in a still alpine lake above Zermatt',
     },
-    ...['Venice', 'Bologna', 'Verona', 'Motor Valley'].map((p) => placePhotos[p]),
+    placePhotos.Grindelwald,
+    placePhotos.Montreux,
+    placePhotos.Stresa,
   ],
-  'adriatic-collection': ['Dubrovnik', 'Hvar', 'Rovinj', 'Split', 'Venice'].map(
-    (p) => placePhotos[p],
-  ),
+  // The route in order. The first photograph was Sirmione's castle on Lake
+  // Garda, not Emilia-Romagna: the flyer's Bologna photograph opens the card
+  // instead, with the traveler's face kept in the crop.
+  'italy-uncovered': [
+    {
+      src: '/images/home/italian-experience.jpg',
+      alt: 'A smiling traveler holding a board of prosciutto and an aperitivo in an Italian salumeria',
+      pos: '50% 20%',
+    },
+    placePhotos['Motor Valley'],
+    placePhotos['Lake Garda'],
+    placePhotos.Verona,
+    placePhotos.Venice,
+  ],
+  // The route in order, Venice to Dubrovnik. Dubrovnik keeps its walls (its
+  // page points at the view from Mount Srđ).
+  'adriatic-collection': [
+    placePhotos.Venice,
+    placePhotos.Rovinj,
+    placePhotos.Split,
+    placePhotos.Hvar,
+    {
+      src: '/images/drive/croatia-dubrovnik-old-town-walls.jpg',
+      alt: 'Dubrovnik’s walls and the Lovrijenac fortress above clear Adriatic water',
+    },
+  ],
 };
 
 /** A departure month, '2027-06', as the Month filter names it: "June 2027". */
@@ -80,6 +122,7 @@ function departureMonths(j: Journey) {
 /** A journey as its card shows it. */
 export function toCollectionCard(j: Journey): CollectionCardData {
   const book = flipbook[j.slug];
+  const availability = journeyAvailabilityOf(j);
   return {
     slug: j.slug,
     title: book?.title ?? j.title,
@@ -96,7 +139,8 @@ export function toCollectionCard(j: Journey): CollectionCardData {
     // (a date or just a year) once Marc sets it. The price has its own line.
     facts: [`${j.days} days`, ...(j.departure && j.departure !== DATES_TBA ? [j.departure] : [])],
     price: fromPriceLabel(j),
-    status: statusLabel[j.status ?? 'open'] ?? 'Now booking',
+    status: availabilityText(availability),
+    availability,
     tint: journeyTint[j.slug] ?? '#1d4a66',
     imgs: (cardPhotos[j.slug] ?? []).filter(Boolean),
   };

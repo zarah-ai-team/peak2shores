@@ -119,10 +119,11 @@ export function WaysToTravel() {
     <section ref={section} className="hc-ways" id="ways" aria-labelledby="ways-title">
       <div className="head dk">
         <div>
-          {/* "The Art of Travel" (2 Nov notes): the six ways to travel with us.
-              No call to action up here; the floating button covers it. */}
+          {/* "The Art of Travel" (2 Nov notes): the six ways to travel with us,
+              in the line agreed with Marc (review of 23 Nov). No call to action
+              up here; the floating button covers it. */}
           <h2 id="ways-title">The Art of Travel</h2>
-          <p className="sub-h">Experience the world your way.</p>
+          <p className="sub-h">Six ways to discover the world with Peaks2Shores.</p>
         </div>
       </div>
 

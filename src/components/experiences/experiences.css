@@ -1,7 +1,7 @@
 /* ==========================================================================
    Experiences — set in the homepage's language (home.css supplies the .hc
    tokens, buttons and labels). A film opening on night, the ways to travel
-   on paper as a row of tall photographs, the five experiences on night as a
+   on paper as a row of tall photographs, the four experiences on night as a
    collage of prints, and a paper close. Photographs at the homepage radius; one
    heading style throughout: Newsreader, regular, never italic.
    ========================================================================== */
@@ -322,7 +322,7 @@
   background: rgb(255 255 255 / 0.24);
 }
 
-/* -- 03 The five: a collage of prints ---------------------------------- */
+/* -- 03 The four: a collage of prints ---------------------------------- */
 .xp-five {
   background: var(--paper);
   color: var(--ink);
@@ -359,27 +359,24 @@
   color: #fff;
   transition: transform 0.9s var(--ease);
 }
-/* Taste leads, tall; Meet and Discover step down beside it; Explore and Stay
-   below them, all five ending on one line. */
+/* The four (Marc's decision, 24 Nov 2026): Taste leads, tall; Meet and
+   Discover stand one above the other beside it, a step down; Move rises tall
+   at the right (its bridge runs up the frame), all four ending on one line. */
 .xp-print-1 {
   grid-column: 1 / 6;
   grid-row: 1 / 11;
 }
 .xp-print-2 {
   grid-column: 6 / 10;
-  grid-row: 2 / 6;
+  grid-row: 2 / 7;
 }
 .xp-print-3 {
-  grid-column: 10 / 13;
-  grid-row: 1 / 7;
+  grid-column: 6 / 10;
+  grid-row: 7 / 11;
 }
 .xp-print-4 {
-  grid-column: 6 / 9;
-  grid-row: 6 / 11;
-}
-.xp-print-5 {
-  grid-column: 9 / 13;
-  grid-row: 7 / 11;
+  grid-column: 10 / 13;
+  grid-row: 1 / 11;
 }
 .xp-print .pic {
   position: absolute;
@@ -509,7 +506,7 @@
   .xp-panel .bar {
     display: none;
   }
-  /* The collage on six columns: Taste across the top, the others two by two. */
+  /* The collage on two columns: the four prints two by two. */
   .xp-collage {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-auto-rows: auto;
@@ -519,15 +516,15 @@
   .xp-print-1,
   .xp-print-2,
   .xp-print-3,
-  .xp-print-4,
-  .xp-print-5 {
+  .xp-print-4 {
     grid-column: auto;
     grid-row: auto;
     aspect-ratio: 4 / 5;
   }
-  .xp-print-1 {
-    grid-column: 1 / -1;
-    aspect-ratio: 16 / 10;
+  /* The four prints one size here, so Taste's name is the size of the
+     others' (it leads, larger, only where its print does). */
+  .xp-print-1 h3 {
+    font-size: clamp(1.5rem, 2vw, 2.375rem);
   }
 }
 @media (max-width: 900px) {

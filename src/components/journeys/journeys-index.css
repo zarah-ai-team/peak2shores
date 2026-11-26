@@ -405,6 +405,15 @@
   text-transform: uppercase;
   color: var(--muted);
 }
+/* The journey's status under its region, as on the list's cards. */
+.jxh-card .jxh-st {
+  margin-top: 0.5rem;
+}
+/* The "Stay tuned" card has no status: the same line, kept as empty room. */
+.jxh-card .jxh-st-room {
+  display: block;
+  visibility: hidden;
+}
 .jxh-card h3 {
   margin: 0.5rem 0 0;
   font-family: var(--serif);
@@ -531,6 +540,12 @@
 .xpd-head {
   position: sticky;
   top: calc(var(--nav-h-compact) + 5rem);
+}
+/* It rides up with the menu bar as the header steps aside (globals.css). */
+@media (prefers-reduced-motion: no-preference) {
+  .xpd-head {
+    transition: top 0.45s var(--ease-editorial);
+  }
 }
 .xpd-head h2 {
   max-width: 14ch;
@@ -1051,32 +1066,21 @@
     margin-left: 0;
   }
 }
-/* A phone held sideways (a short screen). The owner's decision of 19
-   November 2026: on this page the in-page menu scrolls away with the page,
-   and only the header stays pinned. The menu follows the hero directly only
-   here, so a journey's page (where this stylesheet can still be loaded after
-   a step from here) keeps its pinned bar; anchors and the menu's current
-   tab follow the header alone. The globe takes the height left under the
-   header, less its arrows, so the globe and the arrows that turn it are on
-   screen together (the canvas follows its box, and the route is framed
-   again to the new height), and an open filter list fits under the header
-   with its button. */
+/* A phone held sideways (a short screen). The in-page menu stays pinned here
+   too, at the very top while the header is away on a scroll down (the owner's
+   decision of 25 November 2026, in place of the menu that scrolled away of 19
+   November). The globe takes the height left under the menu bar and a
+   breath (the header's height stands for the two), less its arrows, so the
+   globe and the arrows that turn it are on screen together as the page is
+   read down (the canvas follows its box, and the route is framed again to
+   the new height). */
 @media (orientation: landscape) and (max-height: 500px) {
-  .jxh + nav[data-journey-tabs] {
-    position: static;
-  }
-  html:has(.jxh + nav[data-journey-tabs]) {
-    scroll-padding-top: calc(var(--nav-h) + 1rem);
-  }
   .jxh-map {
     aspect-ratio: auto;
     height: max(8rem, calc(100svh - var(--nav-h) - 6.5rem));
   }
   .jx .colmap-hint {
     margin-bottom: 0.75rem;
-  }
-  .jx .flist {
-    max-height: max(9rem, calc(100svh - var(--nav-h-compact) - 7rem));
   }
 }
 /* There, 760px wide or less: "Stay tuned" beside the turning earth, as on a

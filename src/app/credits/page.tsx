@@ -39,7 +39,7 @@ const libraries: Record<string, string> = {
   shutterstock: 'Shutterstock',
 };
 
-/** The website a hotel's photograph comes from, "mandarinoriental.com". */
+/** The website a hotel's photograph comes from, "schweizerhof-luzern.ch". */
 const siteOf = (row: Credit) =>
   row.pageUrl ? new URL(row.pageUrl).hostname.replace(/^www\./, '') : '';
 
@@ -65,6 +65,14 @@ const breakAtDots = (host: string) => {
     </Fragment>
   ));
 };
+
+/**
+ * To a finger, a photograph's link is a 44px target however short its words
+ * are: an invisible band centred on them, as on the Plan page's journey
+ * titles. Each credit's padding keeps the band clear of the next one's link.
+ */
+const TITLE_TARGET =
+  'relative pointer-coarse:after:absolute pointer-coarse:after:inset-x-0 pointer-coarse:after:top-1/2 pointer-coarse:after:h-11 pointer-coarse:after:-translate-y-1/2';
 
 /**
  * One table of credits: the photograph (linked to its source page), who it is
@@ -130,7 +138,7 @@ function CreditTable({
                   rel={
                     row.source === 'hotel' ? 'noopener noreferrer' : 'noopener noreferrer license'
                   }
-                  className="prose-link"
+                  className={`prose-link ${TITLE_TARGET}`}
                 >
                   {titleOf(row)}
                 </a>
@@ -164,8 +172,9 @@ function CreditTable({
  * drift from what is on the site. Remove it only once every credited frame has
  * been replaced with commissioned photography.
  *
- * The hotels' photographs (the hotel pop-ups on the journey pages) come from
- * each hotel's official website; they are listed apart, credited as the hotel
+ * The hotels' photographs (the hotel pop-ups on the journey pages, and a few
+ * elsewhere: the homepage, Where we stay, the ways to travel) come from each
+ * hotel's official website; they are listed apart, credited as the hotel
  * gives it, each linked to the page it was taken from.
  *
  * The films and photographs the client supplied are recorded in
@@ -210,8 +219,9 @@ export default function CreditsPage() {
               The hotels’ photographs
             </h2>
             <p className="prose-body-sm measure m-0 mb-6">
-              Shown in the hotel pop-ups on the journey pages. Each photograph is the hotel’s own,
-              taken from its official website and credited as the hotel gives it.
+              Most are shown in the hotel pop-ups on the journey pages, a few elsewhere on the site.
+              Each photograph is the hotel’s own, taken from its official website and credited as
+              the hotel gives it.
             </p>
             <CreditTable
               rows={hotels}

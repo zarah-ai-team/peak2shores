@@ -9,6 +9,8 @@ export type HeroPlace = {
   stay: string;
   img?: string;
   alt: string;
+  /** Where the photograph's crop centres (CSS object-position), when its subject is off the middle. */
+  pos?: string;
 };
 
 /* The hero fills the screen's height, so on a screen taller than it is wide
@@ -98,6 +100,7 @@ export function HeroStage({
               alt={shown === k ? p.alt : ''}
               aria-hidden={shown !== k}
               fill
+              style={p.pos ? { objectPosition: p.pos } : undefined}
               sizes={HERO_SIZES}
               quality={85}
               onLoad={() => setReady((s) => plus(s, k))}

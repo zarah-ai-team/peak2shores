@@ -136,8 +136,8 @@ export async function getRelatedJourneys(
 }
 
 /**
- * Journey titles the enquiry form may name — every visible journey, so a
- * sold-out one can still take a waitlist enquiry. `/api/enquiry` validates the
+ * Journey titles the inquiry form may name — every visible journey, so a
+ * sold-out one can still take an inquiry. `/api/enquiry` validates the
  * submitted title against this same list.
  */
 export async function getEnquirableJourneyTitles(): Promise<string[]> {

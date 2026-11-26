@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { AvailabilityGuide } from '@/components/journeys/AvailabilityGuide';
 import { JourneyCollection } from '@/components/journeys/JourneyCollection';
 import { JourneysHero } from '@/components/journeys/JourneysHero';
 import { JourneysMap } from '@/components/journeys/JourneysMap';
@@ -10,6 +11,7 @@ import { journeysFaq } from '@/lib/data/faq';
 import { journeyRank } from '@/lib/data/flipbook';
 import { toCollectionCard } from '@/lib/journeyCards';
 import { DATES_TBA } from '@/lib/journeys';
+import { PRIVATE_TRAVEL_HREF } from '@/lib/links';
 
 /* Rebuilt hourly, so a journey scheduled with `publishAt` appears on time. */
 export const revalidate = 3600;
@@ -31,7 +33,9 @@ export const metadata = pageMetadata({
  *    passed. Its tabs alone: no "Request details".
  * 3. The Collection: the journey cards with their dropdown filters, and a
  *    Cards / Map switch whose Map view is the globe with the journeys as a
- *    carousel.
+ *    carousel. Each card shows its journey's booking status.
+ *    Then, small, Understanding Journey Availability: the three statuses and
+ *    Limited Availability in Marc's words (his review of 23 November 2026).
  * 4. The details that make the difference.
  * 5. Bespoke Private Travel: one slim navy banner with one button.
  * 6. Good to know: the questions. No button of its own since the chat notes
@@ -64,6 +68,7 @@ export default async function JourneysPage() {
         tba={DATES_TBA}
         map={<JourneysMap journeys={journeys} />}
       />
+      <AvailabilityGuide />
       <DetailsDifference />
 
       <section className="jxb" id="private" aria-labelledby="jxb-h">
@@ -79,7 +84,7 @@ export default async function JourneysPage() {
           {/* `data-fab-clear`: the floating "Connect with our team" steps aside
               rather than cover the button. */}
           <div className="jxb-ctas" data-fab-clear>
-            <Link className="jxb-btn solid" href="/plan#private">
+            <Link className="jxb-btn solid" href={PRIVATE_TRAVEL_HREF}>
               Bespoke Private Travel
             </Link>
           </div>

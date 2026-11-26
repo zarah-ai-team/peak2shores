@@ -27,8 +27,18 @@ import { defaultDialCountry, dialCodeOf, dialCodes } from './dialCodes';
 import type { JourneyFormKind, JourneyRef } from './JourneyForms';
 import './journey-forms.css';
 
-/** One press of a button that opens a form: which form, and the departure it named. */
-export type FormRequest = { kind: JourneyFormKind; departure?: string; n: number };
+/**
+ * One press of a button that opens a form: which form, the departure it named,
+ * the button's own words when they title the pop-up ("Request your place"),
+ * and what that departure's status means, shown at the top of the pop-up.
+ */
+export type FormRequest = {
+  kind: JourneyFormKind;
+  departure?: string;
+  title?: string;
+  note?: string;
+  n: number;
+};
 
 const FIRST_NAME = site.founder.name.split(' ')[0];
 
@@ -45,11 +55,13 @@ const COPY: Record<
   }
 > = {
   enquiry: {
-    title: 'Make an enquiry',
-    about: 'Enquiring about',
-    intro: `Enquiring holds nothing and commits you to nothing\u00a0— it starts a conversation with ${FIRST_NAME}.`,
-    send: 'Send enquiry',
-    email: 'Email your enquiry',
+    // The page's booking call to action replaces this title when it has one
+    // (JourneyRef.cta: "Request your place").
+    title: 'Make an inquiry',
+    about: 'Inquiring about',
+    intro: `Inquiring holds nothing and commits you to nothing\u00a0— it starts a conversation with ${FIRST_NAME}.`,
+    send: 'Send inquiry',
+    email: 'Email your inquiry',
   },
   group: {
     title: 'Book this journey',
@@ -142,9 +154,10 @@ function check(kind: JourneyFormKind, values: Values): Errors {
 }
 
 /**
- * The three pop-up forms of a journey's page, in one dialog: "Make an
- * enquiry", "Book this journey" (the group departure) and "Book as a private
- * journey". The button that opens it chooses the form, so the journey and the
+ * The three pop-up forms of a journey's page, in one dialog: the inquiry
+ * (titled with the journey's booking call to action, "Request your place",
+ * or "Make an inquiry"), "Book this journey" (the group departure) and "Book
+ * as a private journey". The button that opens it chooses the form, so the journey and the
  * type are shown at the top and sent with the request, never asked for.
  *
  * What is typed stays while the page is open: a form closed by mistake opens
@@ -230,6 +243,11 @@ export function JourneyFormDialog({
   const kind =
     status === 'idle' || status === 'error' ? request.kind : (sent?.kind ?? request.kind);
   const copy = COPY[kind];
+  // What the status of the departure (or the journey) means, above the
+  // form's own words: a departure set off by 10 guests (Marc's para 73).
+  const note =
+    (request.kind === kind && request.note) ||
+    (kind === 'enquiry' && journey.cta ? journey.statusNote : undefined);
   const booking = kind !== 'enquiry';
   const departures = kind === 'group' ? (journey.departures ?? []) : [];
   const sending = status === 'sending';
@@ -306,7 +324,7 @@ export function JourneyFormDialog({
     const origin = /^https?:$/.test(window.location.protocol) ? window.location.origin : site.url;
     const subject =
       kind === 'enquiry'
-        ? `Enquiry: ${journey.title}`
+        ? `Inquiry: ${journey.title}`
         : `${kind === 'group' ? 'Group' : 'Private'} booking request: ${journey.title}`;
     const lines = (
       [
@@ -401,7 +419,12 @@ export function JourneyFormDialog({
     <Dialog
       open={open}
       onClose={onClose}
-      title={copy.title}
+      title={
+        // The button's words when it named them (a departure's "Secure your
+        // place"); the inquiry takes the journey's call to action.
+        (request.kind === kind && request.title) ||
+        (kind === 'enquiry' && journey.cta ? journey.cta : copy.title)
+      }
       describedBy={aboutId}
       initialFocus={coarse ? undefined : refs.name}
       returnFocus={returnFocus}
@@ -411,7 +434,7 @@ export function JourneyFormDialog({
             label, the journey's name and the type. */}
         <p id={aboutId} className="sr-only">
           {kind === 'enquiry'
-            ? `Enquiring about ${journey.title}.`
+            ? `Inquiring about ${journey.title}.`
             : `${journey.title}, as a ${kind} journey.`}
         </p>
         <p className="jf-about" aria-hidden>
@@ -427,7 +450,7 @@ export function JourneyFormDialog({
             </h3>
             <p>
               {kind === 'enquiry'
-                ? `Your enquiry about ${journey.title} is with us.`
+                ? `Your inquiry about ${journey.title} is with us.`
                 : `Your request for ${journey.title} as a ${kind} journey is with us.`}{' '}
               If anything changes before then, write to{' '}
               <a href={`mailto:${site.email}`}>{site.email}</a>.
@@ -459,6 +482,7 @@ export function JourneyFormDialog({
           </div>
         ) : (
           <>
+            {note && <p className="jf-intro">{note}</p>}
             <p className="jf-intro">{copy.intro}</p>
             <form className="jf-form" noValidate aria-busy={sending} onSubmit={onSubmit}>
               <div className="jf-grid">

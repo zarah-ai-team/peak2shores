@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { Arrow } from '@/components/ui/Button';
 import { useSwipe } from '@/components/ui/useDrag';
+import { PRIVATE_TRAVEL_HREF } from '@/lib/links';
 
 /** One journey as the slider needs it — plain data, built on the server. */
 export type JourneySlide = {
@@ -17,11 +18,15 @@ export type JourneySlide = {
   lead: string;
   /** Dates and rate, once Marc sets them, as a quiet line under the tagline. */
   facts: string[];
-  /** Where it stands for booking ("Now booking"), for a journey with a page. */
+  /**
+   * Where it stands for booking, in words ("Now booking", "Guaranteed",
+   * "Sold Out"), for a journey with a page: shown once, over its name and on
+   * its card. A journey still to come says "Coming soon" instead.
+   */
   status?: string;
   /** In the flipbook, not yet released: register interest instead of reserve. */
   soon?: boolean;
-  /** `pos`: where the wide crop centres (CSS object-position). */
+  /** `pos`: where the wide crop centres (CSS object-position); `alt` describes the photograph. */
   photo: { src?: string; alt: string; tone: string; pos?: string };
 };
 
@@ -39,6 +44,12 @@ const PATIENCE = 8000;
 const FINALE = 'finale';
 const NONE: JourneySlide[] = [];
 
+/** The names of the two views: the live site's own (the owner's request of 26 Nov). */
+const VIEW_NAMES: Record<View, string> = { now: 'Now booking', soon: 'Coming soon' };
+
+/** A slide's one status: its booking status, or "Coming soon" for a journey still to come. */
+const statusOf = (s: JourneySlide) => (s.soon ? VIEW_NAMES.soon : s.status);
+
 /** A title with its place words picked out in blue. */
 function marked(text: string, places: string[]) {
   if (!places.length) return text;
@@ -53,9 +64,12 @@ const arrived = (img: HTMLImageElement) => img.complete && img.naturalWidth > 0;
 
 /**
  * The journeys as one large rounded frame: each journey a full photograph
- * with its name, its tagline, its dates and rate once they are set, and one
- * button, to the journey's own page; the others as small cards on the right.
- * A finale ("More journeys are taking shape") follows the last journey.
+ * with its status, its name, its tagline, its dates and rate once they are
+ * set, and one button, to the journey's own page; the next three as small
+ * landscape cards low on the right, so they keep clear of the picture (Marc's
+ * review of 23 Nov). On a phone or an upright tablet the photograph stands
+ * whole above the words (journeys-home.css). A finale ("More journeys are
+ * taking shape") follows the last journey.
  *
  * It plays every 7 s only while it is on screen, and holds still under the
  * pointer, while a control has keyboard focus, when paused, in a background
@@ -80,8 +94,8 @@ export function JourneySlider({
   slides: JourneySlide[];
   /** The journeys still to come, shown when the visitor switches view. */
   soon?: JourneySlide[];
-  /** The finale's photograph; without one, the plain night ground. */
-  horizon?: { src?: string };
+  /** The finale's photograph and what it shows; without one, the plain night ground. */
+  horizon?: { src?: string; alt?: string };
 }) {
   // Two views, switched at the top of the frame: what can be booked now, and
   // what is coming. Each plays on its own and ends on the finale.
@@ -304,20 +318,21 @@ export function JourneySlider({
     return { onPointerEnter: () => want(id), onFocus: () => want(id) };
   };
 
-  /** One slide's photograph, behind everything: fetched when wanted, shown when in. */
-  const backdrop = (id: string, src: string, pos?: string) => (
+  /** One slide's photograph, behind everything: fetched when wanted, shown when in.
+      Described in words (`alt`), read out for the slide on show. */
+  const backdrop = (id: string, src: string, alt: string, pos?: string) => (
     <Image
       src={src}
-      alt=""
+      alt={alt}
       fill
-      // On a phone or tablet the frame is taller than it is wide, so the
-      // landscape photograph is cropped by height and needs a wider file. On
-      // an upright phone it is drawn about three times the screen's width:
-      // 190vw asks for a file twice as wide as before, sharp to about 0.7 of
-      // a screen pixel (the owner's choice of 19 Nov), and never more than
-      // 2560px, as 220vw would on a 3x iPhone (the 3840px file is up to
-      // twice the bytes again).
-      sizes="(max-width: 440px) 190vw, (max-width: 600px) 150vw, (max-width: 900px) 125vw, 92vw"
+      // On an upright phone the photograph stands at 4:3 above the words
+      // (23 Nov), cropped by its height: the widest (Swiss Elegance, nearly
+      // 2:1) is drawn about 1.3 times the screen's width, so 135vw keeps
+      // every one sharp to the screen's own pixel (the owner's choice of
+      // 19 Nov was 0.7 of one) with a file about half the size that the
+      // words-over-the-picture layout needed (190vw). On a tablet the 3:2
+      // photograph is drawn up to 1.2 times the screen's width.
+      sizes="(max-width: 600px) 135vw, (max-width: 900px) 125vw, 92vw"
       quality={85}
       // Each when wanted; the slide the page opens on (the only one in view)
       // as the frame nears the screen, rather than with the page's own first
@@ -337,6 +352,8 @@ export function JourneySlider({
       ref={frame}
       className={`frame${onFin ? ' fin' : ''}`}
       data-dir={dir}
+      // With the view switch: on a phone it has a row of its own above the photograph.
+      data-views={soon.length > 0 ? '' : undefined}
       data-moved={moved ? '' : undefined}
       data-busy={pending ? '' : undefined}
       aria-busy={pending ? true : undefined}
@@ -354,26 +371,24 @@ export function JourneySlider({
       }}
     >
       {/* The pictures: a photograph per journey of either view, the finale's
-          last. Only the one on show is seen; the rest wait, clipped away. */}
+          last. Only the one on show is seen, and read out; the rest wait,
+          clipped away and hidden from assistive technology. */}
       {(['now', 'soon'] as const).flatMap((v) =>
         (v === 'now' ? now : soon).map((s, i) => {
           const id = `${v}:${s.slug}`;
+          const on = v === view && i === index;
           return (
-            <div
-              key={id}
-              className={`bg${v === view && i === index ? ' on' : ''}${waits(id)}`}
-              aria-hidden
-            >
-              {s.photo.src && backdrop(id, s.photo.src, s.photo.pos)}
+            <div key={id} className={`bg${on ? ' on' : ''}${waits(id)}`} aria-hidden={!on}>
+              {s.photo.src && backdrop(id, s.photo.src, s.photo.alt, s.photo.pos)}
             </div>
           );
         }),
       )}
       <div
         className={`bg hzbg${horizon?.src ? ' photo' : ''}${onFin ? ' on' : ''}${waits(FINALE)}`}
-        aria-hidden
+        aria-hidden={!onFin}
       >
-        {horizon?.src && backdrop(FINALE, horizon.src)}
+        {horizon?.src && backdrop(FINALE, horizon.src, horizon.alt ?? '')}
       </div>
       <div className="shade" aria-hidden />
       {/* Every card's photograph, fetched ahead once the frame is near, so a
@@ -382,31 +397,53 @@ export function JourneySlider({
       {near && cardsShown && (
         <div className="pre" aria-hidden>
           {[...now, ...soon].map(
-            (s, i) => s.photo.src && <Thumb key={`${i}:${s.slug}`} src={s.photo.src} eager />,
+            (s, i) =>
+              s.photo.src && (
+                <Thumb key={`${i}:${s.slug}`} src={s.photo.src} alt={s.photo.alt} eager />
+              ),
           )}
-          {horizon?.src && <Thumb src={horizon.src} eager />}
+          {horizon?.src && <Thumb src={horizon.src} alt={horizon.alt ?? ''} eager />}
         </div>
       )}
 
+      {/* The switch between the two views (the owner's request of 26 Nov):
+          "Now booking", a toggle, "Coming soon", so it reads as a switch of
+          view and never as two statuses (Ishika, 24 Nov); each slide shows
+          its own status. The two names are the buttons a keyboard and a
+          screen reader use; the toggle is the same choice for a pointer, and
+          flips to the other view. Words without a ground: the view on show
+          is white, and the knob sits on its side. */}
       {soon.length > 0 && (
         <div className="views" role="group" aria-label="Show journeys">
-          {(
-            [
-              ['now', 'Now booking'],
-              ['soon', 'Coming soon'],
-            ] as const
-          ).map(([v, label]) => (
-            <button
-              key={v}
-              type="button"
-              className={chosen === v ? 'on' : undefined}
-              aria-pressed={chosen === v}
-              onClick={() => show(v)}
-              {...ahead(v, 0)}
-            >
-              {label}
-            </button>
-          ))}
+          <button
+            type="button"
+            className={chosen === 'now' ? 'vw on' : 'vw'}
+            aria-pressed={chosen === 'now'}
+            onClick={() => show('now')}
+            {...ahead('now', 0)}
+          >
+            {VIEW_NAMES.now}
+          </button>
+          <button
+            type="button"
+            className="sw"
+            data-on={chosen}
+            tabIndex={-1}
+            aria-hidden
+            onClick={() => show(chosen === 'now' ? 'soon' : 'now')}
+            {...ahead(chosen === 'now' ? 'soon' : 'now', 0)}
+          >
+            <i />
+          </button>
+          <button
+            type="button"
+            className={chosen === 'soon' ? 'vw on' : 'vw'}
+            aria-pressed={chosen === 'soon'}
+            onClick={() => show('soon')}
+            {...ahead('soon', 0)}
+          >
+            {VIEW_NAMES.soon}
+          </button>
         </div>
       )}
 
@@ -423,8 +460,9 @@ export function JourneySlider({
               aria-hidden={!on}
               inert={!on}
             >
-              {/* No status pill or length/group line on the slide (5 Nov): the
-                  Now booking / Coming soon switch above already says it. */}
+              {/* Its status, once, as a quiet label over its name: no pill, and
+                  no length or group line (5 Nov). */}
+              {statusOf(s) && <p className="st">{statusOf(s)}</p>}
               <h3>{marked(s.title, s.places)}</h3>
               <p className="lead">{s.lead}</p>
               {s.facts.length > 0 && (
@@ -484,7 +522,7 @@ export function JourneySlider({
             <Link className="btn btn-accent" href="#circle">
               Join the circle <Arrow />
             </Link>
-            <Link className="btn btn-line" href="/plan#private">
+            <Link className="btn btn-line" href={PRIVATE_TRAVEL_HREF}>
               Plan a private journey
             </Link>
           </div>
@@ -526,9 +564,9 @@ export function JourneySlider({
                   aria-label={`Show ${s ? s.title : 'More journeys coming'}`}
                   {...ahead(view, k)}
                 >
-                  {photo && <Thumb src={photo} />}
+                  {photo && <Thumb src={photo} alt={s ? s.photo.alt : (horizon?.alt ?? '')} />}
                   <span className="cap" aria-hidden>
-                    {s && <span className="st">{s.soon ? 'Coming soon' : s.status}</span>}
+                    {s && statusOf(s) && <span className="st">{statusOf(s)}</span>}
                     <span className="t">
                       {s ? marked(s.short, s.places) : 'More journeys coming'}
                     </span>
@@ -605,9 +643,10 @@ const loaded = new Set<string>();
  * fades in once it has loaded and decoded, rather than popping in; one that
  * is already there (and every one, without JavaScript) is simply shown. A
  * file that fails stays out of sight, the card's night ground in its place.
- * `eager`: fetched now rather than when it comes into view.
+ * `eager`: fetched now rather than when it comes into view. `alt` describes
+ * the photograph (the card's button carries its own name).
  */
-function Thumb({ src, eager = false }: { src: string; eager?: boolean }) {
+function Thumb({ src, alt, eager = false }: { src: string; alt: string; eager?: boolean }) {
   const img = useRef<HTMLImageElement>(null);
   const [wait, setWait] = useState(false);
   useEffect(() => {
@@ -617,11 +656,12 @@ function Thumb({ src, eager = false }: { src: string; eager?: boolean }) {
     <Image
       ref={img}
       src={src}
-      alt=""
+      alt={alt}
       fill
-      // A card shows a portrait crop of a landscape photograph, so the file is
-      // about one and a half times the card's width (roughly 28vw).
-      sizes="(max-width: 900px) 1px, 28vw"
+      // A card shows a 4:3 (square below 1200px) crop of a landscape
+      // photograph, which covers it by its height: the file is about one and
+      // a half times the card's height wide, never more than 20vw.
+      sizes="(max-width: 900px) 1px, 20vw"
       quality={85}
       loading={eager ? 'eager' : 'lazy'}
       className={`photo-grade${wait ? ' wait' : ''}`}

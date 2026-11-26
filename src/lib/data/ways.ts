@@ -4,7 +4,12 @@
  * three photographs. The lines build on the site's approved copy (the ways
  * on the homepage, the reasons and beliefs in copy.ts); no prices, numbers
  * or partners are added. Written 23 Nov 2026 for the owner's review.
+ *
+ * Every private way's call to action opens the Private Travel form
+ * (PRIVATE_TRAVEL_HREF), in place of the old intake section (Marc's review
+ * of 23 Nov 2026).
  */
+import { PRIVATE_TRAVEL_HREF } from '../links';
 
 export type WayPhoto = {
   src: string;
@@ -38,6 +43,12 @@ export type WayPage = {
   lead: string;
   hero: WayPhoto;
   parts: WayPart[];
+  /**
+   * The journeys in the making this way, listed as coming soon: the
+   * section's label and heading, and the journeys by their key in `horizon`
+   * (copy.ts, after the Journey Book).
+   */
+  soon?: { label: string; title: string; journeys: string[] };
   /** Where the page's call to action goes. */
   cta: { label: string; href: string };
 };
@@ -158,15 +169,17 @@ export const wayPages: WayPage[] = [
       {
         label: 'Exceptional stays',
         title: 'Hotels chosen for their sense of place.',
-        body: 'Handpicked luxury properties, selected for their character, outstanding hospitality, and sense of place: a suite terrace above Lake Lucerne, an arrival by boat in Venice.',
+        body: 'Handpicked luxury properties, selected for their character, outstanding hospitality, and sense of place: a suite above Lake Lucerne, an arrival by boat in Venice.',
         points: [
           'Rooms and suites chosen for the view, not the category',
           'Private transfers between every stay',
         ],
         photos: [
+          // Hotel Schweizerhof Luzern, Swiss Elegance's Lucerne hotel since
+          // Marc's review of 23 Nov 2026 (the Mandarin Oriental before it).
           {
-            src: '/images/hotels/mandarin-oriental-luzern/03-lake-view-suite-terrace.jpg',
-            alt: 'A suite terrace set for the evening above Lake Lucerne at dusk',
+            src: '/images/hotels/schweizerhof-luzern/02-lucerne-luxury-suite.jpg',
+            alt: 'A Lucerne Luxury Suite at Hotel Schweizerhof Luzern, balcony doors open to the lake',
           },
           {
             src: '/images/hotels/jw-marriott-venice/02-arrival-by-boat.jpg',
@@ -196,7 +209,7 @@ export const wayPages: WayPage[] = [
         ],
       },
     ],
-    cta: { label: 'Start a private journey', href: '/plan#private' },
+    cta: { label: 'Start a private journey', href: PRIVATE_TRAVEL_HREF },
   },
   {
     slug: 'safari',
@@ -282,7 +295,13 @@ export const wayPages: WayPage[] = [
         ],
       },
     ],
-    cta: { label: 'Plan a safari', href: '/plan#private' },
+    // Marc's review of 23 Nov 2026: the safaris among our journeys, here.
+    soon: {
+      label: 'Upcoming safari journeys',
+      title: 'Two safari journeys in the making.',
+      journeys: ['southern-africa', 'kenya-tanzania'],
+    },
+    cta: { label: 'Plan a safari', href: PRIVATE_TRAVEL_HREF },
   },
   {
     slug: 'cruises',
@@ -360,7 +379,7 @@ export const wayPages: WayPage[] = [
         ],
       },
     ],
-    cta: { label: 'Plan a voyage', href: '/plan#private' },
+    cta: { label: 'Plan a voyage', href: PRIVATE_TRAVEL_HREF },
   },
   {
     slug: 'sports-events',
@@ -432,7 +451,7 @@ export const wayPages: WayPage[] = [
         ],
       },
     ],
-    cta: { label: 'Plan around an event', href: '/plan#private' },
+    cta: { label: 'Plan around an event', href: PRIVATE_TRAVEL_HREF },
   },
   {
     slug: 'villas',
@@ -507,7 +526,7 @@ export const wayPages: WayPage[] = [
         ],
       },
     ],
-    cta: { label: 'Find a villa', href: '/plan#private' },
+    cta: { label: 'Find a villa', href: PRIVATE_TRAVEL_HREF },
   },
 ];
 

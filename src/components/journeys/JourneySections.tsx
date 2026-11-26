@@ -11,6 +11,7 @@ import { journeyTagStatus } from '@/components/pages/journeyStatus';
 import { isNew, type Journey, type JourneyDetail, type JourneySummary } from '@/lib/content';
 import { fromPriceLabel } from '@/lib/journeyPrice';
 import { journeyStays } from '@/lib/journeys';
+import { PRIVATE_TRAVEL_HREF } from '@/lib/links';
 import { enterAt } from '@/lib/motion';
 import { site } from '@/lib/site';
 import { OpenJourneyForm } from './forms/JourneyForms';
@@ -105,10 +106,10 @@ export function JourneyHero({ journey }: { journey: Journey }) {
         >
           {journey.lead}
         </p>
-        {/* From a tablet up the tab bar carries the way to enquire. */}
+        {/* From a tablet up the tab bar carries the way to inquire. */}
         <p className="enter col-span-4 m-0 md:hidden" style={enterAt(0.5)}>
           <ButtonLink href="#enquire" variant="light" arrow>
-            Enquire
+            Inquire
           </ButtonLink>
         </p>
       </div>
@@ -343,13 +344,13 @@ function availability(journey: Journey) {
     default:
       return journey.detail?.spotsLeft
         ? `${journey.detail.spotsLeft} places left`
-        : 'Open for enquiries';
+        : 'Open for inquiries';
   }
 }
 
 /**
  * Dates & Rates, A&K-style: each departure as a row — dates, length, group,
- * the rate and where it stands — with the way to enquire on the row. Below
+ * the rate and where it stands — with the way to inquire on the row. Below
  * it, what the rate includes and what it does not.
  */
 export function DatesAndRates({ journey, cta }: { journey: Journey; cta: string }) {
@@ -375,7 +376,7 @@ export function DatesAndRates({ journey, cta }: { journey: Journey; cta: string 
                 </th>
               ))}
               <th scope="col" className="pb-3">
-                <span className="sr-only">Enquire</span>
+                <span className="sr-only">Inquire</span>
               </th>
             </tr>
           </thead>
@@ -415,7 +416,7 @@ export function DatesAndRates({ journey, cta }: { journey: Journey; cta: string 
         <p className="prose-body-sm measure mb-section-sm text-muted">
           Rates are per person, in US dollars. The same journey can be arranged privately on your
           own dates —{' '}
-          <Link href="/plan#private" className="underline underline-offset-4 hover:text-ink">
+          <Link href={PRIVATE_TRAVEL_HREF} className="underline underline-offset-4 hover:text-ink">
             ask about private travel
           </Link>
           .

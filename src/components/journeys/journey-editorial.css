@@ -1356,13 +1356,14 @@
   border-top: 1px solid var(--rule);
 }
 
-/* -- The in-page menu's enquiry (JourneyTabs) ---------------------------------------
+/* -- The in-page menu's booking (JourneyTabs) ---------------------------------------
    From 1024px the bar's right end holds the journey at a glance (its days and
-   group size over its from-price) and the "Make an enquiry" pill; on a phone
-   or a tablet the same facts and pill sit in a slim bar fixed to the foot of
-   the screen, so that the tabs keep the menu bar's whole width (beside the
-   enquiry block a tablet showed only two or three of them). On a short
-   screen the facts and the pill join the tabs instead, as from 1024px
+   group size over its from-price) and the booking pill its status names
+   ("Request your place", "Secure your place", "Explore other journeys"); on
+   a phone or a tablet the same facts and pill sit in a slim bar fixed to the
+   foot of the screen, so that the tabs keep the menu bar's whole width
+   (beside the booking block a tablet showed only two or three of them). On a
+   short screen the facts and the pill join the tabs instead, as from 1024px
    (below). These sit outside `.jy`, so they read the site's own tokens. The
    fade at the end of tabs that scroll sideways is with the menu itself, in
    journey-tabs.css, as the Journeys page carries the menu too. */
@@ -1376,9 +1377,9 @@
     align-items: center;
     gap: clamp(1rem, 1.4vw, 1.5rem);
   }
-  /* "Make an enquiry" is 0.375em wider than the label this bar was laid out
-     with: the pill's sides give that back, so the pill keeps its width and
-     the tabs their room. */
+  /* The status's labels are wider than the label this bar was laid out
+     with: the pill's sides give a little of that back, so the tabs keep
+     their room (they scroll sideways for the rest). */
   .jt-aside .jt-pill {
     padding-inline: calc(var(--pill-px) - 0.1875em);
   }
@@ -1509,11 +1510,17 @@
     white-space: normal;
     text-wrap: pretty;
   }
-  /* The pill's sides are 2px under the house pill's: "Make an enquiry" is
-     4px wider than the label the bar was laid out with, and so the facts keep
-     the same room and the bar its heights below. */
+  /* The pill's sides are 2px under the house pill's, so the facts keep
+     their room beside the status's labels. However long the label, the facts
+     keep 5rem, the width of the price's longest word ("announced"): a label
+     that would leave them less (the longest, "Explore other journeys", on
+     the narrowest phones) takes two lines in its pill instead. */
   .jt-ibar .jt-pill {
+    max-width: calc(100% - 5.75rem);
     padding-inline: 1.375rem;
+    line-height: 1.2;
+    text-align: center;
+    white-space: normal;
   }
   /* Anchors and focus keep clear of the bar at its tallest (95px, where the
      facts take three lines; a longer price or a larger text size can make it
@@ -1540,13 +1547,20 @@
   }
 }
 /* Under 390px the pill's sides and the gap tighten a little, so a 375px phone
-   keeps the price on one line. In em, as above (389.92px at 16px). */
+   keeps the price on one line. In em, as above (389.92px at 16px). Under
+   360px they tighten once more, so "Request your place" holds one line
+   beside the facts' 5rem on a 320px phone. */
 @media (max-width: 24.37em) {
   .jt-ibar {
     gap: 0.75rem;
   }
   .jt-ibar .jt-pill {
     padding-inline: 1rem;
+  }
+}
+@media (max-width: 22.49em) {
+  .jt-ibar .jt-pill {
+    padding-inline: 0.875rem;
   }
 }
 @media (prefers-reduced-motion: reduce) {

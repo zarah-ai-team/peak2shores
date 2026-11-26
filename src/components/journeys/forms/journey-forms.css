@@ -1,5 +1,5 @@
 /*
- * A journey page's pop-up forms (JourneyFormDialog): "Make an enquiry", "Book
+ * A journey page's pop-up forms (JourneyFormDialog): the inquiry, "Book
  * this journey" and "Book as a private journey", inside the site's Dialog.
  * Scoped to `.jf`.
  *
@@ -82,6 +82,11 @@
   line-height: 1.65;
   color: var(--jf-body);
   text-wrap: pretty;
+}
+/* The status's meaning, then the form's own words, read as one intro: about
+   10px between them, within the form's 1.5rem gap. */
+.jf-intro + .jf-intro {
+  margin-top: -0.875rem;
 }
 
 /* -- Fields ------------------------------------------------------------ */

@@ -254,34 +254,35 @@ export const rhythm: Rhythm[] = [
 
 /* -- Home: also designed for you ---------------------------------------- */
 
-/** The secondary offers — smaller than the journeys, but present. */
+/** The secondary offers — smaller than the journeys, but present. Each
+    leads to its own page, as the homepage's ways do (23 Nov 2026). */
 export const services = [
   {
     n: '01',
     title: 'Private Travel',
     line: 'Designed around you alone — your dates, your pace, your people.',
-    href: '/plan#private',
+    href: '/experiences/private',
     media: 'svc-private' as MediaKey,
   },
   {
     n: '02',
     title: 'Cruises & Yachts',
     line: 'Small ships and private yachts, chosen the way we choose hotels.',
-    href: '/plan#private',
+    href: '/experiences/cruises',
     media: 'svc-cruises' as MediaKey,
   },
   {
     n: '03',
     title: 'Sports & Special Events',
     line: 'The event, and everything around it, arranged with the same care.',
-    href: '/plan#private',
+    href: '/experiences/sports-events',
     media: 'svc-events' as MediaKey,
   },
   {
     n: '04',
     title: 'Villas',
     line: 'Houses with a strong sense of place, for families and friends.',
-    href: '/plan#private',
+    href: '/experiences/villas',
     media: 'svc-villas' as MediaKey,
   },
 ];
@@ -291,7 +292,9 @@ export const services = [
 export const speak = {
   label: 'Speak to a travel designer',
   headline: 'Every journey begins with a conversation.',
-  body: 'Call, message us on WhatsApp, or book a time that suits you. Most of our guests talk to us before they book — we would rather you did.',
+  // Only the ways that exist today: no WhatsApp number or booking calendar
+  // yet (Ishika's notes of 24 Nov 2026).
+  body: 'Call us or write to us. Most of our guests talk to us before they book — we would rather you did.',
 };
 
 /* -- The Peaks → Shores transition --------------------------------------- */
@@ -320,6 +323,7 @@ export type Experience = {
   media: MediaKey;
 };
 
+/** Four, as Marc decided (Ishika's notes of 24 Nov 2026): Taste, Meet, Discover, Move. */
 export const experiences: Experience[] = [
   {
     slug: 'taste',
@@ -340,16 +344,109 @@ export const experiences: Experience[] = [
     media: 'ex-3',
   },
   {
-    slug: 'explore',
-    title: 'Explore',
+    slug: 'move',
+    title: 'Move',
     body: 'Hiking, sailing, cycling, nature, the outdoors.',
     media: 'ex-4',
   },
+];
+
+/* -- Journeys on the horizon ---------------------------------------------- */
+
+/** A journey in the making, as the Journey Book shows it: no page, no dates yet. */
+export type HorizonJourney = {
+  slug: string;
+  /** The destination, as the Destinations page names it. */
+  place: string;
+  /** The journey's name in the Journey Book. */
+  title: string;
+  /** Its line in the Journey Book. */
+  line: string;
+  /** Its photograph in the Journey Book (public/journey-book/img). */
+  photo: { src: string; alt: string; pos?: string };
+};
+
+/**
+ * The journeys in the making, in the Journey Book's order ("Our curated
+ * collection", pages 21-28), each with the Journey Book's own photograph.
+ * Shown as coming soon on /destinations (Ishika's notes of 24 Nov 2026), the
+ * safaris among them on /experiences/safari.
+ */
+export const horizon: HorizonJourney[] = [
   {
-    slug: 'stay',
-    title: 'Stay',
-    body: 'Hotels, villas, retreats, remarkable properties.',
-    media: 'ex-5',
+    slug: 'southern-italy',
+    place: 'Southern Italy',
+    title: 'Experience La Dolce Vita in Southern Italy',
+    line: 'From Puglia to the Amalfi Coast and the allure of Capri.',
+    photo: {
+      src: '/journey-book/img/positano.jpg',
+      alt: 'Positano on the Amalfi Coast from the sea',
+      pos: '62% 50%',
+    },
+  },
+  {
+    slug: 'sicily',
+    place: 'Sicily',
+    title: 'The Soul of Sicily',
+    line: 'A timeless Mediterranean love affair.',
+    photo: {
+      src: '/journey-book/img/sicily.jpg',
+      alt: 'Cefalù and its cathedral below La Rocca on the Sicilian coast',
+      pos: '45% 50%',
+    },
+  },
+  {
+    slug: 'andalusia-morocco',
+    place: 'Andalusia & Morocco',
+    title: 'Andalusian Grace & Moroccan Mystique',
+    line: 'Where royal heritage meets the romance of discovery.',
+    photo: {
+      src: '/journey-book/img/andalusia.jpg',
+      alt: 'A flamenco dancer in red at Plaza de España in Seville',
+      pos: '40% 40%',
+    },
+  },
+  {
+    slug: 'southern-africa',
+    place: 'Southern Africa',
+    title: 'The Rhythm of Southern Africa',
+    line: 'Cape Town, Kruger National Park, Zimbabwe, Botswana and Zambia.',
+    photo: {
+      src: '/journey-book/img/gamedrive.jpg',
+      alt: 'An open game-drive vehicle under an acacia at golden sunrise',
+      pos: '40% 50%',
+    },
+  },
+  {
+    slug: 'kenya-tanzania',
+    place: 'Kenya & Tanzania',
+    title: 'From Savannah to the Indian Ocean',
+    line: 'An intimate exploration of Kenya & Tanzania.',
+    photo: {
+      src: '/journey-book/img/kenya_villa.jpg',
+      alt: 'A thatched Swahili villa with a turquoise pool and bougainvillea on the Kenyan coast',
+    },
+  },
+  {
+    slug: 'china',
+    place: 'China',
+    title: 'China Reimagined',
+    line: 'Where ancient wonders meet modern marvels.',
+    photo: {
+      src: '/journey-book/img/china.jpg',
+      alt: 'The Temple of Heaven in Beijing framed by a painted gateway and a paper parasol',
+    },
+  },
+  {
+    slug: 'australia',
+    place: 'Australia & New Zealand',
+    title: 'The Down Under & Aotearoa Collective',
+    line: 'Australia & New Zealand, a world apart.',
+    photo: {
+      src: '/journey-book/img/sydney.jpg',
+      alt: 'Sydney Harbour with the Opera House, the city skyline and the Harbour Bridge',
+      pos: '0% 50%',
+    },
   },
 ];
 

@@ -1,5 +1,7 @@
+import { availabilityText } from '@/lib/availability';
 import { getJourneys, getSiteSettings } from '@/lib/content';
 import { fromPriceLabel } from '@/lib/journeyPrice';
+import { journeyAvailabilityOf } from '@/lib/journeys';
 
 /* Rebuilt hourly, with the journeys, so a released journey is listed on time. */
 export const revalidate = 3600;
@@ -26,24 +28,26 @@ export async function GET() {
     `${site.name} (${site.legalName}) designs small luxury group journeys for intimate groups of travelers, ` +
       `each personally curated by founder ${site.founder.name}, plus private journeys on the traveler's own dates. ` +
       `Based in Miami, with Swiss roots. Founded ${site.founded}. ` +
-      'Prices are per person in US dollars. Enquiring commits the traveler to nothing.',
+      `Group journeys are designed for ${site.groupSize}. ` +
+      'Each departure shows its status: Booking Now while its group comes together, Guaranteed once 10 guests have confirmed, Sold Out at 18. ' +
+      'Prices are per person in US dollars. Inquiring commits the traveler to nothing.',
     '',
     '## Journeys',
     '',
     ...journeys.map(
       (j) =>
         `- [${j.title}](${url(`/journeys/${j.slug}`)}): ${j.country}, ${j.region}. ${j.days} days, ` +
-        `${j.departureISO ? `departs ${j.departureWindow}` : 'dates to be announced'}, ${price(j)}, small group` +
-        `${j.hostedByMarc ? ', hosted by Marc' : ''}${j.status && j.status !== 'open' ? ` (${j.status.replace('-', ' ')})` : ''}. ${j.lead}`,
+        `${j.departureISO ? `departs ${j.departureWindow}` : 'dates to be announced'}, ${price(j)}, ${site.groupSize}` +
+        `${j.hostedByMarc ? ', hosted by Marc' : ''}, ${j.status === 'past' ? 'departed' : availabilityText(journeyAvailabilityOf(j))}. ${j.lead}`,
     ),
     '',
     '## Key pages',
     '',
-    `- [All journeys](${url('/journeys')}): the current list, filterable by destination`,
+    `- [All journeys](${url('/journeys')}): the current list of journeys`,
     `- [Destinations](${url('/destinations')}): the countries the journeys go to`,
     `- [Experiences](${url('/experiences')}): what a day on a journey can hold`,
     `- [Our story](${url('/our-story')}): ${site.founder.name} and the philosophy behind the journeys`,
-    `- [Plan your journey](${url('/plan')}): enquire about a journey or a private trip`,
+    `- [Plan your journey](${url('/plan')}): inquire about a journey or a private trip`,
     `- [Journal](${url('/journal')}): notes on places, hotels and tables`,
     '',
     '## Contact',

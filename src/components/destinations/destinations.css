@@ -549,6 +549,171 @@ html[data-dz-open] {
   will-change: transform;
 }
 
+/* -- 03 On the horizon: the journeys in the making ------------------------ */
+/* Paper between the dark story and the dark closing band. Each destination
+   is its Journey Book photograph with "Coming soon", its name and its
+   journey's name, four to a row on a wide screen and two below 900px; the
+   eighth place, in the house navy, is the way to hear first. Nothing here is
+   a link but that one: the journeys have no pages yet. */
+.dz-soon {
+  background: var(--paper);
+  color: var(--ink);
+  padding: clamp(4.5rem, 7vw, 8rem) var(--dz-side) clamp(5rem, 7.5vw, 8.75rem);
+}
+.dz-soon-head,
+.dz-soon-list {
+  max-width: 100rem;
+  margin-inline: auto;
+}
+.dz-soon-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.25rem 3.75rem;
+  margin-bottom: clamp(2.25rem, 3.5vw, 4rem);
+  padding-bottom: 1.375rem;
+  border-bottom: 1px solid rgb(20 29 36 / 0.14);
+}
+.dz-soon-head .lab {
+  margin: 0;
+  color: var(--lake);
+}
+.dz-soon-head h2 {
+  margin: 1rem 0 0;
+  max-width: 18ch;
+  font-family: var(--serif);
+  font-weight: var(--title-weight);
+  font-size: var(--h2);
+  line-height: 1.08;
+  letter-spacing: -0.008em;
+  color: var(--title);
+}
+.dz-soon-head > p {
+  margin: 0;
+  max-width: 34ch;
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: var(--sub);
+  line-height: 1.7;
+  color: #3a434a;
+}
+.dz-soon-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.75rem, 2.4vw, 2.75rem) clamp(0.875rem, 1.2vw, 1.375rem);
+}
+.dz-soon-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+.dz-soon-pic {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  margin-bottom: 0.625rem;
+  border-radius: 0.625rem;
+  background: var(--deep);
+}
+.dz-soon-k {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--lake);
+}
+.dz-soon-t {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: var(--title-weight);
+  font-size: clamp(1.25rem, 1.45vw, 1.625rem);
+  line-height: 1.2;
+  color: var(--ink);
+}
+.dz-soon-f {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: #3a434a;
+}
+.dz-soon-more {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: clamp(1.25rem, 2vw, 2rem);
+  border-radius: 0.625rem;
+  background: var(--deep);
+  color: #fff;
+}
+.dz-soon-more .lab {
+  margin: 0;
+  color: var(--ice);
+}
+.dz-soon-more-t {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(1.375rem, 1.7vw, 2rem);
+  line-height: 1.15;
+}
+.dz-soon-more .tlink {
+  align-self: flex-start;
+}
+.dz-soon-more :focus-visible {
+  outline-color: var(--color-acqua);
+}
+@media (max-width: 899px) {
+  .dz-soon-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+/* A tablet: the photographs wide, so four rows stay short. */
+@media (min-width: 641px) and (max-width: 899px) {
+  .dz-soon-pic {
+    aspect-ratio: 4 / 3;
+  }
+}
+@media (max-width: 640px) {
+  .dz-soon-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .dz-soon-t {
+    font-size: 1.125rem;
+  }
+  .dz-soon-f {
+    font-size: 0.8125rem;
+  }
+  .dz-soon-more {
+    padding: 1rem;
+  }
+  .dz-soon-more-t {
+    font-size: 1.25rem;
+  }
+}
+/* To a finger, "Hear first in The Circle" is a 44px target, its underline
+   where it is. */
+@media (pointer: coarse) {
+  .dz-soon-more .tlink {
+    position: relative;
+  }
+  .dz-soon-more .tlink::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+  }
+}
+
 /* -- 04 Closing ---------------------------------------------------------- */
 /* Under the page's own class, so these win over the shared band's rules in
    home.css (.hc-circle h2, .hc .ctarow) whichever stylesheet loads last. */

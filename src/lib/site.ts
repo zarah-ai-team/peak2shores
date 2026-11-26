@@ -1,3 +1,6 @@
+import { groupSizeLabel, MAX_GUESTS } from './availability';
+import { PRIVATE_TRAVEL_HREF } from './links';
+
 export const site = {
   name: 'Peaks2Shores',
   tagline: 'Luxury travel, personally curated.',
@@ -5,10 +8,14 @@ export const site = {
     'Small luxury group journeys for an intimate circle of travelers, personally curated by Marc Haeni. Iconic places, extraordinary experiences and lifelong connections.',
   url: 'https://peaks2shores.com',
   founded: 2022,
-  /** The most a group can be; used to check enquiries, never shown as a figure. */
-  maxGuests: 18,
-  /** How the size of a group is described wherever it is shown. */
-  groupSize: 'Small group',
+  /** The most a group can be (18); used to check the guests on an inquiry. */
+  maxGuests: MAX_GUESTS,
+  /**
+   * How the size of a group is described wherever it is shown: "10–18
+   * guests", a minimum of 10 and a maximum of 18 (Marc's review of 23
+   * November 2026).
+   */
+  groupSize: groupSizeLabel,
   email: 'welcome@peaks2shores.com',
   /**
    * Confirmed by Marc, October 2026. (The old site's "Call" button dialled
@@ -26,7 +33,7 @@ export const site = {
   /**
    * A scheduling link for "Book a call" (Calendly, Cal.com, Google
    * appointment page…). Unset until Marc chooses one; until then the button
-   * falls back to the enquiry form on /plan.
+   * falls back to the inquiry form on /plan.
    */
   bookingUrl: null as string | null,
   /**
@@ -154,7 +161,7 @@ export const footerNav: { label: string; items: NavItem[] }[] = [
     items: [
       { label: 'Our story', href: '/our-story' },
       { label: 'Plan your journey', href: '/plan' },
-      { label: 'Bespoke private travel', href: '/plan#private' },
+      { label: 'Bespoke private travel', href: PRIVATE_TRAVEL_HREF },
       { label: 'Contact', href: '/plan#contact' },
     ],
   },

@@ -1,9 +1,28 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
+import Image, { getImageProps } from 'next/image';
 import { useReducedMotion } from 'motion/react';
 import type { HomeVisual } from '@/lib/data/home';
+
+/**
+ * A film's poster: its still, 256px wide, a few kilobytes through the site's
+ * own image loader (the 1920px stills once named here were dropped for their
+ * weight; Lighthouse of 24 Nov then found none of the five homepage films
+ * with a poster). A film stays transparent until it first plays (`shown`
+ * below), so the sharp still beneath it is what the visitor sees meanwhile,
+ * and the small poster is never drawn over it.
+ */
+export function posterOf(src: string): string {
+  const { props } = getImageProps({ src, alt: '', width: 256, height: 144, quality: 85 });
+  return props.srcSet?.split(', ')[0]?.split(' ')[0] ?? props.src;
+}
+
+/** A film's style until it first plays (transparent) and once it has (seen). */
+export const shown = (played: boolean) => ({
+  opacity: played ? 1 : 0,
+  transition: 'opacity 0.4s ease',
+});
 
 /**
  * The film to load on this screen: on a phone or small tablet, its 720px cut
@@ -21,9 +40,8 @@ export const forScreen = (src: string) =>
  * A full-bleed still, with Marc's film over it when there is one. The film is
  * muted, loops, and plays only while it is on screen (and `active`, when the
  * caller hides it behind another layer); under reduced motion the still holds.
- * The film has no poster: the still beneath it is the same frame at the same
- * crop, and shows through until the first frame is ready (a poster was a
- * second, 1920px copy of it, fetched with the page whatever the screen).
+ * The still beneath is the same frame at the same crop, and shows until the
+ * film first plays; the film's poster is a small copy of it (posterOf).
  */
 export function HomeMedia({
   visual,
@@ -41,6 +59,7 @@ export function HomeMedia({
   const video = useRef<HTMLVideoElement>(null);
   const reduced = useReducedMotion();
   const visible = useRef(false);
+  const [played, setPlayed] = useState(false);
 
   useEffect(() => {
     const el = video.current;
@@ -75,7 +94,9 @@ export function HomeMedia({
           ref={video}
           className={className}
           // The film crops where its still does, so the two never jump apart.
-          style={visual.pos ? { objectPosition: visual.pos } : undefined}
+          style={{ ...(visual.pos ? { objectPosition: visual.pos } : {}), ...shown(played) }}
+          poster={posterOf(visual.img)}
+          onPlaying={() => setPlayed(true)}
           muted
           loop
           playsInline

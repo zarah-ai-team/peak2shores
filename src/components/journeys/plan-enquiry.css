@@ -399,6 +399,12 @@
   letter-spacing: 0.04em;
   color: var(--pe-blue);
 }
+/* On a touch screen the number never falls under 11px. */
+@media (pointer: coarse) {
+  .pe-grp span {
+    font-size: 0.6875rem;
+  }
+}
 .pe-f {
   min-width: 0;
   margin: 1.5rem 0 0;
@@ -719,10 +725,24 @@
   accent-color: var(--pe-ink);
 }
 .pe-consent a {
+  position: relative;
   color: var(--pe-ink);
   text-decoration: underline;
   text-decoration-color: var(--color-brand);
   text-underline-offset: 0.22em;
+}
+/* Under a finger the link is a 44px target, centred on its words, so a press
+   just above or below them opens the policy rather than ticking the box, as
+   in the journey pop-ups' form. The words do not move. */
+@media (pointer: coarse) {
+  .pe-consent a::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    height: 2.75rem;
+    translate: 0 -50%;
+  }
 }
 .pe-err {
   margin: 0;

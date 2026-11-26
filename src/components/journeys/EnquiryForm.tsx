@@ -1,7 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useId, useRef, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { Suspense, useCallback, useEffect, useId, useRef, useState } from 'react';
 import { failureMessage, postForm, privacyConsent } from '@/lib/forms';
 import { track } from '@/lib/analytics';
 import { readFirstTouch } from '@/lib/attribution';
@@ -40,6 +41,13 @@ export type EnquiryFormProps = {
   destinations: string[];
   /** Marc's portrait, beside "A personal reply". */
   portrait?: { src: string; alt: string };
+  /**
+   * The way and the journey the address asked for, read on the server, so
+   * the first paint already shows them (a private-travel link opens on
+   * "Design a private journey", not on "Join a departure" for a moment).
+   */
+  initialPath?: Path;
+  initialJourney?: string;
 };
 
 const consentName = `${privacyConsent.before} ${privacyConsent.policy.label}`;
@@ -57,16 +65,30 @@ const consentName = `${privacyConsent.before} ${privacyConsent.policy.label}`;
  * a private journey), the Privacy Policy tick box and a round send button.
  * Sent, the card thanks the reader and repeats what they asked for.
  *
- * "Request details" on a journey page (/plan?journey=swiss-elegance#contact)
- * arrives with that journey chosen. The sending, the tick box, the honeypot
- * and the undelivered fallback are as before: the browser checks the name and
- * the email; nothing sends until the box is ticked; the confirmation never
- * claims more than the server confirmed.
+ * A link to /plan?journey=swiss-elegance#contact arrives with that journey
+ * chosen; every private-travel link (PRIVATE_TRAVEL_HREF,
+ * /plan?travel=private#contact) arrives on "Design a private journey": the
+ * Private Travel form (Marc's review of 23 Nov 2026). The sending, the tick
+ * box, the honeypot and the undelivered fallback are as before: the browser
+ * checks the name and the email; nothing sends until the box is ticked; the
+ * confirmation never claims more than the server confirmed.
  */
-export function EnquiryForm({ journeys, destinations, portrait }: EnquiryFormProps) {
+export function EnquiryForm({
+  journeys,
+  destinations,
+  portrait,
+  initialPath = 'departure',
+  initialJourney,
+}: EnquiryFormProps) {
   const id = useId();
-  const [path, setPath] = useState<Path>('departure');
-  const [journey, setJourney] = useState(journeys[0]?.slug ?? '');
+  const [path, setPath] = useState<Path>(initialPath);
+  const [journey, setJourney] = useState(
+    journeys.find((j) => j.slug === initialJourney)?.slug ?? journeys[0]?.slug ?? '',
+  );
+  // The private way was asked for by the address (not chosen on the page):
+  // once the address no longer asks for it (Back), the form goes back to
+  // joining a departure.
+  const pathFromAddress = useRef(initialPath === 'private');
   const [where, setWhere] = useState<string[]>([]);
   const [party, setParty] = useState<string>('Couple');
   const [guests, setGuests] = useState(2);
@@ -82,14 +104,22 @@ export function EnquiryForm({ journeys, destinations, portrait }: EnquiryFormPro
   const consentErrorId = `${id}-consent-error`;
   const consentMissing = consentTried && !consent;
 
-  /* A journey named in the address opens the form on it. */
-  useEffect(() => {
-    const slug = new URLSearchParams(window.location.search).get('journey');
-    if (slug && journeys.some((j) => j.slug === slug)) {
-      setPath('departure');
-      setJourney(slug);
-    }
-  }, [journeys]);
+  /* The address chooses the way: `travel=private` opens the private journey,
+     a journey named in it opens the form on that journey (AddressChoice). */
+  const choose = useCallback(
+    (travel: string | null, slug: string | null) => {
+      const named = !!slug && journeys.some((j) => j.slug === slug);
+      if (travel === 'private') {
+        setPath('private');
+        pathFromAddress.current = true;
+      } else if (named || pathFromAddress.current) {
+        setPath('departure');
+        pathFromAddress.current = false;
+      }
+      if (named && slug) setJourney(slug);
+    },
+    [journeys],
+  );
 
   useEffect(() => {
     if (status === 'sent' || status === 'undelivered') doneRef.current?.focus();
@@ -199,7 +229,7 @@ export function EnquiryForm({ journeys, destinations, portrait }: EnquiryFormPro
             .map(([k, v]) => `${k}: ${v}`)
             .join('\n');
           setMailto(
-            `mailto:${site.email}?subject=${encodeURIComponent(`Enquiry: ${lines.Journey}`)}&body=${encodeURIComponent(body)}`,
+            `mailto:${site.email}?subject=${encodeURIComponent(`Inquiry: ${lines.Journey}`)}&body=${encodeURIComponent(body)}`,
           );
           setStatus('undelivered');
         }
@@ -224,6 +254,9 @@ export function EnquiryForm({ journeys, destinations, portrait }: EnquiryFormPro
 
   return (
     <section className="pe" id="enquire" aria-labelledby={`${id}-h`}>
+      <Suspense fallback={null}>
+        <AddressChoice onChoose={choose} />
+      </Suspense>
       {/* `#contact`, where the site's Contact and "Book a call" links land. */}
       <div id="contact" className="pe-anchor" data-no-settle />
       <p className="pe-giant" aria-hidden>
@@ -247,7 +280,10 @@ export function EnquiryForm({ journeys, destinations, portrait }: EnquiryFormPro
                 role="radio"
                 aria-checked={path === p.value}
                 className={path === p.value ? 'on' : ''}
-                onClick={() => setPath(p.value)}
+                onClick={() => {
+                  pathFromAddress.current = false;
+                  setPath(p.value);
+                }}
               >
                 <span className="pe-pi" aria-hidden>
                   <RateIcon name={p.icon} />
@@ -321,13 +357,13 @@ export function EnquiryForm({ journeys, destinations, portrait }: EnquiryFormPro
                     <span className="pe-si" aria-hidden>
                       <RateIcon name="mail" />
                     </span>
-                    Email your enquiry
+                    Email your inquiry
                   </a>
                 </>
               )}
               {status === 'sent' && (
                 <button type="button" className="pe-again" onClick={reset}>
-                  Send another enquiry
+                  Send another inquiry
                 </button>
               )}
             </div>
@@ -573,7 +609,7 @@ export function EnquiryForm({ journeys, destinations, portrait }: EnquiryFormPro
                     <span className="pe-si" aria-hidden>
                       <RateIcon name="arrow" />
                     </span>
-                    {status === 'sending' ? 'Sending' : 'Send enquiry'}
+                    {status === 'sending' ? 'Sending' : 'Send inquiry'}
                   </button>
                 </div>
                 <p role="alert" aria-live="assertive" className="pe-err pe-full">
@@ -588,6 +624,26 @@ export function EnquiryForm({ journeys, destinations, portrait }: EnquiryFormPro
       </div>
     </section>
   );
+}
+
+/**
+ * Reads the way the address asks for and hands it to the form, on arrival
+ * and whenever the address changes on this page (a private-travel link in the
+ * menu or the footer, followed from /plan itself). In its own Suspense
+ * boundary, so the form around it is still drawn on the server.
+ */
+function AddressChoice({
+  onChoose,
+}: {
+  onChoose: (travel: string | null, journey: string | null) => void;
+}) {
+  const params = useSearchParams();
+  const travel = params.get('travel');
+  const journey = params.get('journey');
+  useEffect(() => {
+    onChoose(travel, journey);
+  }, [travel, journey, onChoose]);
+  return null;
 }
 
 /** The two ways to travel, each with its icon. */

@@ -5,7 +5,7 @@
  */
 
 /** Switzerland first, then the Adriatic, then Italy. A journey not listed follows. */
-export const journeyOrder = ['swiss-elegance', 'adriatic-collection', 'the-italian-experience'];
+export const journeyOrder = ['swiss-elegance', 'adriatic-collection', 'italy-uncovered'];
 
 /** A journey's place in Marc's order; unplaced journeys after. */
 export const journeyRank = (slug: string) => {
@@ -23,7 +23,7 @@ export const flipbook: Record<string, { title: string; short?: string; tagline: 
     title: 'The Adriatic Collection',
     tagline: 'From Venice to Dubrovnik',
   },
-  'the-italian-experience': {
+  'italy-uncovered': {
     title: 'Italy Uncovered',
     tagline: 'Emilia-Romagna · Lake Garda & Venice',
   },
@@ -41,14 +41,7 @@ export const flipbook: Record<string, { title: string; short?: string; tagline: 
 export const journeyTint: Record<string, string> = {
   'swiss-elegance': '#1d4a66',
   'adriatic-collection': '#0f5767',
-  'the-italian-experience': '#0e2f42',
-};
-
-/** Where a journey stands for booking, in words. */
-export const statusLabel: Record<string, string> = {
-  open: 'Now booking',
-  waitlist: 'Waitlist open',
-  'sold-out': 'Sold out · Join the waitlist',
+  'italy-uncovered': '#0e2f42',
 };
 
 export type ComingJourney = {
@@ -71,8 +64,11 @@ export type ComingJourney = {
 
 /**
  * The flipbook's journeys that have no page yet: shown as "coming soon", with
- * a way to register interest. Their photographs are stand-ins until Marc sends
- * his own (Sicily's lemons especially).
+ * a way to register interest. Each with its photograph in the Journey Book
+ * ("Journeys on the horizon", pages 21-25; Ishika's notes of 24 November
+ * 2026), in place of the old draft photographs (the lemons, Amalfi): the
+ * Journey Book's own files (public/journey-book/img), or the same photograph
+ * at full size where the client's Drive has it (public/images/drive).
  */
 export const comingSoon: ComingJourney[] = [
   {
@@ -87,9 +83,9 @@ export const comingSoon: ComingJourney[] = [
     dest: ['Italy'],
     inspire: ['Coast & Islands', 'Culture', 'Food & Wine'],
     photo: {
-      src: '/images/g2.jpg',
-      alt: 'Ripe lemons, some halved, in wooden crates',
-      tone: '#6c7f86',
+      src: '/journey-book/img/sicily.jpg',
+      alt: 'Cefalù and its cathedral below La Rocca on the Sicilian coast',
+      tone: '#5f7a80',
     },
   },
   {
@@ -103,16 +99,10 @@ export const comingSoon: ComingJourney[] = [
     dest: ['Italy'],
     inspire: ['Coast & Islands', 'Food & Wine'],
     photo: {
-      src: '/images/dep-amalfi.jpg',
-      alt: 'Positano’s pastel houses climbing the hillside above a blue sea',
+      src: '/journey-book/img/positano.jpg',
+      alt: 'Positano on the cliffs of the Amalfi Coast above a sea dotted with boats',
       tone: '#4f8aa0',
     },
-    more: [
-      {
-        src: '/images/home-hero.jpg',
-        alt: 'A sailing boat at anchor off the Amalfi Coast, a cliffside town behind',
-      },
-    ],
   },
   {
     slug: 'southern-africa',
@@ -125,6 +115,8 @@ export const comingSoon: ComingJourney[] = [
     tint: '#0a2232',
     dest: ['Southern Africa'],
     inspire: ['Nature', 'Culture'],
+    // The Journey Book's game drive, Zambezi sunset and Chobe elephant, at
+    // full size from the client's Drive.
     photo: {
       src: '/images/drive/south-africa-safari-game-drive-sunset.jpg',
       alt: 'A safari vehicle under an acacia at sunset',
@@ -132,12 +124,12 @@ export const comingSoon: ComingJourney[] = [
     },
     more: [
       {
-        src: '/images/drive/zimbabwe-victoria-falls-gorge.jpg',
-        alt: 'The gorge below Victoria Falls in spray',
+        src: '/images/drive/zimbabwe-zambezi-sunset-cruise.jpg',
+        alt: 'A river boat on the Zambezi at sunset',
       },
       {
-        src: '/images/drive/botswana-chobe-elephants-floodplain.jpg',
-        alt: 'Elephants on the Chobe floodplain in Botswana',
+        src: '/images/drive/botswana-chobe-elephant-river.jpg',
+        alt: 'An elephant drinking in the Chobe River in Botswana',
       },
     ],
   },

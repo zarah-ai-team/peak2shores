@@ -12,7 +12,7 @@ import { getMedia } from '@/lib/media';
 export const metadata = pageMetadata({
   title: 'Experiences',
   description:
-    'Taste, Meet, Discover, Explore, Stay — the five kinds of experience every Peaks2Shores journey is built from.',
+    'Taste, Meet, Discover, Move — the four kinds of experience every Peaks2Shores journey is built from.',
   path: '/experiences',
 });
 
@@ -24,7 +24,7 @@ const opening = homeExperiences.find((x) => x.word === 'Meet') ?? homeExperience
  * labels and buttons; experiences.css the rest):
  *   01 a full-bleed film ·
  *   02 the ways to travel as a row of tall photographs, one open at a time ·
- *   03 the five experiences as a collage of photographs ·
+ *   03 the four experiences as a collage of photographs ·
  *   04 one call to action: plan your journey.
  * Everything is on the page from the first paint; the motion only changes
  * which photograph has the room. Each experience keeps its anchor (#taste,
@@ -71,7 +71,7 @@ export default async function ExperiencesPage() {
             Experiences
           </p>
           <h1 id="xp-title">The things worth your time.</h1>
-          <p className="intro">Five kinds of experience shape every journey.</p>
+          <p className="intro">Four kinds of experience shape every journey.</p>
         </div>
       </section>
 
@@ -83,18 +83,18 @@ export default async function ExperiencesPage() {
             <h2 id="ways-title">From a small group to a yacht of your own.</h2>
           </div>
           <p className="sub">
-            Every one is built from the five experiences below, with the same people on the ground
+            Every one is built from the four experiences below, with the same people on the ground
             and the same care behind each day.
           </p>
         </div>
         <ExperiencePanels items={panels} />
       </section>
 
-      {/* 03 — The five. */}
+      {/* 03 — The four (Marc's decision, 24 Nov 2026). */}
       <section className="xp-five" aria-labelledby="five-title">
         <div className="xp-head">
           <div>
-            <p className="lab">Five kinds of experience</p>
+            <p className="lab">Four kinds of experience</p>
             <h2 id="five-title">What fills the days of every journey.</h2>
           </div>
           <p className="sub">
@@ -112,7 +112,7 @@ export default async function ExperiencesPage() {
         </div>
         <div>
           <p>
-            The five above describe how we plan, not what we are limited to. Private journeys start
+            The four above describe how we plan, not what we are limited to. Private journeys start
             with what you actually want to do.
           </p>
           <Link className="btn btn-ink" href="/plan">

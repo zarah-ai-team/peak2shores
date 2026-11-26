@@ -1,0 +1,452 @@
+/*
+ * Understanding Journey Availability (AvailabilityGuide), on the Journeys
+ * page between The Collection and The Peaks2Shores Experience. On the
+ * Collection's paper under a hairline: the heading, what sets a status and
+ * where it is shown (with the status as it looks there); a key to the dots;
+ * then the three statuses as three soft blue panels in the order a departure
+ * moves through them, each with its guests and the range of its 18 places,
+ * Limited Availability inside Guaranteed. From 1024px the head sits on the
+ * panels' three columns and the panels' rows line up across the three; on a
+ * tablet each panel reads in two columns; on a phone, one. House blues and
+ * ink only, nothing bright; the panels have no visible border.
+ */
+.avg {
+  --ink: #141d24;
+  --muted: #5a646d;
+  --lake: var(--color-acqua-text);
+  --rule: rgb(20 29 36 / 0.14);
+  --serif: var(--font-display);
+  --sans: var(--font-ui);
+  --gut: clamp(1.25rem, 3.39vw, 4rem);
+  --col-gap: clamp(0.75rem, 1.4vw, 1.25rem);
+  --panel-pad: clamp(1.25rem, 2vw, 1.75rem);
+  /* An open place: a ring of at least 3:1 on the panel. */
+  --open: rgb(20 29 36 / 0.5);
+  padding: 0 var(--gut) clamp(4rem, 6.5vw, 6.5rem);
+  background: var(--color-ivory);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+.avg-in {
+  padding-top: clamp(2.75rem, 4.4vw, 4rem);
+  border-top: 1px solid var(--rule);
+}
+
+/* -- The head ------------------------------------------------------------- */
+.avg-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: var(--col-gap);
+  align-items: start;
+}
+.avg-lab {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--lake);
+}
+.avg-lab::before {
+  content: '';
+  flex: none;
+  width: 1.75rem;
+  height: 1px;
+  background: currentColor;
+}
+.avg-head h2 {
+  max-width: 16ch;
+  margin: 0.875rem 0 0;
+  font-family: var(--serif);
+  font-weight: var(--title-weight);
+  font-size: clamp(1.625rem, 2.2vw, 2.375rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.avg-intro {
+  max-width: 40rem;
+  margin: 1.25rem 0 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+/* A small caps label: "Where you'll see it", "What you can do". */
+.avg-k {
+  display: block;
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-stone-text);
+}
+.avg-where-k {
+  margin: 1.5rem 0 0.875rem;
+}
+.avg-where {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem var(--col-gap);
+  max-width: 40rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.avg-where li {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+/* The two samples share one height, their feet on one line, so the words
+   under them start level. */
+.avg-sample {
+  display: flex;
+  align-items: flex-end;
+  min-height: 2.25rem;
+}
+/* The status as a journey card shows it, on its photograph: the dark chip
+   with the water-blue dot (collection-card.css), here on the navy. */
+.avg-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4375rem;
+  padding: 0.4375rem 0.8125rem;
+  border-radius: 999px;
+  background: var(--color-navy);
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.avg-chip i {
+  flex: none;
+  width: 0.4375rem;
+  height: 0.4375rem;
+  border-radius: 50%;
+  background: var(--color-acqua);
+}
+/* The status as a date shows it: the tag and its secondary words. */
+.avg-date {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+.avg-date small {
+  font-size: 0.75rem;
+  line-height: 1.2;
+  color: var(--muted);
+}
+.avg-wt {
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.avg-wt b {
+  display: block;
+  font-weight: 600;
+  color: var(--ink);
+}
+/* No word left alone on a last line. */
+.avg-intro,
+.avg-wt,
+.avg-legend,
+.avg-w,
+.avg-lim p {
+  text-wrap: pretty;
+}
+
+/* -- The key to the dots -------------------------------------------------- */
+.avg-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: clamp(2rem, 3.5vw, 3rem) 0 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.avg-key {
+  display: inline-flex;
+  flex: none;
+  gap: 3px;
+}
+.avg-key i {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px var(--open);
+}
+.avg-key [data-on] {
+  background: var(--color-acqua-deep);
+  box-shadow: none;
+}
+
+/* -- The three statuses --------------------------------------------------- */
+.avg-steps {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--col-gap);
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.avg-steps > li {
+  /* The range's colour: deeper as a departure fills. */
+  --tone: var(--color-acqua-deep);
+  display: flex;
+  flex-direction: column;
+  padding: var(--panel-pad);
+  /* Invisible on screen; drawn by forced colours, so a panel keeps its edge. */
+  border: 1px solid transparent;
+  border-radius: 1rem;
+  background: var(--color-panel);
+}
+.avg-steps > li[data-s='guaranteed'] {
+  --tone: var(--color-acqua-text);
+}
+.avg-steps > li[data-s='sold-out'] {
+  --tone: var(--color-navy);
+}
+/* The status and its secondary words, as beside a date (AvailabilityTag),
+   the tag a step larger where it heads its panel. */
+.avg-steps h3 {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: 1;
+}
+.avg-steps h3 .kicker-sm {
+  font-size: 0.8125rem;
+}
+.avg-sec {
+  margin: 0.5rem 0 0;
+  font-family: var(--serif);
+  font-size: 1.1875rem;
+  font-style: italic;
+  line-height: 1.3;
+  color: var(--lake);
+}
+.avg-steps [data-s='sold-out'] .avg-sec {
+  color: var(--muted);
+}
+/* The confirmed guests it stands for: the numbers large, in the heading face. */
+.avg-n {
+  margin: 1.125rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.2;
+  color: var(--muted);
+}
+.avg-n b {
+  margin-right: 0.375rem;
+  font-family: var(--serif);
+  font-size: clamp(2.125rem, 2.8vw, 2.75rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--color-navy);
+}
+/* The 18 places, this status's range coloured, numbered beneath. */
+.avg-strip {
+  display: block;
+  max-width: 20rem;
+  margin-top: 1rem;
+}
+.avg-places,
+.avg-scale {
+  display: flex;
+  gap: 3px;
+}
+.avg-places i,
+.avg-scale span {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.avg-places [data-min],
+.avg-scale [data-min] {
+  margin-left: 0.4375rem;
+}
+.avg-places i {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px var(--open);
+}
+.avg-places [data-on] {
+  background: var(--tone);
+  box-shadow: none;
+}
+.avg-scale {
+  margin-top: 0.375rem;
+}
+.avg-scale span {
+  display: flex;
+  justify-content: center;
+  font-family: var(--sans);
+  font-size: 0.6875rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--muted);
+}
+.avg-body {
+  margin: 1.25rem 0 1.25rem;
+}
+.avg-w {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+/* Limited Availability, inside Guaranteed: the indicator beside it. */
+.avg-lim {
+  margin-top: 1rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.75rem;
+  background: var(--color-ivory);
+}
+.avg-lim h4 {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: 1;
+}
+/* Its two parts may break within themselves at a very large text size. */
+.avg-lim .kicker-sm span {
+  white-space: normal;
+}
+.avg-lim p {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+/* What the traveller can do, at the foot of the panel: information, not a
+   button, so set in the text's own weight. */
+.avg-do {
+  margin: auto 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--ink);
+}
+.avg-do .avg-k {
+  margin: 0 0 0.25rem;
+}
+.avg-note {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/* From 1024px: the head on the panels' three columns (the heading over the
+   first, the words over the other two, each "where" over its own), and the
+   three panels side by side, their rows shared, so the status, the numbers,
+   the places, the words and "What you can do" line up across the three. */
+@media (min-width: 1024px) {
+  .avg-head {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .avg-title {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+  }
+  .avg-intro,
+  .avg-where-k,
+  .avg-where {
+    grid-column: 2 / span 2;
+  }
+  .avg-intro {
+    margin-top: 0;
+  }
+  .avg-where {
+    grid-template-columns: subgrid;
+    max-width: none;
+  }
+  .avg-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .avg-steps > li {
+    display: grid;
+    grid-row: span 6;
+    grid-template-rows: subgrid;
+    row-gap: 0;
+  }
+  /* The rules over "What you can do" on one line; a longer answer runs down. */
+  .avg-do {
+    margin-top: 0;
+  }
+}
+/* A tablet and a phone held sideways: one panel under another, each in two
+   columns, the status, its guests and its places at the left, the words and
+   what to do at the right. */
+@media (min-width: 601px) and (max-width: 1023px) {
+  .avg-steps > li {
+    display: grid;
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    grid-template-rows: auto auto auto 1fr auto;
+    grid-template-areas:
+      'tag body'
+      'sec body'
+      'n body'
+      'strip body'
+      '. do';
+    column-gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: start;
+  }
+  .avg-steps h3 {
+    grid-area: tag;
+  }
+  .avg-sec {
+    grid-area: sec;
+  }
+  .avg-n {
+    grid-area: n;
+  }
+  .avg-strip {
+    grid-area: strip;
+  }
+  .avg-body {
+    grid-area: body;
+    margin-top: 0;
+  }
+  .avg-do {
+    grid-area: do;
+  }
+}
+/* A phone: "Where you'll see it" one under the other. */
+@media (max-width: 600px) {
+  .avg-where {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Forced colours (Windows high contrast): the dots and the panels keep their
+   shapes in the system's colours. */
+@media (forced-colors: active) {
+  .avg-places i,
+  .avg-key i {
+    forced-color-adjust: none;
+    background: Canvas;
+    box-shadow: inset 0 0 0 1px CanvasText;
+  }
+  .avg-places [data-on],
+  .avg-key [data-on] {
+    background: CanvasText;
+  }
+}

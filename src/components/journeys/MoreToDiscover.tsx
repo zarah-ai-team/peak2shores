@@ -10,10 +10,6 @@ const LIMIT = 3;
 /** A journey's countries, in the order its name gives them: 'Switzerland & Italy'. */
 const countriesOf = (j: Pick<Journey, 'country'>) => j.country.split(/\s*&\s*/);
 
-/** A journey's own country: its `mainCountry`, else the first of its countries. */
-const ownCountry = (j: Pick<Journey, 'country' | 'mainCountry'>) =>
-  j.mainCountry ?? countriesOf(j)[0];
-
 /**
  * The row under a journey's page, in place of the questions (Ishika's notes
  * of 9 November 2026, items 25 and 26, after A&K's "More South Africa
@@ -21,18 +17,18 @@ const ownCountry = (j: Pick<Journey, 'country' | 'mainCountry'>) =>
  * compact form (the lead photograph, the name, the itinerary, the days, the
  * price line and "View journey"; no status label).
  *
- * The heading names the journey's own country, with the place name changing
- * from journey to journey (the designer's notes; the owner's decision of
- * 19 November 2026): "More to discover in Switzerland" under Swiss Elegance,
- * "in Italy" under Italy Uncovered and "in Croatia" under The Adriatic
- * Collection. A journey without a `mainCountry` names the first of its
- * countries, and one without a country reads "More journeys to discover".
- * The journeys sharing a country with this one come first, then the rest,
- * each group in Marc's order.
+ * The heading is "More journeys to discover" under every journey (the
+ * owner's decision of 25 November 2026, after Ishika's notes of 24 November:
+ * "More to discover in Switzerland" showed the Adriatic and Italian
+ * journeys), "to discover" kept together so every page breaks it the same
+ * way. It can name the journey's own country again once there are several
+ * journeys to a country. The journeys sharing a country with this one come
+ * first, then the rest, each group in Marc's order.
  *
  * Three cards across on a laptop and wider. On a tablet the row is swiped
  * sideways with two cards across, and on a phone with one card and the edge
- * of the next in view. Nothing renders when there is no other journey.
+ * of the next in view; each card fits within one screen (collection-card.css).
+ * Nothing renders when there is no other journey.
  */
 export async function MoreToDiscover({ current }: { current: Journey }) {
   const own = countriesOf(current);
@@ -45,16 +41,11 @@ export async function MoreToDiscover({ current }: { current: Journey }) {
     .slice(0, LIMIT);
   if (others.length === 0) return null;
 
-  const country = ownCountry(current);
-  // "to discover" stays together, so on a phone every page breaks the same
-  // way: "More to discover / in Italy".
-  const heading = country ? `More to discover in ${country}` : 'More journeys to discover';
-
   return (
     <section className="mtd" aria-labelledby="mtd-h">
       <div className="mtd-in">
         <h2 id="mtd-h" className="mtd-h">
-          {heading}
+          More journeys to&nbsp;discover
         </h2>
         <ul className="mtd-row">
           {others.map((j) => (

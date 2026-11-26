@@ -1,0 +1,35 @@
+/*
+ * 08 — Hotels & lodges (HotelFlips.tsx): what Marc's review of 23 Nov 2026
+ * changed. The rest of the section is styled in home.css and home-fixes.css.
+ */
+
+/* Marc's note, under the subheading: the sans of the section's own lines
+   (home.css, `.hc-hot .head p`), a step smaller and quieter than the serif
+   line above it, at a reading length. */
+.hc .hc-hot .head.solo p.hot-note {
+  max-width: 64ch;
+  margin-top: 1rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-on-dark-body);
+}
+
+/* Four hotels: a row of four, as five stood across a wide screen, from the
+   width where the rail would scroll less than half a card: 1140px on a
+   laptop, whose type steps down to 90%, and 1280px on a touch screen. A
+   card there keeps "Victoria Falls | Zimbabwe" on one line, and turned it
+   still holds its notes (the band of its second photograph gives up the
+   room). Below that the rail of home.css stays, with its arrows. */
+@media (min-width: 1140px) and (pointer: fine), (min-width: 1280px) {
+  .hc .hc-hot .flips[data-count='4'] {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    overflow: visible;
+    margin-inline: 0;
+    padding-inline: 0;
+    scroll-snap-type: none;
+  }
+  .hc .hc-hot .flips[data-count='4'] + .flip-foot .fnav {
+    display: none;
+  }
+}

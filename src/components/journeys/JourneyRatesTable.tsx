@@ -1,6 +1,15 @@
 'use client';
 
+import Link from 'next/link';
 import { Fragment, useId, useState } from 'react';
+import { AvailabilityTag } from '@/components/ui/AvailabilityTag';
+import {
+  availability,
+  limitedAvailability,
+  OTHER_JOURNEYS_HREF,
+  type DepartureAvailability,
+} from '@/lib/availability';
+import { PRIVATE_TRAVEL_HREF } from '@/lib/links';
 import { OpenJourneyForm } from './forms/JourneyForms';
 
 /** A departure as the table shows it, already in words. */
@@ -16,15 +25,9 @@ export type RateRow = {
   price: string;
   single: string;
   withExtension?: string;
-  /** 'Available', 'Limited', 'Waitlist', 'Sold out' */
-  availability: string;
-  /** '4 places left', under a limited departure's status. */
-  detail?: string;
-  tone: 'ok' | 'low' | 'wait' | 'out';
-  guaranteed: boolean;
+  /** Where it stands: its status, from its confirmed guests, and Limited Availability. */
+  availability: DepartureAvailability;
   notes: string[];
-  /** Book (open) or join the waitlist; a sold-out departure offers the waitlist too. */
-  action: string;
 };
 
 const ALL = 'all';
@@ -34,18 +37,25 @@ const count = (n: number) => `${n} ${n === 1 ? 'departure' : 'departures'}`;
  * The Dates & Prices table, after A&K's: a ruled table with a row for each
  * departure (departs, returns, price per person sharing, single supplement,
  * availability) and a Details button that opens a line beneath it with the
- * price with the extension, the departure's notes and a button that opens
- * the booking form on that departure. Above it, a filter by year when the
+ * price with the extension, the departure's notes, and its status in Marc's
+ * words with the next step it offers (Marc's review of 23 November 2026):
+ * "Request your place" while booking now and "Secure your place" once
+ * guaranteed, each opening the booking form on that departure (with the
+ * deposit terms beside the second); once sold out, "Explore other journeys"
+ * and "Discover private travel". Above it, a filter by year when the
  * departures start in more than one. On a phone each row stacks, every value
  * under its column's name.
  */
 export function JourneyRatesTable({
   rows,
   extensionLabel,
+  deposit,
 }: {
   rows: RateRow[];
   /** "With Italy Uncovered", when the journey has an extension. */
   extensionLabel?: string;
+  /** The deposit and balance terms, shown beside "Secure your place". */
+  deposit?: string[];
 }) {
   const id = useId();
   const years = [...new Set(rows.map((r) => r.year))];
@@ -103,10 +113,12 @@ export function JourneyRatesTable({
           {shown.map((r) => {
             const isOpen = open === r.id;
             const panel = `${id}-${r.id.replace(/\W/g, '')}`;
+            const { status, limited } = r.availability;
+            const words = availability[status];
             return (
               <Fragment key={r.id}>
                 <tr
-                  className={`rt-row${isOpen ? ' is-open' : ''}${r.tone === 'out' ? ' is-out' : ''}`}
+                  className={`rt-row${isOpen ? ' is-open' : ''}${status === 'sold-out' ? ' is-out' : ''}`}
                 >
                   <th scope="row" className="rt-d" data-k="Departs">
                     <b>{r.starts.date}</b>
@@ -122,18 +134,11 @@ export function JourneyRatesTable({
                   <td className="num" data-k="Single supplement">
                     {r.single}
                   </td>
-                  <td data-k="Availability">
-                    <span className={`av av-${r.tone}`}>
-                      <i aria-hidden />
-                      {r.availability}
-                    </span>
-                    {(r.detail || r.guaranteed) && (
-                      <small className="av-sub">
-                        {[r.detail, r.guaranteed && 'Guaranteed departure']
-                          .filter(Boolean)
-                          .join(' · ')}
-                      </small>
-                    )}
+                  <td className="rt-av" data-k="Availability">
+                    <AvailabilityTag status={status} limited={limited} />
+                    <small className="av-sub">
+                      {limited ? limitedAvailability.wording : words.secondary}
+                    </small>
                   </td>
                   <td className="rt-t">
                     <button
@@ -179,10 +184,40 @@ export function JourneyRatesTable({
                           </ul>
                         </div>
                       )}
-                      <div className="rt-cta">
-                        <OpenJourneyForm kind="group" departure={r.id} className="btn btn-ink">
-                          {r.action}
-                        </OpenJourneyForm>
+                      {/* The departure's status, what it means and the next step. */}
+                      <div className="rt-st">
+                        <AvailabilityTag status={status} limited={limited} />
+                        <p className="rt-stw">
+                          {words.wording}
+                          {limited && ` ${limitedAvailability.wording}`}
+                        </p>
+                        {status === 'guaranteed' && deposit && deposit.length > 0 && (
+                          <p className="rt-dep">{deposit.join(' ')}</p>
+                        )}
+                        <div className="rt-cta">
+                          {status === 'sold-out' ? (
+                            <>
+                              <Link className="btn btn-ink" href={OTHER_JOURNEYS_HREF}>
+                                {words.cta}
+                              </Link>
+                              {words.altCta && (
+                                <Link className="tlink" href={PRIVATE_TRAVEL_HREF}>
+                                  {words.altCta}
+                                </Link>
+                              )}
+                            </>
+                          ) : (
+                            <OpenJourneyForm
+                              kind="group"
+                              departure={r.id}
+                              dialogTitle={words.cta}
+                              dialogNote={`${words.wording}${limited ? ` ${limitedAvailability.wording}` : ''}`}
+                              className="btn btn-ink"
+                            >
+                              {words.cta}
+                            </OpenJourneyForm>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </td>

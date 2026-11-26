@@ -18,7 +18,7 @@ export const revalidate = 3600;
  * The Instagram profile link, on our own site instead of Linktree — so the
  * visit, and where it came from, stays with us.
  *
- * Use this as the bio link, tagged so enquiries are credited to Instagram:
+ * Use this as the bio link, tagged so inquiries are credited to Instagram:
  *   https://peaks2shores.com/links?utm_source=instagram&utm_medium=social&utm_campaign=bio
  *
  * Kept out of search: it duplicates pages that rank on their own.
@@ -45,7 +45,7 @@ export default async function LinksPage() {
       meta: [journey.country, `${journey.days} days`, journey.departure],
       tag: journeyTagStatus(journey),
     })),
-    { href: '/plan', title: 'Plan your journey', meta: ['Enquire, or design a private trip'] },
+    { href: '/plan', title: 'Plan your journey', meta: ['Inquire, or design a private trip'] },
     { href: '/journeys', title: 'All journeys', meta: ['Small groups, personally curated'] },
     { href: '/journal', title: 'The journal', meta: ['Places, hotels and tables'] },
     { href: '/our-story', title: 'Our story', meta: [site.founder.name] },

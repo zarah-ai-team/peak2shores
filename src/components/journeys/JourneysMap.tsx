@@ -1,5 +1,6 @@
 import type { Journey } from '@/lib/content';
 import { flipbook } from '@/lib/data/flipbook';
+import { journeyAvailabilityOf } from '@/lib/journeys';
 import { getMedia, type MediaKey } from '@/lib/media';
 import { HeroCarousel, type HeroJourney } from './HeroCarousel';
 import './journeys-index.css';
@@ -14,7 +15,7 @@ const names = (a: string, b: string) => {
    its subject (CSS object-position). */
 const cardPos: Record<string, string> = {
   // An upright frame: the castle and the waterfront sit in its lower half.
-  'the-italian-experience': '50% 73%',
+  'italy-uncovered': '50% 73%',
   // A wide frame: keep the harbor and the old tower, not the hillside.
   'adriatic-collection': '42% 50%',
 };
@@ -50,6 +51,7 @@ export function JourneysMap({ journeys }: { journeys: Journey[] }) {
       slug: j.slug,
       title: flipbook[j.slug]?.title ?? j.title,
       country: j.country,
+      availability: journeyAvailabilityOf(j),
       // One line under the name: how long, and from where to where.
       facts: [`${j.days} days`, j.region],
       // The journey's own card photograph, as the menu shows it.

@@ -149,7 +149,7 @@ export const media = {
     alt: 'A quiet stone lane in an old Tuscan village, lined with potted plants',
   },
   'ex-4': {
-    label: 'Explore',
+    label: 'Move',
     brief: 'A ridge trail or a sailboat, two people, wide.',
     tone: '#7b8b93',
     // Marc's own photograph (Drive), in place of the stock sailboat.
@@ -257,7 +257,7 @@ export const media = {
     alt: 'Chapel Bridge and Water Tower on the clear Reuss, Lucerne',
   },
   'exp-move': {
-    label: 'Explore',
+    label: 'Move',
     brief: 'On foot, on the water or on safari — the outdoors. Wide.',
     tone: '#7b8b93',
     src: '/images/drive/botswana-chobe-wild-dogs.jpg',
@@ -412,22 +412,6 @@ export const media = {
     tone: '#2f7f8f',
     alt: 'Marc Haeni on the shore in Miami',
   },
-  'client-hotel-lucerne': {
-    label: 'Stay · Mandarin Oriental Palace, Lucerne',
-    brief:
-      'Drive — "MOLZN EXT 01 AIR FINAL 01X" (Marc, 9 Nov): the Palace from the air, its corner tower above the lake. Upright crop holds the flag and the tower.',
-    tone: '#5d6a7a',
-    src: '/images/home/hotel-mandarin-palace-exterior.jpg',
-    alt: 'Mandarin Oriental Palace, Lucerne, from the air: its corner tower and green copper dome above Lake Lucerne, the Alps beyond',
-  },
-  'client-hotel-stresa': {
-    label: 'Stay · Hotel La Palma, Stresa',
-    brief:
-      'Drive — "Stresa La Palma Sky Bar_1" (Marc, 9 Nov): the rooftop Sky Bar and its view of Isola Bella. Upright crop, centred on the island.',
-    tone: '#4f7f95',
-    src: '/images/home/hotel-lapalma-sky-bar.jpg',
-    alt: 'The rooftop Sky Bar at Hotel La Palma, Stresa, its sofas looking across Lake Maggiore to Isola Bella and the Alps',
-  },
   'client-hotel-victoria-falls': {
     label: 'Stay · The Palm River Hotel, Victoria Falls',
     brief:
@@ -447,10 +431,10 @@ export const media = {
   'client-hotel-vipingo': {
     label: 'Stay · Cardamom House, Vipingo',
     brief:
-      'Drive — "Cardamom_House_2023_Area_View_Manda_Toto_with_pool" (Marc, 9 Nov), cropped to the pool and the bougainvillea as proposed in the chat forwarded on 13 Nov. Upright crop holds the two guests.',
+      'Drive — "Cardamom_House_2023_Area_View_Manda_Toto_with_pool" (Marc, 9 Nov), the whole frame: zoomed out to the house with its pool (Marc’s review of 23 Nov; the crop to the pool and the bougainvillea, hotel-cardamom-pool.jpg, was shown until then). Upright crop holds the house and the pool.',
     tone: '#8a9faa',
-    src: '/images/home/hotel-cardamom-pool.jpg',
-    alt: 'The pool at Cardamom House, Vipingo, beneath a pergola of pink bougainvillea, two guests at the water’s edge',
+    src: '/images/home/hotel-cardamom-pool-aerial.jpg',
+    alt: 'Cardamom House, Vipingo, from the air: the house under its thatched roof above a long pool, pink bougainvillea and two guests at the water’s edge',
   },
 
   /* ---- Home, the journeys slider: the client's photographs (30 Oct) ---- */
@@ -486,10 +470,12 @@ export const media = {
   },
   'home-jr-horizon': {
     label: 'Home slider · More journeys coming',
-    brief: 'A traveller among the columns of Karnak. Wide.',
-    tone: '#5c7d8e',
-    src: '/images/home/jr-horizon-karnak-temple.jpg',
-    alt: 'A traveller in a long white dress among the carved columns of Karnak temple, Luxor',
+    // The Journey Book's own opener of "Journeys on the horizon" (page 18), in
+    // place of the old draft photograph of Karnak (Ishika's notes of 24 Nov).
+    brief: 'Sydney Harbour at sunset, the Journey Book’s “Journeys on the horizon”. Wide.',
+    tone: '#525869',
+    src: '/journey-book/img/sydney.jpg',
+    alt: 'Sydney Harbour at sunset, with the Opera House, the city skyline and the Harbour Bridge',
   },
 
   /* ---- Home, all departures (one small bright frame per journey) ------- */
@@ -572,8 +558,12 @@ export const media = {
   /* ---- Launch journeys --------------------------------------------------
      Each journey: hero (its page), list (Journeys index, upright), card
      (related journeys), a homepage frame, and a photograph per stay where
-     one exists. Drive photographs where we have the place; Unsplash for the
-     rest (provenance in public/images/credits.json). */
+     one exists. The client's own where we have the place: the journey
+     flyers' and the Journey Book's photographs (Ishika's notes of 24 Nov
+     2026; web copies in public/images/journeys, recorded in
+     reports/image-asset-plan.md) and Marc's Drive; Unsplash for the rest
+     (provenance in public/images/credits.json). A `-flyer` slot holds the
+     flyer's photograph of a stay whose older slot keeps its own file. */
   'se-hero': {
     label: 'Hero · Swiss Elegance',
     brief: 'Lake Lucerne and the Alps. Wide.',
@@ -588,12 +578,16 @@ export const media = {
     src: '/images/drive/switzerland-grand-hotel-facade.jpg',
     alt: 'The entrance of a belle-époque grand hotel in Lucerne, under its glass canopy',
   },
+  // The journey's photograph in the Map view, the menu and the Plan page: the
+  // Swiss Elegance flyer's cover, in place of a steamer under low cloud
+  // (Marc's review of 23 Nov: "replace the current Switzerland pictures").
   'se-card': {
     label: 'Card · Swiss Elegance',
-    brief: 'A paddle steamer on Lake Lucerne.',
-    tone: '#5d6b70',
-    src: '/images/sl-2.jpg',
-    alt: 'A paddle steamer on Lake Lucerne under low cloud',
+    brief:
+      'The Swiss Elegance flyer’s cover (28 Oct): Lucerne from above, its lake steamers and the Alps. Wide.',
+    tone: '#56707c',
+    src: '/images/journeys/jy-lucerne-from-above.jpg',
+    alt: 'Lucerne from above, its old town roofs and towers, paddle steamers at the quay and the lake reaching to the Alps',
   },
   'se-lucerne': {
     label: 'Swiss Elegance · Lucerne',
@@ -604,10 +598,11 @@ export const media = {
   },
   'se-grindelwald': {
     label: 'Swiss Elegance · Grindelwald',
-    brief: 'The Eiger above Grindelwald.',
-    tone: '#496371',
-    src: '/images/drive/switzerland-grindelwald-eiger.jpg',
-    alt: 'The Eiger above Grindelwald, Switzerland, a gondola crossing green meadows and chalets',
+    brief:
+      'The flyer’s Grindelwald photograph (the Journey Book’s f_train.jpg): a mountain train below the Jungfrau peaks.',
+    tone: '#56707c',
+    src: '/images/journeys/jy-grindelwald-train.jpg',
+    alt: 'A red mountain train climbing through wildflower meadows below the snowy peaks and glaciers of the Jungfrau region',
   },
   'se-montreux': {
     label: 'Swiss Elegance · Montreux',
@@ -625,16 +620,24 @@ export const media = {
   },
   'se-stresa': {
     label: 'Swiss Elegance · Stresa',
-    brief: 'Lake Maggiore from Stresa.',
-    tone: '#4f6f80',
-    src: '/images/drive/italy-stresa-beach-club.jpg',
-    alt: 'A lakeside pool and umbrellas facing the mountains on Lake Maggiore, Stresa',
+    brief: 'The flyer’s Stresa & Lake Maggiore photograph: Isola Bella from the air.',
+    tone: '#5f8394',
+    src: '/images/journeys/jy-stresa-isola-bella-aerial.jpg',
+    alt: 'Isola Bella from the air, the Borromeo palace and its terraced gardens on Lake Maggiore, the Stresa shore and the Alps beyond',
   },
   'se-milan': {
     label: 'Swiss Elegance · Milan',
     brief: 'The Duomo.',
     tone: '#62737b',
     alt: 'The marble facade of Milan’s Duomo on the cathedral square under an evening sky',
+  },
+  'se-milan-flyer': {
+    label: 'Swiss Elegance · Milan (flyer)',
+    brief:
+      'The flyer’s Milan photograph, cut 4:3 around the Duomo clear of its printed label (949x712: the flyer holds it no larger).',
+    tone: '#4f6573',
+    src: '/images/journeys/jy-milan-duomo.jpg',
+    alt: 'Milan’s Duomo at sunset across an empty Piazza del Duomo',
   },
   'ie-hero': {
     label: 'Hero · The Italian Experience',
@@ -659,6 +662,28 @@ export const media = {
     brief: 'Bologna’s porticoes.',
     tone: '#537484',
     alt: 'Looking along the vaulted ocher porticoes of a street in Bologna',
+  },
+  'ie-bologna-flyer': {
+    label: 'Italy Uncovered · Bologna & Emilia-Romagna (flyer)',
+    brief:
+      'The flyer’s Bologna & Emilia-Romagna photograph, the homepage’s Italy Uncovered frame: a traveler with prosciutto and an aperitivo.',
+    tone: '#537484',
+    src: '/images/home/italian-experience.jpg',
+    alt: 'A smiling traveler holding a board of prosciutto and an aperitivo in an Italian salumeria',
+  },
+  'ie-motor-valley': {
+    label: 'Italy Uncovered · Motor Valley',
+    brief: 'A Ferrari at the Ferrari Museum, Maranello (Wikimedia Commons, credited).',
+    tone: '#5d7682',
+    src: '/images/journeys/jy-motor-valley-ferrari.jpg',
+    alt: 'A Ferrari race car on display at the Ferrari Museum in Maranello',
+  },
+  'ie-verona': {
+    label: 'Italy Uncovered · Valpolicella & Verona',
+    brief: 'The flyer’s Verona photograph (Marc’s Drive, 25 Oct): the Arena on Piazza Bra.',
+    tone: '#6a8390',
+    src: '/images/home/jr-italy-verona-arena.jpg',
+    alt: 'The Roman Arena on Piazza Bra in Verona at dawn, the pastel houses of the square beside it',
   },
   'ie-garda': {
     label: 'The Italian Experience · Lake Garda',
@@ -704,6 +729,37 @@ export const media = {
     brief: 'The Grand Canal.',
     tone: '#6c7c88',
     alt: 'The Grand Canal in Venice, the domes of Santa Maria della Salute beyond',
+  },
+  'ac-venice-flyer': {
+    label: 'The Adriatic Collection · Venice (flyer)',
+    brief: 'The Adriatic flyer’s Venice photograph: two spritzes above the Grand Canal.',
+    tone: '#66808c',
+    src: '/images/home/way-private-venice.jpg',
+    alt: 'Two Aperol spritzes and cicchetti on a ledge above the Grand Canal at golden hour, Santa Maria della Salute beyond',
+  },
+  'ac-istria': {
+    label: 'The Adriatic Collection · Rovinj & Istria',
+    brief:
+      'The flyer’s “A Peaks2Shores moment”: a truffle hunter and his dog in an Istrian wood (1180x676, the size the flyer holds).',
+    tone: '#4a616c',
+    src: '/images/journeys/jy-istria-truffle-hunter.jpg',
+    alt: 'A truffle hunter in a hat greeting his white truffle dog in a green spring wood',
+  },
+  'ac-split': {
+    label: 'The Adriatic Collection · Split',
+    brief:
+      'The flyer’s Diocletian’s Palace photograph (625x535, the size the flyer holds): the cathedral’s bell tower above the harbor.',
+    tone: '#5b7d8c',
+    src: '/images/journeys/jy-split-diocletians-palace.jpg',
+    alt: 'The bell tower of St Domnius Cathedral above Diocletian’s Palace in Split, the harbor and the sea beyond',
+  },
+  'ac-dubrovnik': {
+    label: 'The Adriatic Collection · Dubrovnik',
+    brief:
+      'The flyer’s Mount Srđ photograph (the Journey Book’s f_dubrovnik_hd.jpg): the Panorama Restaurant above the old town.',
+    tone: '#465e6a',
+    src: '/images/journeys/jy-dubrovnik-mount-srd.jpg',
+    alt: 'Tables set on the terrace of the Panorama Restaurant on Mount Srđ, Dubrovnik’s old town and harbor far below',
   },
   'dep-adriatic': {
     label: 'Departures · The Adriatic Collection',

@@ -1,16 +1,22 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { AvailabilityTag } from '@/components/ui/AvailabilityTag';
+import { StatusTag } from '@/components/ui/StatusTag';
 import { Arrow } from '@/components/ui/Button';
-import type { Journey, JourneyFlyer } from '@/lib/content';
-import { flipbook, statusLabel } from '@/lib/data/flipbook';
 import {
-  ratesOf,
-  type JourneyRates,
-  type RateDeparture,
-  type RateItem,
-} from '@/lib/data/journeyRates';
+  availability,
+  departureAvailability,
+  isUpcoming,
+  limitedAvailability,
+  OTHER_JOURNEYS_HREF,
+  type DepartureStatus,
+} from '@/lib/availability';
+import type { Journey, JourneyFlyer } from '@/lib/content';
+import { flipbook } from '@/lib/data/flipbook';
+import { ratesOf, type JourneyRates, type RateItem } from '@/lib/data/journeyRates';
 import { fromPriceLabel } from '@/lib/journeyPrice';
-import { DATES_TBA, RATES_TBA, type JourneyDeparture } from '@/lib/journeys';
+import { DATES_TBA, journeyAvailabilityOf, RATES_TBA, type JourneyDeparture } from '@/lib/journeys';
+import { PRIVATE_TRAVEL_HREF } from '@/lib/links';
 import { getMedia } from '@/lib/media';
 import { site } from '@/lib/site';
 import { OpenJourneyForm } from './forms/JourneyForms';
@@ -32,8 +38,13 @@ import './journey-rates.css';
  * the notes; nothing here adds facts.
  *
  * The page's forms open as pop-ups from `OpenJourneyForm` buttons, inside the
- * page's `JourneyFormsProvider`: the enquiry from the in-page menu, the group
- * and private booking requests from the rates box.
+ * page's `JourneyFormsProvider`: the inquiry from the in-page menu, the group
+ * and private booking requests from the dates and the rates box.
+ *
+ * The booking status follows Marc's review of 23 November 2026: the journey's
+ * own (the best of its departures, journeyAvailabilityOf) in the hero's
+ * facts, and each departure's beside its dates, with what it means and the
+ * next step it offers, every one drawn by AvailabilityTag.
  */
 
 const titleOf = (j: { slug: string; title: string }) => flipbook[j.slug]?.title ?? j.title;
@@ -69,21 +80,14 @@ function placesOf(j: Journey): HeroPlace[] {
         stay: n ? `${n} ${n === 1 ? 'night' : 'nights'}` : 'Along the way',
         img: photo?.src,
         alt: photo?.alt ?? stop.name,
+        pos: photo?.pos,
       },
     ];
   });
 }
 
-/** Where "Learn more" about taking a journey privately goes: Bespoke Private
-    Travel on the Plan page, as every private-travel link on the site does. */
-const PRIVATE_HREF = '/plan#private';
-
-/** Where a journey stands for booking, in the words its card and the home
-    slider use: "Now booking" while it is open, dates set or not (booking
-    requests are taken before the dates are announced). */
-export function statusOf(journey: Journey) {
-  return statusLabel[journey.status ?? 'open'] ?? 'Departed';
-}
+/** The three statuses in the order a departure moves through them. */
+const STATUSES: DepartureStatus[] = ['booking-now', 'guaranteed', 'sold-out'];
 
 /* -- Departures ----------------------------------------------------------------- */
 
@@ -108,9 +112,9 @@ function datesOf(d: JourneyDeparture) {
     : `${dayLabel.format(a)}, ${ya} – ${dayLabel.format(b)}, ${yb}`;
 }
 
-/** The journey's departures in date order. */
+/** The journey's departures still to come, in date order. */
 const departuresOf = (j: Journey) =>
-  [...(j.departures ?? [])].sort((a, b) => a.start.localeCompare(b.start));
+  (j.departures ?? []).filter((d) => isUpcoming(d)).sort((a, b) => a.start.localeCompare(b.start));
 
 /** The departures as the booking forms offer them: the dates, and the dates' ISO interval. */
 export function departureOptions(j: Journey): { value: string; label: string }[] {
@@ -130,7 +134,13 @@ function departureTable(j: Journey): { rows: DepartureRow[]; filter?: DepartureF
   if (deps.length === 0)
     return {
       rows: [
-        { id: 'tba', dates: DATES_TBA, price: fromPriceLabel(j), status: statusOf(j), key: '' },
+        {
+          id: 'tba',
+          dates: DATES_TBA,
+          price: fromPriceLabel(j),
+          availability: journeyAvailabilityOf(j),
+          key: '',
+        },
       ],
     };
   const by = new Set(deps.map((d) => d.start.slice(0, 4))).size > 1 ? 'year' : 'month';
@@ -139,7 +149,7 @@ function departureTable(j: Journey): { rows: DepartureRow[]; filter?: DepartureF
     id: `${d.start}/${d.end}`,
     dates: datesOf(d),
     price: d.price ? fromPriceLabel({ priceFrom: d.price }) : fromPriceLabel(j),
-    status: d.status ? (statusLabel[d.status] ?? 'Departed') : statusOf(j),
+    availability: departureAvailability(d),
     key: keyOf(d),
   }));
   const keys = [...new Set(rows.map((r) => r.key))];
@@ -160,13 +170,19 @@ function departureTable(j: Journey): { rows: DepartureRow[]; filter?: DepartureF
 export function JyHero({ journey }: { journey: Journey }) {
   const media = getMedia(journey.detail?.heroMedia ?? journey.heroMedia ?? journey.listMedia);
 
+  // The status: the best of the journey's departures, as on its card; a
+  // journey that has run keeps its page, marked as departed.
+  const status = journeyAvailabilityOf(journey);
+  const past = journey.status === 'past';
   const facts: { k: string; v: string; live?: boolean; tba?: boolean }[] = [
     { k: 'Length', v: `${journey.days} days · ${nightsOf(journey)} nights` },
     { k: 'Departure', v: journey.departureWindow },
     { k: 'Group', v: site.groupSize },
     { k: 'Price', v: fromPriceLabel(journey), tba: !journey.priceFrom },
     { k: 'Countries', v: countriesOf(journey) },
-    { k: 'Status', v: statusOf(journey), live: true },
+    past
+      ? { k: 'Status', v: 'Departed' }
+      : { k: 'Status', v: availability[status.status].label, live: true },
   ];
 
   /* `data-header="solid-on-scroll"`: the site header turns to its solid bar as
@@ -188,8 +204,16 @@ export function JyHero({ journey }: { journey: Journey }) {
           <div key={f.k}>
             <dt>{f.k}</dt>
             <dd className={f.live ? 'live' : f.tba ? 'tba' : undefined}>
-              {f.live && <i aria-hidden />}
-              {f.v}
+              {f.live ? (
+                <AvailabilityTag
+                  status={status.status}
+                  limited={status.limited}
+                  tone="dark"
+                  className="jy-avl"
+                />
+              ) : (
+                f.v
+              )}
             </dd>
           </div>
         ))}
@@ -237,7 +261,7 @@ export function JyIntro({ journey, flyer }: { journey: Journey; flyer: JourneyFl
               (`data-fab-clear`). */}
           <p className="priv" data-fab-clear>
             <span>Want to take this journey privately?</span>{' '}
-            <Link className="tlink" href={PRIVATE_HREF}>
+            <Link className="tlink" href={PRIVATE_TRAVEL_HREF}>
               Learn more<span className="sr-only"> about taking this journey privately</span>
             </Link>
           </p>
@@ -322,6 +346,7 @@ export function JyExtension({ flyer, slug }: { flyer: JourneyFlyer; slug?: strin
      data when the journey has it (the same figure as its table). */
   const rates = slug ? ratesOf(slug) : undefined;
   const combo = rates?.departures
+    .filter((d) => isUpcoming(d))
     .map((d) => d.withExtension)
     .filter((p): p is string => !!p)
     .sort((a, b) => Number(a.replace(/\D/g, '')) - Number(b.replace(/\D/g, '')))[0];
@@ -391,38 +416,52 @@ export function JyExtension({ flyer, slug }: { flyer: JourneyFlyer; slug?: strin
 
 /* -- 4. Dates & prices -------------------------------------------------------- */
 
-const availabilityOf: Record<RateDeparture['availability'], [string, RateRow['tone'], string]> = {
-  available: ['Available', 'ok', 'Book this departure'],
-  limited: ['Limited', 'low', 'Book this departure'],
-  waitlist: ['Waitlist', 'wait', 'Join the waitlist'],
-  'sold-out': ['Sold out', 'out', 'Join the waitlist'],
-};
-
+/* Each departure's status from its confirmed guests (Marc's review of 23
+   November 2026), in place of the old Available / Limited / Waitlist / Sold
+   out and the separate "Guaranteed departure" note. */
 function rateRows(rates: JourneyRates): RateRow[] {
-  return [...rates.departures]
+  return rates.departures
+    .filter((d) => isUpcoming(d))
     .sort((a, b) => a.start.localeCompare(b.start))
-    .map((d) => {
-      const [label, tone, action] = availabilityOf[d.availability];
-      return {
-        id: `${d.start}/${d.end}`,
-        dates: datesOf(d),
-        starts: dayOf(d.start),
-        ends: dayOf(d.end),
-        year: d.start.slice(0, 4),
-        price: d.price,
-        single: d.single,
-        withExtension: d.withExtension,
-        availability: label,
-        detail:
-          d.availability === 'limited' && d.placesLeft
-            ? `${d.placesLeft} ${d.placesLeft === 1 ? 'place' : 'places'} left`
-            : undefined,
-        tone,
-        guaranteed: !!d.guaranteed,
-        notes: d.notes ?? [],
-        action,
-      };
-    });
+    .map((d) => ({
+      id: `${d.start}/${d.end}`,
+      dates: datesOf(d),
+      starts: dayOf(d.start),
+      ends: dayOf(d.end),
+      year: d.start.slice(0, 4),
+      price: d.price,
+      single: d.single,
+      withExtension: d.withExtension,
+      availability: departureAvailability(d),
+      notes: d.notes ?? [],
+    }));
+}
+
+/**
+ * What the statuses mean, in brief, under the table: each status with its
+ * secondary words, and Limited Availability beside Guaranteed, with a way on
+ * to the full explanation on the Journeys page.
+ */
+function StatusKey() {
+  return (
+    <div className="dp-key">
+      <ul aria-label="What the availability means">
+        {STATUSES.map((s) => (
+          <li key={s}>
+            <AvailabilityTag status={s} />
+            <span>{availability[s].secondary}</span>
+          </li>
+        ))}
+        <li>
+          <AvailabilityTag status="guaranteed" limited />
+          <span>{limitedAvailability.wording}</span>
+        </li>
+      </ul>
+      <Link className="tlink" href="/journeys#availability">
+        Understanding journey availability
+      </Link>
+    </div>
+  );
 }
 
 const longDate = new Intl.DateTimeFormat('en-US', {
@@ -453,7 +492,9 @@ export function JyDates({ journey }: { journey: Journey }) {
 
 function JyRates({ journey, rates }: { journey: Journey; rates: JourneyRates }) {
   const x = journey.flyer?.extension;
-  const rows = rateRows(rates);
+  // A journey that has run offers no departure, whatever rows remain.
+  const past = journey.status === 'past';
+  const rows = past ? [] : rateRows(rates);
   /* The extension's short name: "Swiss Elegance", "Italy Uncovered". */
   const xName = x?.title.split(/[,:]/)[0];
   const parts: { id: string; t: string; icon: RateIconName; tone: string; items: RateItem[] }[] = [
@@ -471,23 +512,52 @@ function JyRates({ journey, rates }: { journey: Journey; rates: JourneyRates }) 
             <h2 id="jy-dp-h">Dates and prices</h2>
           </div>
           <p className="dp-lede">
-            Each departure is limited to a small group. Prices are per person in US dollars, sharing
-            a double room.
+            Each departure travels with no more than 18 guests. Prices are per person in US dollars,
+            sharing a double room.
           </p>
         </header>
-        {rates.sample && (
+        {rates.sample && rows.length > 0 && (
           <p className="dp-sample" role="note">
             <RateIcon name="info" />
             <span>
-              <b>Sample dates and prices.</b> Shown for review only; the confirmed departures and
-              rates will replace them.
+              <b>Sample dates, prices and availability.</b> Shown for review only; the confirmed
+              departures, rates and availability will replace them.
             </span>
           </p>
         )}
-        <JourneyRatesTable rows={rows} extensionLabel={xName ? `With ${xName}` : undefined} />
+        {/* Every departure in the data has run (or the journey has): a line
+            in place of an empty table, until new dates are entered; a
+            journey that has run says so and leads on, as a sold-out one. */}
+        {rows.length > 0 ? (
+          <>
+            <JourneyRatesTable
+              rows={rows}
+              extensionLabel={xName ? `With ${xName}` : undefined}
+              deposit={rates.payment
+                .filter((p) => p.icon === 'card' || p.icon === 'clock')
+                .map((p) => p.text)}
+            />
+            <StatusKey />
+          </>
+        ) : past ? (
+          <div className="dp-done">
+            <StatusTag status="past" />
+            <p className="dp-foot">This journey has departed.</p>
+            <p className="dp-foot">
+              <Link className="tlink" href={OTHER_JOURNEYS_HREF}>
+                {availability['sold-out'].cta} →
+              </Link>{' '}
+              <Link className="tlink" href={PRIVATE_TRAVEL_HREF}>
+                {availability['sold-out'].altCta} →
+              </Link>
+            </p>
+          </div>
+        ) : (
+          <p className="dp-foot">{`${DATES_TBA}.`}</p>
+        )}
         <p className="dp-foot">
           International flights are not included.
-          {xName && ` The price with ${xName} is in each departure’s details.`}
+          {rows.length > 0 && xName && ` The price with ${xName} is in each departure’s details.`}
         </p>
       </section>
 
@@ -541,12 +611,21 @@ function JyRates({ journey, rates }: { journey: Journey; rates: JourneyRates }) 
 function JyDatesTba({ journey }: { journey: Journey }) {
   const x = journey.flyer?.extension;
   const { rows, filter } = departureTable(journey);
+  const status = journeyAvailabilityOf(journey);
+  const words = availability[status.status];
+  const past = journey.status === 'past';
   return (
     <section className="jy dep" id="dates" aria-labelledby="jy-dep-h">
       <div className="dep-main">
         <p className="lab">Dates &amp; prices</p>
         <h2 id="jy-dep-h">Dates and prices</h2>
-        <JourneyDepartures rows={rows} filter={filter} />
+        {/* A journey that has run lists no departure (its status, with the
+            ways on, is in the aside). */}
+        {past ? (
+          <p className="dp-foot">This journey has departed.</p>
+        ) : (
+          <JourneyDepartures rows={rows} filter={filter} />
+        )}
         <div className="circle">
           <div>
             <p className="t">Be the first to hear when dates open.</p>
@@ -569,15 +648,48 @@ function JyDatesTba({ journey }: { journey: Journey }) {
             <p>{x.combo}: rates to be announced</p>
           </div>
         )}
+        {/* The journey's status, what it means and the step it offers
+            (Marc's review of 23 November 2026); a journey that has run says
+            so and leads to the others, as a sold-out one does. */}
+        <div className="rate-st">
+          {past ? (
+            <StatusTag status="past" tone="dark" />
+          ) : (
+            <>
+              <AvailabilityTag status={status.status} limited={status.limited} tone="dark" />
+              <p>
+                {words.wording}
+                {status.limited && ` ${limitedAvailability.wording}`}
+              </p>
+            </>
+          )}
+        </div>
         {/* `data-fab-clear`: the floating "Connect with our team" steps aside
             while these buttons pass through the foot of the screen. */}
         <div className="ctas" data-fab-clear>
-          <OpenJourneyForm kind="group" className="btn btn-blue">
-            Book this journey <Arrow />
-          </OpenJourneyForm>
-          <OpenJourneyForm kind="private" className="btn btn-line">
-            Book as a private journey
-          </OpenJourneyForm>
+          {past || status.status === 'sold-out' ? (
+            <Link className="btn btn-blue" href={OTHER_JOURNEYS_HREF}>
+              {availability['sold-out'].cta} <Arrow />
+            </Link>
+          ) : (
+            <OpenJourneyForm
+              kind="group"
+              dialogTitle={words.cta}
+              dialogNote={`${words.wording}${status.limited ? ` ${limitedAvailability.wording}` : ''}`}
+              className="btn btn-blue"
+            >
+              {words.cta} <Arrow />
+            </OpenJourneyForm>
+          )}
+          {past ? (
+            <Link className="btn btn-line" href={PRIVATE_TRAVEL_HREF}>
+              {availability['sold-out'].altCta}
+            </Link>
+          ) : (
+            <OpenJourneyForm kind="private" className="btn btn-line">
+              Book as a private journey
+            </OpenJourneyForm>
+          )}
         </div>
         <p className="fine">International flights are not included.</p>
       </aside>

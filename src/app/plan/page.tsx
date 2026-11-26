@@ -8,7 +8,6 @@ import { FactList, SectionLabel, Tick } from '@/components/ui/Editorial';
 import { Section } from '@/components/ui/Section';
 import { StatusTag } from '@/components/ui/StatusTag';
 import { EnquiryForm, type EnquiryJourney } from '@/components/journeys/EnquiryForm';
-import { journeyTagStatus } from '@/components/pages/journeyStatus';
 import { fromPriceLabel } from '@/lib/journeyPrice';
 import {
   getDestinations,
@@ -19,7 +18,8 @@ import {
   type JourneySummary,
 } from '@/lib/content';
 
-/* Rebuilt hourly, so a journey scheduled with `publishAt` appears on time. */
+/* Rebuilt hourly, so a journey scheduled with `publishAt` appears on time
+   (while the page reads the address, below, it is drawn for each visit). */
 export const revalidate = 3600;
 
 export const metadata = pageMetadata({
@@ -29,7 +29,18 @@ export const metadata = pageMetadata({
   path: '/plan',
 });
 
-export default async function PlanPage() {
+export default async function PlanPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ travel?: string | string[]; journey?: string | string[] }>;
+}) {
+  /* The way the address asks for (every private-travel link is
+     /plan?travel=private#contact, a journey's /plan?journey=…#contact), read
+     here so the form's first paint already shows it. Reading the address
+     renders the page for each visit, which also keeps a journey scheduled
+     with `publishAt` on time. */
+  const { travel, journey } = await searchParams;
+  const one = (v?: string | string[]) => (Array.isArray(v) ? v[0] : v);
   const [journeys, titles, destinations] = await Promise.all([
     getJourneySummaries(),
     getEnquirableJourneyTitles(),
@@ -37,7 +48,7 @@ export default async function PlanPage() {
   ]);
 
   /* The journeys a visitor can join, as the form's photograph cards: every
-     one the enquiry API accepts, with its length and route. */
+     one the inquiry API accepts, with its length and route. */
   const cards: EnquiryJourney[] = journeys
     .filter((j) => titles.includes(j.title) && j.status !== 'past')
     .map((j) => {
@@ -58,6 +69,8 @@ export default async function PlanPage() {
         journeys={cards}
         destinations={destinations.map((d) => d.country)}
         portrait={marc.src ? { src: marc.src, alt: marc.alt ?? 'Marc Haeni' } : undefined}
+        initialPath={one(travel) === 'private' ? 'private' : 'departure'}
+        initialJourney={one(journey)}
       />
 
       <Section pad="section-sm" aria-labelledby="departures-title">
@@ -115,7 +128,7 @@ export default async function PlanPage() {
 
 /**
  * To a finger, a journey's title is a 44px target however short it is: an
- * invisible band centred on it, as on the enquiry form's Privacy Policy link.
+ * invisible band centred on it, as on the inquiry form's Privacy Policy link.
  */
 const TITLE_TARGET =
   'relative pointer-coarse:after:absolute pointer-coarse:after:inset-x-0 pointer-coarse:after:top-1/2 pointer-coarse:after:h-11 pointer-coarse:after:-translate-y-1/2';
@@ -123,14 +136,15 @@ const TITLE_TARGET =
 /**
  * The departures as a ledger: a real table from 768px (Journey · Window ·
  * Days · Group · Price · Status), stacked rows on a phone. Each title links to
- * its journey. The price is the journey's from-price line, "From $X per
- * person" or "Rates to be announced" (fromPriceLabel).
+ * its journey. The group is its size, "10–18 guests"; the price is the
+ * journey's from-price line, "From $X per person" or "Rates to be announced"
+ * (fromPriceLabel); the status is Marc's (his review of 23 November 2026),
+ * the best of its departures, drawn as on its page: "Booking Now".
  */
 function Ledger({ journeys }: { journeys: JourneySummary[] }) {
-  const status = (journey: JourneySummary) => {
-    const tag = journeyTagStatus(journey);
-    return <StatusTag status={tag}>{tag === 'open' ? 'Open' : undefined}</StatusTag>;
-  };
+  const status = (journey: JourneySummary) => (
+    <StatusTag status={journey.availability.status} limited={journey.availability.limited} />
+  );
 
   return (
     <>

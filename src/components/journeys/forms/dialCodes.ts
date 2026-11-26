@@ -1,6 +1,6 @@
 /**
  * Countries and their calling codes, for the phone field of a journey page's
- * booking and enquiry forms, in alphabetical order of their English names.
+ * booking and inquiry forms, in alphabetical order of their English names.
  *
  * Each row is [ISO 3166 code, name, calling code without its "+"]. The United
  * States, Canada and the Caribbean countries that share +1 list the code

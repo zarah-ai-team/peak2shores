@@ -9,7 +9,9 @@ import './connect.css';
  * "Connect with our team", fixed bottom right on every page: one tap opens the
  * ways to reach the team. Escape or a click outside closes it. Call,
  * WhatsApp and the scheduling link appear only once they are set in site.ts;
- * until a scheduling link exists, "Book a call" opens the enquiry form.
+ * until a scheduling link exists, "Book a call" opens the inquiry form. On a
+ * phone the button is a small round icon, its words kept as its name for a
+ * screen reader (connect.css).
  */
 /** The height of the strip at the foot of the screen that the button occupies. */
 const STRIP = 104;
