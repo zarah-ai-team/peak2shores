@@ -140,8 +140,10 @@ const useBrowserLayoutEffect = typeof window === 'undefined' ? useEffect : useLa
  * until Marc sets the rate.
  *
  * `compact` is the card of the row under a journey's page (More to discover):
- * the lead photograph, the name, the itinerary, the days, the price line and
- * "View journey", with no region or status label, tagline or line.
+ * the lead photograph with the status label on it, as on The Collection's
+ * cards (every journey card shows its status: Marc's review of 23 November
+ * 2026), the name, the itinerary, the days, the price line and "View
+ * journey", with no region label, tagline or line.
  *
  * A photograph after the first loads once a reader reaches for its dot (a
  * press or the keyboard's focus) or swipes to it. The one asked for shows
@@ -276,20 +278,18 @@ export function CollectionCard({
         ))}
         <div className="pcg" aria-hidden />
       </div>
-      {!compact && (
-        <div className="pctop">
-          <span>{c.region}</span>
-          {/* The dot drawn by the status, as on the journey pages
-              (AvailabilityTag): ringed once guaranteed, muted once sold out. */}
-          <span
-            className={`st${c.soon ? ' soon' : ''}`}
-            data-status={c.soon ? undefined : c.availability.status}
-          >
-            <i aria-hidden />
-            {c.status}
-          </span>
-        </div>
-      )}
+      <div className="pctop">
+        {!compact && <span>{c.region}</span>}
+        {/* The dot drawn by the status, as on the journey pages
+            (AvailabilityTag): ringed once guaranteed, muted once sold out. */}
+        <span
+          className={`st${c.soon ? ' soon' : ''}`}
+          data-status={c.soon ? undefined : c.availability.status}
+        >
+          <i aria-hidden />
+          {c.status}
+        </span>
+      </div>
       <div className="pcb">
         {imgs.length > 1 && (
           <div className="dots" role="group" aria-label="Photographs">

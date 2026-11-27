@@ -761,6 +761,111 @@ export const media = {
     src: '/images/journeys/jy-dubrovnik-mount-srd.jpg',
     alt: 'Tables set on the terrace of the Panorama Restaurant on Mount Srđ, Dubrovnik’s old town and harbor far below',
   },
+  /*
+   * The Soul of Sicily (Marc's brief of 27 Nov 2026). Two sources: Marc's
+   * Drive (Destinations / Italy / Sicily: Shutterstock photographs he
+   * licensed; web copies in public/images/drive and sc-card, sc-list), and the
+   * photographs of the Liberty Sicily itinerary (22-29 May 2027), upscaled
+   * 4x with Magnific Precision for the experiences the Drive has no photograph
+   * of (public/images/journeys/jy-sicily-*, and sc-hero).
+   */
+  'sc-hero': {
+    label: 'Hero · The Soul of Sicily',
+    brief:
+      'Marc’s brief: Taormina above the Mediterranean with Mount Etna beyond. The Liberty itinerary’s photograph, upscaled 4x. Wide.',
+    tone: '#3f6f86',
+    alt: 'The bay below Taormina from the hillside, oleander in bloom, Mount Etna rising beyond the coast',
+  },
+  'sc-list': {
+    label: 'The Soul of Sicily',
+    brief: 'Marc’s Drive: the Benedictine cloister of Monreale Cathedral. Upright.',
+    tone: '#4d6d7c',
+    alt: 'Carved columns and arches in the cloister of Monreale Cathedral, a palm and the bell tower beyond',
+  },
+  'sc-card': {
+    label: 'Card · The Soul of Sicily',
+    brief: 'Marc’s Drive: the Teatro Antico of Taormina above the coast.',
+    tone: '#3d6f8c',
+    alt: 'The Teatro Antico of Taormina on its hilltop above the coast and Isola Bella',
+  },
+  'sc-palermo': {
+    label: 'The Soul of Sicily · Palermo',
+    brief: 'The Liberty itinerary’s Palermo street photograph, upscaled 4x.',
+    tone: '#6a7a86',
+    src: '/images/journeys/jy-sicily-palermo-street.jpg',
+    alt: 'A lively lane in Palermo’s old town, café tables and a street vendor in the afternoon sun',
+  },
+  'sc-cefalu': {
+    label: 'The Soul of Sicily · Cefalù',
+    brief: 'Marc’s Drive: Cefalù Cathedral from above.',
+    tone: '#5a7a8e',
+    src: '/images/drive/italy-cefalu-cathedral.jpg',
+    alt: 'The Norman cathedral of Cefalù and its twin towers below the cliffs of La Rocca',
+  },
+  'sc-agrigento': {
+    label: 'The Soul of Sicily · Agrigento',
+    brief: 'Marc’s Drive: the Valley of the Temples.',
+    tone: '#64808c',
+    src: '/images/drive/italy-agrigento-valley-of-the-temples.jpg',
+    alt: 'The Temple of Concordia among olive and almond trees in the Valley of the Temples, Agrigento',
+  },
+  'sc-taormina': {
+    label: 'The Soul of Sicily · Taormina',
+    brief: 'Marc’s Drive: a lane off Taormina’s Corso Umberto.',
+    tone: '#5f7686',
+    src: '/images/drive/italy-taormina-corso.jpg',
+    alt: 'A flight of steps lined with shops and ceramics off Corso Umberto in Taormina',
+  },
+  'sc-gangi': {
+    label: 'The Soul of Sicily · Behind the doors of Sicilian aristocracy',
+    brief:
+      'Marc’s Drive: Palermo from above, its maiolica dome and the mountains. Until a photograph of Palazzo Gangi comes from Liberty Sicily.',
+    tone: '#5d7a8a',
+    src: '/images/drive/italy-palermo-maiolica-dome.jpg',
+    alt: 'A maiolica-tiled dome above the rooftops and churches of Palermo, the mountains beyond',
+  },
+  'sc-monreale': {
+    label: 'The Soul of Sicily · Monreale after hours',
+    brief: 'The Liberty itinerary’s photograph of Monreale Cathedral’s nave, upscaled 4x. Upright.',
+    tone: '#5c6f80',
+    src: '/images/journeys/jy-sicily-monreale-mosaics.jpg',
+    alt: 'The golden mosaics of Monreale Cathedral, Christ Pantocrator in the apse above the nave',
+  },
+  'sc-cooking': {
+    label: 'The Soul of Sicily · From garden to table',
+    brief: 'The Liberty itinerary’s cooking class photograph, upscaled 4x.',
+    tone: '#6c7f8a',
+    src: '/images/journeys/jy-sicily-cooking-class.jpg',
+    alt: 'Two guests in aprons preparing fresh vegetables at a countryside cooking class in Sicily',
+  },
+  'sc-temples': {
+    label: 'The Soul of Sicily · Ancient Sicily in the golden light',
+    brief: 'Marc’s Drive: the Valley of the Temples.',
+    tone: '#64808c',
+    src: '/images/drive/italy-agrigento-valley-of-the-temples.jpg',
+    alt: 'The Temple of Concordia above the olive groves of the Valley of the Temples, Agrigento',
+  },
+  'sc-boat': {
+    label: 'The Soul of Sicily · Sicily from the sea',
+    brief: 'The Liberty itinerary’s private boat photograph, upscaled 4x.',
+    tone: '#3c78a0',
+    src: '/images/journeys/jy-sicily-private-boat.jpg',
+    alt: 'A two-masted wooden sailing boat on the open Ionian Sea under a blue sky',
+  },
+  'sc-etna': {
+    label: 'The Soul of Sicily · Mount Etna',
+    brief: 'The Liberty itinerary’s photograph of a 4x4 on Mount Etna, upscaled 4x.',
+    tone: '#5a7186',
+    src: '/images/journeys/jy-sicily-etna-jeep.jpg',
+    alt: 'A green 4x4 on a lava track across the slopes of Mount Etna, the volcano’s summit beyond',
+  },
+  'home-jr-sicily': {
+    label: 'Home slider · The Soul of Sicily',
+    brief: 'Marc’s Drive: Cefalù from above, below La Rocca. Wide.',
+    tone: '#3f7c96',
+    src: '/images/home/jr-sicily-cefalu.jpg',
+    alt: 'Cefalù on its headland below the cliffs of La Rocca, the turquoise sea around it',
+  },
   'dep-adriatic': {
     label: 'Departures · The Adriatic Collection',
     brief: 'Sailing off Hvar. Small landscape crop.',

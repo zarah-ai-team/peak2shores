@@ -968,6 +968,235 @@ export const hotels: HotelRecord[] = [
       },
     ],
   },
+  /* -- The Soul of Sicily (Marc’s brief of 27 Nov 2026) ----------------------------
+     Photographs from each hotel’s official website; NH Collection Taormina’s from
+     the official media kit of its group, Minor Hotels (nh-hotels.com refuses
+     automated downloads). */
+  {
+    id: 'grand-hotel-des-palmes-palermo',
+    name: 'Grand Hotel et des Palmes',
+    place: 'Palermo',
+    country: 'Italy',
+    url: 'https://despalmes.mangias.com/en',
+    tabs: [
+      {
+        id: 'hotel',
+        text: 'A historic five-star address in the heart of Palermo, where magnificent interiors, frescoed ceilings, Art Nouveau details and contemporary refinement reflect the city’s rich cultural heritage. Its central location allows guests to step outside and discover Palermo independently. Richard Wagner finished Parsifal under its roof.',
+      },
+      {
+        id: 'rooms',
+        text: '100 rooms and suites in the spirit of the Belle Époque, with velvet, inlaid wood and marble, some with a private terrace above the old streets. The 156 m² Richard Wagner Suite has stucco and gold leaf, a crystal chandelier and a grand piano that once belonged to the composer.',
+      },
+      {
+        id: 'dining',
+        text: 'In winter the Des Palmes Neobistrot and the Sensus Mixology Bar bring Sicilian cooking and signature cocktails to the Salone degli Specchi, the Ingham family’s old ballroom. The Ouverture Terrace above Palermo’s rooftops, where chef Giuseppe Sole cooks with the seasons and the bar moves in summer, opens for summer 2027.',
+      },
+      {
+        id: 'nearby',
+        text: 'The hotel is a starting point for Palermo’s historic center: the Cathedral, the gold mosaics of the Palatine Chapel, Teatro Massimo, the Quattro Canti and the Ballarò, Vucciria and Capo markets. The concierge arranges private transfers, guided tours and tailor-made itineraries.',
+      },
+    ],
+    photos: shots('© Grand Hotel et Des Palmes', 'https://despalmes.mangias.com/en', [
+      {
+        src: '/images/hotels/grand-hotel-des-palmes-palermo/01-marble-hall.jpg',
+        alt: 'The hotel’s entrance hall: stone columns, curving marble steps, a small fountain and a white marble statue before a gilded mirror',
+        width: 2560,
+        height: 1707,
+        tab: 'hotel',
+      },
+      {
+        src: '/images/hotels/grand-hotel-des-palmes-palermo/02-richard-wagner-suite.jpg',
+        alt: 'The Richard Wagner Suite beneath a crystal chandelier and gilded stucco, a grand piano by the windows and the bed beyond the sitting area',
+        width: 2560,
+        height: 1707,
+        tab: 'rooms',
+        source: 'https://despalmes.mangias.com/en/rooms-and-suites',
+      },
+      {
+        src: '/images/hotels/grand-hotel-des-palmes-palermo/03-junior-suite.jpg',
+        alt: 'A Junior Suite in soft gray, a velvet sofa and black-and-gold furniture beside the king-size bed',
+        width: 2560,
+        height: 1707,
+        source: 'https://despalmes.mangias.com/en/rooms-and-suites',
+      },
+      {
+        src: '/images/hotels/grand-hotel-des-palmes-palermo/04-salone-degli-specchi-bar.jpg',
+        alt: 'The bar of the Salone degli Specchi framed by drawn curtains and gilded mirror panels, bottles lit on glass shelves',
+        width: 2560,
+        height: 1707,
+        tab: 'dining',
+        source: 'https://despalmes.mangias.com/en/restaurants',
+      },
+      {
+        src: '/images/hotels/grand-hotel-des-palmes-palermo/05-piano-salon.jpg',
+        alt: 'A long salon beneath a coffered wooden ceiling, a grand piano among plum velvet armchairs and tall windows onto green plants',
+        width: 2560,
+        height: 1707,
+      },
+      {
+        src: '/images/hotels/grand-hotel-des-palmes-palermo/06-ouverture-terrace.jpg',
+        alt: 'The Ouverture Terrace laid under an awning, Palermo’s rooftops, domes and bell towers and the mountains beyond',
+        width: 2560,
+        height: 1707,
+        tab: 'nearby',
+        source: 'https://despalmes.mangias.com/en/restaurants',
+      },
+    ]),
+  },
+  {
+    id: 'villa-athena-agrigento',
+    name: 'Villa Athena',
+    place: 'Agrigento',
+    country: 'Italy',
+    url: 'https://www.hotelvillaathena.it/en',
+    tabs: [
+      {
+        id: 'hotel',
+        text: 'An exceptional five-star retreat situated within the UNESCO-listed Valley of the Temples. Set in an elegant historic residence near the magnificent Temple of Concordia, Villa Athena offers an extraordinary connection to Sicily’s ancient history in a setting of tranquility and natural beauty. It is the only hotel inside the archaeological park, with 27 rooms and suites among centuries-old olive trees.',
+      },
+      {
+        id: 'rooms',
+        text: 'Rooms keep the villa’s original 18th-century majolica floors, and the Temple View Rooms face the Temple of Concordia from both bedroom and bathroom. The 60 m² Villa Suite adds a living room with a bar, a private Jacuzzi and a panoramic terrace over the whole archaeological site.',
+      },
+      {
+        id: 'dining',
+        text: 'The Terrazza degli Dei, the signature restaurant, serves Sicilian fine dining by chef Massimiliano Ballarò to live piano, with the Temples of Concordia and Juno beyond the terrace. From June to October, Federico II serves an à la carte breakfast, lunch and sunset drinks on its terrace facing the temples and by the pool.',
+      },
+      {
+        id: 'spa',
+        text: 'Villa Athena SPA, set in an old storeroom around an ancient Greek cistern, is booked privately for up to two guests: a Jacuzzi, a sensory shower and a steam bath among 18th-century majolica. The outdoor pool is for resort guests only, and the gym is in a former barn.',
+      },
+      {
+        id: 'nearby',
+        text: 'Guests enter the Valley of the Temples through their own private entrance, and a ten-minute walk leads to the foot of the Temple of Concordia; the hotel arranges private guides. Agrigento’s medieval old town is five minutes from the hotel, and private boat trips run along the coast toward the Scala dei Turchi.',
+      },
+    ],
+    photos: shots(
+      '© Villa Athena Resort',
+      'https://www.hotelvillaathena.it/en/location-in-agrigento',
+      [
+        {
+          src: '/images/hotels/villa-athena-agrigento/01-villa-and-temple-of-concordia.jpg',
+          alt: 'Villa Athena’s honey-colored facade among palms and pines, the Temple of Concordia on the ridge behind',
+          width: 1920,
+          height: 1080,
+          tab: 'hotel',
+        },
+        {
+          src: '/images/hotels/villa-athena-agrigento/02-villa-suite.jpg',
+          alt: 'The Villa Suite: a blue-and-white majolica floor, a four-poster bed and glass doors onto a balustraded terrace facing the Temple of Concordia',
+          width: 1920,
+          height: 1280,
+          tab: 'rooms',
+          source:
+            'https://www.hotelvillaathena.it/en/rooms-suites-temple-view-agrigento/villa-suite',
+        },
+        {
+          src: '/images/hotels/villa-athena-agrigento/03-terrazza-degli-dei.jpg',
+          alt: 'A table laid on the Terrazza degli Dei, a palm and the Temple of Concordia in the evening sun beyond the olive trees',
+          width: 1920,
+          height: 1080,
+          tab: 'dining',
+          source: 'https://www.hotelvillaathena.it/en/terrazza-degli-dei-restaurant-agrigento',
+        },
+        {
+          src: '/images/hotels/villa-athena-agrigento/04-pool.jpg',
+          alt: 'The pool lined with loungers and white parasols in the garden, the villa’s balustraded terrace and tall palms above',
+          width: 1920,
+          height: 1280,
+          source: 'https://www.hotelvillaathena.it/en',
+        },
+        {
+          src: '/images/hotels/villa-athena-agrigento/05-spa.jpg',
+          alt: 'The spa’s Jacuzzi beneath a waterfall spout, a glass sensory shower and blue-and-white majolica tiles',
+          width: 1920,
+          height: 1280,
+          tab: 'spa',
+          source: 'https://www.hotelvillaathena.it/en/private-spa-agrigento-valley-of-temples',
+        },
+        {
+          src: '/images/hotels/villa-athena-agrigento/06-temple-of-concordia.jpg',
+          alt: 'The Temple of Concordia from the front, its Doric columns and pediment against a clear sky',
+          width: 1920,
+          height: 1280,
+          tab: 'nearby',
+          source: 'https://www.hotelvillaathena.it/en/private-access-valley-of-temples-agrigento',
+        },
+      ],
+    ),
+  },
+  {
+    id: 'nh-collection-taormina',
+    name: 'NH Collection Taormina',
+    place: 'Taormina',
+    country: 'Italy',
+    url: 'https://www.nh-hotels.com/en/hotel/nh-collection-taormina',
+    tabs: [
+      {
+        id: 'hotel',
+        text: 'Combining contemporary elegance with the timeless charm of Taormina, this five-star property offers a superb central location, stylish accommodations and a panoramic infinity pool, providing a beautiful retreat from which to discover one of Sicily’s most enchanting destinations. Its early-20th-century building looks over the town and the coast to Mount Etna.',
+      },
+      {
+        id: 'rooms',
+        text: '58 rooms and suites in colors drawn from the Sicilian landscape, with handmade ceramics and volcanic stone; some have a private balcony or terrace over the town, the mountains and the coast. The Presidential Suite adds a living area, a Jacuzzi and a large terrace.',
+      },
+      {
+        id: 'dining',
+        text: 'Zefiro cooks contemporary Sicilian food from island produce such as Mazara del Vallo red prawns, Avola almonds and Cinisara beef, and in summer moves up to the seventh-floor rooftop terrace, with views over Taormina and the coast to Etna. Lu Souli, by the pool, serves Sicilian street food, granita, ice cream and cocktails.',
+      },
+      {
+        id: 'spa',
+        text: 'The 260 m² Fusion Spa has a Turkish bath, a Finnish sauna, thalasso and a Jacuzzi, with massages, facials, yoga and meditation classes; the panoramic infinity pool has wide views over the town.',
+      },
+      {
+        id: 'nearby',
+        text: 'Corso Umberto, Taormina’s finest shopping street, is a few steps away, and the Teatro Antico and the medieval Palazzo Corvaja are a few minutes’ walk. Isola Bella, the nearest beach, is about 1.2 km away.',
+      },
+    ],
+    photos: shots('© Minor Hotels', 'https://media.minorhotels.com/en-GLO/assets/242047/', [
+      {
+        src: '/images/hotels/nh-collection-taormina/01-infinity-pool.jpg',
+        alt: 'The infinity pool on a terrace above Taormina’s rooftops, the wooded hillside and the sea beyond',
+        width: 2560,
+        height: 1709,
+        tab: 'spa',
+      },
+      {
+        src: '/images/hotels/nh-collection-taormina/02-entrance.jpg',
+        alt: 'The hotel’s glass-canopied entrance lit at dusk, a revolving door between potted topiary',
+        width: 2560,
+        height: 1709,
+        tab: 'hotel',
+      },
+      {
+        src: '/images/hotels/nh-collection-taormina/03-presidential-suite.jpg',
+        alt: 'The Presidential Suite: a bed with a palm-patterned throw and glass doors onto a balcony above the rooftops and the sea',
+        width: 2560,
+        height: 1709,
+        tab: 'rooms',
+      },
+      {
+        src: '/images/hotels/nh-collection-taormina/04-zefiro-restaurant.jpg',
+        alt: 'Zefiro’s dining room under rattan pendant lights, mustard armchairs and ceramic prickly-pear branches on the walls',
+        width: 2560,
+        height: 1709,
+        tab: 'dining',
+      },
+      {
+        src: '/images/hotels/nh-collection-taormina/05-lobby-lounge.jpg',
+        alt: 'The lobby lounge: curved terracotta sofas, woven armchairs and arching floor lamps between tall curtains',
+        width: 2560,
+        height: 1709,
+      },
+      {
+        src: '/images/hotels/nh-collection-taormina/06-terrace-over-taormina.jpg',
+        alt: 'The Presidential Suite’s terrace, daybeds and cobalt urns before Taormina’s rocky hillside and the sea',
+        width: 2560,
+        height: 1709,
+        tab: 'nearby',
+      },
+    ]),
+  },
 ];
 
 const normal = (name: string) => name.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();

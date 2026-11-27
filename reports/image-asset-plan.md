@@ -95,3 +95,31 @@ Five more points on the credits:
 - **Seamless by Nature.** The card now shows the Kipalo Hills picture, so the Pexels row for the alpine hotel (`home-hw-seamless`) is gone from `credits.json`, `CREDITS.md` and `/credits`. The file it described, `public/images/home/hw-seamless-dolomites-hotel.jpg` (Pexels photo 32740215), is no longer shown on any page and was left in place. Owner action: keep or delete.
 - **The Circle.** The band now shows the Kipalo Hills waterhole picture, so the Unsplash row for the Positano photograph (`home-circle`) is gone from `credits.json`, `CREDITS.md` and `/credits`, and its slot from `src/lib/media.ts` and `scripts/photography-manifest.json`. The file it described, `public/images/home-circle.jpg` ("A view of a beach with boats in the water" by Simon Nham, https://unsplash.com/photos/a-view-of-a-beach-with-boats-in-the-water-F88j1nmoHLk, Unsplash License), is no longer shown on any page and was left in place. Until it goes, `npm run images` names it as a file that matches no slot. Owner action: keep or delete.
 - **The Peaks2Shores Story.** The section now shows Marc's photograph from Solothurn, so the Kenya film it replaced (`public/video/home/story.mp4` and `story-m.mp4`, the client's own clip of 29 Oct) is no longer played on any page and was left in place. Owner action: keep or delete.
+
+## The Soul of Sicily, 27 Nov 2026
+
+Marc's brief of 27 November 2026 (his email with the Liberty Sicily itinerary of 22-29 May 2027). Two client sources, neither in `credits.json` until its licence is confirmed (see above):
+
+- **Marc's Drive**, Destinations › Italy › Sicily: Shutterstock photographs, file names `…shutterstock_<number>.jpg`, which Marc sourced for this journey. Web copies at 2560 px wide at most.
+- **The Liberty Sicily itinerary** (PDF, "Peaks2Shores - Sicily Updated"): its photographs were printed at 360-743 px wide, so they were upscaled 4x with Magnific Precision (ultra-sublime) on 27 Nov 2026 before use. The itinerary does not say where they come from. The Valley of the Temples at sunset was left out: it carries a photographer's signature.
+
+| File | Shows | Known origin | Where it is shown | To confirm with the client |
+| --- | --- | --- | --- | --- |
+| `sc-hero.jpg` | The bay below Taormina, Mount Etna beyond | Liberty itinerary, page 6, upscaled 4x | Hero of The Soul of Sicily | Owner and licence (Liberty Sicily / Helena) |
+| `journeys/jy-sicily-palermo-street.jpg` | A lane in Palermo's old town | Liberty itinerary, page 2, upscaled 4x | Palermo stay | The same |
+| `journeys/jy-sicily-monreale-mosaics.jpg` | Monreale Cathedral's nave and mosaics | Liberty itinerary, page 3, upscaled 4x | Signature experience "Monreale After Hours" | The same |
+| `journeys/jy-sicily-cooking-class.jpg` | A countryside cooking class | Liberty itinerary, page 5, upscaled 4x | "From Garden to Table" | The same |
+| `journeys/jy-sicily-private-boat.jpg` | A two-masted wooden boat at sea | Liberty itinerary, page 6, upscaled 4x | "Sicily from the Sea" | The same |
+| `journeys/jy-sicily-etna-jeep.jpg` | A 4x4 on a lava track on Etna | Liberty itinerary, page 7, upscaled 4x | "The Flavors & Landscapes of Mount Etna" | The same |
+| (not in the site) | Lunch on board; Etna's slopes from above | Liberty itinerary, pages 6-7, upscaled 4x too | Kept out of the site until a place is chosen | The same |
+| `sc-card.jpg`, `drive/italy-taormina-teatro-antico.jpg` | The Teatro Antico above the coast | Drive, Shutterstock 2670243987 | Map view, menu, Plan form (card); 5th photograph of the journey card | Licence type |
+| `sc-list.jpg`, `drive/italy-monreale-cloister.jpg` | The Benedictine cloister of Monreale | Drive, Shutterstock 2781893725 | Lists that use an upright photograph; 2nd photograph of the journey card | The same |
+| `home/jr-sicily-cefalu.jpg`, `drive/italy-cefalu-aerial.jpg` | Cefalù below La Rocca | Drive, "Cefalu Shutterstock.jpg" (asset number not in the name) | Home slider; hero (Cefalù); 3rd photograph of the journey card | Asset number and licence |
+| `drive/italy-cefalu-cathedral.jpg` | Cefalù Cathedral | Drive, Shutterstock 2672817885 | Cefalù stop | Licence type |
+| `drive/italy-palermo-cathedral.jpg` | Palermo Cathedral | Drive, Shutterstock 1995993974 | Hero (Palermo) | The same |
+| `drive/italy-palermo-maiolica-dome.jpg` | A maiolica dome over Palermo | Drive, "Sicily_Palermo_Shutterstock.jpg" | 1st photograph of the journey card; "Behind the Doors of Sicilian Aristocracy" until Liberty Sicily sends a photograph of Palazzo Gangi | Asset number and licence |
+| `drive/italy-agrigento-valley-of-the-temples.jpg` | The Temple of Concordia | Drive, Shutterstock 2745585507 | Hero (Agrigento), Agrigento stay, 4th card photograph, "Ancient Sicily in the Golden Light" | Licence type |
+| `drive/italy-taormina-piazza-ix-aprile.jpg` | Piazza IX Aprile, Taormina | Drive, Shutterstock 1377258734 | Hero (Taormina) | The same |
+| `drive/italy-taormina-corso.jpg` | A lane off Corso Umberto, Taormina | Drive, Shutterstock 268686761 | Taormina stay | The same; it shows passers-by, so an editorial-only licence would not do |
+
+Not used yet: Drive › Monreale town, and Drive › People Scenes (a guest with pasta alla Norma). Still wanted from Liberty Sicily (Helena), as Marc asks: Palazzo Gangi, the cooking class and limoncello, the temples at sunset, the boat and lunch on board, the granita making and the winery, in high resolution, landscape and upright, with the right to use them; and the three hotels' media kits.

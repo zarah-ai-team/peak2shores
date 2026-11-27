@@ -17,6 +17,7 @@ const homeFrames: Record<string, MediaKey> = {
   'italy-uncovered': 'home-jr-italy',
   // Dubrovnik, the journey's finale, in golden light (8 Nov).
   'adriatic-collection': 'home-jr-adriatic',
+  'soul-of-sicily': 'home-jr-sicily',
 };
 
 /* The flipbook's journeys still to come, as slides. */
@@ -98,6 +99,7 @@ const titlePlaces: Record<string, string[]> = {
   'swiss-elegance': ['Swiss', 'Italian'],
   'italy-uncovered': ['Italy'],
   'adriatic-collection': ['Adriatic'],
+  'soul-of-sicily': ['Sicily'],
 };
 
 /* Where a wide crop of the frame centres, when the middle would cut a face. */

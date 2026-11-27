@@ -39,8 +39,9 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
   // reel moves on by itself it is not (a change every eight seconds).
   const [picked, setPicked] = useState(false);
   // The clips whose stills are in the page: the one on screen, the next, and
-  // every one already shown. The rest wait for their turn, so a phone fetches
-  // two stills with the page rather than four.
+  // every one already shown. The rest wait for their turn. The next joins
+  // once the films arm (the reel cannot move on by itself before then), so a
+  // phone fetches one still with the page rather than four.
   const [seen, setSeen] = useState<ReadonlySet<number>>(() => new Set([0]));
   // The clips whose films have played: until then a film is transparent, so
   // its still shows rather than its small poster.
@@ -163,14 +164,16 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
           {/* The clip's still: the frame until its film is ready, and the
               whole clip where the film does not play. On an upright phone or
               tablet the 16:9 frame covers a tall box, so it is drawn about
-              two and a half times the screen's width. */}
-          {(i === current || i === (current + 1) % reel.length || seen.has(i)) && (
+              two and a half times the screen's width. The first is the
+              page's largest paint, so it is fetched ahead of everything. */}
+          {(i === current || (armed && i === (current + 1) % reel.length) || seen.has(i)) && (
             <Image
               src={clip.img}
               alt={clip.alt}
               fill
               sizes="(max-width: 900px) and (orientation: portrait) 160vw, 100vw"
               priority={i === 0}
+              fetchPriority={i === 0 ? 'high' : undefined}
               className={clip.video ? 'fill' : 'fill drift'}
               style={{
                 filter: clip.grade,
@@ -186,7 +189,9 @@ export function HomeHero({ reel }: { reel: ReelClip[] }) {
               className="fill"
               style={{ filter: clip.grade, ...shown(played.has(i)) }}
               src={armed ? forScreen(clip.video) : undefined}
-              poster={posterOf(clip.img)}
+              // Named with the film, not the page: until it plays the film is
+              // transparent and its poster unseen.
+              poster={armed ? posterOf(clip.img) : undefined}
               onPlaying={() => setPlayed((had) => (had.has(i) ? had : new Set(had).add(i)))}
               muted
               playsInline

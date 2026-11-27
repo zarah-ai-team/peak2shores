@@ -183,6 +183,12 @@ The Hotel Excelsior Dubrovnik shows the licensed Pexels frame
 | `hotel-fairmont-montreux-04` | hotels/fairmont-montreux/04-glass-roofed-restaurant.jpg | [fairmont.com](https://www.fairmont.com/en/hotels/montreux/fairmont-le-montreux-palace.html) | Fairmont Hotels & Resorts, part of Accor |
 | `hotel-fairmont-montreux-05` | hotels/fairmont-montreux/05-indoor-pool.jpg | [fairmont.com](https://www.fairmont.com/en/hotels/montreux/fairmont-le-montreux-palace/wellness.html) | Fairmont Hotels & Resorts, part of Accor |
 | `hotel-fairmont-montreux-06` | hotels/fairmont-montreux/06-balcony-lake-view.jpg | [fairmont.com](https://www.fairmont.com/en/hotels/montreux/fairmont-le-montreux-palace.html) | Fairmont Hotels & Resorts, part of Accor |
+| `hotel-grand-hotel-des-palmes-palermo-01` | hotels/grand-hotel-des-palmes-palermo/01-marble-hall.jpg | [despalmes.mangias.com](https://despalmes.mangias.com/en) | Grand Hotel et Des Palmes |
+| `hotel-grand-hotel-des-palmes-palermo-02` | hotels/grand-hotel-des-palmes-palermo/02-richard-wagner-suite.jpg | [despalmes.mangias.com](https://despalmes.mangias.com/en/rooms-and-suites) | Grand Hotel et Des Palmes |
+| `hotel-grand-hotel-des-palmes-palermo-03` | hotels/grand-hotel-des-palmes-palermo/03-junior-suite.jpg | [despalmes.mangias.com](https://despalmes.mangias.com/en/rooms-and-suites) | Grand Hotel et Des Palmes |
+| `hotel-grand-hotel-des-palmes-palermo-04` | hotels/grand-hotel-des-palmes-palermo/04-salone-degli-specchi-bar.jpg | [despalmes.mangias.com](https://despalmes.mangias.com/en/restaurants) | Grand Hotel et Des Palmes |
+| `hotel-grand-hotel-des-palmes-palermo-05` | hotels/grand-hotel-des-palmes-palermo/05-piano-salon.jpg | [despalmes.mangias.com](https://despalmes.mangias.com/en) | Grand Hotel et Des Palmes |
+| `hotel-grand-hotel-des-palmes-palermo-06` | hotels/grand-hotel-des-palmes-palermo/06-ouverture-terrace.jpg | [despalmes.mangias.com](https://despalmes.mangias.com/en/restaurants) | Grand Hotel et Des Palmes |
 | `hotel-grand-park-rovinj-01` | hotels/grand-park-rovinj/01-terraces-and-marina.jpg | [maistra.com](https://www.maistra.com/properties/grand-park-hotel-rovinj/) | Maistra Hospitality Group |
 | `hotel-grand-park-rovinj-02` | hotels/grand-park-rovinj/02-sea-view-room.jpg | [maistra.com](https://www.maistra.com/properties/grand-park-hotel-rovinj/) | Maistra Hospitality Group |
 | `hotel-grand-park-rovinj-03` | hotels/grand-park-rovinj/03-restaurant-terrace.jpg | [maistra.com](https://www.maistra.com/properties/grand-park-hotel-rovinj/) | Maistra Hospitality Group |
@@ -201,6 +207,12 @@ The Hotel Excelsior Dubrovnik shows the licensed Pexels frame
 | `hotel-majestic-bologna-04` | hotels/majestic-bologna/04-i-carracci.jpg | [grandhotelmajestic.duetorrihotels.com](https://grandhotelmajestic.duetorrihotels.com/en/luxury-hotel-italy-5-stars-bologna/i-carracci-restaurant) | Grand Hotel Majestic già Baglioni |
 | `hotel-majestic-bologna-05` | hotels/majestic-bologna/05-majestic-terraces.jpg | [grandhotelmajestic.duetorrihotels.com](https://grandhotelmajestic.duetorrihotels.com/en/luxury-hotel-italy-5-stars-bologna/majestic-terraces) | Grand Hotel Majestic già Baglioni |
 | `hotel-majestic-bologna-06` | hotels/majestic-bologna/06-bologna-from-above.jpg | [grandhotelmajestic.duetorrihotels.com](https://grandhotelmajestic.duetorrihotels.com/en/luxury-hotel-italy-5-stars-bologna/hotel) | Grand Hotel Majestic già Baglioni |
+| `hotel-nh-collection-taormina-01` | hotels/nh-collection-taormina/01-infinity-pool.jpg | [media.minorhotels.com](https://media.minorhotels.com/en-GLO/assets/242047/) | Minor Hotels |
+| `hotel-nh-collection-taormina-02` | hotels/nh-collection-taormina/02-entrance.jpg | [media.minorhotels.com](https://media.minorhotels.com/en-GLO/assets/242047/) | Minor Hotels |
+| `hotel-nh-collection-taormina-03` | hotels/nh-collection-taormina/03-presidential-suite.jpg | [media.minorhotels.com](https://media.minorhotels.com/en-GLO/assets/242047/) | Minor Hotels |
+| `hotel-nh-collection-taormina-04` | hotels/nh-collection-taormina/04-zefiro-restaurant.jpg | [media.minorhotels.com](https://media.minorhotels.com/en-GLO/assets/242047/) | Minor Hotels |
+| `hotel-nh-collection-taormina-05` | hotels/nh-collection-taormina/05-lobby-lounge.jpg | [media.minorhotels.com](https://media.minorhotels.com/en-GLO/assets/242047/) | Minor Hotels |
+| `hotel-nh-collection-taormina-06` | hotels/nh-collection-taormina/06-terrace-over-taormina.jpg | [media.minorhotels.com](https://media.minorhotels.com/en-GLO/assets/242047/) | Minor Hotels |
 | `hotel-palazzo-cordusio-milan-01` | hotels/palazzo-cordusio-milan/01-palazzo-facade.jpg | [melia.com](https://www.melia.com/en/hotels/italy/milan/palazzo-cordusio-gran-melia) | Meliá Hotels International |
 | `hotel-palazzo-cordusio-milan-02` | hotels/palazzo-cordusio-milan/02-junior-suite.jpg | [melia.com](https://www.melia.com/en/hotels/italy/milan/palazzo-cordusio-gran-melia) | Meliá Hotels International |
 | `hotel-palazzo-cordusio-milan-03` | hotels/palazzo-cordusio-milan/03-giardino-cordusio.jpg | [melia.com](https://www.melia.com/en/hotels/italy/milan/palazzo-cordusio-gran-melia) | Meliá Hotels International |
@@ -231,3 +243,9 @@ The Hotel Excelsior Dubrovnik shows the licensed Pexels frame
 | `hotel-villa-aminta-stresa-04` | hotels/villa-aminta-stresa/04-i-mori-restaurant.jpg | [villa-aminta.it](https://www.villa-aminta.it/en/gallery-lake-maggiore-luxury-resorts) | Villa e Palazzo Aminta |
 | `hotel-villa-aminta-stresa-05` | hotels/villa-aminta-stresa/05-pool.jpg | [villa-aminta.it](https://www.villa-aminta.it/en/gallery-lake-maggiore-luxury-resorts) | Villa e Palazzo Aminta |
 | `hotel-villa-aminta-stresa-06` | hotels/villa-aminta-stresa/06-isola-bella-at-night.jpg | [villa-aminta.it](https://www.villa-aminta.it/) | Villa e Palazzo Aminta |
+| `hotel-villa-athena-agrigento-01` | hotels/villa-athena-agrigento/01-villa-and-temple-of-concordia.jpg | [hotelvillaathena.it](https://www.hotelvillaathena.it/en/location-in-agrigento) | Villa Athena Resort |
+| `hotel-villa-athena-agrigento-02` | hotels/villa-athena-agrigento/02-villa-suite.jpg | [hotelvillaathena.it](https://www.hotelvillaathena.it/en/rooms-suites-temple-view-agrigento/villa-suite) | Villa Athena Resort |
+| `hotel-villa-athena-agrigento-03` | hotels/villa-athena-agrigento/03-terrazza-degli-dei.jpg | [hotelvillaathena.it](https://www.hotelvillaathena.it/en/terrazza-degli-dei-restaurant-agrigento) | Villa Athena Resort |
+| `hotel-villa-athena-agrigento-04` | hotels/villa-athena-agrigento/04-pool.jpg | [hotelvillaathena.it](https://www.hotelvillaathena.it/en) | Villa Athena Resort |
+| `hotel-villa-athena-agrigento-05` | hotels/villa-athena-agrigento/05-spa.jpg | [hotelvillaathena.it](https://www.hotelvillaathena.it/en/private-spa-agrigento-valley-of-temples) | Villa Athena Resort |
+| `hotel-villa-athena-agrigento-06` | hotels/villa-athena-agrigento/06-temple-of-concordia.jpg | [hotelvillaathena.it](https://www.hotelvillaathena.it/en/private-access-valley-of-temples-agrigento) | Villa Athena Resort |

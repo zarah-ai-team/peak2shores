@@ -159,10 +159,16 @@
   text-transform: uppercase;
   white-space: nowrap;
 }
+/* The state's longest words, "Guaranteed · Limited Availability", are wider
+   than a narrow card (More to discover's is 230px wide at 320): there, and
+   only there, they wrap inside the label rather than run past the card's
+   edge. Every shorter state keeps to one line. */
 .pc .pctop .st {
+  max-width: 100%;
   background: rgb(8 20 28 / 0.62);
   color: #fff;
   font-weight: 600;
+  white-space: normal;
 }
 .pc .pctop .st i {
   width: 0.4375rem;

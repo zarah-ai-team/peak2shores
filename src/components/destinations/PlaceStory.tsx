@@ -280,9 +280,12 @@ const Place = memo(function Place({
                           <span>{journey.departureWindow}</span>
                           <span>{journey.price}</span>
                         </span>
-                        {journey.tag !== 'open' && (
-                          <StatusTag status={journey.tag} tone="dark" className="dz-j-tag" />
-                        )}
+                        <StatusTag
+                          status={journey.tag.status}
+                          limited={journey.tag.limited}
+                          tone="dark"
+                          className="dz-j-tag"
+                        />
                       </span>
                       <Arrow />
                     </Link>
@@ -337,9 +340,12 @@ const Place = memo(function Place({
                         <span className="dz-card-f">
                           {journey.region} · {journey.departureWindow} · {journey.price}
                         </span>
-                        {journey.tag !== 'open' && (
-                          <StatusTag status={journey.tag} tone="dark" className="dz-j-tag" />
-                        )}
+                        <StatusTag
+                          status={journey.tag.status}
+                          limited={journey.tag.limited}
+                          tone="dark"
+                          className="dz-j-tag"
+                        />
                         <span className="dz-card-go">
                           View journey <Arrow />
                         </span>

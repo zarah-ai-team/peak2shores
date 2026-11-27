@@ -56,7 +56,7 @@ export type JourneyRates = {
   priceNotes: RateItem[];
   included: RateItem[];
   excluded: RateItem[];
-  /** Deposit, balance and cancellation, in brief; the full terms are on /terms. */
+  /** Deposit, balance and cancellation, in brief; the full terms are on /booking-terms. */
   payment: RateItem[];
 };
 
@@ -471,6 +471,93 @@ export const journeyRates: Record<string, JourneyRates> = {
         icon: 'calendar',
         text: 'Booked within 120 days of departure, the full price is due when you book.',
       },
+      {
+        icon: 'cancel',
+        text: 'Cancellation charges rise as the departure nears; see the Booking Terms.',
+      },
+    ],
+  },
+
+  /*
+   * The Soul of Sicily: Marc's first departure (his brief of 27 November 2026),
+   * not a sample. Its rate is still to be set by Marc, and his possible second
+   * departure (2-9 October 2027) waits for his approval: neither is shown.
+   * What's included follows the Liberty Sicily itinerary of 22-29 May 2027.
+   */
+  'soul-of-sicily': {
+    currency: 'USD',
+    departures: [
+      {
+        start: '2027-05-22',
+        end: '2027-05-29',
+        price: 'To be announced',
+        single: 'To be announced',
+        confirmed: 0,
+        notes: ['Arrive at Palermo Airport (PMO); depart from Catania Airport (CTA).'],
+      },
+    ],
+    priceNotes: [
+      { icon: 'tag', text: 'Rates for this departure are to be announced.' },
+      {
+        icon: 'single',
+        text: 'Prices will be per person in US dollars, sharing a double or twin room, with a supplement for a room of one’s own.',
+      },
+      {
+        icon: 'route',
+        text: 'The journey is one way, from Palermo to Catania; we can arrange your flights.',
+      },
+      {
+        icon: 'group',
+        text: 'Each departure travels with a minimum of 10 and a maximum of 18 guests.',
+      },
+      {
+        icon: 'check',
+        text: 'Places can be requested while the group comes together; once 10 paying guests have confirmed and the services are reconfirmed, the departure is guaranteed.',
+      },
+    ],
+    included: [
+      {
+        icon: 'hotel',
+        text: '7 nights at our intended five-star hotels: Grand Hotel et des Palmes, Villa Athena and NH Collection Taormina',
+      },
+      {
+        icon: 'meal',
+        text: 'Daily breakfast, 3 lunches and 2 dinners, including a welcome dinner in Palermo and a farewell dinner in Taormina',
+      },
+      {
+        icon: 'car',
+        text: 'Private transfers throughout, from Palermo Airport on arrival to Catania Airport on departure',
+      },
+      {
+        icon: 'guide',
+        text: 'A Peaks2Shores Journey Leader throughout, with expert local guides and specialists',
+      },
+      { icon: 'meal', text: 'A guided walk through Palermo with its street-food specialties' },
+      {
+        icon: 'ticket',
+        text: 'A private encounter at Palazzo Gangi and an evening visit to Monreale Cathedral',
+      },
+      { icon: 'meal', text: 'A countryside cooking class and a limoncello masterclass' },
+      { icon: 'ticket', text: 'The Valley of the Temples in the late-afternoon light' },
+      { icon: 'boat', text: 'A private boat along Taormina’s coastline, with lunch on board' },
+      {
+        icon: 'wine',
+        text: 'Mount Etna by private 4x4, granita making and a wine-pairing lunch at an Etna winery',
+      },
+      {
+        icon: 'ticket',
+        text: 'Entrance fees as in the itinerary, including the Palatine Chapel and the Teatro Antico',
+      },
+    ],
+    excluded: [
+      { icon: 'plane', text: 'International flights to Palermo and from Catania' },
+      { icon: 'shield', text: 'Travel insurance, which we strongly recommend' },
+      { icon: 'glass', text: 'Meals and drinks not listed as included' },
+      { icon: 'sparkle', text: 'Optional activities and personal expenses' },
+      { icon: 'passport', text: 'Passport and visa fees' },
+    ],
+    payment: [
+      { icon: 'card', text: 'The deposit and payment terms will be confirmed with the rate.' },
       {
         icon: 'cancel',
         text: 'Cancellation charges rise as the departure nears; see the Booking Terms.',

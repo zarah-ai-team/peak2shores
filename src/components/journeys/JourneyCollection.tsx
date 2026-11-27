@@ -11,6 +11,7 @@ import {
 } from 'react';
 import type { CollectionCardData } from '@/lib/journeyCards';
 import { CollectionCard } from './CollectionCard';
+import { preloadHeroCarousel, useIdleHeroCarousel } from './HeroCarouselLazy';
 import { ShownSlugs } from './shownSlugs';
 import './collection.css';
 // The filters' dropdowns are styled with the rest of the Journeys page.
@@ -98,6 +99,8 @@ export function JourneyCollection({
   /* The globe is drawn only once the Map view has been opened, then kept, so
      going back and forth does not lose the journey it was turned to. */
   const [mapOpened, setMapOpened] = useState(false);
+  // The globe's code arrives once the page is idle, ready for a tap on Map.
+  useIdleHeroCarousel();
   const tabs = useRef<HTMLDivElement>(null);
   const fbar = useRef<HTMLDivElement>(null);
   const show = (next: View) => {
@@ -195,6 +198,9 @@ export function JourneyCollection({
             <p className="lab">Our journeys</p>
             <h2 id="jx-col">The Collection</h2>
           </div>
+          {/* Pointed at, touched or focused, the switch starts fetching the
+              globe's code, so the Map view opens as quickly as when the code
+              came with the page (HeroCarouselLazy). */}
           {map && (
             <div
               ref={tabs}
@@ -202,6 +208,8 @@ export function JourneyCollection({
               role="tablist"
               aria-label="View the journeys as"
               onKeyDown={onTabKey}
+              onPointerEnter={preloadHeroCarousel}
+              onFocus={preloadHeroCarousel}
             >
               {views.map(([key, label]) => (
                 <button

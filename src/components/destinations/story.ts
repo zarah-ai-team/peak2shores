@@ -1,4 +1,4 @@
-import type { TagStatus } from '@/components/ui/StatusTag';
+import type { JourneyBookingTag } from '@/components/pages/journeyStatus';
 
 /**
  * The destination story's data (PlaceStory): what the Destinations page
@@ -30,7 +30,8 @@ export type StoryJourney = {
   departureWindow: string;
   /** 'From $12,400', or 'Rates to be announced'. */
   price: string;
-  tag: TagStatus;
+  /** Its booking status, as the Journeys page's cards show it (journeyBookingTag). */
+  tag: JourneyBookingTag;
   photo: StoryPhoto | null;
 };
 

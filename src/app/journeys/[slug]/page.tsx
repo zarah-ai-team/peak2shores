@@ -24,6 +24,7 @@ import {
   JyHero,
   JyIntro,
 } from '@/components/journeys/JourneyEditorial';
+import { JySignature } from '@/components/journeys/JourneySignature';
 import { JyEssentials } from '@/components/journeys/JourneyEssentials';
 import { MoreToDiscover } from '@/components/journeys/MoreToDiscover';
 import { Stays as HotelStays } from '@/components/journeys/Stays';
@@ -252,6 +253,7 @@ export default async function JourneyPage({ params }: Params) {
       {flyer ? (
         <>
           <JyIntro journey={journey} flyer={flyer} />
+          {flyer.signature && <JySignature signature={flyer.signature} />}
           <JyItinerary journey={journey} flyer={flyer} after={<JyExtensionRow flyer={flyer} />} />
           <JyExtension flyer={flyer} slug={journey.slug} />
           <HotelStays journey={journey} />

@@ -35,6 +35,14 @@ import type { HomeVisual } from './home';
 export const staysNote =
   'A curated selection of hotels and lodges that capture the spirit and standard of our stays. Final properties are thoughtfully chosen for each journey and may vary by departure.';
 
+/**
+ * Marc's wording for every journey's hotels (his brief of 27 Nov 2026, for The
+ * Soul of Sicily, "the same wording ... across all our journeys"): after the
+ * note above, at the top of "Where you'll stay" on each journey page.
+ */
+export const staysIntended =
+  'These are our intended hotels, subject to availability at the time of final journey confirmation; should one be unavailable, a similar alternative of the same standard is chosen.';
+
 export type StayHotel = HomeVisual & {
   place: string;
   name: string;

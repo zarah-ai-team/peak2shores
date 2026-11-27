@@ -4,8 +4,13 @@
  * homepage slider and the Journeys page, so the two always agree.
  */
 
-/** Switzerland first, then the Adriatic, then Italy. A journey not listed follows. */
-export const journeyOrder = ['swiss-elegance', 'adriatic-collection', 'italy-uncovered'];
+/** Switzerland first, then the Adriatic, then Italy, then Sicily. A journey not listed follows. */
+export const journeyOrder = [
+  'swiss-elegance',
+  'adriatic-collection',
+  'italy-uncovered',
+  'soul-of-sicily',
+];
 
 /** A journey's place in Marc's order; unplaced journeys after. */
 export const journeyRank = (slug: string) => {
@@ -27,6 +32,11 @@ export const flipbook: Record<string, { title: string; short?: string; tagline: 
     title: 'Italy Uncovered',
     tagline: 'Emilia-Romagna · Lake Garda & Venice',
   },
+  // Marc's brief of 27 November 2026.
+  'soul-of-sicily': {
+    title: 'The Soul of Sicily',
+    tagline: 'Ancient Wonders, Timeless Traditions & Mediterranean Beauty',
+  },
 };
 
 /**
@@ -42,6 +52,8 @@ export const journeyTint: Record<string, string> = {
   'swiss-elegance': '#1d4a66',
   'adriatic-collection': '#0f5767',
   'italy-uncovered': '#0e2f42',
+  // The Ionian Sea below Taormina, deeper than the Adriatic's.
+  'soul-of-sicily': '#123f58',
 };
 
 export type ComingJourney = {
@@ -71,23 +83,6 @@ export type ComingJourney = {
  * at full size where the client's Drive has it (public/images/drive).
  */
 export const comingSoon: ComingJourney[] = [
-  {
-    slug: 'soul-of-sicily',
-    title: 'The Soul of Sicily',
-    short: 'The Soul of Sicily',
-    places: ['Sicily'],
-    region: 'Italy',
-    tagline: 'A Timeless Mediterranean Love Affair',
-    // The house charcoal, dark as Etna's stone.
-    tint: '#232422',
-    dest: ['Italy'],
-    inspire: ['Coast & Islands', 'Culture', 'Food & Wine'],
-    photo: {
-      src: '/journey-book/img/sicily.jpg',
-      alt: 'Cefalù and its cathedral below La Rocca on the Sicilian coast',
-      tone: '#5f7a80',
-    },
-  },
   {
     slug: 'southern-italy',
     title: 'Experience La Dolce Vita in Southern Italy',

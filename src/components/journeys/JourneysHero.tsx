@@ -45,6 +45,8 @@ export function JourneysHero() {
             alt={photo.alt ?? photo.label}
             fill
             priority
+            // The page's largest paint: fetched ahead of everything.
+            fetchPriority="high"
             quality={85}
             sizes="(max-width: 760px) 100vw, (max-width: 1100px) 864px, 60vw"
           />

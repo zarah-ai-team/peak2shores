@@ -1,7 +1,14 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from 'react';
 
 export type RouteStep = {
   /** The marker the stay is at; -1 when it is not on the route. */
@@ -17,6 +24,8 @@ export type RouteStep = {
   nights: string;
   tagline: string;
   text: string;
+  /** The stay's days in Marc's words, listed in place of `text` where he has written them. */
+  program?: { n: number; title: string; text: string }[];
   moment?: string;
   img?: string;
   alt: string;
@@ -99,6 +108,12 @@ export function RouteLive({
   const list = useRef<HTMLOListElement>(null);
   // A chosen stay holds the map a moment, while its body opens and the page settles.
   const holdUntil = useRef(0);
+  /* Opening a stay below the open one closes that one at once (`snap`), and the
+     page moves by what it lost, so the stay just chosen stays where it was
+     pressed rather than leaping off the top of the screen (a stay with its
+     days is long: The Soul of Sicily). `anchor` is where its button was. */
+  const [snap, setSnap] = useState(-1);
+  const anchor = useRef<{ k: number; top: number } | null>(null);
   const n = steps.length;
 
   /* Follow the reading: the stay whose top has passed the eye line is the one
@@ -231,8 +246,27 @@ export function RouteLive({
     holdUntil.current = performance.now() + 900;
     setPlaying(false);
     setActive(k);
+    if (open >= 0 && open < k) {
+      const button = list.current?.children[k]?.querySelector('.jr-acc');
+      if (button) anchor.current = { k, top: button.getBoundingClientRect().top };
+      setSnap(open);
+    }
     setOpen((o) => (o === k ? -1 : k));
   };
+
+  useLayoutEffect(() => {
+    const a = anchor.current;
+    if (!a) return;
+    anchor.current = null;
+    const button = list.current?.children[a.k]?.querySelector('.jr-acc');
+    if (button) {
+      const by = button.getBoundingClientRect().top - a.top;
+      if (Math.abs(by) > 1) window.scrollBy({ top: by, behavior: 'instant' });
+    }
+    // The next stay closed is closed slowly again.
+    const t = window.setTimeout(() => setSnap(-1), 50);
+    return () => window.clearTimeout(t);
+  }, [open]);
 
   const step = active >= 0 ? steps[active] : null;
   const here = step && step.at >= 0 ? markers[step.at] : null;
@@ -550,13 +584,25 @@ export function RouteLive({
                 </button>
                 <div
                   id={`jr-b-${k}`}
-                  className={`jr-body${open === k ? ' on' : ''}`}
+                  className={`jr-body${open === k ? ' on' : ''}${snap === k ? ' snap' : ''}`}
                   inert={open !== k}
                 >
                   <div>
                     <div className="in">
                       <div className="tx">
-                        <p>{x.text}</p>
+                        {x.program?.length ? (
+                          <ol className="jr-days">
+                            {x.program.map((d) => (
+                              <li key={d.n}>
+                                <span className="dn">Day {d.n}</span>
+                                <span className="dh">{d.title}</span>
+                                <p>{d.text}</p>
+                              </li>
+                            ))}
+                          </ol>
+                        ) : (
+                          <p>{x.text}</p>
+                        )}
                         {x.moment && (
                           <p className="mo">
                             <b>A Peaks2Shores moment</b>

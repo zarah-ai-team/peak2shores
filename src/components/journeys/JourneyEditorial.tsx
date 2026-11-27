@@ -595,7 +595,7 @@ function JyRates({ journey, rates }: { journey: Journey; rates: JourneyRates }) 
                   ))}
                 </ul>
                 {p.id === 'pay' && (
-                  <Link className="tlink" href="/terms">
+                  <Link className="tlink" href="/booking-terms">
                     Read the Booking Terms →
                   </Link>
                 )}

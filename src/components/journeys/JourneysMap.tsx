@@ -2,7 +2,8 @@ import type { Journey } from '@/lib/content';
 import { flipbook } from '@/lib/data/flipbook';
 import { journeyAvailabilityOf } from '@/lib/journeys';
 import { getMedia, type MediaKey } from '@/lib/media';
-import { HeroCarousel, type HeroJourney } from './HeroCarousel';
+import type { HeroJourney } from './HeroCarousel';
+import { HeroCarouselLazy } from './HeroCarouselLazy';
 import './journeys-index.css';
 
 /** Does a stay ("Stresa & Lake Maggiore") name a stop on the route ("Stresa")? */
@@ -32,7 +33,8 @@ const cardPhoto = (key: MediaKey, pos?: string) => {
  * with its stops and nights; "Stay tuned" draws back to the whole earth.
  *
  * It is the Map view of The Collection (JourneyCollection), which follows the
- * page's half-and-half hero and its in-page menu.
+ * page's half-and-half hero and its in-page menu. The globe's code comes only
+ * once that view is wanted (HeroCarouselLazy).
  */
 export function JourneysMap({ journeys }: { journeys: Journey[] }) {
   const items: HeroJourney[] = journeys.map((j) => {
@@ -63,7 +65,7 @@ export function JourneysMap({ journeys }: { journeys: Journey[] }) {
   });
 
   return (
-    <HeroCarousel
+    <HeroCarouselLazy
       journeys={items}
       label="A globe showing the chosen journey’s route, its stops and nights"
       // "Stay tuned" names no place, so its photograph promises none: a boat

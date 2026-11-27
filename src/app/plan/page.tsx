@@ -79,7 +79,7 @@ export default async function PlanPage({
             <SectionLabel className="mb-stack">Upcoming departures</SectionLabel>
             <Reveal variant="mask">
               <h2 id="departures-title" className="h2 max-w-[24ch]">
-                Or take a place on a journey that is already going.
+                Or join a small group on one of our departures.
               </h2>
             </Reveal>
           </div>

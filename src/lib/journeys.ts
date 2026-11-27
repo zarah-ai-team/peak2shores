@@ -117,6 +117,12 @@ export type FlyerStay = {
   /** "A Peaks2Shores moment", where the flyer has one. */
   moment?: string;
   media?: MediaKey;
+  /**
+   * The stay's days in Marc's words, where he has written them (The Soul of
+   * Sicily, 27 Nov 2026): listed under the stay when it is opened, in place
+   * of its "What you'll do" lines, which still serve the search engines.
+   */
+  days?: { n: number; title: string; text: string }[];
 };
 
 /**
@@ -135,6 +141,12 @@ export type JourneyFlyer = {
   hotels: { place: string; name: string; url?: string; credit?: string; unconfirmed?: boolean }[];
   /** The overview's starred highlights, two columns (launch brief stay texts). */
   highlights?: string[];
+  /**
+   * The journey's signature experiences, each with its photograph, in a
+   * section of their own after the overview (Marc's brief for The Soul of
+   * Sicily, 27 Nov 2026): what sets it apart from a conventional tour.
+   */
+  signature?: { intro?: string; items: { title: string; text: string; media: MediaKey }[] };
   /**
    * The journey this one pairs with, as the slim last row of the itinerary
    * and a full-width banner after it ("Italian extension" in the menu).
@@ -794,6 +806,207 @@ const allJourneys: Journey[] = [
         { place: 'Split', name: 'Hotel Ambasador Split' },
         { place: 'Dubrovnik', name: 'Hotel Excelsior Dubrovnik' },
       ],
+    },
+  },
+  /*
+   * The Soul of Sicily, from Marc's brief of 27 November 2026 (his email, with
+   * the Liberty Sicily itinerary of 22-29 May 2027). The first departure is
+   * set; its rate and the second departure (2-9 October 2027) wait for Marc's
+   * approval, so neither is shown. Its day-by-day is Marc's own wording.
+   */
+  {
+    slug: 'soul-of-sicily',
+    n: 'No. 04',
+    title: 'The Soul of Sicily',
+    eyebrow: 'Palermo, Cefalù, Agrigento & Taormina',
+    lead: 'From Palermo to Taormina',
+    blurb:
+      'Palermo’s palaces and markets, the golden mosaics of Monreale, the Greek temples of Agrigento and Taormina above the sea, with Mount Etna beyond. Fewer places, more time to discover Sicily at your own pace.',
+    country: 'Italy',
+    mainCountry: 'Italy',
+    region: 'Palermo to Taormina',
+    coords: [14.2, 37.6],
+    route: [
+      { name: 'Palermo', coords: [13.361, 38.116] },
+      { name: 'Cefalù', coords: [14.022, 38.039] },
+      { name: 'Agrigento', coords: [13.585, 37.291] },
+      { name: 'Taormina', coords: [15.287, 37.852] },
+    ],
+    days: 8,
+    departure: 'May 2027',
+    departureWindow: 'May 22 – 29, 2027',
+    departureISO: '2027-05-22',
+    departureMonths: ['2027-05'],
+    departures: [{ start: '2027-05-22', end: '2027-05-29' }],
+    group: groupSizeLabel,
+    groupMax: MAX_GUESTS,
+    hostedByMarc: false,
+    who: [],
+    inspire: ['Culture', 'Food & Wine', 'Coast & Islands'],
+    tags: ['Culture', 'Food & Wine'],
+    listMedia: 'sc-list',
+    cardMedia: 'sc-card',
+    heroMedia: 'sc-hero',
+    featured: true,
+    seo: {
+      title: 'The Soul of Sicily',
+      description:
+        '8 days in Sicily for no more than 18 guests: Palermo, Monreale after hours, Cefalù, the Valley of the Temples at sunset, Taormina and Mount Etna.',
+    },
+    flyer: {
+      included: experience,
+      parts: [
+        {
+          stays: [
+            {
+              place: 'Palermo',
+              nights: 2,
+              tagline: 'Aristocratic palaces, golden mosaics and vibrant markets.',
+              doing: [
+                'Discover the Palatine Chapel, Palermo’s historic streets and its street-food markets.',
+                'Step behind the doors of Palazzo Gangi for a private encounter with Sicilian nobility.',
+                'See the golden mosaics of Monreale Cathedral on a specially arranged evening visit.',
+              ],
+              days: [
+                {
+                  n: 1,
+                  title: 'Welcome to Sicily',
+                  text: 'Arrive in Palermo, where a private transfer takes you to your elegant hotel in the heart of the city. Enjoy time to settle in, relax after your journey or take a first leisurely stroll through Palermo before coming together for a welcoming Sicilian dinner with your fellow travelers.',
+                },
+                {
+                  n: 2,
+                  title: 'Palermo’s Hidden Treasures & Monreale After Hours',
+                  text: 'Discover the fascinating cultural heritage of Palermo, from its magnificent Palatine Chapel and historic streets to its vibrant markets, where traditional street-food specialties introduce you to the authentic flavors of the island. Step behind the doors of Palazzo Gangi for a private encounter with Palermo’s aristocratic heritage before concluding the day with a specially arranged evening visit to the magnificent Cathedral of Monreale.',
+                },
+              ],
+              media: 'sc-palermo',
+            },
+            {
+              place: 'Cefalù',
+              tagline: 'A Mediterranean gem on Sicily’s northern coast.',
+              doing: [
+                'Explore Cefalù’s picturesque fishing harbor and medieval streets.',
+                'Discover its magnificent Norman cathedral, a UNESCO World Heritage Site.',
+                'Take time to wander at your own pace before a delightful lunch.',
+              ],
+              media: 'sc-cefalu',
+            },
+            {
+              place: 'Agrigento',
+              nights: 2,
+              tagline: 'Sicilian traditions and ancient Greek wonders.',
+              doing: [
+                'Stay within the UNESCO-listed Valley of the Temples, near the Temple of Concordia.',
+                'Cook in the Sicilian countryside and learn the art of homemade limoncello.',
+                'Explore the Valley of the Temples as the afternoon light softens.',
+              ],
+              days: [
+                {
+                  n: 3,
+                  title: 'Cefalù – A Mediterranean Gem',
+                  text: 'Journey along Sicily’s northern coast to the enchanting seaside town of Cefalù. Discover its picturesque fishing harbor, medieval streets and magnificent Norman cathedral, with time to soak up the atmosphere and explore independently. Following a delightful lunch, continue to Agrigento and settle into your extraordinary hotel within the historic landscape of the Valley of the Temples.',
+                },
+                {
+                  n: 4,
+                  title: 'Sicilian Traditions & Ancient Wonders',
+                  text: 'Immerse yourself in the culinary traditions of Sicily during a hands-on cooking experience in the countryside. Discover seasonal ingredients, prepare fresh pasta and traditional Sicilian dishes, and learn the art of making homemade limoncello. Later, as the afternoon light softens, explore the remarkable Valley of the Temples, where ancient Greek temples stand as timeless reminders of Sicily’s extraordinary past.',
+                },
+              ],
+              media: 'sc-agrigento',
+            },
+            {
+              place: 'Taormina',
+              nights: 3,
+              tagline: 'Timeless beauty between Mount Etna and the Ionian Sea.',
+              doing: [
+                'Arrive by the sea, after lunch aboard a private boat on the Ionian Sea.',
+                'Explore Mount Etna by 4x4, make granita and lunch at an Etna winery.',
+                'Discover the Teatro Antico, then an afternoon at leisure and a farewell dinner.',
+              ],
+              days: [
+                {
+                  n: 5,
+                  title: 'Across Sicily – Arriving in Taormina by the Sea',
+                  text: 'Travel across the island toward Sicily’s spectacular eastern coastline, where a private boat awaits for an unforgettable experience on the Ionian Sea. Enjoy a leisurely lunch on board, surrounded by beautiful coastal scenery, before continuing to your hotel in the heart of Taormina. The remainder of the day is yours to explore, relax and enjoy this enchanting destination.',
+                },
+                {
+                  n: 6,
+                  title: 'Mount Etna – Volcanoes, Vineyards & Local Flavors',
+                  text: 'Discover the dramatic landscapes of Mount Etna during a private 4x4 adventure through its volcanic terrain. Learn about the island’s historic snow-collecting traditions and discover the art of preparing authentic Sicilian granita alongside a local master gelato maker. Continue to an exceptional Etna winery, where the island’s unique volcanic terroir comes to life through a vineyard and cellar visit, followed by a beautifully curated wine-pairing lunch.',
+                },
+                {
+                  n: 7,
+                  title: 'Taormina – Timeless Beauty & La Dolce Vita',
+                  text: 'Explore the elegant streets and historic treasures of Taormina with your local guide, including the magnificent Teatro Antico, framed by spectacular views of Mount Etna and the Ionian Sea. The afternoon is intentionally left at leisure. Discover charming boutiques, enjoy a leisurely lunch, relax by the hotel pool or simply find a beautiful terrace and embrace the Sicilian way of life. Come together one final time for a memorable farewell dinner celebrating our wonderful journey through Sicily.',
+                },
+                {
+                  n: 8,
+                  title: 'Arrivederci, Sicilia',
+                  text: 'Enjoy a leisurely breakfast before your transfer to Catania Airport, taking home wonderful memories, new friendships and a deeper connection to this extraordinary Mediterranean island.',
+                },
+              ],
+              media: 'sc-taormina',
+            },
+          ],
+        },
+      ],
+      hotels: [
+        {
+          place: 'Palermo',
+          name: 'Grand Hotel et des Palmes',
+          url: 'https://despalmes.mangias.com/en',
+        },
+        { place: 'Agrigento', name: 'Villa Athena', url: 'https://www.hotelvillaathena.it/en' },
+        {
+          place: 'Taormina',
+          name: 'NH Collection Taormina',
+          url: 'https://www.nh-hotels.com/en/hotel/nh-collection-taormina',
+        },
+      ],
+      highlights: [
+        'Stay in three carefully selected five-star hotels in Palermo, Agrigento and Taormina',
+        'Discover Palermo’s Palatine Chapel, historic streets and street-food markets',
+        'Wander Cefalù’s fishing harbor, medieval lanes and Norman cathedral',
+        'Take in Taormina’s Teatro Antico, framed by Mount Etna and the Ionian Sea',
+        'Come together for a welcome dinner in Palermo and a farewell dinner in Taormina',
+        'Enjoy time at leisure by design, to discover Sicily at your own pace',
+      ],
+      signature: {
+        intro:
+          'This is not simply a journey through Sicily. It is an invitation to experience its soul.',
+        items: [
+          {
+            title: 'Behind the Doors of Sicilian Aristocracy',
+            text: 'Step inside Palermo’s magnificent Palazzo Gangi, discovering the fascinating heritage, refined interiors and enduring traditions of Sicilian nobility during an intimate private encounter.',
+            media: 'sc-gangi',
+          },
+          {
+            title: 'Monreale After Hours',
+            text: 'Experience the extraordinary golden mosaics of Monreale Cathedral during a specially arranged evening visit, away from the daytime crowds and in an atmosphere of remarkable tranquility.',
+            media: 'sc-monreale',
+          },
+          {
+            title: 'From Garden to Table',
+            text: 'Discover the authentic flavors of Sicily during a hands-on countryside cooking experience, preparing traditional dishes with seasonal ingredients and learning the secrets of homemade Sicilian limoncello.',
+            media: 'sc-cooking',
+          },
+          {
+            title: 'Ancient Sicily in the Golden Light',
+            text: 'Explore the magnificent Valley of the Temples in Agrigento as the setting sun casts its golden light across one of the Mediterranean’s most extraordinary archaeological landscapes.',
+            media: 'sc-temples',
+          },
+          {
+            title: 'Sicily from the Sea',
+            text: 'Set sail along the beautiful coastline of Taormina aboard a privately chartered boat, enjoying a memorable lunch on board surrounded by the sparkling waters of the Ionian Sea.',
+            media: 'sc-boat',
+          },
+          {
+            title: 'The Flavors & Landscapes of Mount Etna',
+            text: 'Explore Europe’s highest active volcano by private 4x4 vehicles, discover the traditions behind Sicilian granita with a local master gelato maker, and enjoy a memorable wine-pairing lunch at an Etna winery.',
+            media: 'sc-etna',
+          },
+        ],
+      },
     },
   },
 ];

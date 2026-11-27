@@ -11,7 +11,8 @@ import type { HomeVisual } from '@/lib/data/home';
  * weight; Lighthouse of 24 Nov then found none of the five homepage films
  * with a poster). A film stays transparent until it first plays (`shown`
  * below), so the sharp still beneath it is what the visitor sees meanwhile,
- * and the small poster is never drawn over it.
+ * and the small poster is never drawn over it. Both callers name it only once
+ * the page has loaded, so the posters stay out of the page's first bytes.
  */
 export function posterOf(src: string): string {
   const { props } = getImageProps({ src, alt: '', width: 256, height: 144, quality: 85 });
@@ -60,6 +61,17 @@ export function HomeMedia({
   const reduced = useReducedMotion();
   const visible = useRef(false);
   const [played, setPlayed] = useState(false);
+  // The poster is named only once the page has loaded, so its few kilobytes
+  // do not compete with the hero for the connection. It is never seen before
+  // then: the film is transparent until it first plays.
+  const [armed, setArmed] = useState(false);
+
+  useEffect(() => {
+    const arm = () => setArmed(true);
+    if (document.readyState === 'complete') arm();
+    else window.addEventListener('load', arm, { once: true });
+    return () => window.removeEventListener('load', arm);
+  }, []);
 
   useEffect(() => {
     const el = video.current;
@@ -95,7 +107,7 @@ export function HomeMedia({
           className={className}
           // The film crops where its still does, so the two never jump apart.
           style={{ ...(visual.pos ? { objectPosition: visual.pos } : {}), ...shown(played) }}
-          poster={posterOf(visual.img)}
+          poster={armed ? posterOf(visual.img) : undefined}
           onPlaying={() => setPlayed(true)}
           muted
           loop

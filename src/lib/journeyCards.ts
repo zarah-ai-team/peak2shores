@@ -92,6 +92,25 @@ const cardPhotos: Record<string, CardPhoto[]> = {
       alt: 'Dubrovnik’s walls and the Lovrijenac fortress above clear Adriatic water',
     },
   ],
+  // The route in order, from Marc's Drive: Palermo, Monreale (part of the
+  // Palermo stay), Cefalù, the Valley of the Temples and Taormina's theatre.
+  'soul-of-sicily': [
+    {
+      src: '/images/drive/italy-palermo-maiolica-dome.jpg',
+      alt: 'A maiolica-tiled dome above the rooftops and churches of Palermo, the mountains beyond',
+      pos: '70% 50%',
+    },
+    {
+      src: '/images/drive/italy-monreale-cloister.jpg',
+      alt: 'Carved columns and arches in the cloister of Monreale Cathedral, the bell tower beyond',
+    },
+    placePhotos['Cefalù'],
+    placePhotos.Agrigento,
+    {
+      src: '/images/drive/italy-taormina-teatro-antico.jpg',
+      alt: 'The Teatro Antico of Taormina on its hilltop above the coast and Isola Bella',
+    },
+  ],
 };
 
 /** A departure month, '2027-06', as the Month filter names it: "June 2027". */

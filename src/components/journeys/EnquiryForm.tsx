@@ -6,6 +6,7 @@ import { Suspense, useCallback, useEffect, useId, useRef, useState } from 'react
 import { failureMessage, postForm, privacyConsent } from '@/lib/forms';
 import { track } from '@/lib/analytics';
 import { readFirstTouch } from '@/lib/attribution';
+import { availability } from '@/lib/availability';
 import { site } from '@/lib/site';
 import { RateIcon, type RateIconName } from './RateIcon';
 import './plan-enquiry.css';
@@ -60,9 +61,11 @@ const consentName = `${privacyConsent.before} ${privacyConsent.policy.label}`;
  * private journey), with Marc's portrait and the ways to reach us. On the
  * right, a frosted card: the chosen way and a progress rule that fills as
  * the reader writes, underlined fields, "Traveling as" as a segmented
- * control, guests as a stepper, then the journeys as photograph cards (to
- * join a departure) or the destinations as chips with the lead-time note (for
- * a private journey), the Privacy Policy tick box and a round send button.
+ * control, guests as a stepper, then the journeys as photograph cards with
+ * the minimum-group note, Marc's Booking Now wording (to join a departure;
+ * his review of 23 Nov 2026), or the destinations as chips with the lead-time
+ * note (for a private journey), the Privacy Policy tick box and a round send
+ * button.
  * Sent, the card thanks the reader and repeats what they asked for.
  *
  * A link to /plan?journey=swiss-elegance#contact arrives with that journey
@@ -512,6 +515,14 @@ export function EnquiryForm({
                         </label>
                       ))}
                     </div>
+                    <p className="pe-info">
+                      <span className="pe-ii" aria-hidden>
+                        <RateIcon name="group" />
+                      </span>
+                      <span>
+                        <b>Minimum group.</b> {availability['booking-now'].wording}
+                      </span>
+                    </p>
                   </fieldset>
                 ) : (
                   <fieldset className="pe-f pe-full">

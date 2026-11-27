@@ -65,7 +65,9 @@ const nextConfig = {
     formats: ['image/webp'],
     // Full-bleed photographs on retina and 4K screens need 2560 and 3840
     // variants; Marc's photographs are exported at up to 3840px for them.
-    deviceSizes: [420, 640, 828, 1080, 1280, 1600, 1920, 2560, 3840],
+    // 2048 for an upright phone's journey hero (140vh: about 2016px on an
+    // 823px-tall phone at 1.75x), which would otherwise be sent the 2560 file.
+    deviceSizes: [420, 640, 828, 1080, 1280, 1600, 1920, 2048, 2560, 3840],
     // One quality step, high enough that skies and water show no banding.
     qualities: [85],
     // Next's default is 60 seconds, so browsers and the CDN come back for every

@@ -127,6 +127,7 @@ export function JyItinerary({
       nights: n ? `${n} ${n === 1 ? 'night' : 'nights'}` : '',
       tagline: stay.tagline,
       text: stay.doing.join(' '),
+      program: stay.days,
       moment: stay.moment,
       img: m?.src ?? undefined,
       alt: m?.alt ?? stay.place,

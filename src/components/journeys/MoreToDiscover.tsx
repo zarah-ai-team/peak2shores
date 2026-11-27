@@ -14,8 +14,9 @@ const countriesOf = (j: Pick<Journey, 'country'>) => j.country.split(/\s*&\s*/);
  * The row under a journey's page, in place of the questions (Ishika's notes
  * of 9 November 2026, items 25 and 26, after A&K's "More South Africa
  * Adventures"): the other journeys as The Collection's cards, in their
- * compact form (the lead photograph, the name, the itinerary, the days, the
- * price line and "View journey"; no status label).
+ * compact form (the lead photograph with the journey's booking status on it,
+ * as on the Journeys page, the name, the itinerary, the days, the price line
+ * and "View journey"; no region label).
  *
  * The heading is "More journeys to discover" under every journey (the
  * owner's decision of 25 November 2026, after Ishika's notes of 24 November:

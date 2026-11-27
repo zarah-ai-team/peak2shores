@@ -11,7 +11,7 @@ import {
   type HotelRecord,
   type HotelTabId,
 } from '@/lib/data/hotels';
-import { staysNote } from '@/lib/data/homeHotels';
+import { staysIntended, staysNote } from '@/lib/data/homeHotels';
 import type { Journey } from '@/lib/journeys';
 import { placePhotos } from './placePhotos';
 import './stays.css';
@@ -99,7 +99,9 @@ export function Stays({ journey }: { journey: Journey }) {
           Handpicked luxury properties, selected for their character, outstanding hospitality, and
           sense of place.
         </p>
-        <p className="jst-note">{staysNote}</p>
+        <p className="jst-note">
+          {staysNote} {staysIntended}
+        </p>
       </div>
       <ul className="jst-grid">
         {cards.map((card) => (

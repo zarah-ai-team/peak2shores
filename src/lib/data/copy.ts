@@ -385,17 +385,6 @@ export const horizon: HorizonJourney[] = [
     },
   },
   {
-    slug: 'sicily',
-    place: 'Sicily',
-    title: 'The Soul of Sicily',
-    line: 'A timeless Mediterranean love affair.',
-    photo: {
-      src: '/journey-book/img/sicily.jpg',
-      alt: 'Cefalù and its cathedral below La Rocca on the Sicilian coast',
-      pos: '45% 50%',
-    },
-  },
-  {
     slug: 'andalusia-morocco',
     place: 'Andalusia & Morocco',
     title: 'Andalusian Grace & Moroccan Mystique',

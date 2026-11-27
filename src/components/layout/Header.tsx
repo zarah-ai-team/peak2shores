@@ -250,6 +250,9 @@ export function Header({
               closeMenu();
             }}
           >
+            {/* Only the logo the page opens with is preloaded: the white one
+                over a hero, the dark one on paper. Both load with the page
+                (`eager`), so the other is there when the bar changes. */}
             <span className="site-logo">
               <Image
                 src="/brand/p2s-logo-white.svg"
@@ -257,7 +260,9 @@ export function Header({
                 unoptimized
                 width={2454}
                 height={1017}
-                priority
+                priority={overHero}
+                fetchPriority={overHero ? undefined : 'low'}
+                loading="eager"
                 className="logo-on-photo"
               />
               <Image
@@ -266,7 +271,9 @@ export function Header({
                 unoptimized
                 width={2454}
                 height={1017}
-                priority
+                priority={!overHero}
+                fetchPriority={overHero ? 'low' : undefined}
+                loading="eager"
                 className="logo-on-paper"
               />
             </span>

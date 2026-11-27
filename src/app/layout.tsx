@@ -18,13 +18,23 @@ import { getNavigation, getSiteMenu } from '@/lib/content';
 /* Display type is Newsreader (with its optical sizes, so a large heading is
    drawn finer than a caption); Instrument Sans is the interface and body
    voice. Both are variable fonts, so every weight comes from one file each.
-   Self-hosted by next/font — no request leaves the site. */
+   Self-hosted by next/font — no request leaves the site.
+
+   Not preloaded (page-speed pass of 27 Nov 2026): preloading put all four
+   files, about 390 KB with both italics, ahead of the hero photograph on
+   every page. Each family stays one call, roman and italic together:
+   next/font names each call's family on its own, so an italic call apart
+   would be a second family, and italic text set in the first would be drawn
+   as a slanted roman. Unpreloaded, a file is fetched as soon as the
+   stylesheet asks for it, and an italic only where italic text is shown;
+   `swap` and the matched fallback metrics are as before. */
 const newsreader = Newsreader({
   subsets: ['latin'],
   style: ['normal', 'italic'],
   axes: ['opsz'],
   variable: '--font-newsreader',
   display: 'swap',
+  preload: false,
 });
 const instrumentSans = Instrument_Sans({
   subsets: ['latin'],
@@ -34,6 +44,7 @@ const instrumentSans = Instrument_Sans({
   axes: ['wdth'],
   variable: '--font-instrument-sans',
   display: 'swap',
+  preload: false,
 });
 
 /**

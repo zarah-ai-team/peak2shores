@@ -260,6 +260,11 @@
   font-weight: 600;
   text-align: right;
 }
+@media (max-width: 360px) {
+  .jy .rt-facts dd {
+    white-space: nowrap;
+  }
+}
 .jy .rt-notes ul {
   display: grid;
   gap: 0.5rem;

@@ -1,0 +1,154 @@
+/*
+ * A journey's signature experiences (JySignature), after its overview: a calm
+ * blue-grey band between the ivory overview and the white itinerary, its
+ * heading set like the overview's, and each experience a photograph with its
+ * number, title and words. Scoped to `.jy.sig`.
+ */
+
+.jy.sig {
+  --sig-gap: clamp(1.5rem, 2.4vw, 2.5rem);
+  padding: clamp(4.5rem, 8vw, 7.5rem) var(--gut) clamp(4.5rem, 8vw, 7.5rem);
+  background: var(--color-panel);
+  color: var(--ink);
+}
+.jy.sig .lab {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  color: var(--lake);
+}
+.jy.sig .lab::before {
+  content: '';
+  flex: none;
+  width: 1.75rem;
+  height: 1px;
+  background: currentColor;
+}
+.jy.sig .sig-head {
+  display: grid;
+  gap: 1.125rem;
+  margin-bottom: clamp(2.5rem, 4.4vw, 4rem);
+}
+.jy.sig h2 {
+  max-width: 20ch;
+  margin: 0;
+  font-size: clamp(2.125rem, 3.6vw, 3.5rem);
+  text-wrap: balance;
+}
+.jy.sig .sig-intro {
+  max-width: 40rem;
+  margin: 0.25rem 0 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.125rem, 1.5vw, 1.375rem);
+  line-height: 1.5;
+  color: #3b464f;
+}
+
+.sig-rail:focus-visible {
+  outline: 2px solid var(--lake);
+  outline-offset: 0.5rem;
+  border-radius: 1rem;
+}
+
+/* Three across on a laptop. */
+.sig-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(2.5rem, 4vw, 3.75rem) var(--sig-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sig-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.sig-card .ph {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+.sig-card .ph img {
+  object-fit: cover;
+}
+.sig-card .n {
+  margin-top: 1.375rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--lake);
+}
+.sig-card h3 {
+  margin: 0.5rem 0 0;
+  font-family: var(--serif);
+  font-weight: var(--title-weight);
+  font-size: clamp(1.375rem, 1.75vw, 1.625rem);
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+}
+.sig-card p {
+  margin: 0.75rem 0 0;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.7;
+  color: #3b464f;
+}
+
+/* Two across on a tablet. */
+@media (max-width: 1100px) {
+  .sig-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* A phone: a row swiped sideways, one experience and the edge of the next.
+   It runs to the screen's edges; its first and last cards stop on the
+   page's gutter. */
+@media (max-width: 760px) {
+  .sig-rail {
+    margin-inline: calc(-1 * var(--gut));
+    padding-inline: var(--gut);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gut);
+    scrollbar-width: none;
+  }
+  .sig-rail::-webkit-scrollbar {
+    display: none;
+  }
+  .sig-row {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 82%;
+  }
+  .sig-card {
+    scroll-snap-align: start;
+  }
+}
+/* A phone held sideways: two cards across the short screen, so a whole card
+   fits in it. */
+@media (max-width: 1100px) and (orientation: landscape) and (max-height: 500px) {
+  .sig-rail {
+    margin-inline: calc(-1 * var(--gut));
+    padding-inline: var(--gut);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gut);
+    scrollbar-width: none;
+  }
+  .sig-row {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 44%;
+  }
+  .sig-card {
+    scroll-snap-align: start;
+  }
+}

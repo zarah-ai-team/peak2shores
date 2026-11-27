@@ -701,6 +701,12 @@
   font-weight: 600;
   color: var(--pe-ink);
 }
+/* A longer note on a narrow phone: the icon at the top of the words. */
+@media (max-width: 400px) {
+  .pe-info {
+    align-items: flex-start;
+  }
+}
 
 /* The tick box, the promises and the send button. */
 .pe-consent {

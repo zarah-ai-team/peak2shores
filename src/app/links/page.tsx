@@ -4,7 +4,7 @@ import { Frame } from '@/components/ui/Frame';
 import { Arrow } from '@/components/ui/Button';
 import { SectionLabel } from '@/components/ui/Editorial';
 import { StatusTag } from '@/components/ui/StatusTag';
-import { journeyTagStatus } from '@/components/pages/journeyStatus';
+import { journeyBookingTag } from '@/components/pages/journeyStatus';
 import {
   getFeaturedJourneys,
   getJourneySummaries,
@@ -43,7 +43,7 @@ export default async function LinksPage() {
       href: `/journeys/${journey.slug}`,
       title: journey.title,
       meta: [journey.country, `${journey.days} days`, journey.departure],
-      tag: journeyTagStatus(journey),
+      tag: journeyBookingTag(journey.status, journey.availability),
     })),
     { href: '/plan', title: 'Plan your journey', meta: ['Inquire, or design a private trip'] },
     { href: '/journeys', title: 'All journeys', meta: ['Small groups, personally curated'] },
@@ -93,6 +93,14 @@ export default async function LinksPage() {
               {lead.title}
             </span>
             <span className="lead mt-1 block">{lead.lead}</span>
+            {(() => {
+              const tag = journeyBookingTag(lead.status, lead.availability);
+              return (
+                <span className="mt-3 flex">
+                  <StatusTag status={tag.status} limited={tag.limited} />
+                </span>
+              );
+            })()}
           </Link>
         )}
 
@@ -108,11 +116,16 @@ export default async function LinksPage() {
                     {link.title}
                   </span>
                   <span className="kicker-sm mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
-                    {'tag' in link && link.tag && link.tag !== 'open' && (
-                      <StatusTag status={link.tag} />
-                    )}
                     <Facts facts={link.meta} />
                   </span>
+                  {/* A journey's booking status, as the Journeys page's cards
+                      show it, on a line of its own under the facts, so it
+                      stands in the same place on every row. */}
+                  {'tag' in link && (
+                    <span className="mt-2 flex">
+                      <StatusTag status={link.tag.status} limited={link.tag.limited} />
+                    </span>
+                  )}
                 </span>
                 <Arrow className="shrink-0" />
               </Link>

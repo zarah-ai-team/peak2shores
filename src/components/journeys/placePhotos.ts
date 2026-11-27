@@ -11,6 +11,24 @@
  * that (Milan, Split) is shown only in its stay on the itinerary (media.ts).
  */
 export const placePhotos: Record<string, { src: string; alt: string; pos?: string }> = {
+  // The Soul of Sicily: Marc's Drive (Shutterstock photographs he licensed).
+  Palermo: {
+    src: '/images/drive/italy-palermo-cathedral.jpg',
+    alt: 'Palermo Cathedral and its domes behind the palms of its square, under a summer sky',
+  },
+  Cefalù: {
+    src: '/images/drive/italy-cefalu-aerial.jpg',
+    alt: 'Cefalù on its headland below the cliffs of La Rocca, the turquoise sea around it',
+  },
+  Agrigento: {
+    src: '/images/drive/italy-agrigento-valley-of-the-temples.jpg',
+    alt: 'The Temple of Concordia among olive and almond trees in the Valley of the Temples, Agrigento',
+    pos: '22% 50%',
+  },
+  Taormina: {
+    src: '/images/drive/italy-taormina-piazza-ix-aprile.jpg',
+    alt: 'Piazza IX Aprile in Taormina, the clock tower and the church of San Giuseppe below the hill',
+  },
   Lucerne: {
     src: '/images/drive/switzerland-lucerne-water-tower.jpg',
     alt: 'The Water Tower and Chapel Bridge on the Reuss in Lucerne, the old town behind',

@@ -87,6 +87,8 @@ export function HeroStage({
             alt={media.alt ?? ''}
             fill
             priority
+            // The page's largest paint: fetched ahead of everything.
+            fetchPriority="high"
             sizes={HERO_SIZES}
             quality={85}
           />

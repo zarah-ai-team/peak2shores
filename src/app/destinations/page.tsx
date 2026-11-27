@@ -10,7 +10,7 @@ import {
   type StoryScene,
 } from '@/components/destinations/story';
 import { placePhotos } from '@/components/journeys/placePhotos';
-import { journeyTagStatus } from '@/components/pages/journeyStatus';
+import { journeyBookingTag } from '@/components/pages/journeyStatus';
 import {
   getDestinations,
   getJourneys,
@@ -21,7 +21,7 @@ import {
 import { horizon } from '@/lib/data/copy';
 import { PRIVATE_TRAVEL_HREF } from '@/lib/links';
 import { getMedia, type MediaKey } from '@/lib/media';
-import { RATES_TBA } from '@/lib/journeys';
+import { journeyAvailabilityOf, RATES_TBA } from '@/lib/journeys';
 
 export const metadata = pageMetadata({
   title: 'Destinations',
@@ -154,7 +154,7 @@ const order = (slug: string) => {
 
 /** A line under each country's name, in the journeys' own voice. */
 const TAGLINE: Record<string, string> = {
-  italy: 'Lakes, kitchens and the lagoon, unhurried.',
+  italy: 'Lakes, kitchens, the lagoon and Sicily’s temples, unhurried.',
   switzerland: 'Marc’s home country, shown to a friend.',
   spain: 'The island after the season leaves.',
   'south-africa': 'Wine, sea and long tables.',
@@ -257,7 +257,7 @@ function storyPlace(place: Destination, catalog: Journey[]): StoryPlace {
     days: journey.days,
     departureWindow: journey.departureWindow,
     price: journey.priceFrom ? `From ${journey.priceFrom}` : RATES_TBA,
-    tag: journeyTagStatus(journey),
+    tag: journeyBookingTag(journey.status, journeyAvailabilityOf(journey)),
     photo: fresh(
       photoOf(journey.cardMedia),
       photoOf(journey.listMedia),

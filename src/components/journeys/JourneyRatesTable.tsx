@@ -165,7 +165,7 @@ export function JourneyRatesTable({
                         </div>
                         <div>
                           <dt>Room of one’s own</dt>
-                          <dd>+ {r.single}</dd>
+                          <dd>{r.single.startsWith('$') ? `+ ${r.single}` : r.single}</dd>
                         </div>
                         {extensionLabel && (
                           <div>
