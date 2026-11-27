@@ -25,6 +25,7 @@ import {
   JyIntro,
 } from '@/components/journeys/JourneyEditorial';
 import { JySignature } from '@/components/journeys/JourneySignature';
+import { preloadJourneyFonts } from './fontPreloads';
 import { JyEssentials } from '@/components/journeys/JourneyEssentials';
 import { MoreToDiscover } from '@/components/journeys/MoreToDiscover';
 import { Stays as HotelStays } from '@/components/journeys/Stays';
@@ -101,6 +102,8 @@ export default async function JourneyPage({ params }: Params) {
   const { slug } = await params;
   const journey = await getJourneyBySlug(slug);
   if (!journey) notFound();
+  // The opening words' fonts, fetched first on a journey page (fontPreloads.ts).
+  preloadJourneyFonts();
 
   const site = await getSiteSettings();
 
